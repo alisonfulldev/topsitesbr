@@ -1,0 +1,375 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  admin
+  client
+}
+
+enum SiteType {
+  mini_site
+  landing_page
+  institucional
+  loja_virtual
+}
+
+enum SiteStatus {
+  pendente_ativacao
+  online
+  offline
+  manutencao
+  suspenso
+}
+
+enum DnsStatus {
+  pendente
+  verificado
+  falhou
+}
+
+enum SslStatus {
+  pendente
+  ativo
+  falhou
+}
+
+enum SubscriptionStatus {
+  active
+  overdue
+  canceled
+}
+
+enum InvoiceStatus {
+  pending
+  paid
+  overdue
+}
+
+enum ProductType {
+  upgrade_site
+  service
+  addon
+}
+
+enum DiscountType {
+  percent
+  fixed
+}
+
+enum OrderStatus {
+  pending
+  paid
+  delivered
+}
+
+enum ChangeType {
+  texto
+  imagem
+  texto_e_imagem
+  nova_secao
+  nova_pagina
+  duvida
+  outro
+}
+
+enum TicketStatus {
+  open
+  in_progress
+  done
+}
+
+enum NotificationChannel {
+  painel
+  email
+  whatsapp
+}
+
+enum CostCategory {
+  ia
+  trafego_pago
+  hospedagem_ferramentas
+  outro
+}
+
+enum ReferralStatus {
+  confirmado
+  recompensado
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model Client {
+  id                       String    @id @default(uuid())
+  name                     String
+  email                    String    @unique
+  phone                    String?
+  document                 String?
+  referralCode             String    @unique
+  monthlyFeeAcknowledgedAt DateTime?
+  downloadRetentionShownAt DateTime?
+  createdAt                DateTime  @default(now()) @map("created_at")
+  updatedAt                DateTime  @updatedAt @map("updated_at")
+
+  users             User[]
+  sites             Site[]
+  subscriptions     Subscription[]
+  orders            Order[]
+  tickets           Ticket[]
+  notifications     Notification[]
+  referralsGiven    Referral[]          @relation("ReferrerClient")
+  referralReceived  Referral?           @relation("ReferredClient")
+  planChangeHistory PlanChangeHistory[]
+
+  @@map("clients")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  clientId     String?   @map("client_id")
+  name         String
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  role         UserRole
+  active       Boolean   @default(true)
+  lastLoginAt  DateTime? @map("last_login_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  client Client? @relation(fields: [clientId], references: [id])
+
+  @@map("users")
+}
+
+model Site {
+  id           String     @id @default(uuid())
+  clientId     String     @map("client_id")
+  siteUrl      String?    @map("site_url")
+  siteType     SiteType   @map("site_type")
+  templateUsed String?    @map("template_used")
+  status       SiteStatus @default(pendente_ativacao)
+  publishedAt  DateTime?  @map("published_at")
+  filesZipUrl  String?    @map("files_zip_url")
+  notes        String?
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  client  Client   @relation(fields: [clientId], references: [id])
+  domains Domain[]
+  tickets Ticket[]
+
+  @@map("sites")
+}
+
+model Domain {
+  id         String    @id @default(uuid())
+  siteId     String    @map("site_id")
+  domain     String
+  dnsStatus  DnsStatus @default(pendente) @map("dns_status")
+  sslStatus  SslStatus @default(pendente) @map("ssl_status")
+  verifiedAt DateTime? @map("verified_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  site Site @relation(fields: [siteId], references: [id])
+
+  @@map("domains")
+}
+
+model Plan {
+  id                     String   @id @default(uuid())
+  name                   String   @unique
+  price                  Decimal  @db.Decimal(10, 2)
+  monthlyChangesIncluded Int      @map("monthly_changes_included")
+  prioritySupport        Boolean  @default(false) @map("priority_support")
+  allowedChangeTypes     String   @default("") @map("allowed_change_types")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  subscriptions     Subscription[]
+  planChangesFrom   PlanChangeHistory[] @relation("PlanChangeFrom")
+  planChangesTo     PlanChangeHistory[] @relation("PlanChangeTo")
+
+  @@map("plans")
+}
+
+model Subscription {
+  id                  String             @id @default(uuid())
+  clientId            String             @map("client_id")
+  planId              String             @map("plan_id")
+  status              SubscriptionStatus @default(active)
+  asaasSubscriptionId String?            @map("asaas_subscription_id")
+  nextDueDate         DateTime?          @map("next_due_date")
+  planActivatedAt     DateTime           @default(now()) @map("plan_activated_at")
+  createdAt           DateTime           @default(now()) @map("created_at")
+  updatedAt           DateTime           @updatedAt @map("updated_at")
+
+  client   Client    @relation(fields: [clientId], references: [id])
+  plan     Plan      @relation(fields: [planId], references: [id])
+  invoices Invoice[]
+
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id             String        @id @default(uuid())
+  subscriptionId String        @map("subscription_id")
+  amount         Decimal       @db.Decimal(10, 2)
+  status         InvoiceStatus @default(pending)
+  dueDate        DateTime      @map("due_date")
+  paidAt         DateTime?     @map("paid_at")
+  asaasChargeId  String?       @map("asaas_charge_id")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id])
+
+  @@map("invoices")
+}
+
+model Product {
+  id               String    @id @default(uuid())
+  name             String
+  price            Decimal   @db.Decimal(10, 2)
+  type             ProductType
+  requiresSiteType SiteType? @map("requires_site_type")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  orders     Order[]
+  promotions Promotion[]
+
+  @@map("products")
+}
+
+model Promotion {
+  id            String       @id @default(uuid())
+  productId     String?      @map("product_id")
+  title         String
+  description   String?
+  discountType  DiscountType @map("discount_type")
+  discountValue Decimal      @db.Decimal(10, 2) @map("discount_value")
+  startDate     DateTime     @map("start_date")
+  endDate       DateTime     @map("end_date")
+  active        Boolean      @default(true)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  product Product? @relation(fields: [productId], references: [id])
+
+  @@map("promotions")
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  clientId  String      @map("client_id")
+  productId String      @map("product_id")
+  amount    Decimal     @db.Decimal(10, 2)
+  status    OrderStatus @default(pending)
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  client  Client  @relation(fields: [clientId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("orders")
+}
+
+model Ticket {
+  id            String       @id @default(uuid())
+  clientId      String       @map("client_id")
+  siteId        String       @map("site_id")
+  changeType    ChangeType   @map("change_type")
+  textContent   String?      @map("text_content")
+  attachmentUrl String?      @map("attachment_url")
+  status        TicketStatus @default(open)
+  isExtraPaid   Boolean      @default(false) @map("is_extra_paid")
+  isPriority    Boolean      @default(false) @map("is_priority")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  client Client @relation(fields: [clientId], references: [id])
+  site   Site   @relation(fields: [siteId], references: [id])
+
+  @@map("tickets")
+}
+
+model Notification {
+  id        String              @id @default(uuid())
+  clientId  String?             @map("client_id")
+  title     String
+  message   String
+  channel   NotificationChannel
+  read      Boolean             @default(false)
+  createdAt DateTime            @default(now()) @map("created_at")
+  updatedAt DateTime            @updatedAt @map("updated_at")
+
+  client Client? @relation(fields: [clientId], references: [id])
+
+  @@map("notifications")
+}
+
+model Cost {
+  id                  String       @id @default(uuid())
+  category            CostCategory
+  description         String
+  amount              Decimal      @db.Decimal(10, 2)
+  costDate            DateTime     @map("cost_date")
+  isRecurring         Boolean      @default(false) @map("is_recurring")
+  recurrenceFrequency String?      @map("recurrence_frequency")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+
+  @@map("costs")
+}
+
+model Referral {
+  id               String         @id @default(uuid())
+  referrerClientId String         @map("referrer_client_id")
+  referredClientId String         @unique @map("referred_client_id")
+  status           ReferralStatus @default(confirmado)
+  rewardMonths     Int            @default(1) @map("reward_months")
+  rewardedAt       DateTime?      @map("rewarded_at")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+
+  referrerClient Client @relation("ReferrerClient", fields: [referrerClientId], references: [id])
+  referredClient Client @relation("ReferredClient", fields: [referredClientId], references: [id])
+
+  @@map("referrals")
+}
+
+model ReferralClick {
+  id           String   @id @default(uuid())
+  referralCode String   @map("referral_code")
+  clickedAt    DateTime @default(now()) @map("clicked_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("referral_clicks")
+}
+
+model PlanChangeHistory {
+  id               String   @id @default(uuid())
+  clientId         String   @map("client_id")
+  fromPlanId       String   @map("from_plan_id")
+  toPlanId         String   @map("to_plan_id")
+  changedAt        DateTime @default(now()) @map("changed_at")
+  wasManualOverride Boolean  @default(false) @map("was_manual_override")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  client   Client @relation(fields: [clientId], references: [id])
+  fromPlan Plan   @relation("PlanChangeFrom", fields: [fromPlanId], references: [id])
+  toPlan   Plan   @relation("PlanChangeTo", fields: [toPlanId], references: [id])
+
+  @@map("plan_change_history")
+}
