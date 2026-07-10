@@ -75,6 +75,7 @@ enum ChangeType {
   texto
   imagem
   texto_e_imagem
+  correcao
   nova_secao
   nova_pagina
   duvida
@@ -191,6 +192,8 @@ model Plan {
   monthlyChangesIncluded Int      @map("monthly_changes_included")
   prioritySupport        Boolean  @default(false) @map("priority_support")
   allowedChangeTypes     String   @default("") @map("allowed_change_types")
+  changeDeadlineDays     Int      @default(7) @map("change_deadline_days")
+  discountPercent        Int      @default(0) @map("discount_percent")
   createdAt              DateTime @default(now()) @map("created_at")
   updatedAt              DateTime @updatedAt @map("updated_at")
 

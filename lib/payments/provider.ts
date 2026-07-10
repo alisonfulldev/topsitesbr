@@ -15,10 +15,22 @@ export interface CreateSubscriptionResult {
   subscriptionId: string
   chargeId: string
   nextDueDate: Date
+  paymentUrl: string
 }
 
 export interface UpdateSubscriptionResult {
   nextDueDate: Date
+}
+
+export interface CreateSingleChargeInput {
+  customerId: string
+  description: string
+  price: number
+}
+
+export interface CreateSingleChargeResult {
+  chargeId: string
+  paymentUrl: string
 }
 
 export interface PaymentProvider {
@@ -29,6 +41,7 @@ export interface PaymentProvider {
     newPrice: number,
     planName: string,
   ): Promise<UpdateSubscriptionResult>
+  createSingleCharge(input: CreateSingleChargeInput): Promise<CreateSingleChargeResult>
 }
 
 function mockId(prefix: string): string {
@@ -53,12 +66,21 @@ const mockProvider: PaymentProvider = {
       subscriptionId: mockId('sub'),
       chargeId: mockId('chg'),
       nextDueDate: addDays(30),
+      paymentUrl: '/dev/pagamento-simulado',
     }
   },
 
   async updateSubscription(subscriptionId, newPrice, planName) {
     console.log('[MOCK:updateSubscription]', subscriptionId, planName, `R$${newPrice}`)
     return { nextDueDate: addDays(30) }
+  },
+
+  async createSingleCharge(input) {
+    console.log('[MOCK:createSingleCharge]', input.description, `R$${input.price}`)
+    return {
+      chargeId: mockId('chg'),
+      paymentUrl: '/dev/pagamento-simulado',
+    }
   },
 }
 
