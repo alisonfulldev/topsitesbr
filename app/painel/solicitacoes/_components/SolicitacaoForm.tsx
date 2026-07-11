@@ -200,7 +200,7 @@ export function SolicitacaoForm({
         <p className="text-sm text-green-700 max-w-sm mx-auto">{successMsg}</p>
         <button
           onClick={() => setSuccessMsg(null)}
-          className="mt-5 text-sm text-indigo-600 hover:underline"
+          className="mt-5 text-sm text-brand-text hover:underline"
         >
           Fazer nova solicitação
         </button>
@@ -217,7 +217,7 @@ export function SolicitacaoForm({
           <select
             value={siteId}
             onChange={(e) => setSiteId(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
           >
             {sites.map((s) => (
               <option key={s.id} value={s.id}>
@@ -255,7 +255,7 @@ export function SolicitacaoForm({
                       key={opt.changeType}
                       className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                         selectedType === opt.changeType
-                          ? 'border-indigo-400 bg-indigo-50'
+                          ? 'border-brand-200 bg-brand-50'
                           : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                       }`}
                     >
@@ -265,7 +265,7 @@ export function SolicitacaoForm({
                         value={opt.changeType}
                         checked={selectedType === opt.changeType}
                         onChange={() => handleTypeChange(opt.changeType)}
-                        className="mt-0.5 accent-indigo-600"
+                        className="mt-0.5 accent-brand"
                       />
                       <span className="flex-1 min-w-0">
                         <span className="text-sm font-medium text-gray-900">{opt.label}</span>
@@ -314,7 +314,7 @@ export function SolicitacaoForm({
                         ? 'Descreva o conteúdo da nova página: objetivo, texto, seções...'
                         : 'Cole aqui o texto exato que deve aparecer no site...'
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand resize-none"
               />
             </div>
           )}
@@ -333,7 +333,7 @@ export function SolicitacaoForm({
                 accept="image/*"
                 ref={fileRef}
                 onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-                className="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:font-medium hover:file:bg-indigo-100"
+                className="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-brand-50 file:text-brand-text file:font-medium hover:file:bg-brand-100"
               />
               {imageFile && (
                 <p className="text-xs text-gray-500 mt-1">
@@ -354,7 +354,7 @@ export function SolicitacaoForm({
       <button
         type="submit"
         disabled={isPending || !selectedType}
-        className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+        className="w-full py-3 rounded-xl bg-brand text-brand-dark font-semibold text-sm hover:bg-brand-hover disabled:opacity-50 transition-colors"
       >
         {isPending ? 'Enviando…' : 'Enviar solicitação'}
       </button>

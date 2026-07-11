@@ -6,8 +6,8 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'TopSites ADM',
-  description: 'Painel administrativo TopSites',
+  title: 'TOP SITE',
+  description: 'Painel administrativo TOP SITE',
 }
 
 export default function RootLayout({

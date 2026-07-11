@@ -84,7 +84,7 @@ export default async function SitesPage({
         </div>
         <Link
           href={`/admin/clientes/${client.id}/sites/novo`}
-          className="px-3 py-1.5 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition-colors"
+          className="px-3 py-1.5 bg-brand text-brand-dark text-sm rounded-md hover:bg-brand-hover transition-colors"
         >
           + Novo Site
         </Link>
@@ -95,7 +95,7 @@ export default async function SitesPage({
           <p className="text-gray-400 text-sm">Nenhum site cadastrado.</p>
           <Link
             href={`/admin/clientes/${client.id}/sites/novo`}
-            className="mt-3 inline-block text-sm text-indigo-600 hover:underline"
+            className="mt-3 inline-block text-sm text-brand-text hover:underline"
           >
             Cadastrar primeiro site →
           </Link>
@@ -133,7 +133,7 @@ export default async function SitesPage({
                         href={site.siteUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-indigo-600 hover:underline break-all"
+                        className="text-sm text-brand-text hover:underline break-all"
                       >
                         {site.siteUrl}
                       </a>
@@ -185,7 +185,7 @@ export default async function SitesPage({
                 <div className="flex flex-col items-end gap-2 shrink-0">
                   <Link
                     href={`/admin/clientes/${client.id}/sites/${site.id}`}
-                    className="text-xs text-indigo-600 hover:text-indigo-800 underline underline-offset-2"
+                    className="text-xs text-brand-text hover:text-brand-dark underline underline-offset-2"
                   >
                     Gerenciar →
                   </Link>

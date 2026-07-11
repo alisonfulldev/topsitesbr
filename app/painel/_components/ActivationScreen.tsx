@@ -61,7 +61,7 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown }:
     <>
       <div className="flex items-center justify-center min-h-[calc(100vh-57px)]">
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-10 max-w-lg w-full text-center">
-          <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center text-2xl mx-auto mb-5">
+          <div className="w-14 h-14 rounded-full bg-brand-100 flex items-center justify-center text-2xl mx-auto mb-5">
             🎉
           </div>
 
@@ -90,7 +90,7 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown }:
             <button
               onClick={handleActivate}
               disabled={isPending}
-              className="flex-1 py-3 px-5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 disabled:opacity-50 transition-colors shadow-sm"
+              className="flex-1 py-3 px-5 rounded-xl bg-brand text-brand-dark font-semibold text-sm hover:bg-brand-hover disabled:opacity-50 transition-colors shadow-sm"
             >
               {isPending ? 'Processando…' : 'Ativar por R$17/mês'}
             </button>
@@ -127,7 +127,7 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown }:
               <button
                 onClick={handleModalActivate}
                 disabled={isPending}
-                className="flex-1 py-2.5 px-4 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+                className="flex-1 py-2.5 px-4 rounded-xl bg-brand text-brand-dark text-sm font-semibold hover:bg-brand-hover disabled:opacity-50 transition-colors"
               >
                 Quero ativar por R$17/mês
               </button>

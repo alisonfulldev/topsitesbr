@@ -30,7 +30,46 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
   })
 
   if (!invoice) {
-    return { ok: false, message: `Fatura não encontrada para chargeId: ${chargeId}` }
+    // Try to find an Order (single charge — upsell / ticket avulso) with this chargeId
+    const order = await prisma.order.findFirst({
+      where: { asaasChargeId: chargeId },
+      include: {
+        client: { select: { id: true, name: true } },
+        product: { select: { name: true } },
+      },
+    })
+
+    if (!order) {
+      return { ok: false, message: `Cobrança não encontrada: ${chargeId}` }
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.order.update({
+        where: { id: order.id },
+        data: { status: 'paid' },
+      })
+      await tx.notification.create({
+        data: {
+          clientId: order.client.id,
+          title: 'Compra confirmada',
+          message: `Seu pedido de "${order.product.name}" foi confirmado. Em breve entraremos em contato para prosseguir.`,
+          channel: 'painel',
+        },
+      })
+      await tx.notification.create({
+        data: {
+          clientId: null,
+          title: `Novo pedido: ${order.product.name}`,
+          message: `Cliente ${order.client.name} comprou "${order.product.name}". Verifique e execute o serviço.`,
+          channel: 'painel',
+        },
+      })
+    })
+
+    return {
+      ok: true,
+      message: `Pedido de "${order.product.name}" por ${order.client.name} confirmado.`,
+    }
   }
 
   const { subscription } = invoice

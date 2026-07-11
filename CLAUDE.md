@@ -68,39 +68,66 @@ O funil de entrega funciona assim:
 
 ## 4. Planos e Regras de Manutenção
 
-| Plano | Preço/mês | Alterações mensais incluídas | Tipos de alteração permitidos | Prioridade |
-|---|---|---|---|---|
-| Básico | R$ 17 | 0 (site no ar, SSL, monitoramento, suporte básico) | Nenhum incluso (vira cobrança avulsa se solicitar) | Não |
-| Plus | R$ 29 | 1 alteração/mês | **Texto OU Imagem** (não os dois juntos) | Não |
-| Pro | R$ 55 | 2 alterações/mês | **Texto, Imagem, ou Texto e Imagem juntos** | Sim |
+Os planos são **níveis de serviço**, não apenas "pacotes de alterações" — cada um
+tem benefícios contínuos que fazem sentido manter mesmo em meses sem alteração:
+
+| Benefício | Básico R$17 | Plus R$29 | Pro R$55 |
+|---|---|---|---|
+| Site no ar + SSL + monitoramento | ✅ | ✅ | ✅ |
+| Alterações incluídas/mês | 0 | 1 (texto OU imagem) | 2 (incl. combinada) |
+| Prazo de execução de alterações | até 15 dias | até 7 dias | até 3 dias |
+| Correções (link quebrado, erro de digitação, telefone desatualizado) | ✅ ilimitadas e gratuitas | ✅ ilimitadas e gratuitas | ✅ ilimitadas e gratuitas |
+| Relatório de visitas do site | — | básico (visitas do mês) | completo (visitas, origem, páginas mais vistas) |
+| Suporte via WhatsApp direto | — (só pelo painel) | ✅ | ✅ |
+| Desconto em serviços avulsos e upsells | — | 10% | 20% |
+| Revisão semestral do site com sugestões | — | — | ✅ |
+| Prioridade na fila de atendimento | — | — | ✅ |
+
+### Preços de alterações avulsas (fora do plano)
+
+Qualquer plano pode solicitar alterações além do limite (ou o Básico, que não tem
+nenhuma inclusa) — pagando avulso por tipo:
+
+| Tipo | Preço avulso |
+|---|---|
+| Alteração de Texto | R$ 20 |
+| Alteração de Imagem | R$ 40 |
+| Alteração de Texto e Imagem | R$ 60 |
+
+Esses preços também funcionam como incentivo natural de upgrade: quem paga avulso
+com frequência percebe sozinho que o Plus (R$29) ou o Pro (R$55) compensam.
+O desconto do plano (10% Plus / 20% Pro) se aplica a esses avulsos e aos upsells.
 
 ### Regras do módulo de Solicitação de Manutenção
 
-Ao abrir uma solicitação, o cliente escolhe o **tipo de alteração**, e as opções
-disponíveis mudam conforme o plano:
+Ao abrir uma solicitação, o cliente escolhe o **tipo**, e as opções disponíveis
+mudam conforme o plano:
 
-- **Plano Plus (R$29)**: só vê as opções "Alteração de Texto" e "Alteração de
-  Imagem" (a opção combinada não aparece para ele).
-- **Plano Pro (R$55)**: vê as três opções: "Alteração de Texto", "Alteração de
-  Imagem" e "Alteração de Texto e Imagem".
-- **Plano Básico (R$17)**: pode solicitar, mas toda solicitação vira cobrança
-  avulsa (não está incluída no plano).
+- **Correção** (disponível pra todos os planos): link quebrado, erro de digitação,
+  dado desatualizado. Ilimitada, gratuita, **não consome** o limite mensal.
+- **Plano Plus (R$29)**: alterações inclusas são "Texto" OU "Imagem" (a combinada
+  não aparece como opção inclusa; se solicitar os dois, é avulso de R$60).
+- **Plano Pro (R$55)**: as três opções inclusas, incluindo a combinada.
+- **Plano Básico (R$17)**: pode solicitar qualquer tipo, sempre como avulso pago
+  (R$20/40/60 conforme o tipo).
 
 Campos exigidos conforme o tipo escolhido:
+- **Correção**: descrição obrigatória do que está errado.
 - **Alteração de Texto**: campo de texto obrigatório com o conteúdo que deve entrar
   no site.
 - **Alteração de Imagem**: upload de imagem obrigatório (anexo).
 - **Alteração de Texto e Imagem**: os dois campos obrigatórios (texto + imagem).
 
 Controle de limite mensal:
-- O sistema conta quantas solicitações de alteração (de qualquer tipo) o cliente já
-  abriu no mês corrente.
-- Cada solicitação — mesmo a combinada de texto e imagem — consome **1 unidade**
-  do limite mensal do plano.
-- Se o limite foi atingido, a nova solicitação é permitida mas marcada como
-  **extra paga** (gera uma Order/cobrança avulsa via Asaas).
-- Solicitações de clientes do plano Pro entram com prioridade mais alta na fila de
-  atendimento.
+- O sistema conta quantas solicitações de **alteração** (texto/imagem/combinada) o
+  cliente já abriu no mês corrente — correções não contam.
+- Cada alteração — mesmo a combinada — consome **1 unidade** do limite do plano.
+- Se o limite foi atingido (ou o plano é o Básico), a solicitação é permitida mas
+  marcada como **extra paga**, com o preço do tipo (R$20/40/60, com desconto do
+  plano se houver), gerando Order/cobrança avulsa via Asaas.
+- O prazo de execução exibido ao cliente segue o plano: 15 dias (Básico), 7 dias
+  (Plus), 3 dias (Pro). A fila do admin mostra o prazo-limite de cada ticket.
+- Solicitações de clientes do plano Pro entram com prioridade mais alta na fila.
 
 ### Solicitações que são sempre pagas à parte (independente do plano)
 
@@ -230,6 +257,8 @@ erDiagram
     int monthly_changes_included
     boolean priority_support
     string allowed_change_types "texto|imagem|texto_e_imagem, csv"
+    int change_deadline_days "prazo de execucao: 15 basico, 7 plus, 3 pro"
+    int discount_percent "desconto em avulsos e upsells: 0/10/20"
   }
   SUBSCRIPTIONS {
     uuid id
@@ -277,7 +306,7 @@ erDiagram
     uuid id
     uuid client_id
     uuid site_id
-    string change_type "texto, imagem, texto_e_imagem, nova_secao, nova_pagina, duvida, outro"
+    string change_type "correcao, texto, imagem, texto_e_imagem, nova_secao, nova_pagina, duvida, outro"
     text text_content "obrigatorio se change_type inclui texto"
     string attachment_url "obrigatorio se change_type inclui imagem, no Supabase Storage"
     string status "open, in_progress, done"

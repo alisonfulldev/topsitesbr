@@ -11,7 +11,12 @@ export async function uploadSiteFile(
   path: string,
   file: File | Buffer,
   contentType?: string
-): Promise<string> {
+): Promise<string | null> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.SUPABASE_SERVICE_ROLE_KEY === 'PREENCHER') {
+    console.log('[MOCK:uploadSiteFile]', path)
+    return null
+  }
   await uploadFile(SITE_FILES_BUCKET, path, file, contentType)
   return getPublicUrl(SITE_FILES_BUCKET, path)
 }

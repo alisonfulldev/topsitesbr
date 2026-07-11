@@ -98,13 +98,13 @@ export default async function ClientePage({
           </Link>
           <Link
             href={`/admin/clientes/${client.id}/assinatura`}
-            className="px-3 py-1.5 text-sm border border-indigo-300 rounded-lg text-indigo-600 hover:bg-indigo-50"
+            className="px-3 py-1.5 text-sm border border-brand-200 rounded-lg text-brand-text hover:bg-brand-50"
           >
             Assinatura
           </Link>
           <Link
             href={`/admin/clientes/${client.id}/sites`}
-            className="px-3 py-1.5 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="px-3 py-1.5 text-sm bg-brand text-brand-dark rounded-lg hover:bg-brand-hover"
           >
             Ver Sites
           </Link>
@@ -125,7 +125,7 @@ export default async function ClientePage({
           <Row
             label="Código de ref."
             value={
-              <code className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded text-indigo-600">
+              <code className="font-mono text-xs bg-gray-100 px-1.5 py-0.5 rounded text-brand-text">
                 {client.referralCode}
               </code>
             }
@@ -134,7 +134,7 @@ export default async function ClientePage({
             label="Plano"
             value={
               subscription ? (
-                <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-700">
+                <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-brand-100 text-brand-text">
                   {subscription.plan.name} — R${' '}
                   {Number(subscription.plan.price).toFixed(2).replace('.', ',')}
                   /mês
@@ -153,7 +153,7 @@ export default async function ClientePage({
           <h3 className="text-sm font-semibold text-gray-700">Logins de Acesso</h3>
           <Link
             href="/admin/usuarios"
-            className="text-xs text-indigo-600 hover:underline"
+            className="text-xs text-brand-text hover:underline"
           >
             Gerenciar →
           </Link>
@@ -198,7 +198,7 @@ export default async function ClientePage({
           </h3>
           <Link
             href={`/admin/clientes/${client.id}/sites`}
-            className="text-xs text-indigo-600 hover:underline"
+            className="text-xs text-brand-text hover:underline"
           >
             Ver todos →
           </Link>
@@ -211,7 +211,7 @@ export default async function ClientePage({
               <div key={s.id} className="flex items-center gap-3 text-sm">
                 <Link
                   href={`/admin/clientes/${client.id}/sites/${s.id}`}
-                  className="font-medium text-indigo-600 hover:underline"
+                  className="font-medium text-brand-text hover:underline"
                 >
                   {s.siteUrl ?? '(sem URL)'}
                 </Link>
@@ -239,7 +239,7 @@ export default async function ClientePage({
               <span className="font-medium">Foi indicado por: </span>
               <Link
                 href={`/admin/clientes/${client.referralReceived.referrerClient.id}`}
-                className="text-indigo-600 hover:underline"
+                className="text-brand-text hover:underline"
               >
                 {client.referralReceived.referrerClient.name}
               </Link>
@@ -265,7 +265,7 @@ export default async function ClientePage({
                   <div key={r.id} className="flex items-center gap-3 text-sm">
                     <Link
                       href={`/admin/clientes/${r.referredClient.id}`}
-                      className="text-indigo-600 hover:underline"
+                      className="text-brand-text hover:underline"
                     >
                       {r.referredClient.name}
                     </Link>

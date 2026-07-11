@@ -33,7 +33,7 @@ type Site = {
 }
 
 const INPUT =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
+  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent'
 
 const STATUS_OPTIONS = [
   { value: 'pendente_ativacao', label: 'Pendente de Ativação' },
@@ -95,7 +95,7 @@ function StatusUpdater({
         value={status}
         onChange={(e) => handleChange(e.target.value)}
         disabled={isPending}
-        className="border border-gray-200 rounded-lg px-2 py-1 text-xs text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
+        className="border border-gray-200 rounded-lg px-2 py-1 text-xs text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand disabled:opacity-50"
       >
         {STATUS_OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>
@@ -167,7 +167,7 @@ function DomainRow({
             type="text"
             value={form.domain}
             onChange={(e) => setForm((f) => ({ ...f, domain: e.target.value }))}
-            className="col-span-3 border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
+            className="col-span-3 border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand"
             placeholder="exemplo.com.br"
           />
           <div>
@@ -202,7 +202,7 @@ function DomainRow({
             <button
               onClick={handleSave}
               disabled={isPending}
-              className="px-2 py-1 bg-indigo-600 text-white text-xs rounded-md hover:bg-indigo-700 disabled:opacity-50"
+              className="px-2 py-1 bg-brand text-brand-dark text-xs rounded-md hover:bg-brand-hover disabled:opacity-50"
             >
               Salvar
             </button>
@@ -304,7 +304,7 @@ function AddDomainForm({
     return (
       <button
         onClick={() => setShowForm(true)}
-        className="text-xs text-indigo-600 hover:text-indigo-800 underline underline-offset-2"
+        className="text-xs text-brand-text hover:text-brand-dark underline underline-offset-2"
       >
         + Adicionar domínio
       </button>
@@ -312,7 +312,7 @@ function AddDomainForm({
   }
 
   return (
-    <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-100 space-y-3">
+    <div className="p-3 bg-brand-50 rounded-lg border border-brand-100 space-y-3">
       {error && <p className="text-xs text-red-600">{error}</p>}
       <div className="grid grid-cols-3 gap-2">
         <input
@@ -320,7 +320,7 @@ function AddDomainForm({
           value={form.domain}
           onChange={(e) => setForm((f) => ({ ...f, domain: e.target.value }))}
           placeholder="exemplo.com.br"
-          className="col-span-3 border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
+          className="col-span-3 border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand"
         />
         <div>
           <label className="block text-xs text-gray-500 mb-1">DNS</label>
@@ -354,7 +354,7 @@ function AddDomainForm({
           <button
             onClick={handleAdd}
             disabled={isPending}
-            className="px-3 py-1 bg-indigo-600 text-white text-xs rounded-md hover:bg-indigo-700 disabled:opacity-50"
+            className="px-3 py-1 bg-brand text-brand-dark text-xs rounded-md hover:bg-brand-hover disabled:opacity-50"
           >
             {isPending ? 'Salvando…' : 'Salvar'}
           </button>
@@ -486,7 +486,7 @@ function UpdateSiteForm({ site }: { site: Site }) {
         <button
           type="submit"
           disabled={isPending}
-          className="px-3 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+          className="px-3 py-1.5 bg-brand text-brand-dark text-xs rounded-lg hover:bg-brand-hover disabled:opacity-50"
         >
           {isPending ? 'Salvando…' : 'Salvar'}
         </button>
@@ -543,7 +543,7 @@ export function SiteDetailClient({ site }: { site: Site }) {
                   href={site.siteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-indigo-600 hover:underline break-all"
+                  className="text-brand-text hover:underline break-all"
                 >
                   {site.siteUrl}
                 </a>
@@ -566,7 +566,7 @@ export function SiteDetailClient({ site }: { site: Site }) {
                   href={site.filesZipUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-indigo-600 hover:underline text-xs"
+                  className="text-brand-text hover:underline text-xs"
                 >
                   ↓ Baixar ZIP
                 </a>

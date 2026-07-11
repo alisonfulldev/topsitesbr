@@ -119,12 +119,12 @@ function PlanCard({
     <div
       className={`relative flex flex-col rounded-xl border p-5 transition-shadow ${
         isCurrent
-          ? 'border-indigo-400 bg-indigo-50 shadow-sm'
+          ? 'border-brand-200 bg-brand-50 shadow-sm'
           : 'border-gray-200 bg-white hover:shadow-sm'
       }`}
     >
       {isCurrent && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-semibold px-3 py-0.5 rounded-full">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand text-brand-dark text-xs font-semibold px-3 py-0.5 rounded-full">
           Plano Atual
         </span>
       )}
@@ -139,7 +139,7 @@ function PlanCard({
 
       <ul className="space-y-2 flex-1 mb-5">
         <li className="flex items-start gap-2 text-sm text-gray-700">
-          <span className="mt-0.5 text-indigo-500 shrink-0">
+          <span className="mt-0.5 text-brand-text shrink-0">
             {plan.monthlyChangesIncluded > 0 ? '✓' : '—'}
           </span>
           <span>
@@ -151,13 +151,13 @@ function PlanCard({
 
         {plan.allowedChangeTypes && (
           <li className="flex items-start gap-2 text-sm text-gray-700">
-            <span className="mt-0.5 text-indigo-500 shrink-0">✓</span>
+            <span className="mt-0.5 text-brand-text shrink-0">✓</span>
             <span>{describeAllowedTypes(plan.allowedChangeTypes, plan.monthlyChangesIncluded)}</span>
           </li>
         )}
 
         <li className="flex items-start gap-2 text-sm text-gray-700">
-          <span className={`mt-0.5 shrink-0 ${plan.prioritySupport ? 'text-indigo-500' : 'text-gray-300'}`}>
+          <span className={`mt-0.5 shrink-0 ${plan.prioritySupport ? 'text-brand-text' : 'text-gray-300'}`}>
             {plan.prioritySupport ? '✓' : '—'}
           </span>
           <span className={plan.prioritySupport ? '' : 'text-gray-400'}>
@@ -166,7 +166,7 @@ function PlanCard({
         </li>
 
         <li className="flex items-start gap-2 text-sm text-gray-700">
-          <span className="mt-0.5 text-indigo-500 shrink-0">✓</span>
+          <span className="mt-0.5 text-brand-text shrink-0">✓</span>
           <span>Hospedagem, SSL e monitoramento</span>
         </li>
       </ul>
@@ -199,14 +199,14 @@ function PlanCard({
 
       {/* Action button */}
       {isCurrent ? (
-        <div className="h-8 flex items-center justify-center text-xs text-indigo-600 font-medium">
+        <div className="h-8 flex items-center justify-center text-xs text-brand-text font-medium">
           Plano ativo
         </div>
       ) : !hasSubscription ? (
         <button
           onClick={handleActivate}
           disabled={isPending}
-          className="w-full py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="w-full py-2 rounded-lg bg-brand text-brand-dark text-sm font-medium hover:bg-brand-hover disabled:opacity-50 transition-colors"
         >
           {isPending ? 'Ativando…' : 'Ativar Assinatura'}
         </button>

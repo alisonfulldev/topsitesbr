@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createSite } from '../actions'
 
 const INPUT =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
+  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent'
 
 function Field({
   label,
@@ -110,18 +110,18 @@ export function SiteFormClient({ clientId }: { clientId: string }) {
         </Field>
 
         <Field
-          label="Arquivo ZIP do site"
-          hint="ZIP com os arquivos HTML/CSS/JS — o cliente poderá baixar pelo painel"
+          label="Arquivo do site (ZIP ou RAR)"
+          hint="Compactado com os arquivos HTML/CSS/JS — o cliente poderá baixar pelo painel"
         >
           <div className="flex items-center gap-3">
             <label className="flex-1 flex items-center gap-2 px-3 py-2 border border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
               <span className="text-gray-400 text-xs">
-                {fileName ?? 'Clique para selecionar um arquivo .zip'}
+                {fileName ?? 'Clique para selecionar um arquivo .zip ou .rar'}
               </span>
               <input
                 type="file"
                 name="filesZip"
-                accept=".zip,application/zip,application/x-zip-compressed"
+                accept=".zip,.rar,application/zip,application/x-zip-compressed,application/x-rar-compressed,application/vnd.rar"
                 className="hidden"
                 onChange={(e) =>
                   setFileName(e.target.files?.[0]?.name ?? null)
@@ -169,7 +169,7 @@ export function SiteFormClient({ clientId }: { clientId: string }) {
         <button
           type="submit"
           disabled={isPending}
-          className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="px-4 py-2 bg-brand text-brand-dark text-sm rounded-lg hover:bg-brand-hover disabled:opacity-50 transition-colors"
         >
           {isPending ? 'Salvando...' : 'Cadastrar Site'}
         </button>

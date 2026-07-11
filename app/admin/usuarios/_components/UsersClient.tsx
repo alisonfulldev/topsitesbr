@@ -27,7 +27,7 @@ type TempPass = { userId: string; userName: string; password: string }
 const ROLE_LABEL: Record<Role, string> = { admin: 'Admin', client: 'Cliente' }
 
 const INPUT =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
+  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent'
 
 function Field({
   label,
@@ -156,7 +156,7 @@ export function UsersClient({
           </p>
           <button
             onClick={openModal}
-            className="px-3 py-1.5 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition-colors"
+            className="px-3 py-1.5 bg-brand text-brand-dark text-sm rounded-md hover:bg-brand-hover transition-colors"
           >
             + Novo Usuário
           </button>
@@ -392,7 +392,7 @@ export function UsersClient({
               <button
                 onClick={handleCreate}
                 disabled={isPending}
-                className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+                className="px-4 py-2 bg-brand text-brand-dark text-sm rounded-lg hover:bg-brand-hover disabled:opacity-50 transition-colors"
               >
                 {isPending ? 'Criando...' : 'Criar Usuário'}
               </button>

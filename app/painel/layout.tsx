@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
@@ -38,32 +38,44 @@ export default async function PainelLayout({ children }: { children: React.React
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-10 border-b bg-white px-6 py-3 flex items-center justify-between shadow-sm">
+      <header className="sticky top-0 z-10 border-b bg-brand-dark px-6 py-3 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-6">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-600">
-              TopSites
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-brand">
+              TOP SITE
             </p>
-            <p className="text-[11px] text-gray-400 -mt-0.5">Painel do Cliente</p>
+            <p className="text-[10px] text-gray-400 -mt-0.5 uppercase tracking-wider">Painel do Cliente</p>
           </div>
           <nav className="flex items-center gap-1 text-sm">
             <Link
               href="/painel"
-              className="px-3 py-1.5 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
             >
               Início
             </Link>
             <Link
               href="/painel/solicitacoes"
-              className="px-3 py-1.5 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
             >
               Solicitações
             </Link>
             <Link
+              href="/painel/upgrades"
+              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
+            >
+              Upgrades
+            </Link>
+            <Link
               href="/painel/assinatura"
-              className="px-3 py-1.5 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
             >
               Assinatura
+            </Link>
+            <Link
+              href="/painel/indicacoes"
+              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
+            >
+              Indicações
             </Link>
           </nav>
         </div>
@@ -76,7 +88,7 @@ export default async function PainelLayout({ children }: { children: React.React
             onMarkAll={markAllNotificationsRead}
             allHref="/painel/notificacoes"
           />
-          <span className="text-sm text-gray-600">{session.user.name}</span>
+          <span className="text-sm text-gray-300">{session.user.name}</span>
           <SignOutButton />
         </div>
       </header>

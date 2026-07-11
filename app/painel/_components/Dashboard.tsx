@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 
 const SITE_STATUS_LABEL: Record<string, string> = {
   pendente_ativacao: 'Aguardando ativação',
@@ -113,7 +113,7 @@ function SiteCard({ site }: { site: SiteData }) {
           href={site.siteUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-indigo-600 hover:underline break-all"
+          className="text-sm text-brand-text hover:underline break-all"
         >
           {site.siteUrl}
         </a>
@@ -141,7 +141,7 @@ function SiteCard({ site }: { site: SiteData }) {
           <a
             href={site.filesZipUrl}
             download
-            className="text-xs text-gray-500 hover:text-indigo-600 underline transition-colors"
+            className="text-xs text-gray-500 hover:text-brand-text underline transition-colors"
           >
             ↓ Baixar arquivos do site
           </a>
@@ -180,28 +180,28 @@ function PlanCard({ subscription }: { subscription: SubscriptionData }) {
 
       <ul className="space-y-1.5 text-sm text-gray-600 mb-4">
         <li className="flex gap-2">
-          <span className="text-indigo-500 shrink-0">✓</span>
+          <span className="text-brand-text shrink-0">✓</span>
           Hospedagem, SSL e monitoramento
         </li>
         <li className="flex gap-2">
-          <span className="text-indigo-500 shrink-0">✓</span>
+          <span className="text-brand-text shrink-0">✓</span>
           Prazo de atendimento: {deadlineLabel(plan.changeDeadlineDays, plan.prioritySupport)}
         </li>
         {plan.monthlyChangesIncluded > 0 && (
           <li className="flex gap-2">
-            <span className="text-indigo-500 shrink-0">✓</span>
+            <span className="text-brand-text shrink-0">✓</span>
             {plan.monthlyChangesIncluded} alteração/mês inclusa
           </li>
         )}
         {plan.discountPercent > 0 && (
           <li className="flex gap-2">
-            <span className="text-indigo-500 shrink-0">✓</span>
+            <span className="text-brand-text shrink-0">✓</span>
             {plan.discountPercent}% de desconto em serviços avulsos
           </li>
         )}
         {plan.prioritySupport && (
           <li className="flex gap-2">
-            <span className="text-indigo-500 shrink-0">✓</span>
+            <span className="text-brand-text shrink-0">✓</span>
             Atendimento prioritário
           </li>
         )}
@@ -247,7 +247,7 @@ function ChangesCard({
         </p>
         <Link
           href="/painel/assinatura"
-          className="mt-3 inline-block text-xs text-indigo-600 hover:underline"
+          className="mt-3 inline-block text-xs text-brand-text hover:underline"
         >
           Fazer upgrade para incluir alterações →
         </Link>
@@ -269,7 +269,7 @@ function ChangesCard({
       </div>
       <div className="w-full bg-gray-100 rounded-full h-1.5 mb-2">
         <div
-          className={`h-1.5 rounded-full transition-all ${pct >= 100 ? 'bg-red-500' : 'bg-indigo-500'}`}
+          className={`h-1.5 rounded-full transition-all ${pct >= 100 ? 'bg-red-500' : 'bg-brand'}`}
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -298,7 +298,7 @@ function VisitsCard({ plan }: { plan: PlanFeatures }) {
           </p>
           <Link
             href="/painel/assinatura"
-            className="text-xs text-indigo-600 hover:underline"
+            className="text-xs text-brand-text hover:underline"
           >
             Fazer upgrade →
           </Link>
@@ -363,7 +363,7 @@ function EventsCard({ events }: { events: EventData[] }) {
       )}
       <Link
         href="/painel/notificacoes"
-        className="mt-3 inline-block text-xs text-indigo-600 hover:underline"
+        className="mt-3 inline-block text-xs text-brand-text hover:underline"
       >
         Ver todas as notificações →
       </Link>
@@ -393,7 +393,7 @@ export function Dashboard({
             <a
               href={primarySite.filesZipUrl}
               download
-              className="text-sm text-indigo-600 hover:underline"
+              className="text-sm text-brand-text hover:underline"
             >
               ↓ Baixar arquivos do site
             </a>

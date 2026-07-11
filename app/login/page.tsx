@@ -34,7 +34,6 @@ function LoginForm() {
       return
     }
 
-    // Busca a sessão para redirecionar pelo role
     const sessionRes = await fetch('/api/auth/session')
     const session = await sessionRes.json()
 
@@ -64,7 +63,7 @@ function LoginForm() {
           required
           autoComplete="email"
           placeholder="seu@email.com"
-          className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         />
       </div>
 
@@ -79,14 +78,14 @@ function LoginForm() {
           required
           autoComplete="current-password"
           placeholder="••••••••"
-          className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         />
       </div>
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
+        className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-brand-dark shadow-sm hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
       >
         {loading ? 'Entrando…' : 'Entrar'}
       </button>
@@ -96,14 +95,17 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <main className="flex min-h-screen items-center justify-center bg-brand-dark px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">TopSites ADM</h1>
-          <p className="mt-1 text-sm text-gray-500">Entre com sua conta para continuar</p>
+          <p className="text-[13px] font-black uppercase tracking-[0.25em] text-brand mb-1">
+            TOP SITE
+          </p>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Bem-vindo</h1>
+          <p className="mt-1 text-sm text-gray-400">Entre com sua conta para continuar</p>
         </div>
 
-        <div className="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-gray-200">
+        <div className="rounded-2xl bg-white p-8 shadow-xl">
           <Suspense fallback={<div className="h-64 animate-pulse rounded-lg bg-gray-100" />}>
             <LoginForm />
           </Suspense>

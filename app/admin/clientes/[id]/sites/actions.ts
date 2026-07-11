@@ -30,7 +30,7 @@ export async function createSite(
       const buffer = Buffer.from(await file.arrayBuffer())
       const ext = file.name.split('.').pop() ?? 'zip'
       const path = `${clientId}/${Date.now()}.${ext}`
-      filesZipUrl = await uploadSiteFile(path, buffer, file.type || 'application/zip')
+      filesZipUrl = await uploadSiteFile(path, buffer, file.type || 'application/zip') ?? null
     } catch (err) {
       return { error: 'Erro ao fazer upload do arquivo. Verifique a configuração do Storage.' }
     }

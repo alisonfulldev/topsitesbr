@@ -10,28 +10,47 @@ export default async function PagamentoSimuladoPage() {
     )
   }
 
-  const invoices = await prisma.invoice.findMany({
-    where: { asaasChargeId: { not: null } },
-    include: {
-      subscription: {
-        include: {
-          client: { select: { name: true } },
-          plan: { select: { name: true } },
+  const [invoices, orders] = await Promise.all([
+    prisma.invoice.findMany({
+      where: { asaasChargeId: { not: null } },
+      include: {
+        subscription: {
+          include: {
+            client: { select: { name: true } },
+            plan: { select: { name: true } },
+          },
         },
       },
-    },
-    orderBy: { createdAt: 'desc' },
-    take: 50,
-  })
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    }),
+    prisma.order.findMany({
+      where: { asaasChargeId: { not: null } },
+      include: {
+        client: { select: { name: true } },
+        product: { select: { name: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    }),
+  ])
 
-  const rows = invoices.map((inv) => ({
+  const invoiceRows = invoices.map((inv) => ({
     id: inv.id,
     chargeId: inv.asaasChargeId!,
     clientName: inv.subscription.client.name,
-    planName: inv.subscription.plan.name,
+    description: `Plano ${inv.subscription.plan.name}`,
     amount: Number(inv.amount),
     status: inv.status,
-    dueDate: inv.dueDate.toISOString(),
+  }))
+
+  const orderRows = orders.map((o) => ({
+    id: o.id,
+    chargeId: o.asaasChargeId!,
+    clientName: o.client.name,
+    description: o.product.name,
+    amount: Number(o.amount),
+    status: o.status,
   }))
 
   return (
@@ -43,7 +62,7 @@ export default async function PagamentoSimuladoPage() {
             Ferramenta de desenvolvimento — simula eventos que o Asaas enviaria via webhook.
           </p>
         </div>
-        <SimuladorClient invoices={rows} />
+        <SimuladorClient invoiceRows={invoiceRows} orderRows={orderRows} />
       </div>
     </div>
   )

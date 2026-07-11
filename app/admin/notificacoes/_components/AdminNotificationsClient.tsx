@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useTransition } from 'react'
 import { markAdminNotificationRead, markAllAdminNotificationsRead } from '../actions'
@@ -63,7 +63,7 @@ export function AdminNotificationsClient({
           <button
             onClick={handleMarkAll}
             disabled={isPending}
-            className="text-sm text-indigo-600 hover:underline disabled:opacity-50"
+            className="text-sm text-brand-text hover:underline disabled:opacity-50"
           >
             Marcar todas como lidas
           </button>
@@ -80,12 +80,12 @@ export function AdminNotificationsClient({
             <li
               key={n.id}
               className={`bg-white rounded-xl border p-4 flex items-start gap-4 ${
-                !n.read ? 'border-indigo-200 bg-indigo-50/30' : 'border-gray-200'
+                !n.read ? 'border-brand-200 bg-brand-50/30' : 'border-gray-200'
               }`}
             >
               <div
                 className={`mt-1 w-2 h-2 rounded-full shrink-0 ${
-                  !n.read ? 'bg-indigo-500' : 'bg-gray-200'
+                  !n.read ? 'bg-brand' : 'bg-gray-200'
                 }`}
               />
               <div className="flex-1 min-w-0">
@@ -106,7 +106,7 @@ export function AdminNotificationsClient({
                     <button
                       onClick={() => handleMarkRead(n.id)}
                       disabled={isPending}
-                      className="text-xs text-indigo-600 hover:underline disabled:opacity-50"
+                      className="text-xs text-brand-text hover:underline disabled:opacity-50"
                     >
                       Marcar como lida
                     </button>

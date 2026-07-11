@@ -13,7 +13,7 @@ export default async function ClientesPage() {
         </div>
         <Link
           href="/admin/clientes/novo"
-          className="px-3 py-1.5 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition-colors"
+          className="px-3 py-1.5 bg-brand text-brand-dark text-sm rounded-md hover:bg-brand-hover transition-colors"
         >
           + Novo Cliente
         </Link>
@@ -68,7 +68,7 @@ export default async function ClientesPage() {
                   </td>
                   <td className="px-4 py-3">
                     {c.planName ? (
-                      <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-700">
+                      <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-brand-100 text-brand-text">
                         {c.planName}
                       </span>
                     ) : (
@@ -87,7 +87,7 @@ export default async function ClientesPage() {
                     <div className="flex items-center gap-3">
                       <Link
                         href={`/admin/clientes/${c.id}`}
-                        className="text-xs text-indigo-600 hover:text-indigo-800 underline underline-offset-2"
+                        className="text-xs text-brand-text hover:text-brand-dark underline underline-offset-2"
                       >
                         Ver
                       </Link>

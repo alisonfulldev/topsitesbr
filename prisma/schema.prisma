@@ -272,13 +272,14 @@ model Promotion {
 }
 
 model Order {
-  id        String      @id @default(uuid())
-  clientId  String      @map("client_id")
-  productId String      @map("product_id")
-  amount    Decimal     @db.Decimal(10, 2)
-  status    OrderStatus @default(pending)
-  createdAt DateTime    @default(now()) @map("created_at")
-  updatedAt DateTime    @updatedAt @map("updated_at")
+  id            String      @id @default(uuid())
+  clientId      String      @map("client_id")
+  productId     String      @map("product_id")
+  amount        Decimal     @db.Decimal(10, 2)
+  status        OrderStatus @default(pending)
+  asaasChargeId String?     @map("asaas_charge_id")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
 
   client  Client  @relation(fields: [clientId], references: [id])
   product Product @relation(fields: [productId], references: [id])

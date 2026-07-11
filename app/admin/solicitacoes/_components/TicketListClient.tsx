@@ -43,7 +43,7 @@ const STATUS_COLOR: Record<string, string> = {
 
 const TYPE_COLOR: Record<string, string> = {
   correcao: 'bg-purple-100 text-purple-700',
-  texto: 'bg-indigo-100 text-indigo-700',
+  texto: 'bg-brand-100 text-brand-text',
   imagem: 'bg-pink-100 text-pink-700',
   texto_e_imagem: 'bg-violet-100 text-violet-700',
   nova_secao: 'bg-orange-100 text-orange-700',
@@ -82,14 +82,14 @@ function TicketCard({
   return (
     <div
       className={`bg-white rounded-xl border p-4 space-y-3 ${
-        ticket.isPriority ? 'border-indigo-300' : 'border-gray-200'
+        ticket.isPriority ? 'border-brand-200' : 'border-gray-200'
       }`}
     >
       {/* Header row */}
       <div className="flex items-start justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2 flex-wrap">
           {ticket.isPriority && (
-            <span className="text-[10px] font-bold uppercase tracking-wide bg-indigo-600 text-white px-1.5 py-0.5 rounded">
+            <span className="text-[10px] font-bold uppercase tracking-wide bg-brand text-brand-dark px-1.5 py-0.5 rounded">
               Prioritário
             </span>
           )}
@@ -120,7 +120,7 @@ function TicketCard({
             href={ticket.siteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-2 text-xs text-indigo-600 hover:underline"
+            className="ml-2 text-xs text-brand-text hover:underline"
           >
             {ticket.siteUrl}
           </a>
@@ -236,7 +236,7 @@ export function TicketListClient({ tickets: initial }: { tickets: TicketRow[] })
             onClick={() => setFilter(tab.key)}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               filter === tab.key
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-brand text-brand-dark'
                 : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
             }`}
           >

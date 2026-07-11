@@ -27,7 +27,7 @@ interface Props {
 }
 
 const INPUT =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
+  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent'
 
 function Field({
   label,
@@ -140,7 +140,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
       ? 'border-green-400 focus:ring-green-400'
       : referralStatus === 'invalid'
       ? 'border-red-400 focus:ring-red-400'
-      : 'border-gray-300 focus:ring-indigo-500'
+      : 'border-gray-300 focus:ring-brand'
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-lg">
@@ -261,7 +261,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
                       }}
                       className="block w-full text-left px-3 py-1.5 rounded-md hover:bg-gray-50 text-xs text-gray-600 border border-gray-100"
                     >
-                      <code className="font-mono text-indigo-600">{r.code}</code>
+                      <code className="font-mono text-brand-text">{r.code}</code>
                       <span className="ml-2 text-gray-400">{r.clientName}</span>
                       <span className="ml-2 text-gray-300">
                         {new Date(r.lastClickAt).toLocaleDateString('pt-BR')}
@@ -285,7 +285,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
                 type="checkbox"
                 checked={createLogin}
                 onChange={(e) => setCreateLogin(e.target.checked)}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                className="rounded border-gray-300 text-brand-text focus:ring-brand"
               />
               <span className="text-sm text-gray-700">
                 Criar login de acesso agora
@@ -325,7 +325,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           type="button"
           onClick={handleSubmit}
           disabled={isPending}
-          className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="px-4 py-2 bg-brand text-brand-dark text-sm rounded-lg hover:bg-brand-hover disabled:opacity-50 transition-colors"
         >
           {isPending
             ? 'Salvando...'
