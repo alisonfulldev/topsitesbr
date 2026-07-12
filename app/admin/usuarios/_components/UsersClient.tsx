@@ -2,6 +2,10 @@
 
 import { useState, useTransition } from 'react'
 import { createUser, toggleUserActive, resetPassword } from '../actions'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { EmptyState } from '@/components/ui/empty-state'
+import { Modal, ModalActions } from '@/components/ui/modal'
 
 type Role = 'admin' | 'client'
 
@@ -27,7 +31,7 @@ type TempPass = { userId: string; userName: string; password: string }
 const ROLE_LABEL: Record<Role, string> = { admin: 'Admin', client: 'Cliente' }
 
 const INPUT =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent'
+  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent'
 
 function Field({
   label,
@@ -136,9 +140,7 @@ export function UsersClient({
               </div>
               <button
                 onClick={() =>
-                  setTempPasswords((prev) =>
-                    prev.filter((p) => p.userId !== t.userId)
-                  )
+                  setTempPasswords((prev) => prev.filter((p) => p.userId !== t.userId))
                 }
                 className="text-amber-600 hover:text-amber-800 font-medium"
               >
@@ -154,252 +156,196 @@ export function UsersClient({
           <p className="text-sm text-gray-500">
             {users.length} {users.length === 1 ? 'usuário' : 'usuários'}
           </p>
-          <button
-            onClick={openModal}
-            className="px-3 py-1.5 bg-brand text-brand-dark text-sm rounded-md hover:bg-brand-hover transition-colors"
-          >
+          <Button variant="primary" size="sm" onClick={openModal}>
             + Novo Usuário
-          </button>
+          </Button>
         </div>
 
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-100 text-sm">
             <thead className="bg-gray-50">
               <tr>
-                {[
-                  'Nome',
-                  'E-mail',
-                  'Papel',
-                  'Cliente vinculado',
-                  'Último acesso',
-                  'Status',
-                  'Ações',
-                ].map((h) => (
-                  <th
-                    key={h}
-                    className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {h}
-                  </th>
-                ))}
+                {['Nome', 'E-mail', 'Papel', 'Cliente vinculado', 'Último acesso', 'Status', 'Ações'].map(
+                  (h) => (
+                    <th
+                      key={h}
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {h}
+                    </th>
+                  ),
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {users.length === 0 && (
+              {users.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={7}
-                    className="px-4 py-10 text-center text-gray-400"
-                  >
-                    Nenhum usuário cadastrado ainda.
+                  <td colSpan={7}>
+                    <EmptyState title="Nenhum usuário cadastrado ainda." className="py-10" />
                   </td>
                 </tr>
-              )}
-              {users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50/60">
-                  <td className="px-4 py-3 font-medium text-gray-900">
-                    {user.name}
-                  </td>
-                  <td className="px-4 py-3 text-gray-600">{user.email}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
-                        user.role === 'admin'
-                          ? 'bg-purple-100 text-purple-700'
-                          : 'bg-blue-100 text-blue-700'
-                      }`}
-                    >
-                      {ROLE_LABEL[user.role]}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-gray-600">
-                    {user.client?.name ?? (
-                      <span className="text-gray-300">—</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-gray-400 text-xs">
-                    {user.lastLoginAt
-                      ? new Date(user.lastLoginAt).toLocaleString('pt-BR', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: '2-digit',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                      : '—'}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
-                        user.active
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
-                      }`}
-                    >
-                      {user.active ? 'Ativo' : 'Inativo'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3 justify-end">
-                      {confirmResetId === user.id ? (
-                        <span className="text-xs text-gray-500">
-                          Confirmar reset?{' '}
+              ) : (
+                users.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50/60">
+                    <td className="px-4 py-3 font-medium text-gray-900">{user.name}</td>
+                    <td className="px-4 py-3 text-gray-600">{user.email}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant={user.role === 'admin' ? 'purple' : 'info'}>
+                        {ROLE_LABEL[user.role]}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {user.client?.name ?? <span className="text-gray-300">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-gray-400 text-xs">
+                      {user.lastLoginAt
+                        ? new Date(user.lastLoginAt).toLocaleString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : '—'}
+                    </td>
+                    <td className="px-4 py-3">
+                      <Badge variant={user.active ? 'success' : 'error'}>
+                        {user.active ? 'Ativo' : 'Inativo'}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3 justify-end">
+                        {confirmResetId === user.id ? (
+                          <span className="text-xs text-gray-500">
+                            Confirmar reset?{' '}
+                            <button
+                              onClick={() => handleReset(user)}
+                              disabled={isPending}
+                              className="text-red-600 hover:underline font-medium"
+                            >
+                              Sim
+                            </button>
+                            {' / '}
+                            <button
+                              onClick={() => setConfirmResetId(null)}
+                              className="text-gray-500 hover:underline"
+                            >
+                              Não
+                            </button>
+                          </span>
+                        ) : (
                           <button
-                            onClick={() => handleReset(user)}
+                            onClick={() => setConfirmResetId(user.id)}
                             disabled={isPending}
-                            className="text-red-600 hover:underline font-medium"
+                            className="text-xs text-gray-500 hover:text-gray-700 underline underline-offset-2"
                           >
-                            Sim
+                            Resetar senha
                           </button>
-                          {' / '}
-                          <button
-                            onClick={() => setConfirmResetId(null)}
-                            className="text-gray-500 hover:underline"
-                          >
-                            Não
-                          </button>
-                        </span>
-                      ) : (
+                        )}
                         <button
-                          onClick={() => setConfirmResetId(user.id)}
+                          onClick={() => handleToggle(user.id, user.active)}
                           disabled={isPending}
-                          className="text-xs text-gray-500 hover:text-gray-700 underline underline-offset-2"
+                          className={`text-xs underline underline-offset-2 ${
+                            user.active
+                              ? 'text-red-500 hover:text-red-700'
+                              : 'text-green-600 hover:text-green-800'
+                          }`}
                         >
-                          Resetar senha
+                          {user.active ? 'Desativar' : 'Ativar'}
                         </button>
-                      )}
-                      <button
-                        onClick={() => handleToggle(user.id, user.active)}
-                        disabled={isPending}
-                        className={`text-xs underline underline-offset-2 ${
-                          user.active
-                            ? 'text-red-500 hover:text-red-700'
-                            : 'text-green-600 hover:text-green-800'
-                        }`}
-                      >
-                        {user.active ? 'Desativar' : 'Ativar'}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Modal - Novo Usuário */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setShowModal(false)}
-          />
-          <div className="relative z-10 bg-white rounded-xl shadow-2xl w-full max-w-md">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
-              <h3 className="font-semibold text-gray-900">Novo Usuário</h3>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                ✕
-              </button>
+      {/* Modal — Novo Usuário */}
+      <Modal open={showModal} onClose={() => setShowModal(false)} title="Novo Usuário">
+        <div className="space-y-4 mt-4">
+          {formError && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              {formError}
             </div>
+          )}
 
-            <div className="px-5 py-4 space-y-4">
-              {formError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-                  {formError}
-                </div>
-              )}
+          <Field label="Nome" required>
+            <input
+              type="text"
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              placeholder="Nome completo"
+              className={INPUT}
+            />
+          </Field>
 
-              <Field label="Nome" required>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, name: e.target.value }))
-                  }
-                  placeholder="Nome completo"
-                  className={INPUT}
-                />
-              </Field>
+          <Field label="E-mail" required>
+            <input
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+              placeholder="email@exemplo.com"
+              className={INPUT}
+            />
+          </Field>
 
-              <Field label="E-mail" required>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, email: e.target.value }))
-                  }
-                  placeholder="email@exemplo.com"
-                  className={INPUT}
-                />
-              </Field>
+          <Field label="Senha temporária" required>
+            <input
+              type="text"
+              value={form.password}
+              onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+              placeholder="Senha a ser entregue ao usuário"
+              className={`${INPUT} font-mono`}
+            />
+          </Field>
 
-              <Field label="Senha temporária" required>
-                <input
-                  type="text"
-                  value={form.password}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, password: e.target.value }))
-                  }
-                  placeholder="Senha a ser entregue ao usuário"
-                  className={`${INPUT} font-mono`}
-                />
-              </Field>
+          <Field label="Papel" required>
+            <select
+              value={form.role}
+              onChange={(e) => setForm((f) => ({ ...f, role: e.target.value as Role }))}
+              className={INPUT}
+            >
+              <option value="client">Cliente</option>
+              <option value="admin">Admin</option>
+            </select>
+          </Field>
 
-              <Field label="Papel" required>
-                <select
-                  value={form.role}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, role: e.target.value as Role }))
-                  }
-                  className={INPUT}
-                >
-                  <option value="client">Cliente</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </Field>
-
-              {form.role === 'client' && (
-                <Field label="Vincular ao cliente">
-                  <select
-                    value={form.clientId}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, clientId: e.target.value }))
-                    }
-                    className={INPUT}
-                  >
-                    <option value="">— Nenhum (vincular depois) —</option>
-                    {clients.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name} ({c.email})
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-              )}
-            </div>
-
-            <div className="flex justify-end gap-3 px-5 py-4 border-t border-gray-200">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+          {form.role === 'client' && (
+            <Field label="Vincular ao cliente">
+              <select
+                value={form.clientId}
+                onChange={(e) => setForm((f) => ({ ...f, clientId: e.target.value }))}
+                className={INPUT}
               >
-                Cancelar
-              </button>
-              <button
-                onClick={handleCreate}
-                disabled={isPending}
-                className="px-4 py-2 bg-brand text-brand-dark text-sm rounded-lg hover:bg-brand-hover disabled:opacity-50 transition-colors"
-              >
-                {isPending ? 'Criando...' : 'Criar Usuário'}
-              </button>
-            </div>
-          </div>
+                <option value="">— Nenhum (vincular depois) —</option>
+                {clients.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({c.email})
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
         </div>
-      )}
+
+        <ModalActions>
+          <Button variant="secondary" size="md" fullWidth onClick={() => setShowModal(false)}>
+            Cancelar
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            fullWidth
+            onClick={handleCreate}
+            loading={isPending}
+          >
+            Criar Usuário
+          </Button>
+        </ModalActions>
+      </Modal>
     </>
   )
 }

@@ -1,10 +1,9 @@
-﻿import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { SignOutButton } from '@/components/sign-out-button'
 import { NotificationBell } from '@/components/notification-bell'
+import { PainelDesktopSidebar, PainelBottomNav } from '@/components/painel/PainelNav'
 import { markNotificationRead, markAllNotificationsRead } from './actions'
 
 export default async function PainelLayout({ children }: { children: React.ReactNode }) {
@@ -37,50 +36,15 @@ export default async function PainelLayout({ children }: { children: React.React
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-10 border-b bg-brand-dark px-6 py-3 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-6">
-          <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-brand">
-              TOP SITE
-            </p>
-            <p className="text-[10px] text-gray-400 -mt-0.5 uppercase tracking-wider">Painel do Cliente</p>
-          </div>
-          <nav className="flex items-center gap-1 text-sm">
-            <Link
-              href="/painel"
-              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
-            >
-              Início
-            </Link>
-            <Link
-              href="/painel/solicitacoes"
-              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
-            >
-              Solicitações
-            </Link>
-            <Link
-              href="/painel/upgrades"
-              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
-            >
-              Upgrades
-            </Link>
-            <Link
-              href="/painel/assinatura"
-              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
-            >
-              Assinatura
-            </Link>
-            <Link
-              href="/painel/indicacoes"
-              className="px-3 py-1.5 rounded-md text-gray-300 hover:bg-brand-dark-hover hover:text-white transition-colors"
-            >
-              Indicações
-            </Link>
-          </nav>
-        </div>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Desktop sidebar — hidden on mobile */}
+      <PainelDesktopSidebar userName={session.user.name ?? session.user.email ?? ''} />
 
-        <div className="flex items-center gap-3">
+      {/* Right column: header + content */}
+      <div className="flex-1 flex flex-col min-h-screen min-w-0">
+        {/* Mobile header — compact, only visible on small screens */}
+        <header className="sticky top-0 z-30 flex items-center justify-between bg-brand-dark px-4 py-3 md:hidden shadow-sm">
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-brand">TOP SITE</p>
           <NotificationBell
             unreadCount={unreadCount}
             notifications={notifications}
@@ -88,12 +52,29 @@ export default async function PainelLayout({ children }: { children: React.React
             onMarkAll={markAllNotificationsRead}
             allHref="/painel/notificacoes"
           />
-          <span className="text-sm text-gray-300">{session.user.name}</span>
-          <SignOutButton />
-        </div>
-      </header>
+        </header>
 
-      <main className="p-6">{children}</main>
+        {/* Desktop header — notification bell + user name, hidden on mobile */}
+        <header className="sticky top-0 z-30 hidden md:flex items-center justify-end gap-3 bg-white border-b border-gray-200 px-6 py-3 shadow-sm">
+          <NotificationBell
+            unreadCount={unreadCount}
+            notifications={notifications}
+            onMarkRead={markNotificationRead}
+            onMarkAll={markAllNotificationsRead}
+            allHref="/painel/notificacoes"
+            theme="light"
+          />
+          <span className="text-sm text-gray-600">{session.user.name}</span>
+        </header>
+
+        {/* Page content — extra bottom padding on mobile to clear the fixed bottom nav (72px) */}
+        <main className="flex-1 p-4 md:p-6 pb-24 md:pb-6">
+          {children}
+        </main>
+      </div>
+
+      {/* Mobile bottom navigation — hidden on desktop */}
+      <PainelBottomNav />
     </div>
   )
 }

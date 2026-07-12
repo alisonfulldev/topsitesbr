@@ -1,0 +1,28 @@
+{
+  "name": "TOP SITE — Painel do Cliente",
+  "short_name": "TOP SITE",
+  "description": "Gerencie seu site, acompanhe o status e solicite manutenções",
+  "start_url": "/painel",
+  "scope": "/painel",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0D0B1F",
+  "theme_color": "#0D0B1F",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["business", "productivity"]
+}

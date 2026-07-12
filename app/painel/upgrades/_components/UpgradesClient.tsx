@@ -2,6 +2,9 @@
 
 import { useState, useTransition } from 'react'
 import { purchaseProduct } from '../actions'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { EmptyState } from '@/components/ui/empty-state'
 
 export type ProductRow = {
   id: string
@@ -30,8 +33,28 @@ function fmt(value: number): string {
 }
 
 function daysLeft(isoDate: string): number {
-  const diff = new Date(isoDate).getTime() - Date.now()
-  return Math.max(0, Math.ceil(diff / 86_400_000))
+  return Math.max(0, Math.ceil((new Date(isoDate).getTime() - Date.now()) / 86_400_000))
+}
+
+const PRODUCT_META: Array<{ keywords: string[]; icon: string; benefit: string }> = [
+  { keywords: ['landing'], icon: '🚀', benefit: 'Converta mais visitantes em clientes' },
+  { keywords: ['institucional'], icon: '🏢', benefit: 'Presença profissional com múltiplas páginas' },
+  { keywords: ['loja', 'virtual'], icon: '🛒', benefit: 'Venda seus produtos direto pelo site' },
+  { keywords: ['logo', 'identidade'], icon: '🎨', benefit: 'Identidade visual que passa credibilidade imediata' },
+  { keywords: ['seo', 'google', 'posicion'], icon: '🔍', benefit: 'Apareça no Google quando buscarem pelo seu negócio' },
+  { keywords: ['tráfego', 'trafego', 'ads', 'campanha'], icon: '📈', benefit: 'Atraia clientes que ainda não te conhecem' },
+  { keywords: ['domínio', 'dominio'], icon: '🌐', benefit: 'Endereço próprio como seunegocio.com.br' },
+  { keywords: ['e-mail', 'email'], icon: '📧', benefit: 'voce@seunegocio.com.br — credibilidade desde o 1º contato' },
+  { keywords: ['whatsapp'], icon: '💬', benefit: 'Atendimento profissional com catálogo e métricas' },
+  { keywords: ['blog'], icon: '✍️', benefit: 'Conteúdo que atrai visitantes mês após mês' },
+]
+
+function getProductMeta(name: string): { icon: string; benefit: string } {
+  const lower = name.toLowerCase()
+  for (const meta of PRODUCT_META) {
+    if (meta.keywords.some((k) => lower.includes(k))) return meta
+  }
+  return { icon: '⚡', benefit: 'Potencialize sua presença online' }
 }
 
 function ProductCard({
@@ -44,8 +67,10 @@ function ProductCard({
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
+  const { icon, benefit } = getProductMeta(product.name)
   const hasDiscount = product.finalPrice < product.basePrice
   const isFree = product.finalPrice === 0
+  const hasPromo = !!product.promoTitle
 
   function handleBuy() {
     setError(null)
@@ -55,51 +80,49 @@ function ProductCard({
         setError(result.error)
         return
       }
-      if (result.paymentUrl) {
-        window.location.href = result.paymentUrl
-      }
+      if (result.paymentUrl) window.location.href = result.paymentUrl
     })
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 flex flex-col gap-3 hover:border-brand-200 transition-colors">
-      <div className="flex-1">
-        <p className="text-xs font-medium uppercase tracking-wide text-brand-text mb-1">
-          {product.type === 'upgrade_site' ? 'Upgrade de Site' : product.type === 'addon' ? 'Complemento' : 'Serviço'}
-        </p>
-        <h3 className="font-semibold text-gray-900 text-base">{product.name}</h3>
+    <div className="bg-white rounded-xl border border-gray-200 p-5 flex flex-col hover:border-brand-200 hover:shadow-sm transition-all">
+      {/* Icon */}
+      <div className="text-5xl mb-4">{icon}</div>
 
-        {product.promoTitle && (
-          <p className="mt-1 text-xs text-orange-600 font-medium">
-            Promoção: {product.promoTitle}
-            {product.promoDiscountLabel && ` — ${product.promoDiscountLabel}`}
-          </p>
-        )}
-        {!product.promoTitle && product.planDiscountPercent > 0 && (
-          <p className="mt-1 text-xs text-brand-text font-medium">
-            Seu plano {planName} dá {product.planDiscountPercent}% off
-          </p>
-        )}
+      {/* Title + promo badge */}
+      <div className="flex items-start gap-2 mb-1">
+        <h3 className="font-semibold text-gray-900 text-base leading-snug flex-1">{product.name}</h3>
+        {hasPromo && <Badge variant="orange">Promoção</Badge>}
       </div>
 
-      <div>
+      {/* Benefit phrase */}
+      <p className="text-sm text-gray-500 leading-snug mb-4 flex-1">{benefit}</p>
+
+      {/* Price */}
+      <div className="mb-4">
         {hasDiscount && (
           <p className="text-sm text-gray-400 line-through">R$ {fmt(product.basePrice)}</p>
         )}
         <p className="text-2xl font-bold text-gray-900">
           {isFree ? 'Gratuito' : `R$ ${fmt(product.finalPrice)}`}
         </p>
+        {hasPromo && product.promoDiscountLabel && (
+          <p className="text-xs text-orange-600 font-medium mt-0.5">
+            {product.promoDiscountLabel} de desconto
+          </p>
+        )}
+        {!hasPromo && product.planDiscountPercent > 0 && planName && (
+          <p className="text-xs text-brand-text font-medium mt-0.5">
+            {product.planDiscountPercent}% de desconto — plano {planName}
+          </p>
+        )}
       </div>
 
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-red-600 mb-3">{error}</p>}
 
-      <button
-        onClick={handleBuy}
-        disabled={isPending}
-        className="w-full py-2 rounded-lg bg-brand text-brand-dark text-sm font-semibold hover:bg-brand-hover disabled:opacity-50 transition-colors"
-      >
-        {isPending ? 'Processando…' : 'Comprar'}
-      </button>
+      <Button variant="conversion" size="md" fullWidth onClick={handleBuy} loading={isPending}>
+        Comprar
+      </Button>
     </div>
   )
 }
@@ -126,34 +149,31 @@ export function UpgradesClient({
             return (
               <div
                 key={promo.id}
-                className="rounded-xl bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 px-5 py-4 flex items-start gap-4"
+                className="rounded-xl bg-orange-50 border border-orange-200 px-5 py-4 flex items-start gap-4"
               >
-                <span className="text-2xl">🔥</span>
-                <div className="flex-1">
+                <span className="text-2xl shrink-0">🔥</span>
+                <div className="flex-1 min-w-0">
                   <p className="font-semibold text-orange-800">{promo.title}</p>
                   {promo.description && (
                     <p className="text-sm text-orange-700 mt-0.5">{promo.description}</p>
                   )}
-                  {promo.productName && (
-                    <p className="text-sm text-orange-600 mt-0.5">
-                      Válido para: <strong>{promo.productName}</strong>
-                      {' — '}
-                      {promo.discountType === 'percent'
-                        ? `${promo.discountValue}% de desconto`
-                        : `R$ ${fmt(promo.discountValue)} de desconto`}
-                    </p>
-                  )}
-                  {!promo.productName && (
-                    <p className="text-sm text-orange-600 mt-0.5">
-                      {promo.discountType === 'percent'
-                        ? `${promo.discountValue}% de desconto em todos os produtos`
-                        : `R$ ${fmt(promo.discountValue)} de desconto em todos os produtos`}
-                    </p>
-                  )}
+                  <p className="text-sm text-orange-600 mt-0.5">
+                    {promo.productName ? (
+                      <>
+                        Válido para: <strong>{promo.productName}</strong>
+                        {' — '}
+                      </>
+                    ) : (
+                      'Todos os produtos — '
+                    )}
+                    {promo.discountType === 'percent'
+                      ? `${promo.discountValue}% de desconto`
+                      : `R$ ${fmt(promo.discountValue)} de desconto`}
+                  </p>
                 </div>
-                <p className="text-xs text-orange-500 whitespace-nowrap">
-                  {days === 0 ? 'Último dia!' : `${days} dia${days !== 1 ? 's' : ''} restante${days !== 1 ? 's' : ''}`}
-                </p>
+                <Badge variant="orange">
+                  {days === 0 ? 'Último dia!' : `${days}d restante${days !== 1 ? 's' : ''}`}
+                </Badge>
               </div>
             )
           })}
@@ -163,7 +183,10 @@ export function UpgradesClient({
       {/* Upgrade de site */}
       {upgradeProducts.length > 0 && (
         <section>
-          <h3 className="text-base font-semibold text-gray-900 mb-3">Upgrade do seu site</h3>
+          <h3 className="text-base font-semibold text-gray-900 mb-1">Upgrade do seu site</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Evolua para um site mais completo e converta mais
+          </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {upgradeProducts.map((p) => (
               <ProductCard key={p.id} product={p} planName={planName} />
@@ -172,10 +195,13 @@ export function UpgradesClient({
         </section>
       )}
 
-      {/* Other services & addons */}
+      {/* Serviços e complementos */}
       {otherProducts.length > 0 && (
         <section>
-          <h3 className="text-base font-semibold text-gray-900 mb-3">Serviços e complementos</h3>
+          <h3 className="text-base font-semibold text-gray-900 mb-1">Serviços e complementos</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Ferramentas para crescer e profissionalizar sua presença online
+          </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {otherProducts.map((p) => (
               <ProductCard key={p.id} product={p} planName={planName} />
@@ -185,8 +211,8 @@ export function UpgradesClient({
       )}
 
       {products.length === 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 p-10 text-center text-sm text-gray-400">
-          Nenhum serviço disponível no momento.
+        <div className="bg-white rounded-xl border border-gray-200">
+          <EmptyState title="Nenhum serviço disponível no momento." className="py-8" />
         </div>
       )}
     </div>

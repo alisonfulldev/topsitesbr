@@ -1,7 +1,12 @@
 'use client'
 
 import { useState, useRef, useTransition } from 'react'
+import Link from 'next/link'
 import { createTicket } from '../actions'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
+import { EmptyState } from '@/components/ui/empty-state'
 
 // ── Static price table (mirrors the DB seed) ─────────────────────────────────
 const AVULSA_PRICE: Record<string, number> = {
@@ -115,6 +120,39 @@ const GROUP_LABEL: Record<string, string> = {
   fixo: 'Serviços Adicionais (sempre cobrados à parte)',
 }
 
+// ── Upsell hint ───────────────────────────────────────────────────────────────
+// Returns the upgrade suggestion when the selected alteration is avulsa.
+// nova_secao/nova_pagina are always paid regardless of plan — no upsell hint.
+type UpsellHint = { avulsaLabel: string; upgradeName: string; upgradePrice: string }
+
+function getUpsellHint(
+  type: string | null,
+  opt: OptionConfig | undefined,
+  plan: PlanInfo,
+): UpsellHint | null {
+  if (!type || !opt || opt.included || !opt.avulsaBase) return null
+  if (!['texto', 'imagem', 'texto_e_imagem'].includes(type)) return null
+
+  const avulsaFinal = opt.avulsaBase * (1 - plan.discountPercent / 100)
+  const avulsaLabel = `R$${avulsaFinal % 1 === 0 ? avulsaFinal.toFixed(0) : avulsaFinal.toFixed(2).replace('.', ',')}`
+
+  const basicoPlan = plan.monthlyChangesIncluded === 0
+  const plusPlan = plan.monthlyChangesIncluded === 1
+
+  if (basicoPlan) {
+    if (type === 'texto_e_imagem') {
+      return { avulsaLabel, upgradeName: 'Pro', upgradePrice: 'R$55/mês' }
+    }
+    return { avulsaLabel, upgradeName: 'Plus', upgradePrice: 'R$29/mês' }
+  }
+
+  if (plusPlan) {
+    return { avulsaLabel, upgradeName: 'Pro', upgradePrice: 'R$55/mês' }
+  }
+
+  return null
+}
+
 export function SolicitacaoForm({
   sites,
   plan,
@@ -135,6 +173,9 @@ export function SolicitacaoForm({
 
   const options = buildOptions(plan, monthlyUsed)
   const groups = ['correcao', 'alteracao', 'fixo'] as const
+
+  const selectedOption = options.find((o) => o.changeType === selectedType)
+  const upsellHint = getUpsellHint(selectedType, selectedOption, plan)
 
   const needsText =
     selectedType !== null &&
@@ -186,8 +227,8 @@ export function SolicitacaoForm({
 
   if (sites.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-8 text-center text-sm text-gray-500">
-        Nenhum site encontrado. Entre em contato com o suporte.
+      <div className="bg-white rounded-xl border border-gray-200">
+        <EmptyState title="Nenhum site encontrado. Entre em contato com o suporte." />
       </div>
     )
   }
@@ -212,27 +253,22 @@ export function SolicitacaoForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Site selector */}
       {sites.length > 1 && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Site</label>
-          <select
-            value={siteId}
-            onChange={(e) => setSiteId(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
-          >
-            {sites.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.siteUrl ?? s.siteType}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Select label="Site" value={siteId} onChange={(e) => setSiteId(e.target.value)}>
+          {sites.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.siteUrl ?? s.siteType}
+            </option>
+          ))}
+        </Select>
       )}
 
-      {/* Monthly usage banner (for plans with limit) */}
+      {/* Monthly usage banner */}
       {plan.monthlyChangesIncluded > 0 && (
         <div className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
           Alterações incluídas este mês:{' '}
-          <strong className={monthlyUsed >= plan.monthlyChangesIncluded ? 'text-red-600' : 'text-gray-900'}>
+          <strong
+            className={monthlyUsed >= plan.monthlyChangesIncluded ? 'text-red-600' : 'text-gray-900'}
+          >
             {monthlyUsed}/{plan.monthlyChangesIncluded} usada{monthlyUsed !== 1 ? 's' : ''}
           </strong>
         </div>
@@ -253,7 +289,7 @@ export function SolicitacaoForm({
                   {groupOptions.map((opt) => (
                     <label
                       key={opt.changeType}
-                      className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                      className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors min-h-[44px] ${
                         selectedType === opt.changeType
                           ? 'border-brand-200 bg-brand-50'
                           : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
@@ -292,31 +328,28 @@ export function SolicitacaoForm({
       {selectedType && (
         <div className="space-y-4 border-t border-gray-100 pt-5">
           {needsText && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {selectedType === 'correcao'
+            <Textarea
+              label={
+                selectedType === 'correcao'
                   ? 'Descreva o que precisa ser corrigido'
                   : selectedType === 'nova_secao' || selectedType === 'nova_pagina'
                     ? 'Descreva o conteúdo desejado'
-                    : 'Novo conteúdo de texto'}
-                <span className="text-red-500 ml-0.5">*</span>
-              </label>
-              <textarea
-                value={textContent}
-                onChange={(e) => setTextContent(e.target.value)}
-                rows={4}
-                placeholder={
-                  selectedType === 'correcao'
-                    ? 'Ex: o telefone de contato está errado, o link do WhatsApp está quebrado...'
-                    : selectedType === 'nova_secao'
-                      ? 'Descreva o conteúdo da nova seção: título, texto, imagens que serão incluídas...'
-                      : selectedType === 'nova_pagina'
-                        ? 'Descreva o conteúdo da nova página: objetivo, texto, seções...'
-                        : 'Cole aqui o texto exato que deve aparecer no site...'
-                }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand resize-none"
-              />
-            </div>
+                    : 'Novo conteúdo de texto'
+              }
+              required
+              value={textContent}
+              onChange={(e) => setTextContent(e.target.value)}
+              rows={4}
+              placeholder={
+                selectedType === 'correcao'
+                  ? 'Ex: o telefone de contato está errado, o link do WhatsApp está quebrado...'
+                  : selectedType === 'nova_secao'
+                    ? 'Descreva o conteúdo da nova seção: título, texto, imagens que serão incluídas...'
+                    : selectedType === 'nova_pagina'
+                      ? 'Descreva o conteúdo da nova página: objetivo, texto, seções...'
+                      : 'Cole aqui o texto exato que deve aparecer no site...'
+              }
+            />
           )}
 
           {(needsImage || imageOptional) && (
@@ -324,9 +357,7 @@ export function SolicitacaoForm({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Imagem
                 {needsImage && !imageOptional && <span className="text-red-500 ml-0.5">*</span>}
-                {imageOptional && (
-                  <span className="text-gray-400 text-xs ml-1">(opcional)</span>
-                )}
+                {imageOptional && <span className="text-gray-400 text-xs ml-1">(opcional)</span>}
               </label>
               <input
                 type="file"
@@ -345,19 +376,47 @@ export function SolicitacaoForm({
         </div>
       )}
 
+      {/* Upsell comparison hint — presente mas não agressivo, não bloqueia o fluxo */}
+      {upsellHint && (
+        <div className="rounded-lg bg-gray-50 border border-gray-200 px-4 py-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+          <span className="text-gray-600">
+            Esta alteração avulsa:{' '}
+            <strong className="text-gray-900">{upsellHint.avulsaLabel}</strong>
+          </span>
+          <span className="text-gray-300 hidden sm:inline">·</span>
+          <span className="text-gray-600">
+            No plano{' '}
+            <strong className="text-gray-900">
+              {upsellHint.upgradeName} ({upsellHint.upgradePrice})
+            </strong>
+            : inclusa
+          </span>
+          <Link
+            href="/painel/assinatura"
+            className="text-xs text-brand-text hover:underline font-medium sm:ml-auto"
+          >
+            Trocar de plano →
+          </Link>
+        </div>
+      )}
+
       {error && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5">
           {error}
         </p>
       )}
 
-      <button
+      {/* Ação primária neutra (enviar form ≠ conversão comercial) */}
+      <Button
         type="submit"
-        disabled={isPending || !selectedType}
-        className="w-full py-3 rounded-xl bg-brand text-brand-dark font-semibold text-sm hover:bg-brand-hover disabled:opacity-50 transition-colors"
+        variant="primary"
+        size="lg"
+        fullWidth
+        loading={isPending}
+        disabled={!selectedType}
       >
-        {isPending ? 'Enviando…' : 'Enviar solicitação'}
-      </button>
+        Enviar solicitação
+      </Button>
     </form>
   )
 }

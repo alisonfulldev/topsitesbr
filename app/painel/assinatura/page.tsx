@@ -57,6 +57,8 @@ export default async function PainelAssinaturaPage() {
           monthlyChangesIncluded: p.monthlyChangesIncluded,
           prioritySupport: p.prioritySupport,
           allowedChangeTypes: p.allowedChangeTypes,
+          changeDeadlineDays: p.changeDeadlineDays,
+          discountPercent: p.discountPercent,
         }))}
       />
     </div>

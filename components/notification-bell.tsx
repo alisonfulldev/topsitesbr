@@ -28,12 +28,14 @@ export function NotificationBell({
   onMarkRead,
   onMarkAll,
   allHref,
+  theme = 'dark',
 }: {
   unreadCount: number
   notifications: NotifItem[]
   onMarkRead: (id: string) => Promise<void>
   onMarkAll: () => Promise<void>
   allHref: string
+  theme?: 'dark' | 'light'
 }) {
   const [open, setOpen] = useState(false)
   const [notifs, setNotifs] = useState(initialNotifs)
@@ -65,7 +67,11 @@ export function NotificationBell({
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="relative p-2 rounded-md text-gray-300 hover:text-white hover:bg-brand-dark-hover transition-colors"
+        className={`relative p-2 rounded-md transition-colors ${
+          theme === 'light'
+            ? 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+            : 'text-gray-300 hover:text-white hover:bg-brand-dark-hover'
+        }`}
         aria-label={`Notificações — ${count} não lida${count !== 1 ? 's' : ''}`}
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

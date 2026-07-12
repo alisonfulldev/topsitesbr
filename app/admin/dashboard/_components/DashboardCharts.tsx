@@ -40,7 +40,7 @@ export function DashboardCharts({
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 formatter={(v: any) => [`${v} cliente${v !== 1 ? 's' : ''}`, 'Clientes']}
               />
-              <Bar dataKey="count" name="Clientes" fill="#6366f1" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="count" name="Clientes" fill="#0D0B1F" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -71,7 +71,7 @@ export function DashboardCharts({
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter={(v: any) => [`${v} cliente${v !== 1 ? 's' : ''}`, 'Total']}
             />
-            <Bar dataKey="value" name="Clientes" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+            <Bar dataKey="value" name="Clientes" fill="#FFD100" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>
         <div className="mt-3 space-y-1">

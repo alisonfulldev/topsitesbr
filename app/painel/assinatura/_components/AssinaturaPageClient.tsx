@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { clientChangePlan } from '../actions'
+import { Button } from '@/components/ui/button'
 
 type PlanInfo = {
   id: string
@@ -10,6 +11,8 @@ type PlanInfo = {
   monthlyChangesIncluded: number
   prioritySupport: boolean
   allowedChangeTypes: string
+  changeDeadlineDays: number
+  discountPercent: number
 }
 
 type SubscriptionInfo = {
@@ -38,12 +41,8 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('pt-BR')
 }
 
-function formatPrice(price: number) {
-  return `R$ ${price.toFixed(2).replace('.', ',')}`
-}
-
 function describeAllowedTypes(types: string, monthlyChanges: number): string {
-  if (monthlyChanges === 0) return 'Nenhuma alteração inclusa'
+  if (monthlyChanges === 0) return '—'
   const map: Record<string, string> = {
     texto: 'Texto',
     imagem: 'Imagem',
@@ -56,14 +55,79 @@ function describeAllowedTypes(types: string, monthlyChanges: number): string {
     .join(' ou ')
 }
 
+type BenefitRow = {
+  label: string
+  detail: string
+  available: boolean
+}
+
+function getPlanBenefits(plan: PlanInfo): BenefitRow[] {
+  const none = plan.monthlyChangesIncluded === 0
+  const hasVisitReport = plan.monthlyChangesIncluded >= 1
+  const hasFullReport = plan.monthlyChangesIncluded >= 2
+  const hasSemestral = plan.monthlyChangesIncluded >= 2
+
+  return [
+    {
+      label: 'Site no ar + SSL + monitoramento',
+      detail: 'incluso',
+      available: true,
+    },
+    {
+      label: 'Alterações de conteúdo/mês',
+      detail: none
+        ? 'nenhuma inclusa'
+        : `${plan.monthlyChangesIncluded} — ${describeAllowedTypes(plan.allowedChangeTypes, plan.monthlyChangesIncluded)}`,
+      available: !none,
+    },
+    {
+      label: 'Prazo de execução',
+      detail: `até ${plan.changeDeadlineDays} dia${plan.changeDeadlineDays !== 1 ? 's' : ''}`,
+      available: true,
+    },
+    {
+      label: 'Correções ilimitadas (grátis)',
+      detail: 'sempre incluso',
+      available: true,
+    },
+    {
+      label: 'Relatório de visitas',
+      detail: hasFullReport ? 'completo (origem, páginas)' : hasVisitReport ? 'básico (mensal)' : '—',
+      available: hasVisitReport,
+    },
+    {
+      label: 'Suporte via WhatsApp',
+      detail: plan.prioritySupport ? 'incluso' : '—',
+      available: plan.prioritySupport,
+    },
+    {
+      label: 'Desconto em avulsos e upgrades',
+      detail: plan.discountPercent > 0 ? `${plan.discountPercent}% de desconto` : '—',
+      available: plan.discountPercent > 0,
+    },
+    {
+      label: 'Revisão semestral do site',
+      detail: hasSemestral ? 'incluso' : '—',
+      available: hasSemestral,
+    },
+    {
+      label: 'Prioridade na fila de atendimento',
+      detail: plan.prioritySupport && hasSemestral ? 'incluso' : '—',
+      available: plan.prioritySupport && hasSemestral,
+    },
+  ]
+}
+
 function PlanCard({
   plan,
   isCurrent,
+  isPopular,
   subscription,
   onSuccess,
 }: {
   plan: PlanInfo
   isCurrent: boolean
+  isPopular: boolean
   subscription: SubscriptionInfo
   onSuccess: (planName: string) => void
 }) {
@@ -73,6 +137,8 @@ function PlanCard({
 
   const isUpgrade = plan.price > subscription.planPrice
   const isDowngrade = plan.price < subscription.planPrice
+  const benefits = getPlanBenefits(plan)
+  const showPopularBadge = isPopular && !isCurrent
 
   function handleChangePlan() {
     setError(null)
@@ -91,98 +157,103 @@ function PlanCard({
 
   return (
     <div
-      className={`relative flex flex-col rounded-xl border p-5 transition-shadow ${
+      className={`relative flex flex-col rounded-2xl p-5 transition-all ${
         isCurrent
-          ? 'border-brand-200 bg-brand-50 shadow-sm'
-          : 'border-gray-200 bg-white hover:shadow-sm'
+          ? 'border-2 border-brand bg-brand-50'
+          : isPopular
+            ? 'border-2 border-gray-900 bg-white shadow-md'
+            : 'border border-gray-200 bg-white'
       }`}
     >
-      {isCurrent && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand text-brand-dark text-xs font-semibold px-3 py-0.5 rounded-full">
-          Seu Plano
-        </span>
+      {/* Badge — "Seu plano" takes precedence over "Mais popular" */}
+      {(isCurrent || showPopularBadge) && (
+        <div className="absolute -top-3.5 inset-x-0 flex justify-center">
+          <span
+            className={`text-xs font-bold px-4 py-1 rounded-full ${
+              isCurrent
+                ? 'bg-brand text-brand-dark'
+                : 'bg-gray-900 text-white'
+            }`}
+          >
+            {isCurrent ? 'Seu plano atual' : 'Mais popular'}
+          </span>
+        </div>
       )}
 
-      <div className="mb-4">
-        <h3 className="text-base font-semibold text-gray-900">{plan.name}</h3>
-        <p className="text-2xl font-bold text-gray-900 mt-1">
-          {formatPrice(plan.price)}
-          <span className="text-sm font-normal text-gray-500">/mês</span>
+      {/* Price */}
+      <div className="mb-5 pt-1">
+        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">
+          {plan.name}
         </p>
+        <div className="flex items-baseline gap-1">
+          <span className="text-3xl font-bold text-gray-900">R${plan.price}</span>
+          <span className="text-sm text-gray-500">/mês</span>
+        </div>
       </div>
 
-      <ul className="space-y-2 flex-1 mb-5">
-        <li className="flex items-start gap-2 text-sm text-gray-700">
-          <span className={`mt-0.5 shrink-0 ${plan.monthlyChangesIncluded > 0 ? 'text-brand-text' : 'text-gray-300'}`}>
-            {plan.monthlyChangesIncluded > 0 ? '✓' : '—'}
-          </span>
-          <span>
-            {plan.monthlyChangesIncluded === 0
-              ? 'Sem alterações inclusas'
-              : `${plan.monthlyChangesIncluded} alteração/mês`}
-          </span>
-        </li>
-
-        {plan.allowedChangeTypes && (
-          <li className="flex items-start gap-2 text-sm text-gray-700">
-            <span className="mt-0.5 text-brand-text shrink-0">✓</span>
-            <span>{describeAllowedTypes(plan.allowedChangeTypes, plan.monthlyChangesIncluded)}</span>
+      {/* Benefits */}
+      <ul className="space-y-2.5 flex-1 mb-6">
+        {benefits.map((b) => (
+          <li key={b.label} className="flex items-start gap-2 text-sm">
+            <span
+              className={`mt-0.5 shrink-0 font-bold text-xs w-4 text-center leading-4 ${
+                b.available ? 'text-green-600' : 'text-gray-300'
+              }`}
+            >
+              {b.available ? '✓' : '—'}
+            </span>
+            <span className={`flex-1 leading-snug ${b.available ? 'text-gray-700' : 'text-gray-400'}`}>
+              {b.label}
+              {b.available && b.detail !== 'incluso' && b.detail !== 'sempre incluso' && (
+                <span className="ml-1 text-xs text-gray-400">({b.detail})</span>
+              )}
+            </span>
           </li>
-        )}
-
-        <li className="flex items-start gap-2 text-sm text-gray-700">
-          <span className={`mt-0.5 shrink-0 ${plan.prioritySupport ? 'text-brand-text' : 'text-gray-300'}`}>
-            {plan.prioritySupport ? '✓' : '—'}
-          </span>
-          <span className={plan.prioritySupport ? '' : 'text-gray-400'}>
-            Atendimento prioritário
-          </span>
-        </li>
-
-        <li className="flex items-start gap-2 text-sm text-gray-700">
-          <span className="mt-0.5 text-brand-text shrink-0">✓</span>
-          <span>Hospedagem, SSL e monitoramento</span>
-        </li>
+        ))}
       </ul>
 
+      {/* Blocked downgrade */}
+      {blockedUntil && (
+        <div className="mb-3 bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2.5 text-xs text-yellow-800">
+          <p className="font-semibold mb-0.5">Downgrade bloqueado por carência</p>
+          <p>
+            Disponível a partir de <strong>{formatDate(blockedUntil)}</strong>.
+          </p>
+        </div>
+      )}
+
+      {/* Error */}
       {error && (
-        <p className="text-xs text-red-600 mb-3 bg-red-50 border border-red-200 rounded px-2 py-1.5">
+        <p className="text-xs text-red-600 mb-3 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
           {error}
         </p>
       )}
 
-      {blockedUntil && (
-        <div className="mb-3 bg-yellow-50 border border-yellow-200 rounded px-2 py-2 text-xs text-yellow-800">
-          <p className="font-medium mb-0.5">Downgrade bloqueado por carência</p>
-          <p>
-            Disponível a partir de <strong>{formatDate(blockedUntil)}</strong>.
-          </p>
-          <p className="mt-1 text-yellow-600">
-            Entre em contato conosco se precisar de ajuda.
-          </p>
-        </div>
-      )}
-
+      {/* CTA */}
       {isCurrent ? (
-        <div className="h-8 flex items-center justify-center text-xs text-brand-text font-medium">
-          Plano atual
+        <div className="h-9 flex items-center justify-center">
+          <span className="text-xs text-gray-500 font-medium">Plano atual</span>
         </div>
       ) : isUpgrade ? (
-        <button
+        <Button
+          variant="conversion"
+          size="md"
+          fullWidth
           onClick={handleChangePlan}
-          disabled={isPending}
-          className="w-full py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 disabled:opacity-50"
+          loading={isPending}
         >
-          {isPending ? 'Processando…' : '↑ Fazer Upgrade'}
-        </button>
+          Fazer upgrade
+        </Button>
       ) : isDowngrade ? (
-        <button
+        <Button
+          variant="secondary"
+          size="sm"
+          fullWidth
           onClick={handleChangePlan}
-          disabled={isPending}
-          className="w-full py-2 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-50"
+          loading={isPending}
         >
-          {isPending ? 'Processando…' : '↓ Fazer Downgrade'}
-        </button>
+          Fazer downgrade
+        </Button>
       ) : null}
     </div>
   )
@@ -201,18 +272,20 @@ export function AssinaturaPageClient({
     <div className="space-y-6">
       {successMsg && (
         <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-800">
-          {successMsg}
+          ✓ {successMsg}
         </div>
       )}
 
-      {/* Current status */}
+      {/* Current subscription summary */}
       <div className="bg-white rounded-xl border border-gray-200 p-5">
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">Sua Assinatura</h3>
+        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
+          Sua assinatura
+        </p>
         <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
           <div>
             <span className="text-gray-500">Plano: </span>
             <span className="font-medium text-gray-900">
-              {subscription.planName} — {formatPrice(subscription.planPrice)}/mês
+              {subscription.planName} — R${subscription.planPrice}/mês
             </span>
           </div>
           <div>
@@ -238,15 +311,16 @@ export function AssinaturaPageClient({
         </div>
       </div>
 
-      {/* Plans */}
+      {/* Plan comparison cards */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">Trocar de Plano</h3>
-        <div className="grid grid-cols-3 gap-4">
-          {plans.map((plan) => (
+        <p className="text-sm font-semibold text-gray-700 mb-5">Comparar planos</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-4">
+          {plans.map((plan, i) => (
             <PlanCard
               key={plan.id}
               plan={plan}
               isCurrent={subscription.planId === plan.id}
+              isPopular={i === 1}
               subscription={subscription}
               onSuccess={(name) => setSuccessMsg(`Plano alterado para ${name} com sucesso.`)}
             />
@@ -255,7 +329,8 @@ export function AssinaturaPageClient({
       </div>
 
       <p className="text-xs text-gray-400">
-        Downgrade disponível após 3 meses no plano atual. Para assistência, entre em contato pelo WhatsApp.
+        Downgrade disponível após 3 meses no plano atual. Para assistência, entre em contato pelo
+        WhatsApp.
       </p>
     </div>
   )

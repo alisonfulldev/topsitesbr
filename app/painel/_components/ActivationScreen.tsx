@@ -1,7 +1,10 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import { activateBasicPlan, markRetentionShown, requestZipUploadNotification } from '../actions'
+import { Button } from '@/components/ui/button'
+import { Modal, ModalActions } from '@/components/ui/modal'
+import { BottomSheet } from '@/components/ui/bottom-sheet'
 
 type Props = {
   siteId: string
@@ -9,11 +12,27 @@ type Props = {
   retentionAlreadyShown: boolean
 }
 
+const PLAN_BENEFITS = [
+  'Hospedagem gerenciada — zero configuração',
+  'SSL gratuito renovado automaticamente',
+  'Monitoramento 24h do site',
+  'Suporte via painel sempre que precisar',
+]
+
 export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown }: Props) {
-  const [showModal, setShowModal] = useState(false)
+  const [showRetention, setShowRetention] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [zipMsg, setZipMsg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    setIsMobile(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   function handleActivate() {
     setError(null)
@@ -38,109 +57,190 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown }:
       })
       return
     }
-
     if (!retentionAlreadyShown) {
       startTransition(() => markRetentionShown())
-      setShowModal(true)
+      setShowRetention(true)
     } else {
       window.location.href = filesZipUrl
     }
   }
 
-  function handleModalActivate() {
-    setShowModal(false)
+  function handleRetentionActivate() {
+    setShowRetention(false)
     handleActivate()
   }
 
-  function handleModalDownload() {
-    setShowModal(false)
+  function handleRetentionDownload() {
+    setShowRetention(false)
     if (filesZipUrl) window.location.href = filesZipUrl
   }
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-[calc(100vh-57px)]">
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-10 max-w-lg w-full text-center">
-          <div className="w-14 h-14 rounded-full bg-brand-100 flex items-center justify-center text-2xl mx-auto mb-5">
-            🎉
+      {/* Dark landing container */}
+      <div className="bg-brand-dark rounded-2xl overflow-hidden">
+        {/* Hero */}
+        <div className="text-center px-6 pt-10 pb-8">
+          <div className="text-5xl mb-4">🎉</div>
+          <h1 className="text-2xl font-bold text-white mb-2 leading-tight">
+            Seu site está pronto!
+          </h1>
+          <p className="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">
+            Escolha como quer colocá-lo no ar.
+          </p>
+        </div>
+
+        {/* Option cards — stacked on mobile, side-by-side on sm+ */}
+        <div className="px-4 pb-6 flex flex-col sm:flex-row gap-4">
+          {/* Card 1: Publish */}
+          <div className="bg-white rounded-xl p-5 flex flex-col flex-1">
+            <div className="flex items-baseline gap-1.5 mb-3">
+              <span className="text-2xl font-bold text-gray-900">R$17</span>
+              <span className="text-xs text-gray-500 font-medium">/mês</span>
+              <span className="ml-auto text-xs bg-brand text-brand-dark font-semibold px-2 py-0.5 rounded-full">
+                Recomendado
+              </span>
+            </div>
+
+            <h2 className="text-base font-bold text-gray-900 mb-1">Publicar meu site</h2>
+            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+              Sem contrato de fidelidade. Cancele quando quiser.
+            </p>
+
+            <ul className="space-y-2 mb-5 flex-1">
+              {PLAN_BENEFITS.map((b) => (
+                <li key={b} className="flex items-center gap-2 text-xs text-gray-700">
+                  <svg
+                    className="w-3.5 h-3.5 text-green-500 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  {b}
+                </li>
+              ))}
+            </ul>
+
+            {error && (
+              <p className="text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
+                {error}
+              </p>
+            )}
+
+            <Button
+              variant="conversion"
+              size="md"
+              fullWidth
+              onClick={handleActivate}
+              loading={isPending}
+            >
+              Ativar por R$17/mês
+            </Button>
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">Seu site está pronto!</h1>
-
-          <p className="text-gray-600 text-sm leading-relaxed mb-8">
-            Para publicá-lo no ar com hospedagem, SSL e suporte, ative o{' '}
-            <strong className="text-gray-900">Plano Site no Ar por R$17/mês</strong>. Se preferir
-            não assinar, você pode baixar os arquivos do site e hospedar por conta própria, sem
-            custo adicional.
-          </p>
-
-          {error && (
-            <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-2.5 mb-5">
-              {error}
+          {/* Card 2: Download */}
+          <div className="bg-brand-dark-hover border border-brand-dark-border rounded-xl p-5 flex flex-col flex-1">
+            <div className="text-2xl mb-3">📦</div>
+            <h2 className="text-base font-bold text-white mb-1">Baixar os arquivos</h2>
+            <p className="text-xs text-gray-400 mb-5 leading-relaxed flex-1">
+              Receba o zip com todos os arquivos e hospede onde e como quiser.
             </p>
-          )}
 
-          {zipMsg && (
-            <p className="text-blue-700 text-sm bg-blue-50 border border-blue-200 rounded-lg px-4 py-2.5 mb-5">
-              {zipMsg}
-            </p>
-          )}
+            {zipMsg && (
+              <p className="text-blue-300 text-xs bg-blue-950/40 border border-blue-900/50 rounded-lg px-3 py-2 mb-3">
+                {zipMsg}
+              </p>
+            )}
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={handleActivate}
-              disabled={isPending}
-              className="flex-1 py-3 px-5 rounded-xl bg-brand text-brand-dark font-semibold text-sm hover:bg-brand-hover disabled:opacity-50 transition-colors shadow-sm"
-            >
-              {isPending ? 'Processando…' : 'Ativar por R$17/mês'}
-            </button>
-            <button
+            <Button
+              variant="secondary"
+              size="md"
+              fullWidth
               onClick={handleDownloadClick}
               disabled={isPending || !!zipMsg}
-              className="flex-1 py-3 px-5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 disabled:opacity-50 transition-colors"
             >
-              Baixar arquivos do site (grátis)
-            </button>
+              {zipMsg ? 'Aguardando arquivos…' : 'Baixar arquivos (grátis)'}
+            </Button>
           </div>
-
-          <p className="text-xs text-gray-400 mt-5">
-            Ambas as opções estão disponíveis a qualquer momento. Você pode ativar o plano depois,
-            quando quiser.
-          </p>
         </div>
+
+        <p className="text-center text-xs text-gray-600 pb-6 px-4">
+          Você pode ativar o plano a qualquer momento, mesmo depois de baixar os arquivos.
+        </p>
       </div>
 
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-3">
-              Tem certeza que não quer o site no ar por R$17/mês?
-            </h2>
-            <p className="text-sm text-gray-600 leading-relaxed mb-6">
-              Só pra você comparar antes de decidir: uma hospedagem mensal sem fidelidade custa de
-              R$40 a R$70 por mês nas grandes empresas — e os planos baratos que você vê anunciados
-              exigem contrato de 2 a 4 anos pagos adiantado. Aqui são R$17 por mês, sem contrato de
-              permanência, com hospedagem, SSL, monitoramento e suporte inclusos. Você não precisa
-              configurar nada: a gente cuida de tudo.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={handleModalActivate}
-                disabled={isPending}
-                className="flex-1 py-2.5 px-4 rounded-xl bg-brand text-brand-dark text-sm font-semibold hover:bg-brand-hover disabled:opacity-50 transition-colors"
-              >
-                Quero ativar por R$17/mês
-              </button>
-              <button
-                onClick={handleModalDownload}
-                disabled={isPending}
-                className="flex-1 py-2.5 px-4 rounded-xl border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-50 disabled:opacity-50 transition-colors"
-              >
-                Não, quero apenas baixar os arquivos
-              </button>
-            </div>
+      {/* Retention popup — BottomSheet on mobile, Modal on desktop */}
+      {isMobile ? (
+        <BottomSheet
+          open={showRetention}
+          onClose={() => setShowRetention(false)}
+          title="Tem certeza que não quer o site no ar?"
+        >
+          <p className="text-sm text-gray-600 leading-relaxed mb-3">
+            Só pra você comparar: hospedagem mensal{' '}
+            <strong className="text-gray-900">sem fidelidade</strong> custa de R$40 a R$70 nas
+            grandes empresas — os planos baratos exigem contrato de 2 a 4 anos adiantado.
+          </p>
+          <p className="text-sm text-gray-600 leading-relaxed mb-6">
+            Aqui são <strong className="text-gray-900">R$17/mês, sem contrato</strong>, com
+            hospedagem, SSL, monitoramento e suporte. A gente cuida de tudo.
+          </p>
+          <div className="flex flex-col gap-3">
+            <Button
+              variant="conversion"
+              size="md"
+              fullWidth
+              onClick={handleRetentionActivate}
+              loading={isPending}
+            >
+              Quero ativar por R$17/mês
+            </Button>
+            <Button
+              variant="ghost"
+              size="md"
+              fullWidth
+              onClick={handleRetentionDownload}
+              disabled={isPending}
+            >
+              Não, quero apenas baixar os arquivos
+            </Button>
           </div>
-        </div>
+        </BottomSheet>
+      ) : (
+        <Modal
+          open={showRetention}
+          onClose={() => setShowRetention(false)}
+          title="Tem certeza que não quer o site no ar por R$17/mês?"
+          description="Só pra você comparar antes de decidir: uma hospedagem mensal sem fidelidade custa de R$40 a R$70 nas grandes empresas — os planos baratos exigem contrato de 2 a 4 anos pagos adiantado. Aqui são R$17 por mês, sem contrato de permanência, com hospedagem, SSL, monitoramento e suporte inclusos. A gente cuida de tudo."
+        >
+          <ModalActions>
+            <Button
+              variant="conversion"
+              size="md"
+              fullWidth
+              onClick={handleRetentionActivate}
+              loading={isPending}
+            >
+              Quero ativar por R$17/mês
+            </Button>
+            <Button
+              variant="ghost"
+              size="md"
+              fullWidth
+              onClick={handleRetentionDownload}
+              disabled={isPending}
+            >
+              Não, quero apenas baixar os arquivos
+            </Button>
+          </ModalActions>
+        </Modal>
       )}
     </>
   )

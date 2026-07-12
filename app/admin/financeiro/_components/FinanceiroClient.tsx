@@ -66,7 +66,7 @@ function fmtPct(n: number) {
   return `${n.toFixed(1)}%`
 }
 
-const PIE_COLORS = ['#8b5cf6', '#3b82f6', '#10b981', '#6b7280']
+const PIE_COLORS = ['#0D0B1F', '#FFD100', '#2D2850', '#6b7280']
 const COST_LABELS: Record<string, string> = {
   ia: 'IA',
   trafego_pago: 'Tráfego Pago',
@@ -104,7 +104,7 @@ function PeriodSelector({
           onClick={() => navigate(opt.value)}
           className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
             period === opt.value
-              ? 'bg-brand text-brand-dark'
+              ? 'bg-gray-900 text-white'
               : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50'
           }`}
         >
@@ -134,7 +134,7 @@ function PeriodSelector({
           }}
           className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
             period === 'custom'
-              ? 'bg-brand text-brand-dark'
+              ? 'bg-gray-900 text-white'
               : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50'
           }`}
         >
@@ -158,18 +158,18 @@ function KpiCard({
 }) {
   return (
     <div
-      className={`rounded-lg border p-4 ${highlight ? 'bg-brand border-brand' : 'bg-white border-gray-200'}`}
+      className={`rounded-lg border p-4 ${highlight ? 'bg-brand-dark border-brand-dark' : 'bg-white border-gray-200'}`}
     >
       <p
-        className={`text-xs font-medium uppercase tracking-wide ${highlight ? 'text-gray-700' : 'text-gray-500'}`}
+        className={`text-xs font-medium uppercase tracking-wide ${highlight ? 'text-gray-400' : 'text-gray-500'}`}
       >
         {label}
       </p>
-      <p className={`text-2xl font-bold mt-1 ${highlight ? 'text-brand-dark' : 'text-gray-900'}`}>
+      <p className={`text-2xl font-bold mt-1 ${highlight ? 'text-white' : 'text-gray-900'}`}>
         {value}
       </p>
       {sub && (
-        <p className={`text-xs mt-0.5 ${highlight ? 'text-gray-600' : 'text-gray-400'}`}>{sub}</p>
+        <p className={`text-xs mt-0.5 ${highlight ? 'text-gray-300' : 'text-gray-400'}`}>{sub}</p>
       )}
     </div>
   )
@@ -332,13 +332,13 @@ export function FinanceiroClient({
                   formatter={(v: any, name: any) => [fmtBRL(v), name]}
                 />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="subscriptions" name="Assinaturas" stackId="a" fill="#6366f1" />
-                <Bar dataKey="upsells" name="Upsells" stackId="a" fill="#8b5cf6" />
+                <Bar dataKey="subscriptions" name="Assinaturas" stackId="a" fill="#0D0B1F" />
+                <Bar dataKey="upsells" name="Upsells" stackId="a" fill="#2D2850" />
                 <Bar
                   dataKey="maintenance"
                   name="Manutenção"
                   stackId="a"
-                  fill="#a78bfa"
+                  fill="#FFD100"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -413,7 +413,7 @@ export function FinanceiroClient({
                 type="monotone"
                 dataKey="mrr"
                 name="MRR"
-                stroke="#6366f1"
+                stroke="#FFD100"
                 strokeWidth={2}
                 dot={{ r: 3 }}
                 activeDot={{ r: 5 }}
