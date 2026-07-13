@@ -169,7 +169,6 @@ export default async function PainelPage() {
         planActivatedAt: subscription.planActivatedAt.toISOString(),
         plan: {
           monthlyChangesIncluded: subscription.plan.monthlyChangesIncluded,
-          prioritySupport: subscription.plan.prioritySupport,
           allowedChangeTypes: subscription.plan.allowedChangeTypes,
           changeDeadlineDays: subscription.plan.changeDeadlineDays,
           discountPercent: subscription.plan.discountPercent,

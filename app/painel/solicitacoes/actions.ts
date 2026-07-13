@@ -161,8 +161,6 @@ export async function createTicket(
     if (isExtraPaid) productName = PRODUCT_NAME[changeType]
   }
 
-  const isPriority = plan.prioritySupport
-
   // ── 6. Create Ticket ─────────────────────────────────────────────────────
   const ticket = await prisma.ticket.create({
     data: {
@@ -173,7 +171,7 @@ export async function createTicket(
       attachmentUrl,
       status: 'open',
       isExtraPaid,
-      isPriority,
+      isPriority: false,
     },
   })
 
@@ -235,7 +233,7 @@ export async function createTicket(
     notifMessage = `Sua solicitação de "${label}" foi recebida e está incluída no seu plano. Prazo de execução: até ${prazo} dia${prazo !== 1 ? 's' : ''} útil${prazo !== 1 ? 'is' : ''}.`
   }
 
-  await sendNotification(clientId, `Solicitação recebida: ${label}`, notifMessage)
+  await sendNotification(clientId, `Solicitação recebida: ${label}`, notifMessage, 'painel', 'ticket-received')
 
   revalidatePath('/painel/solicitacoes')
   revalidatePath('/painel')

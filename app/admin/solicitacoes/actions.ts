@@ -50,6 +50,8 @@ export async function updateTicketStatus(
       ticket.client.id,
       'Solicitação concluída',
       `Sua solicitação de "${label}" foi concluída. Confira as alterações no seu site${siteRef ? ` (${siteRef})` : ''}.`,
+      'painel',
+      'ticket-done',
     )
   }
 

@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { sendNotification } from '@/lib/notifications'
 
 export async function handlePaymentReceived(chargeId: string): Promise<{
   ok: boolean
@@ -30,7 +31,7 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
   })
 
   if (!invoice) {
-    // Try to find an Order (single charge — upsell / ticket avulso) with this chargeId
+    // Tenta encontrar uma Order (cobrança avulsa — upsell / ticket extra)
     const order = await prisma.order.findFirst({
       where: { asaasChargeId: chargeId },
       include: {
@@ -43,28 +44,23 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
       return { ok: false, message: `Cobrança não encontrada: ${chargeId}` }
     }
 
-    await prisma.$transaction(async (tx) => {
-      await tx.order.update({
-        where: { id: order.id },
-        data: { status: 'paid' },
-      })
-      await tx.notification.create({
-        data: {
-          clientId: order.client.id,
-          title: 'Compra confirmada',
-          message: `Seu pedido de "${order.product.name}" foi confirmado. Em breve entraremos em contato para prosseguir.`,
-          channel: 'painel',
-        },
-      })
-      await tx.notification.create({
-        data: {
-          clientId: null,
-          title: `Novo pedido: ${order.product.name}`,
-          message: `Cliente ${order.client.name} comprou "${order.product.name}". Verifique e execute o serviço.`,
-          channel: 'painel',
-        },
-      })
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { status: 'paid' },
     })
+
+    await sendNotification(
+      order.client.id,
+      'Compra confirmada',
+      `Seu pedido de "${order.product.name}" foi confirmado. Em breve entraremos em contato para prosseguir.`,
+      'painel',
+      'payment-confirmed',
+    )
+    await sendNotification(
+      null,
+      `Novo pedido: ${order.product.name}`,
+      `Cliente ${order.client.name} comprou "${order.product.name}". Verifique e execute o serviço.`,
+    )
 
     return {
       ok: true,
@@ -76,57 +72,45 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
   const { client } = subscription
   const isFirstPayment = subscription.invoices.length === 0
 
-  await prisma.$transaction(async (tx) => {
-    // Mark invoice as paid
-    await tx.invoice.update({
+  // Apenas atualizações financeiras na transaction — notificações ficam fora
+  await prisma.$transaction([
+    prisma.invoice.update({
       where: { id: invoice.id },
       data: { status: 'paid', paidAt: new Date() },
-    })
-
-    // Ensure subscription is active (may have been overdue)
-    await tx.subscription.update({
+    }),
+    prisma.subscription.update({
       where: { id: subscription.id },
       data: { status: 'active' },
-    })
+    }),
+  ])
 
-    // Notify client: payment confirmed
-    await tx.notification.create({
-      data: {
-        clientId: client.id,
-        title: 'Pagamento confirmado',
-        message: `Seu pagamento do plano ${subscription.plan.name} foi confirmado. Obrigado!`,
-        channel: 'painel',
-      },
-    })
+  await sendNotification(
+    client.id,
+    'Pagamento confirmado',
+    `Seu pagamento do plano ${subscription.plan.name} foi confirmado. Obrigado!`,
+    'painel',
+    'payment-confirmed',
+  )
 
-    if (isFirstPayment) {
-      // Notify admin if client has a pending site to publish
-      const hasPendingSite = client.sites.some((s) => s.status === 'pendente_ativacao')
-      if (hasPendingSite) {
-        await tx.notification.create({
-          data: {
-            clientId: null,
-            title: `Publicar site de ${client.name}`,
-            message: `Cliente ${client.name} ativou o plano. Suba o site no GitHub Pages e atualize o status para "online".`,
-            channel: 'painel',
-          },
-        })
-      }
-
-      // Notify admin if this client was referred and referral is pending reward
-      const referral = client.referralReceived
-      if (referral && referral.status === 'confirmado') {
-        await tx.notification.create({
-          data: {
-            clientId: null,
-            title: 'Indicação: aplicar 1 mês grátis',
-            message: `Cliente ${client.name}, indicado por ${referral.referrerClient.name}, ativou o plano. Aplique 1 mês grátis para ${referral.referrerClient.name} no Asaas e marque a indicação como recompensada.`,
-            channel: 'painel',
-          },
-        })
-      }
+  if (isFirstPayment) {
+    const hasPendingSite = client.sites.some((s) => s.status === 'pendente_ativacao')
+    if (hasPendingSite) {
+      await sendNotification(
+        null,
+        `Publicar site de ${client.name}`,
+        `Cliente ${client.name} ativou o plano. Suba o site no GitHub Pages e atualize o status para "online".`,
+      )
     }
-  })
+
+    const referral = client.referralReceived
+    if (referral && referral.status === 'confirmado') {
+      await sendNotification(
+        null,
+        'Indicação: aplicar 1 mês grátis',
+        `Cliente ${client.name}, indicado por ${referral.referrerClient.name}, ativou o plano. Aplique 1 mês grátis para ${referral.referrerClient.name} no Asaas e marque a indicação como recompensada.`,
+      )
+    }
+  }
 
   return {
     ok: true,
@@ -166,15 +150,15 @@ export async function handlePaymentOverdue(chargeId: string): Promise<{
       where: { id: subscription.id },
       data: { status: 'overdue' },
     }),
-    prisma.notification.create({
-      data: {
-        clientId: client.id,
-        title: 'Pagamento em atraso',
-        message: `Identificamos um pagamento em atraso do plano ${subscription.plan.name}. Regularize para manter seu site no ar.`,
-        channel: 'painel',
-      },
-    }),
   ])
+
+  await sendNotification(
+    client.id,
+    'Pagamento em atraso',
+    `Identificamos um pagamento em atraso do plano ${subscription.plan.name}. Regularize para manter seu site no ar.`,
+    'painel',
+    'payment-overdue',
+  )
 
   return {
     ok: true,

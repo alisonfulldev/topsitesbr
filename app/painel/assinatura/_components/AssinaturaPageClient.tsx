@@ -9,7 +9,6 @@ type PlanInfo = {
   name: string
   price: number
   monthlyChangesIncluded: number
-  prioritySupport: boolean
   allowedChangeTypes: string
   changeDeadlineDays: number
   discountPercent: number
@@ -64,8 +63,7 @@ type BenefitRow = {
 function getPlanBenefits(plan: PlanInfo): BenefitRow[] {
   const none = plan.monthlyChangesIncluded === 0
   const hasVisitReport = plan.monthlyChangesIncluded >= 1
-  const hasFullReport = plan.monthlyChangesIncluded >= 2
-  const hasSemestral = plan.monthlyChangesIncluded >= 2
+  const hasWhatsApp = plan.monthlyChangesIncluded >= 1
 
   return [
     {
@@ -92,28 +90,18 @@ function getPlanBenefits(plan: PlanInfo): BenefitRow[] {
     },
     {
       label: 'Relatório de visitas',
-      detail: hasFullReport ? 'completo (origem, páginas)' : hasVisitReport ? 'básico (mensal)' : '—',
+      detail: hasVisitReport ? 'básico (mensal)' : '—',
       available: hasVisitReport,
     },
     {
       label: 'Suporte via WhatsApp',
-      detail: plan.prioritySupport ? 'incluso' : '—',
-      available: plan.prioritySupport,
+      detail: hasWhatsApp ? 'incluso' : '—',
+      available: hasWhatsApp,
     },
     {
       label: 'Desconto em avulsos e upgrades',
       detail: plan.discountPercent > 0 ? `${plan.discountPercent}% de desconto` : '—',
       available: plan.discountPercent > 0,
-    },
-    {
-      label: 'Revisão semestral do site',
-      detail: hasSemestral ? 'incluso' : '—',
-      available: hasSemestral,
-    },
-    {
-      label: 'Prioridade na fila de atendimento',
-      detail: plan.prioritySupport && hasSemestral ? 'incluso' : '—',
-      available: plan.prioritySupport && hasSemestral,
     },
   ]
 }
@@ -314,7 +302,7 @@ export function AssinaturaPageClient({
       {/* Plan comparison cards */}
       <div>
         <p className="text-sm font-semibold text-gray-700 mb-5">Comparar planos</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-4">
           {plans.map((plan, i) => (
             <PlanCard
               key={plan.id}

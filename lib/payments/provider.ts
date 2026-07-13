@@ -41,8 +41,11 @@ export interface PaymentProvider {
     newPrice: number,
     planName: string,
   ): Promise<UpdateSubscriptionResult>
+  cancelSubscription(subscriptionId: string): Promise<void>
   createSingleCharge(input: CreateSingleChargeInput): Promise<CreateSingleChargeResult>
 }
+
+// ── Mock (PAYMENT_DRIVER=mock) ────────────────────────────────────────────────
 
 function mockId(prefix: string): string {
   return `${prefix}_${Math.random().toString(36).substring(2, 10).toUpperCase()}`
@@ -75,6 +78,10 @@ const mockProvider: PaymentProvider = {
     return { nextDueDate: addDays(30) }
   },
 
+  async cancelSubscription(subscriptionId) {
+    console.log('[MOCK:cancelSubscription]', subscriptionId)
+  },
+
   async createSingleCharge(input) {
     console.log('[MOCK:createSingleCharge]', input.description, `R$${input.price}`)
     return {
@@ -84,7 +91,19 @@ const mockProvider: PaymentProvider = {
   },
 }
 
-// Phase 9: replace mock with real Asaas implementation
+// ── Factory ───────────────────────────────────────────────────────────────────
+
+let _provider: PaymentProvider | undefined
+
 export function getPaymentProvider(): PaymentProvider {
-  return mockProvider
+  if (_provider) return _provider
+  if (process.env.PAYMENT_DRIVER === 'asaas') {
+    const { AsaasPaymentProvider } = require('./asaas-provider') as {
+      AsaasPaymentProvider: new () => PaymentProvider
+    }
+    _provider = new AsaasPaymentProvider()
+  } else {
+    _provider = mockProvider
+  }
+  return _provider
 }

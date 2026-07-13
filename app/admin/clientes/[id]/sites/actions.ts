@@ -67,7 +67,7 @@ export async function updateSite(
 
   if (!siteType) return { error: 'Tipo de site é obrigatório.' }
 
-  let filesZipUrl: string | undefined
+  let filesZipUrl: string | null | undefined
   if (file && file.size > 0) {
     try {
       const buffer = Buffer.from(await file.arrayBuffer())

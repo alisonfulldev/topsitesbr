@@ -55,7 +55,7 @@ async function notifyAllEligibleClients(title: string, description: string | nul
 
   await Promise.all(
     clients.map((c) =>
-      sendNotification(c.id, `🎉 Nova promoção: ${title}`, message, 'painel'),
+      sendNotification(c.id, `🎉 Nova promoção: ${title}`, message, 'painel', 'promotion'),
     ),
   )
 }

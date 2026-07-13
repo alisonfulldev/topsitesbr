@@ -23,7 +23,6 @@ type PlanInfo = {
   monthlyChangesIncluded: number
   changeDeadlineDays: number
   discountPercent: number
-  prioritySupport: boolean
 }
 
 type SiteOption = {
@@ -63,7 +62,8 @@ function buildOptions(plan: PlanInfo, monthlyUsed: number): OptionConfig[] {
 
   const textoStatus = alteracaoStatus('texto')
   const imagemStatus = alteracaoStatus('imagem')
-  const combinadaStatus = alteracaoStatus('texto_e_imagem')
+  // texto_e_imagem is always avulsa — no plan includes it
+  const combinadaBadge = `R$${priceAfterDiscount(AVULSA_PRICE.texto_e_imagem, plan.discountPercent).replace('R$', '')} · avulsa`
 
   return [
     {
@@ -92,8 +92,9 @@ function buildOptions(plan: PlanInfo, monthlyUsed: number): OptionConfig[] {
       changeType: 'texto_e_imagem',
       label: 'Alteração de Texto e Imagem',
       group: 'alteracao',
-      ...combinadaStatus,
-      avulsaBase: combinadaStatus.included ? null : AVULSA_PRICE.texto_e_imagem,
+      included: false,
+      avulsaBase: AVULSA_PRICE.texto_e_imagem,
+      badge: combinadaBadge,
     },
     {
       changeType: 'nova_secao',
@@ -131,25 +132,19 @@ function getUpsellHint(
   plan: PlanInfo,
 ): UpsellHint | null {
   if (!type || !opt || opt.included || !opt.avulsaBase) return null
-  if (!['texto', 'imagem', 'texto_e_imagem'].includes(type)) return null
+  // texto_e_imagem is always avulsa — no plan includes it, so no upsell hint
+  if (!['texto', 'imagem'].includes(type)) return null
 
   const avulsaFinal = opt.avulsaBase * (1 - plan.discountPercent / 100)
   const avulsaLabel = `R$${avulsaFinal % 1 === 0 ? avulsaFinal.toFixed(0) : avulsaFinal.toFixed(2).replace('.', ',')}`
 
   const basicoPlan = plan.monthlyChangesIncluded === 0
-  const plusPlan = plan.monthlyChangesIncluded === 1
 
   if (basicoPlan) {
-    if (type === 'texto_e_imagem') {
-      return { avulsaLabel, upgradeName: 'Pro', upgradePrice: 'R$55/mês' }
-    }
     return { avulsaLabel, upgradeName: 'Plus', upgradePrice: 'R$29/mês' }
   }
 
-  if (plusPlan) {
-    return { avulsaLabel, upgradeName: 'Pro', upgradePrice: 'R$55/mês' }
-  }
-
+  // Plus plan with limit reached — no higher plan to suggest
   return null
 }
 

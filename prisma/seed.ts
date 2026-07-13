@@ -24,15 +24,6 @@ async function main() {
       changeDeadlineDays: 7,
       discountPercent: 10,
     },
-    {
-      name: 'Pro',
-      price: 55.0,
-      monthlyChangesIncluded: 2,
-      prioritySupport: true,
-      allowedChangeTypes: 'texto,imagem,texto_e_imagem',
-      changeDeadlineDays: 3,
-      discountPercent: 20,
-    },
   ]
 
   for (const plan of plans) {

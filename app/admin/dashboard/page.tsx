@@ -18,7 +18,6 @@ export default async function AdminDashboardPage() {
   const [
     activeSubscriptions,
     openTickets,
-    priorityTickets,
     referralsThisMonth,
     totalClients,
     upsellClients,
@@ -31,9 +30,6 @@ export default async function AdminDashboardPage() {
       distinct: ['clientId'],
     }),
     prisma.ticket.count({ where: { status: { in: ['open', 'in_progress'] } } }),
-    prisma.ticket.count({
-      where: { status: { in: ['open', 'in_progress'] }, isPriority: true },
-    }),
     prisma.referral.count({ where: { createdAt: { gte: startOfMonth } } }),
     prisma.client.count(),
     prisma.order.findMany({
@@ -112,13 +108,9 @@ export default async function AdminDashboardPage() {
             Tickets em Aberto
           </p>
           <p className="text-2xl font-bold text-gray-900 mt-1">{openTickets}</p>
-          {priorityTickets > 0 ? (
-            <p className="text-xs font-medium text-orange-600 mt-0.5">
-              {priorityTickets} prioritário{priorityTickets !== 1 ? 's' : ''}
-            </p>
-          ) : (
-            <p className="text-xs text-gray-400 mt-0.5">nenhum prioritário</p>
-          )}
+          <p className="text-xs text-gray-400 mt-0.5">
+            {openTickets !== 1 ? 'solicitações' : 'solicitação'} pendente{openTickets !== 1 ? 's' : ''}
+          </p>
         </div>
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <p className="text-xs font-medium uppercase tracking-wide text-gray-500">

@@ -23,7 +23,7 @@ export default async function AdminSolicitacoesPage() {
       },
       site: { select: { siteUrl: true, siteType: true } },
     },
-    orderBy: [{ isPriority: 'desc' }, { createdAt: 'asc' }],
+    orderBy: [{ createdAt: 'asc' }],
   })
 
   const rows = tickets.map((t) => {

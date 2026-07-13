@@ -33,6 +33,7 @@ export async function marcarRecompensado(
     'Você ganhou 1 mês grátis!',
     `Você ganhou 1 mês grátis por indicar ${referral.referredClient.name}! O desconto será aplicado na sua próxima cobrança.`,
     'painel',
+    'referral-reward',
   )
 
   revalidatePath('/admin/indicacoes')

@@ -69,7 +69,6 @@ export default async function AssinaturaPage({
           name: p.name,
           price: Number(p.price),
           monthlyChangesIncluded: p.monthlyChangesIncluded,
-          prioritySupport: p.prioritySupport,
           allowedChangeTypes: p.allowedChangeTypes,
         }))}
       />

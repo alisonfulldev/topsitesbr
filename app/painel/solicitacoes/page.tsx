@@ -62,7 +62,6 @@ export default async function SolicitacoesPage() {
           Plano {plan.name} · Prazo padrão: {plan.changeDeadlineDays} dia
           {plan.changeDeadlineDays !== 1 ? 's' : ''} útil
           {plan.changeDeadlineDays !== 1 ? 'is' : ''}
-          {plan.prioritySupport ? ' (prioritário)' : ''}
         </p>
       </div>
 
@@ -79,7 +78,6 @@ export default async function SolicitacoesPage() {
             monthlyChangesIncluded: plan.monthlyChangesIncluded,
             changeDeadlineDays: plan.changeDeadlineDays,
             discountPercent: plan.discountPercent,
-            prioritySupport: plan.prioritySupport,
           }}
           monthlyUsed={monthlyUsed}
         />

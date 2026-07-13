@@ -25,7 +25,6 @@ type SiteData = {
 
 type PlanFeatures = {
   monthlyChangesIncluded: number
-  prioritySupport: boolean
   allowedChangeTypes: string
   changeDeadlineDays: number
   discountPercent: number
@@ -439,14 +438,13 @@ function PlanBenefitsCard({ subscription }: { subscription: SubscriptionData }) 
 
   const benefits = [
     'Hospedagem, SSL e monitoramento 24h',
-    `Prazo de atendimento: até ${plan.changeDeadlineDays} dias úteis${plan.prioritySupport ? ' (prioritário)' : ''}`,
+    `Prazo de atendimento: até ${plan.changeDeadlineDays} dias úteis`,
     ...(plan.monthlyChangesIncluded > 0
       ? [`${plan.monthlyChangesIncluded} alteração${plan.monthlyChangesIncluded > 1 ? 'ões' : ''}/mês inclusa${plan.monthlyChangesIncluded > 1 ? 's' : ''}`]
       : []),
     ...(plan.discountPercent > 0
       ? [`${plan.discountPercent}% de desconto em serviços e upgrades`]
       : []),
-    ...(plan.prioritySupport ? ['Prioridade na fila de atendimento'] : []),
     'Correções ilimitadas e gratuitas (links, telefone, textos)',
   ]
 

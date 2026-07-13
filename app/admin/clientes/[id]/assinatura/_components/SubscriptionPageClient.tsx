@@ -8,7 +8,6 @@ type PlanInfo = {
   name: string
   price: number
   monthlyChangesIncluded: number
-  prioritySupport: boolean
   allowedChangeTypes: string
 }
 
@@ -157,15 +156,6 @@ function PlanCard({
         )}
 
         <li className="flex items-start gap-2 text-sm text-gray-700">
-          <span className={`mt-0.5 shrink-0 ${plan.prioritySupport ? 'text-brand-text' : 'text-gray-300'}`}>
-            {plan.prioritySupport ? '✓' : '—'}
-          </span>
-          <span className={plan.prioritySupport ? '' : 'text-gray-400'}>
-            Atendimento prioritário
-          </span>
-        </li>
-
-        <li className="flex items-start gap-2 text-sm text-gray-700">
           <span className="mt-0.5 text-brand-text shrink-0">✓</span>
           <span>Hospedagem, SSL e monitoramento</span>
         </li>
@@ -301,7 +291,7 @@ export function SubscriptionPageClient({
         <h3 className="text-sm font-semibold text-gray-700 mb-3">
           {subscription ? 'Trocar de Plano' : 'Ativar Assinatura'}
         </h3>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {plans.map((plan) => (
             <PlanCard
               key={plan.id}
