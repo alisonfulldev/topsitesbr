@@ -2,6 +2,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { getSiteAnalytics } from '@/lib/integrations/analytics'
+import type { AnalyticsResult } from '@/lib/integrations/analytics'
 import { ActivationScreen } from './_components/ActivationScreen'
 import { Dashboard } from './_components/Dashboard'
 import type { ContextualOffer } from './_components/Dashboard'
@@ -99,15 +101,27 @@ export default async function PainelPage() {
   const planMonthlyChanges = subscription?.plan.monthlyChangesIncluded ?? 0
   const ownedProductIds = paidOrders.map((o) => o.productId)
 
+  // Busca upgrade de site elegível para o siteType do cliente
+  const allUpgradeProducts = await prisma.product.findMany({
+    where: { type: 'upgrade_site' },
+    orderBy: { price: 'asc' },
+  })
+  const eligibleSiteUpgrade = allUpgradeProducts.find(
+    (p) =>
+      !ownedProductIds.includes(p.id) &&
+      (p.eligibleSiteTypes?.split(',') ?? []).includes(primarySiteType),
+  )
+
   let contextualOffer: ContextualOffer = null
 
-  if (primarySiteType === 'mini_site') {
-    // (a) Site ainda é mini_site — oferecer upgrade para Landing Page
-    const originalPrice = 199
+  if (eligibleSiteUpgrade) {
+    // (a) Existe upgrade de site disponível para o tipo atual (mini_site ou landing_page)
+    const originalPrice = Number(eligibleSiteUpgrade.price)
     const discountedPrice =
       planDiscount > 0 ? Math.round(originalPrice * (1 - planDiscount / 100) * 100) / 100 : null
     contextualOffer = {
       kind: 'upgrade_landing',
+      upgradeName: eligibleSiteUpgrade.name,
       originalPrice,
       discountedPrice,
       planDiscount,
@@ -115,8 +129,8 @@ export default async function PainelPage() {
   } else if (planMonthlyChanges === 0) {
     // (b) Plano Básico — visitas bloqueadas
     contextualOffer = { kind: 'visits_locked' }
-  } else if (extraPaidLastMonth > 0) {
-    // (c) Pagou alteração avulsa no último mês — sugerir upgrade de plano
+  } else if (extraPaidLastMonth > 0 && planMonthlyChanges === 0) {
+    // (c) Plano Básico e pagou alteração avulsa — sugerir upgrade para Plus
     contextualOffer = { kind: 'plan_pitch' }
   } else {
     // (d) Próximo upsell disponível não adquirido
@@ -142,6 +156,19 @@ export default async function PainelPage() {
         planDiscount,
       }
     }
+  }
+
+  // ── Analytics (somente para plano Plus com analyticsSiteId configurado) ───────
+  const isPlus = (subscription?.plan.monthlyChangesIncluded ?? 0) >= 1
+  const analyticsSiteId = client.sites[0]?.analyticsSiteId ?? null
+  let analyticsResult: AnalyticsResult | null = null
+
+  if (isPlus && analyticsSiteId) {
+    const sinceDate = new Date(now.getFullYear(), now.getMonth(), 1)
+    const untilDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+    const fmt = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    analyticsResult = await getSiteAnalytics(analyticsSiteId, fmt(sinceDate), fmt(untilDate))
   }
 
   // ── Dados para o Dashboard ──────────────────────────────────────────────────
@@ -191,6 +218,7 @@ export default async function PainelPage() {
       ticketsUsedThisMonth={ticketsUsedThisMonth}
       recentEvents={events}
       contextualOffer={contextualOffer}
+      analytics={analyticsResult}
     />
   )
 }

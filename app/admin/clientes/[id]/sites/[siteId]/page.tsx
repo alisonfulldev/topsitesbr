@@ -68,6 +68,7 @@ export default async function SiteDetailPage({
           siteUrl: site.siteUrl,
           siteType: site.siteType,
           templateUsed: site.templateUsed,
+          analyticsSiteId: site.analyticsSiteId,
           status: site.status,
           filesZipUrl: site.filesZipUrl,
           notes: site.notes,

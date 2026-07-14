@@ -148,6 +148,18 @@ export function SiteFormClient({ clientId }: { clientId: string }) {
           </div>
         </Field>
 
+        <Field
+          label="Analytics Site Tag (Cloudflare)"
+          hint="ID do site no Cloudflare Web Analytics — ex: a1b2c3d4e5f6... (deixe em branco se ainda não configurou)"
+        >
+          <input
+            type="text"
+            name="analyticsSiteId"
+            placeholder="a1b2c3d4e5f6..."
+            className={INPUT}
+          />
+        </Field>
+
         <Field label="Observações">
           <textarea
             name="notes"

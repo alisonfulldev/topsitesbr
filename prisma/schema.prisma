@@ -151,17 +151,18 @@ model User {
 }
 
 model Site {
-  id           String     @id @default(uuid())
-  clientId     String     @map("client_id")
-  siteUrl      String?    @map("site_url")
-  siteType     SiteType   @map("site_type")
-  templateUsed String?    @map("template_used")
-  status       SiteStatus @default(pendente_ativacao)
-  publishedAt  DateTime?  @map("published_at")
-  filesZipUrl  String?    @map("files_zip_url")
-  notes        String?
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
+  id              String     @id @default(uuid())
+  clientId        String     @map("client_id")
+  siteUrl         String?    @map("site_url")
+  siteType        SiteType   @map("site_type")
+  templateUsed    String?    @map("template_used")
+  status          SiteStatus @default(pendente_ativacao)
+  publishedAt     DateTime?  @map("published_at")
+  filesZipUrl     String?    @map("files_zip_url")
+  analyticsSiteId String?    @map("analytics_site_id")
+  notes           String?
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
 
   client  Client   @relation(fields: [clientId], references: [id])
   domains Domain[]
@@ -243,7 +244,7 @@ model Product {
   name             String
   price            Decimal   @db.Decimal(10, 2)
   type             ProductType
-  requiresSiteType SiteType? @map("requires_site_type")
+  eligibleSiteTypes String?   @map("eligible_site_types")
   createdAt        DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
 

@@ -68,20 +68,19 @@ O funil de entrega funciona assim:
 
 ## 4. Planos e Regras de Manutenção
 
-Os planos são **níveis de serviço**, não apenas "pacotes de alterações" — cada um
+O sistema tem **dois planos** (o antigo plano Pro de R$55 foi removido). Os
+planos são **níveis de serviço**, não apenas "pacotes de alterações" — cada um
 tem benefícios contínuos que fazem sentido manter mesmo em meses sem alteração:
 
-| Benefício | Básico R$17 | Plus R$29 | Pro R$55 |
-|---|---|---|---|
-| Site no ar + SSL + monitoramento | ✅ | ✅ | ✅ |
-| Alterações incluídas/mês | 0 | 1 (texto OU imagem) | 2 (incl. combinada) |
-| Prazo de execução de alterações | até 15 dias | até 7 dias | até 3 dias |
-| Correções (link quebrado, erro de digitação, telefone desatualizado) | ✅ ilimitadas e gratuitas | ✅ ilimitadas e gratuitas | ✅ ilimitadas e gratuitas |
-| Relatório de visitas do site | — | básico (visitas do mês) | completo (visitas, origem, páginas mais vistas) |
-| Suporte via WhatsApp direto | — (só pelo painel) | ✅ | ✅ |
-| Desconto em serviços avulsos e upsells | — | 10% | 20% |
-| Revisão semestral do site com sugestões | — | — | ✅ |
-| Prioridade na fila de atendimento | — | — | ✅ |
+| Benefício | Básico R$17 | Plus R$29 |
+|---|---|---|
+| Site no ar + SSL + monitoramento | ✅ | ✅ |
+| Alterações incluídas/mês | 0 | 1 (texto OU imagem) |
+| Prazo de execução de alterações | até 15 dias | até 7 dias |
+| Correções (link quebrado, erro de digitação, telefone desatualizado) | ✅ ilimitadas e gratuitas | ✅ ilimitadas e gratuitas |
+| Relatório de visitas do site | — (card bloqueado como incentivo) | completo (visitas, origem, páginas mais vistas) |
+| Suporte via WhatsApp direto | — (só pelo painel) | ✅ |
+| Desconto em serviços avulsos e upsells | — | 10% |
 
 ### Preços de alterações avulsas (fora do plano)
 
@@ -92,11 +91,11 @@ nenhuma inclusa) — pagando avulso por tipo:
 |---|---|
 | Alteração de Texto | R$ 20 |
 | Alteração de Imagem | R$ 40 |
-| Alteração de Texto e Imagem | R$ 60 |
+| Alteração de Texto e Imagem | R$ 60 (sempre avulsa, em qualquer plano) |
 
 Esses preços também funcionam como incentivo natural de upgrade: quem paga avulso
-com frequência percebe sozinho que o Plus (R$29) ou o Pro (R$55) compensam.
-O desconto do plano (10% Plus / 20% Pro) se aplica a esses avulsos e aos upsells.
+com frequência percebe sozinho que o Plus (R$29) compensa.
+O desconto do plano (10% Plus) se aplica a esses avulsos e aos upsells.
 
 ### Regras do módulo de Solicitação de Manutenção
 
@@ -105,9 +104,8 @@ mudam conforme o plano:
 
 - **Correção** (disponível pra todos os planos): link quebrado, erro de digitação,
   dado desatualizado. Ilimitada, gratuita, **não consome** o limite mensal.
-- **Plano Plus (R$29)**: alterações inclusas são "Texto" OU "Imagem" (a combinada
-  não aparece como opção inclusa; se solicitar os dois, é avulso de R$60).
-- **Plano Pro (R$55)**: as três opções inclusas, incluindo a combinada.
+- **Plano Plus (R$29)**: alterações inclusas são "Texto" OU "Imagem". A combinada
+  (texto + imagem) é sempre avulsa (R$60, com o desconto de 10% do plano).
 - **Plano Básico (R$17)**: pode solicitar qualquer tipo, sempre como avulso pago
   (R$20/40/60 conforme o tipo).
 
@@ -119,15 +117,16 @@ Campos exigidos conforme o tipo escolhido:
 - **Alteração de Texto e Imagem**: os dois campos obrigatórios (texto + imagem).
 
 Controle de limite mensal:
-- O sistema conta quantas solicitações de **alteração** (texto/imagem/combinada) o
-  cliente já abriu no mês corrente — correções não contam.
-- Cada alteração — mesmo a combinada — consome **1 unidade** do limite do plano.
-- Se o limite foi atingido (ou o plano é o Básico), a solicitação é permitida mas
-  marcada como **extra paga**, com o preço do tipo (R$20/40/60, com desconto do
-  plano se houver), gerando Order/cobrança avulsa via Asaas.
+- O sistema conta quantas solicitações de **alteração** (texto/imagem) o cliente
+  já abriu no mês corrente — correções não contam.
+- Se o limite foi atingido (ou o plano é o Básico, ou o tipo é a combinada), a
+  solicitação é permitida mas marcada como **extra paga**, com o preço do tipo
+  (R$20/40/60, com desconto do plano se houver), gerando Order/cobrança avulsa
+  via Asaas.
 - O prazo de execução exibido ao cliente segue o plano: 15 dias (Básico), 7 dias
-  (Plus), 3 dias (Pro). A fila do admin mostra o prazo-limite de cada ticket.
-- Solicitações de clientes do plano Pro entram com prioridade mais alta na fila.
+  (Plus). A fila do admin mostra o prazo-limite de cada ticket, ordenada por data
+  de criação (não há mais fila prioritária; o campo isPriority permanece no
+  schema sem uso).
 
 ### Solicitações que são sempre pagas à parte (independente do plano)
 
@@ -337,7 +336,7 @@ erDiagram
 
 ### 6.1 Asaas (cobrança)
 1. Criar `customer` no Asaas ao cadastrar o cliente.
-2. Criar `subscription` (recorrência mensal) vinculada ao plano escolhido (R$17/29/55).
+2. Criar `subscription` (recorrência mensal) vinculada ao plano escolhido (R$17 ou R$29).
 3. Webhook do Asaas (`PAYMENT_RECEIVED`, `PAYMENT_OVERDUE`) atualiza `INVOICES` e
    `SUBSCRIPTIONS.status`.
 4. Cobranças avulsas (upsell ou alteração extra paga) usam o mesmo client, via
@@ -368,7 +367,7 @@ erDiagram
 3. **Cadastro de Clientes**
 4. **Cadastro Manual de Sites** (URL, template usado, status atualizado por você)
 5. **Domínios** (status DNS/SSL atualizado manualmente)
-6. **Planos e Assinaturas** (Básico R$17 / Plus R$29 / Pro R$55, com controle de
+6. **Planos e Assinaturas** (Básico R$17 / Plus R$29, com controle de
    tipo e quantidade de alterações mensais)
 7. **Cobrança** (Asaas + webhooks)
 8. **Solicitação de Manutenção** (texto / imagem / texto e imagem, conforme plano,
@@ -444,8 +443,8 @@ Para evitar que o cliente suba de plano só pra aproveitar as alterações inclu
 depois volte pro plano mais barato no mesmo mês (o que sairia mais barato pra ele do
 que pagar as alterações avulsas), a regra é:
 
-- **Upgrade** (ex: R$17 → R$55) é liberado a qualquer momento, sem carência.
-- **Downgrade** (ex: R$55 → R$17, ou R$55 → R$29) só é permitido se já se passaram
+- **Upgrade** (ex: R$17 → R$29) é liberado a qualquer momento, sem carência.
+- **Downgrade** (ex: R$29 → R$17) só é permitido se já se passaram
   **pelo menos 3 meses** desde a última mudança de plano daquele cliente.
 - Toda mudança de plano (upgrade ou downgrade) atualiza `planActivatedAt` na
   `Subscription` com a data atual, reiniciando a contagem da carência.
@@ -462,7 +461,7 @@ saindo, e como a empresa está crescendo". Fica em `/admin/financeiro` e reúne:
 - **Faturamento total** no período selecionado (mês atual, últimos 3/6/12 meses,
   ou intervalo customizado), separado por origem:
   - Vendas de mini site (entrada nova de cliente)
-  - Assinaturas recorrentes (Básico/Plus/Pro)
+  - Assinaturas recorrentes (Básico/Plus)
   - Upsells avulsos (upgrade de site, logo, tráfego pago, etc.)
   - Alterações extras, Nova Seção e Nova Página (cobranças avulsas de manutenção)
 - **Custos** cadastrados manualmente por você, por categoria:

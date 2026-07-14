@@ -91,10 +91,10 @@ export default async function UpgradesPage() {
   for (const product of allProducts) {
     if (HIDDEN_PRODUCT_NAMES.has(product.name)) continue
 
-    // For upgrade_site, only show if client's current siteType matches requiresSiteType
+    // For upgrade_site, only show if client's current siteType is in the eligible list
     if (product.type === 'upgrade_site') {
-      if (!product.requiresSiteType) continue
-      if (product.requiresSiteType !== clientSiteType) continue
+      const eligible = product.eligibleSiteTypes?.split(',') ?? []
+      if (eligible.length === 0 || !clientSiteType || !eligible.includes(clientSiteType as string)) continue
     }
 
     const basePrice = Number(product.price)

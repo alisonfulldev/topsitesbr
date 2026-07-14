@@ -4,11 +4,12 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { buttonVariantClass } from '@/components/ui/button-class'
 import { EmptyState } from '@/components/ui/empty-state'
+import type { AnalyticsResult } from '@/lib/integrations/analytics'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ContextualOffer =
-  | { kind: 'upgrade_landing'; originalPrice: number; discountedPrice: number | null; planDiscount: number }
+  | { kind: 'upgrade_landing'; upgradeName: string; originalPrice: number; discountedPrice: number | null; planDiscount: number }
   | { kind: 'visits_locked' }
   | { kind: 'plan_pitch' }
   | { kind: 'upsell'; productId: string; name: string; originalPrice: number; discountedPrice: number | null; planDiscount: number }
@@ -202,22 +203,23 @@ function OfferLabel({ children }: { children: React.ReactNode }) {
 }
 
 function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> }) {
-  // (a) Upgrade de site: mini_site → landing page
+  // (a) Upgrade de site (mini_site → Landing Page, ou mini_site/landing_page → Institucional)
   if (offer.kind === 'upgrade_landing') {
     const hasDiscount = offer.planDiscount > 0 && offer.discountedPrice !== null
+    const isInstit = offer.upgradeName.includes('Institucional')
+    const icon = isInstit ? '🏢' : '🚀'
+    const headline = isInstit ? 'Evolua para Site Institucional' : 'Evolua para Landing Page'
+    const description = isInstit
+      ? 'Múltiplas páginas, mais credibilidade e presença profissional completa para o seu negócio.'
+      : 'Mais seções, mais conversão e mais profissionalismo que um Mini Site. Criada do zero para o seu negócio.'
     return (
       <Card className="border-brand-200 bg-brand-50/40">
         <OfferLabel>Para você</OfferLabel>
         <div className="flex items-start gap-3 mb-4">
-          <span className="text-2xl shrink-0">🚀</span>
+          <span className="text-2xl shrink-0">{icon}</span>
           <div>
-            <h3 className="font-bold text-gray-900 text-base leading-snug">
-              Evolua para Landing Page
-            </h3>
-            <p className="text-sm text-gray-600 mt-1">
-              Mais seções, mais conversão e mais profissionalismo que um Mini Site.
-              Criada do zero para o seu negócio.
-            </p>
+            <h3 className="font-bold text-gray-900 text-base leading-snug">{headline}</h3>
+            <p className="text-sm text-gray-600 mt-1">{description}</p>
           </div>
         </div>
         <div className="flex items-end gap-2 mb-4">
@@ -331,7 +333,13 @@ function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> })
 
 // ─── 3. InfoCards ─────────────────────────────────────────────────────────────
 
-function VisitsInfoCard({ plan }: { plan: PlanFeatures }) {
+function VisitsInfoCard({
+  plan,
+  analytics,
+}: {
+  plan: PlanFeatures
+  analytics: AnalyticsResult | null
+}) {
   const isPlus = plan.monthlyChangesIncluded >= 1
 
   if (!isPlus) {
@@ -346,12 +354,59 @@ function VisitsInfoCard({ plan }: { plan: PlanFeatures }) {
     )
   }
 
+  if (!analytics || !analytics.ok) {
+    return (
+      <Card className="flex flex-col justify-between">
+        <CardTitle>Visitas do Site</CardTitle>
+        <div className="flex-1 flex flex-col justify-center py-3">
+          <p className="text-sm text-gray-400 italic">
+            {analytics?.message ?? 'Coletando dados…'}
+          </p>
+        </div>
+      </Card>
+    )
+  }
+
+  const { data } = analytics
+
   return (
     <Card className="flex flex-col justify-between">
       <CardTitle>Visitas do Site</CardTitle>
-      <div className="flex-1 flex flex-col justify-center py-3">
-        <p className="text-sm text-gray-400 italic">Coletando dados…</p>
-        <p className="text-xs text-gray-400 mt-1">Analytics em breve</p>
+      <div className="flex-1 py-3 space-y-3">
+        <div>
+          <p className="text-3xl font-bold text-gray-900">{data.visits.toLocaleString('pt-BR')}</p>
+          <p className="text-xs text-gray-500 mt-0.5">
+            {data.pageViews.toLocaleString('pt-BR')} page views · {data.period}
+          </p>
+        </div>
+
+        {data.topPages.length > 0 && (
+          <div>
+            <p className="text-xs font-medium text-gray-500 mb-1">Páginas mais vistas</p>
+            <ul className="space-y-0.5">
+              {data.topPages.slice(0, 3).map((p) => (
+                <li key={p.path} className="flex justify-between text-xs text-gray-600 gap-2">
+                  <span className="truncate">{p.path || '/'}</span>
+                  <span className="shrink-0 text-gray-400">{p.count}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {data.topReferrers.length > 0 && (
+          <div>
+            <p className="text-xs font-medium text-gray-500 mb-1">Origens</p>
+            <ul className="space-y-0.5">
+              {data.topReferrers.slice(0, 3).map((r) => (
+                <li key={r.host} className="flex justify-between text-xs text-gray-600 gap-2">
+                  <span className="truncate">{r.host || 'Direto'}</span>
+                  <span className="shrink-0 text-gray-400">{r.count}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </Card>
   )
@@ -535,12 +590,14 @@ export function Dashboard({
   ticketsUsedThisMonth,
   recentEvents,
   contextualOffer,
+  analytics,
 }: {
   sites: SiteData[]
   subscription: SubscriptionData | null
   ticketsUsedThisMonth: number
   recentEvents: EventData[]
   contextualOffer: ContextualOffer
+  analytics: AnalyticsResult | null
 }) {
   const primarySite = sites[0] ?? null
 
@@ -572,7 +629,7 @@ export function Dashboard({
 
       {/* 3. Cards informativos em grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <VisitsInfoCard plan={subscription.plan} />
+        <VisitsInfoCard plan={subscription.plan} analytics={analytics} />
         <ChangesInfoCard plan={subscription.plan} used={ticketsUsedThisMonth} />
         <BillingInfoCard subscription={subscription} />
       </div>

@@ -26,6 +26,7 @@ type Site = {
   siteUrl: string | null
   siteType: string
   templateUsed: string | null
+  analyticsSiteId: string | null
   status: string
   filesZipUrl: string | null
   notes: string | null
@@ -473,6 +474,19 @@ function UpdateSiteForm({ site }: { site: Site }) {
       </div>
 
       <div>
+        <label className="block text-xs font-medium text-gray-600 mb-1">
+          Analytics Site Tag (Cloudflare)
+        </label>
+        <input
+          type="text"
+          name="analyticsSiteId"
+          defaultValue={site.analyticsSiteId ?? ''}
+          placeholder="a1b2c3d4e5f6..."
+          className={INPUT}
+        />
+      </div>
+
+      <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Observações</label>
         <textarea
           name="notes"
@@ -573,6 +587,12 @@ export function SiteDetailClient({ site }: { site: Site }) {
               ) : (
                 <span className="text-gray-300">—</span>
               )}
+            </dd>
+          </div>
+          <div className="flex gap-3">
+            <dt className="w-28 text-gray-500 shrink-0">Analytics ID</dt>
+            <dd className="font-mono text-xs text-gray-700 break-all">
+              {site.analyticsSiteId ?? <span className="text-gray-300">—</span>}
             </dd>
           </div>
           {site.notes && (
