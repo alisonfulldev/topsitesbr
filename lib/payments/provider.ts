@@ -9,6 +9,7 @@ export interface CreateSubscriptionInput {
   customerId: string
   planName: string
   price: number
+  successUrl?: string
 }
 
 export interface CreateSubscriptionResult {
@@ -26,6 +27,7 @@ export interface CreateSingleChargeInput {
   customerId: string
   description: string
   price: number
+  successUrl?: string
 }
 
 export interface CreateSingleChargeResult {

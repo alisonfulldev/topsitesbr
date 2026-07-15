@@ -95,10 +95,12 @@ export async function purchaseProduct(
     phone: client.phone,
   })
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   const { chargeId, paymentUrl } = await provider.createSingleCharge({
     customerId,
     description: product.name,
     price: finalPrice,
+    successUrl: `${appUrl}/painel/upgrades?pago=1`,
   })
 
   await prisma.order.create({

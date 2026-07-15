@@ -82,6 +82,9 @@ export class AsaasPaymentProvider implements PaymentProvider {
           nextDueDate: daysFromNow(1),
           cycle: 'MONTHLY',
           description: input.planName,
+          ...(input.successUrl && {
+            callback: { successUrl: input.successUrl, autoRedirect: true },
+          }),
         }),
       })
 
@@ -143,6 +146,9 @@ export class AsaasPaymentProvider implements PaymentProvider {
           value: input.price,
           dueDate: daysFromNow(3),
           description: input.description,
+          ...(input.successUrl && {
+            callback: { successUrl: input.successUrl, autoRedirect: true },
+          }),
         }),
       })
       return { chargeId: payment.id, paymentUrl: payment.invoiceUrl }

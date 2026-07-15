@@ -34,10 +34,12 @@ export async function activateSubscription(
     phone: client.phone,
   })
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   const { subscriptionId, chargeId, nextDueDate } = await provider.createSubscription({
     customerId,
     planName: plan.name,
     price: Number(plan.price),
+    successUrl: `${appUrl}/painel?ativado=1`,
   })
 
   const subscription = await prisma.subscription.create({

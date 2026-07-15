@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import { useSearchParams } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { purchaseProduct } from '../actions'
 import { Badge } from '@/components/ui/badge'
@@ -163,11 +164,27 @@ export function UpgradesClient({
   planName: string | null
   whatsappNumber: string
 }) {
+  const searchParams = useSearchParams()
+  const paid = searchParams.get('pago') === '1'
+
   const upgradeProducts = products.filter((p) => p.type === 'upgrade_site')
   const otherProducts = products.filter((p) => p.type !== 'upgrade_site')
 
   return (
     <div className="space-y-8">
+      {paid && (
+        <div className="rounded-xl bg-green-50 border border-green-200 px-5 py-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-green-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <p className="text-sm font-semibold text-green-800">Pagamento recebido!</p>
+            <p className="text-sm text-green-700 mt-0.5">
+              Seu pedido foi confirmado. Entraremos em contato em breve para dar início ao serviço.
+            </p>
+          </div>
+        </div>
+      )}
       {/* Active promotion banners */}
       {promoBanners.length > 0 && (
         <div className="space-y-3">
