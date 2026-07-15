@@ -1,5 +1,14 @@
 import { prisma } from '@/lib/prisma'
 import { sendNotification } from '@/lib/notifications'
+import { asaasFetch } from '@/lib/integrations/asaas'
+
+interface AsaasPaymentStatus {
+  id: string
+  status: string
+}
+interface AsaasPaymentList {
+  data: AsaasPaymentStatus[]
+}
 
 export async function handlePaymentReceived(chargeId: string): Promise<{
   ok: boolean
@@ -163,5 +172,53 @@ export async function handlePaymentOverdue(chargeId: string): Promise<{
   return {
     ok: true,
     message: `Assinatura de ${client.name} marcada como inadimplente.`,
+  }
+}
+
+// Consulta o Asaas para confirmar o pagamento de uma Order (upsell/avulso).
+export async function syncOrderPayment(clientId: string): Promise<boolean> {
+  if (process.env.PAYMENT_DRIVER !== 'asaas') return false
+
+  const order = await prisma.order.findFirst({
+    where: { clientId, status: 'pending' },
+    select: { asaasChargeId: true },
+    orderBy: { createdAt: 'desc' },
+  })
+  if (!order?.asaasChargeId) return false
+
+  try {
+    const payment = await asaasFetch<AsaasPaymentStatus>(`/payments/${order.asaasChargeId}`)
+    if (!['RECEIVED', 'CONFIRMED', 'RECEIVED_IN_CASH'].includes(payment.status)) return false
+    const result = await handlePaymentReceived(payment.id)
+    return result.ok
+  } catch {
+    return false
+  }
+}
+
+// Consulta o Asaas diretamente e confirma o pagamento se já foi aprovado.
+// Chamado quando o cliente retorna ao painel após o checkout.
+export async function syncSubscriptionPayment(clientId: string): Promise<boolean> {
+  if (process.env.PAYMENT_DRIVER !== 'asaas') return false
+
+  const subscription = await prisma.subscription.findFirst({
+    where: { clientId, status: 'pending' },
+    select: { id: true, asaasSubscriptionId: true },
+  })
+  if (!subscription?.asaasSubscriptionId) return false
+
+  try {
+    const list = await asaasFetch<AsaasPaymentList>(
+      `/subscriptions/${subscription.asaasSubscriptionId}/payments?limit=5&offset=0`,
+    )
+    const paid = list.data.find((p) =>
+      ['RECEIVED', 'CONFIRMED', 'RECEIVED_IN_CASH'].includes(p.status),
+    )
+    if (!paid) return false
+
+    const result = await handlePaymentReceived(paid.id)
+    return result.ok
+  } catch {
+    return false
   }
 }

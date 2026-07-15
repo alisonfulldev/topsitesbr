@@ -4,11 +4,16 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { getSiteAnalytics } from '@/lib/integrations/analytics'
 import type { AnalyticsResult } from '@/lib/integrations/analytics'
+import { syncSubscriptionPayment } from '@/lib/payments/webhook-handlers'
 import { ActivationScreen } from './_components/ActivationScreen'
 import { Dashboard } from './_components/Dashboard'
 import type { ContextualOffer } from './_components/Dashboard'
 
-export default async function PainelPage() {
+export default async function PainelPage({
+  searchParams,
+}: {
+  searchParams: { ativado?: string }
+}) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'client') redirect('/login')
 
@@ -19,6 +24,13 @@ export default async function PainelPage() {
   if (!user?.clientId) redirect('/login')
 
   const clientId = user.clientId
+
+  // Se o cliente voltou do checkout, confirma o pagamento direto na API do Asaas
+  // sem esperar o webhook — resolve o caso de localhost e webhooks atrasados.
+  if (searchParams.ativado === '1') {
+    await syncSubscriptionPayment(clientId)
+  }
+
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)

@@ -2,6 +2,7 @@
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { syncOrderPayment } from '@/lib/payments/webhook-handlers'
 import { UpgradesClient, type ProductRow, type PromoBanner } from './_components/UpgradesClient'
 
 // Products that should NOT appear in the store
@@ -19,7 +20,11 @@ const NO_DISCOUNT_PRODUCT_NAMES = new Set([
   'Domínio Personalizado',
 ])
 
-export default async function UpgradesPage() {
+export default async function UpgradesPage({
+  searchParams,
+}: {
+  searchParams: { pago?: string }
+}) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'client') redirect('/login')
 
@@ -29,6 +34,10 @@ export default async function UpgradesPage() {
   })
   const clientId = user?.clientId
   if (!clientId) redirect('/painel')
+
+  if (searchParams.pago === '1') {
+    await syncOrderPayment(clientId)
+  }
 
   const [client, allProducts, now] = await Promise.all([
     prisma.client.findUnique({
