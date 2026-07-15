@@ -119,7 +119,7 @@ function TicketCard({
         <div className="mb-2">
           {isMock ? (
             <span className="text-xs text-gray-400 italic">
-              📎 {ticket.attachmentUrl.split('/').pop()} (mock)
+              Anexo: {ticket.attachmentUrl.split('/').pop()} (mock)
             </span>
           ) : (
             <button

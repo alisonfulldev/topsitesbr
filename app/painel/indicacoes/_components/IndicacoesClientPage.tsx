@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { GiftIcon, UsersIcon } from '@/components/ui/icons'
 
 type Referral = {
   id: string
@@ -35,7 +36,7 @@ export function IndicacoesClientPage({
   }
 
   async function handleWhatsAppShare() {
-    const text = `Olá! 👋 Tenho um site profissional por apenas R$97 e pago só R$17/mês pela hospedagem. Você pode ter o seu também: ${referralLink}`
+    const text = `Olá! Tenho um site profissional por apenas R$97 e pago só R$17/mês pela hospedagem. Você pode ter o seu também: ${referralLink}`
 
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
@@ -52,7 +53,11 @@ export function IndicacoesClientPage({
     <div className="space-y-5">
       {/* Hero */}
       <div className="bg-brand-dark rounded-2xl p-6 text-center">
-        <div className="text-4xl mb-3">🎁</div>
+        <div className="flex justify-center mb-3">
+          <div className="w-14 h-14 rounded-2xl bg-brand/15 flex items-center justify-center">
+            <GiftIcon className="w-7 h-7 text-brand" />
+          </div>
+        </div>
         <h2 className="text-xl font-bold text-white mb-2">Indique um amigo e ganhe 1 mês grátis</h2>
         <p className="text-gray-400 text-sm max-w-xs mx-auto">
           Seu amigo descobre o site de R$97 · Você ganha um mês sem pagar
@@ -124,7 +129,7 @@ export function IndicacoesClientPage({
                   </p>
                 </div>
                 <Badge variant={r.status === 'recompensado' ? 'success' : 'warning'}>
-                  {r.status === 'recompensado' ? '🎉 Recompensada' : 'Aguardando ativação'}
+                  {r.status === 'recompensado' ? 'Recompensada' : 'Aguardando ativação'}
                 </Badge>
               </div>
             ))}
@@ -132,7 +137,11 @@ export function IndicacoesClientPage({
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
-          <div className="text-3xl mb-3">👥</div>
+          <div className="flex justify-center mb-3">
+            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+              <UsersIcon className="w-6 h-6 text-gray-400" />
+            </div>
+          </div>
           <p className="text-sm font-semibold text-gray-900 mb-1">Nenhuma indicação ainda</p>
           <p className="text-sm text-gray-500">
             Compartilhe seu link e comece a ganhar meses grátis!

@@ -15,10 +15,15 @@ export async function activateSubscription(
 
   if (!client || !plan) return { error: 'Cliente ou plano não encontrado.' }
 
+  const docDigits = client.document?.replace(/\D/g, '') ?? ''
+  if (docDigits.length !== 11 && docDigits.length !== 14) {
+    return { error: 'CPF ou CNPJ do cliente não cadastrado ou inválido. Edite o cadastro do cliente e preencha o CPF/CNPJ antes de ativar a assinatura.' }
+  }
+
   const existing = await prisma.subscription.findFirst({
     where: { clientId, status: { not: 'canceled' } },
   })
-  if (existing) return { error: 'Cliente já possui uma assinatura ativa. Use "Trocar de Plano".' }
+  if (existing) return { error: 'Cliente já possui uma assinatura ativa ou pendente de pagamento. Use "Trocar de Plano" se necessário.' }
 
   const provider = getPaymentProvider()
 
@@ -39,7 +44,7 @@ export async function activateSubscription(
     data: {
       clientId,
       planId,
-      status: 'active',
+      status: 'pending',
       asaasSubscriptionId: subscriptionId,
       nextDueDate,
       planActivatedAt: new Date(),

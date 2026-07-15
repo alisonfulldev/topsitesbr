@@ -43,6 +43,15 @@ export async function asaasFetch<T>(
   return res.json() as Promise<T>
 }
 
+export async function getAsaasInvoiceUrl(chargeId: string): Promise<string | null> {
+  try {
+    const payment = await asaasFetch<{ invoiceUrl: string }>(`/payments/${chargeId}`)
+    return payment.invoiceUrl ?? null
+  } catch {
+    return null
+  }
+}
+
 export function validateAsaasWebhook(token: string): boolean {
   return (
     !!process.env.ASAAS_WEBHOOK_TOKEN &&

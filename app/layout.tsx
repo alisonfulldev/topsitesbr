@@ -9,6 +9,16 @@ export const metadata: Metadata = {
   title: 'TOP SITE',
   description: 'Gerencie seu site, acompanhe o status e solicite manutenções',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/apple-icon.png',
+    other: [
+      { rel: 'android-chrome', url: '/icon.png' },
+    ],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
@@ -27,7 +37,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#0D0B1F',
+  themeColor: '#000000',
 }
 
 export default function RootLayout({

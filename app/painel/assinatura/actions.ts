@@ -31,6 +31,7 @@ export async function clientChangePlan(newPlanId: string): Promise<{
   })
 
   if (!subscription) return { error: 'Nenhuma assinatura ativa.' }
+  if (subscription.status === 'pending') return { error: 'Aguardando confirmação do seu primeiro pagamento. Troca de plano liberada após a confirmação.' }
   if (subscription.planId === newPlanId) return { error: 'Você já está neste plano.' }
 
   const newPlan = await prisma.plan.findUnique({ where: { id: newPlanId } })

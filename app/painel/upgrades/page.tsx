@@ -13,6 +13,12 @@ const HIDDEN_PRODUCT_NAMES = new Set([
   'Alteração de Texto e Imagem (avulsa)',
 ])
 
+// Products that do NOT accept promotions or plan discounts (preço fixo)
+const NO_DISCOUNT_PRODUCT_NAMES = new Set([
+  'E-mail Profissional',
+  'Domínio Personalizado',
+])
+
 export default async function UpgradesPage() {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'client') redirect('/login')
@@ -98,8 +104,9 @@ export default async function UpgradesPage() {
     }
 
     const basePrice = Number(product.price)
-    const planDiscountAmount = basePrice * (planDiscountPercent / 100)
-    const promo = bestPromoAmount(product.id, basePrice)
+    const noDiscount = NO_DISCOUNT_PRODUCT_NAMES.has(product.name)
+    const planDiscountAmount = noDiscount ? 0 : basePrice * (planDiscountPercent / 100)
+    const promo = noDiscount ? { amount: 0, title: null, label: null } : bestPromoAmount(product.id, basePrice)
 
     // Use the higher discount (not cumulative)
     const discountAmount = Math.max(planDiscountAmount, promo.amount)
@@ -111,9 +118,10 @@ export default async function UpgradesPage() {
       type: product.type,
       basePrice,
       finalPrice,
-      planDiscountPercent: promo.amount >= planDiscountAmount ? 0 : planDiscountPercent,
-      promoTitle: promo.amount >= planDiscountAmount ? promo.title : null,
-      promoDiscountLabel: promo.amount >= planDiscountAmount ? promo.label : null,
+      planDiscountPercent: noDiscount || promo.amount >= planDiscountAmount ? 0 : planDiscountPercent,
+      promoTitle: noDiscount ? null : (promo.amount >= planDiscountAmount ? promo.title : null),
+      promoDiscountLabel: noDiscount ? null : (promo.amount >= planDiscountAmount ? promo.label : null),
+      periodLabel: product.name.toLowerCase().includes('domínio') ? '/ano' : undefined,
     })
   }
 
@@ -147,6 +155,7 @@ export default async function UpgradesPage() {
         products={products}
         promoBanners={promoBanners}
         planName={plan?.name ?? null}
+        whatsappNumber={process.env.WHATSAPP_BUSINESS_NUMBER ?? '5511999999999'}
       />
     </div>
   )

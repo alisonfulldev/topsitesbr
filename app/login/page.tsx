@@ -3,6 +3,7 @@
 import { useState, Suspense } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 
 const ERROR_MESSAGES: Record<string, string> = {
   CredentialsSignin: 'E-mail ou senha inválidos.',
@@ -45,15 +46,15 @@ function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3">
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="rounded-xl bg-red-950/40 border border-red-900/40 px-4 py-3">
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
 
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
+      <div className="space-y-1.5">
+        <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-widest text-zinc-500">
           E-mail
         </label>
         <input
@@ -63,12 +64,12 @@ function LoginForm() {
           required
           autoComplete="email"
           placeholder="seu@email.com"
-          className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+          className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3.5 text-sm text-white placeholder:text-zinc-600 transition-all focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
         />
       </div>
 
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
+      <div className="space-y-1.5">
+        <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-widest text-zinc-500">
           Senha
         </label>
         <input
@@ -78,17 +79,19 @@ function LoginForm() {
           required
           autoComplete="current-password"
           placeholder="••••••••"
-          className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+          className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3.5 text-sm text-white placeholder:text-zinc-600 transition-all focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-brand-dark shadow-sm hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
-      >
-        {loading ? 'Entrando…' : 'Entrar'}
-      </button>
+      <div className="pt-2">
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full rounded-xl bg-brand px-4 py-3.5 text-sm font-bold text-black tracking-wide hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 focus:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50 transition-all"
+        >
+          {loading ? 'Entrando…' : 'Entrar'}
+        </button>
+      </div>
     </form>
   )
 }
@@ -96,20 +99,20 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-brand-dark px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <p className="text-[13px] font-black uppercase tracking-[0.25em] text-brand mb-1">
-            TOP SITE
-          </p>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Bem-vindo</h1>
-          <p className="mt-1 text-sm text-gray-400">Entre com sua conta para continuar</p>
+      <div className="w-full max-w-xs">
+        {/* Logo */}
+        <div className="flex justify-center mb-10">
+          <Image src="/logo.png" alt="TOP SITE" width={200} height={68} className="h-16 w-auto" priority />
         </div>
 
-        <div className="rounded-2xl bg-white p-8 shadow-xl">
-          <Suspense fallback={<div className="h-64 animate-pulse rounded-lg bg-gray-100" />}>
-            <LoginForm />
-          </Suspense>
+        {/* Heading */}
+        <div className="mb-8 text-center">
+          <p className="text-sm text-zinc-500">Acesse sua conta para continuar</p>
         </div>
+
+        <Suspense fallback={<div className="h-64 animate-pulse rounded-2xl bg-zinc-900" />}>
+          <LoginForm />
+        </Suspense>
       </div>
     </main>
   )

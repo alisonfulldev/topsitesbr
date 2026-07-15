@@ -73,7 +73,9 @@ export default async function PainelPage() {
 
   // ── Tela de ativação ─────────────────────────────────────────────────────────
   const pendingSite = client.sites.find((s) => s.status === 'pendente_ativacao')
-  const showActivation = !!pendingSite && !subscription
+  const hasActiveSubscription = subscription?.status === 'active'
+  const hasPendingSubscription = subscription?.status === 'pending'
+  const showActivation = !!pendingSite && !hasActiveSubscription
 
   if (showActivation && !client.monthlyFeeAcknowledgedAt) {
     await prisma.client.update({
@@ -88,6 +90,7 @@ export default async function PainelPage() {
         siteId={pendingSite.id}
         filesZipUrl={pendingSite.filesZipUrl}
         retentionAlreadyShown={!!client.downloadRetentionShownAt}
+        pendingPayment={hasPendingSubscription}
       />
     )
   }

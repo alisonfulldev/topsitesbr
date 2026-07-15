@@ -1,10 +1,16 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import type { ReactNode } from 'react'
 import { purchaseProduct } from '../actions'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
+import {
+  RocketIcon, BuildingIcon, ShoppingCartIcon, PaletteIcon,
+  SearchIcon, TrendingUpIcon, GlobeIcon, MailIcon,
+  MessageCircleIcon, PencilIcon, ZapIcon, TagIcon,
+} from '@/components/ui/icons'
 
 export type ProductRow = {
   id: string
@@ -15,6 +21,7 @@ export type ProductRow = {
   planDiscountPercent: number
   promoTitle: string | null
   promoDiscountLabel: string | null
+  periodLabel?: string
 }
 
 export type PromoBanner = {
@@ -36,33 +43,35 @@ function daysLeft(isoDate: string): number {
   return Math.max(0, Math.ceil((new Date(isoDate).getTime() - Date.now()) / 86_400_000))
 }
 
-const PRODUCT_META: Array<{ keywords: string[]; icon: string; benefit: string }> = [
-  { keywords: ['landing'], icon: '🚀', benefit: 'Converta mais visitantes em clientes' },
-  { keywords: ['institucional'], icon: '🏢', benefit: 'Presença profissional com múltiplas páginas' },
-  { keywords: ['loja', 'virtual'], icon: '🛒', benefit: 'Venda seus produtos direto pelo site' },
-  { keywords: ['logo', 'identidade'], icon: '🎨', benefit: 'Identidade visual que passa credibilidade imediata' },
-  { keywords: ['seo', 'google', 'posicion'], icon: '🔍', benefit: 'Apareça no Google quando buscarem pelo seu negócio' },
-  { keywords: ['tráfego', 'trafego', 'ads', 'campanha'], icon: '📈', benefit: 'Atraia clientes que ainda não te conhecem' },
-  { keywords: ['domínio', 'dominio'], icon: '🌐', benefit: 'Endereço próprio como seunegocio.com.br' },
-  { keywords: ['e-mail', 'email'], icon: '📧', benefit: 'voce@seunegocio.com.br — credibilidade desde o 1º contato' },
-  { keywords: ['whatsapp'], icon: '💬', benefit: 'Atendimento profissional com catálogo e métricas' },
-  { keywords: ['blog'], icon: '✍️', benefit: 'Conteúdo que atrai visitantes mês após mês' },
+const PRODUCT_META: Array<{ keywords: string[]; icon: ReactNode; benefit: string }> = [
+  { keywords: ['landing'], icon: <RocketIcon className="w-5 h-5" />, benefit: 'Converta mais visitantes em clientes' },
+  { keywords: ['institucional'], icon: <BuildingIcon className="w-5 h-5" />, benefit: 'Presença profissional com múltiplas páginas' },
+  { keywords: ['loja', 'virtual'], icon: <ShoppingCartIcon className="w-5 h-5" />, benefit: 'Venda seus produtos direto pelo site' },
+  { keywords: ['logo', 'identidade'], icon: <PaletteIcon className="w-5 h-5" />, benefit: 'Identidade visual que passa credibilidade imediata' },
+  { keywords: ['seo', 'google', 'posicion'], icon: <SearchIcon className="w-5 h-5" />, benefit: 'Apareça no Google quando buscarem pelo seu negócio' },
+  { keywords: ['tráfego', 'trafego', 'ads', 'campanha'], icon: <TrendingUpIcon className="w-5 h-5" />, benefit: 'Atraia clientes que ainda não te conhecem' },
+  { keywords: ['domínio', 'dominio'], icon: <GlobeIcon className="w-5 h-5" />, benefit: 'Endereço próprio como seunegocio.com.br' },
+  { keywords: ['e-mail', 'email'], icon: <MailIcon className="w-5 h-5" />, benefit: 'voce@seunegocio.com.br — credibilidade desde o 1º contato' },
+  { keywords: ['whatsapp'], icon: <MessageCircleIcon className="w-5 h-5" />, benefit: 'Atendimento profissional com catálogo e métricas' },
+  { keywords: ['blog'], icon: <PencilIcon className="w-5 h-5" />, benefit: 'Conteúdo que atrai visitantes mês após mês' },
 ]
 
-function getProductMeta(name: string): { icon: string; benefit: string } {
+function getProductMeta(name: string): { icon: ReactNode; benefit: string } {
   const lower = name.toLowerCase()
   for (const meta of PRODUCT_META) {
     if (meta.keywords.some((k) => lower.includes(k))) return meta
   }
-  return { icon: '⚡', benefit: 'Potencialize sua presença online' }
+  return { icon: <ZapIcon className="w-5 h-5" />, benefit: 'Potencialize sua presença online' }
 }
 
 function ProductCard({
   product,
   planName,
+  whatsappNumber,
 }: {
   product: ProductRow
   planName: string | null
+  whatsappNumber: string
 }) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -71,8 +80,14 @@ function ProductCard({
   const hasDiscount = product.finalPrice < product.basePrice
   const isFree = product.finalPrice === 0
   const hasPromo = !!product.promoTitle
+  const isWhatsappLead = product.type === 'whatsapp_lead'
 
   function handleBuy() {
+    if (isWhatsappLead) {
+      const msg = encodeURIComponent(`Olá! Tenho interesse na Loja Virtual para o meu site. Pode me dar mais informações?`)
+      window.open(`https://wa.me/${whatsappNumber}?text=${msg}`, '_blank')
+      return
+    }
     setError(null)
     startTransition(async () => {
       const result = await purchaseProduct(product.id)
@@ -87,7 +102,9 @@ function ProductCard({
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 flex flex-col hover:border-brand-200 hover:shadow-sm transition-all">
       {/* Icon */}
-      <div className="text-5xl mb-4">{icon}</div>
+      <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center mb-4 text-gray-600">
+        {icon}
+      </div>
 
       {/* Title + promo badge */}
       <div className="flex items-start gap-2 mb-1">
@@ -104,14 +121,22 @@ function ProductCard({
           <p className="text-sm text-gray-400 line-through">R$ {fmt(product.basePrice)}</p>
         )}
         <p className="text-2xl font-bold text-gray-900">
-          {isFree ? 'Gratuito' : `R$ ${fmt(product.finalPrice)}`}
+          {isFree ? 'Gratuito' : (
+            <>
+              {isWhatsappLead && <span className="text-sm font-normal text-gray-500 mr-1">a partir de</span>}
+              R$ {fmt(isWhatsappLead ? product.basePrice : product.finalPrice)}
+              {product.periodLabel && (
+                <span className="text-sm font-normal text-gray-500 ml-1">{product.periodLabel}</span>
+              )}
+            </>
+          )}
         </p>
-        {hasPromo && product.promoDiscountLabel && (
+        {!isWhatsappLead && hasPromo && product.promoDiscountLabel && (
           <p className="text-xs text-orange-600 font-medium mt-0.5">
             {product.promoDiscountLabel} de desconto
           </p>
         )}
-        {!hasPromo && product.planDiscountPercent > 0 && planName && (
+        {!isWhatsappLead && !hasPromo && product.planDiscountPercent > 0 && planName && (
           <p className="text-xs text-brand-text font-medium mt-0.5">
             {product.planDiscountPercent}% de desconto — plano {planName}
           </p>
@@ -121,7 +146,7 @@ function ProductCard({
       {error && <p className="text-xs text-red-600 mb-3">{error}</p>}
 
       <Button variant="conversion" size="md" fullWidth onClick={handleBuy} loading={isPending}>
-        Comprar
+        {isWhatsappLead ? 'Falar com especialista' : 'Comprar'}
       </Button>
     </div>
   )
@@ -131,10 +156,12 @@ export function UpgradesClient({
   products,
   promoBanners,
   planName,
+  whatsappNumber,
 }: {
   products: ProductRow[]
   promoBanners: PromoBanner[]
   planName: string | null
+  whatsappNumber: string
 }) {
   const upgradeProducts = products.filter((p) => p.type === 'upgrade_site')
   const otherProducts = products.filter((p) => p.type !== 'upgrade_site')
@@ -151,7 +178,9 @@ export function UpgradesClient({
                 key={promo.id}
                 className="rounded-xl bg-orange-50 border border-orange-200 px-5 py-4 flex items-start gap-4"
               >
-                <span className="text-2xl shrink-0">🔥</span>
+                <div className="w-9 h-9 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
+                  <TagIcon className="w-5 h-5 text-orange-600" />
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-orange-800">{promo.title}</p>
                   {promo.description && (
@@ -189,7 +218,7 @@ export function UpgradesClient({
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {upgradeProducts.map((p) => (
-              <ProductCard key={p.id} product={p} planName={planName} />
+              <ProductCard key={p.id} product={p} planName={planName} whatsappNumber={whatsappNumber} />
             ))}
           </div>
         </section>
@@ -204,7 +233,7 @@ export function UpgradesClient({
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {otherProducts.map((p) => (
-              <ProductCard key={p.id} product={p} planName={planName} />
+              <ProductCard key={p.id} product={p} planName={planName} whatsappNumber={whatsappNumber} />
             ))}
           </div>
         </section>

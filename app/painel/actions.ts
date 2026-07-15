@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
+import { getAsaasInvoiceUrl } from '@/lib/integrations/asaas'
 import { revalidatePath } from 'next/cache'
 
 async function getClientId(): Promise<string | null> {
@@ -25,8 +26,15 @@ export async function activateBasicPlan(): Promise<{ error?: string; paymentUrl?
 
   const existing = await prisma.subscription.findFirst({
     where: { clientId, status: { not: 'canceled' } },
+    include: { invoices: { orderBy: { createdAt: 'desc' }, take: 1 } },
   })
-  if (existing) return { error: 'Você já possui uma assinatura ativa.' }
+  if (existing) {
+    if (existing.status === 'active') return { error: 'Você já possui uma assinatura ativa.' }
+    // Já existe cobrança pendente — devolve a URL do boleto/PIX gerado anteriormente
+    const chargeId = existing.invoices[0]?.asaasChargeId ?? null
+    const paymentUrl = chargeId ? await getAsaasInvoiceUrl(chargeId) : null
+    return { paymentUrl: paymentUrl ?? undefined }
+  }
 
   const [client, basicPlan] = await Promise.all([
     prisma.client.findUnique({ where: { id: clientId } }),
@@ -34,6 +42,11 @@ export async function activateBasicPlan(): Promise<{ error?: string; paymentUrl?
   ])
   if (!client) return { error: 'Cliente não encontrado.' }
   if (!basicPlan) return { error: 'Plano básico não encontrado.' }
+
+  const docDigits = client.document?.replace(/\D/g, '') ?? ''
+  if (docDigits.length !== 11 && docDigits.length !== 14) {
+    return { error: 'Para ativar o plano é necessário ter CPF ou CNPJ cadastrado. Entre em contato com o suporte para atualizar seu cadastro.' }
+  }
 
   const provider = getPaymentProvider()
 
@@ -55,7 +68,7 @@ export async function activateBasicPlan(): Promise<{ error?: string; paymentUrl?
     data: {
       clientId,
       planId: basicPlan.id,
-      status: 'active',
+      status: 'pending',
       asaasSubscriptionId: subscriptionId,
       nextDueDate,
       planActivatedAt: new Date(),

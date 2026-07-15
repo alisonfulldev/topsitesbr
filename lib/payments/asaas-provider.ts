@@ -77,7 +77,7 @@ export class AsaasPaymentProvider implements PaymentProvider {
         method: 'POST',
         body: JSON.stringify({
           customer: input.customerId,
-          billingType: 'BOLETO',
+          billingType: 'UNDEFINED',
           value: input.price,
           nextDueDate: daysFromNow(1),
           cycle: 'MONTHLY',
@@ -139,7 +139,7 @@ export class AsaasPaymentProvider implements PaymentProvider {
         method: 'POST',
         body: JSON.stringify({
           customer: input.customerId,
-          billingType: 'BOLETO',
+          billingType: 'UNDEFINED',
           value: input.price,
           dueDate: daysFromNow(3),
           description: input.description,

@@ -4,6 +4,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { buttonVariantClass } from '@/components/ui/button-class'
 import { EmptyState } from '@/components/ui/empty-state'
+import {
+  AlertTriangleIcon, WrenchIcon, LockIcon, GlobeIcon, ZapIcon,
+  BuildingIcon, RocketIcon, BarChartIcon, LightbulbIcon, StarIcon,
+} from '@/components/ui/icons'
 import type { AnalyticsResult } from '@/lib/integrations/analytics'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -81,7 +85,7 @@ function SiteStatusCard({ site }: { site: SiteData }) {
     return (
       <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-5">
         <div className="flex items-start gap-3 mb-4">
-          <span className="text-2xl mt-0.5">⚠️</span>
+          <AlertTriangleIcon className="w-6 h-6 mt-0.5 text-red-600 shrink-0" />
           <div>
             <h2 className="font-bold text-red-800 text-base">
               {isSuspenso ? 'Site suspenso' : 'Site offline'}
@@ -114,7 +118,7 @@ function SiteStatusCard({ site }: { site: SiteData }) {
     return (
       <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5">
         <div className="flex items-start gap-3">
-          <span className="text-2xl mt-0.5">🔧</span>
+          <WrenchIcon className="w-6 h-6 mt-0.5 text-blue-600 shrink-0" />
           <div>
             <h2 className="font-bold text-blue-800 text-base">Em manutenção</h2>
             <p className="text-sm text-blue-700 mt-0.5">
@@ -166,22 +170,22 @@ function SiteStatusCard({ site }: { site: SiteData }) {
             <span>DNS {domain.dnsStatus === 'verificado' ? 'verificado' : domain.dnsStatus}</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-gray-500 bg-white rounded-lg px-2.5 py-1.5 border border-gray-100">
-            <span className={domain.sslStatus === 'ativo' ? 'text-green-500' : 'text-gray-400'}>🔒</span>
+            <LockIcon className={`w-3 h-3 ${domain.sslStatus === 'ativo' ? 'text-green-500' : 'text-gray-400'}`} />
             <span>SSL {domain.sslStatus === 'ativo' ? 'ativo' : domain.sslStatus}</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-gray-500 bg-white rounded-lg px-2.5 py-1.5 border border-gray-100">
-            <span className="text-gray-400">🌐</span>
+            <GlobeIcon className="w-3 h-3 text-gray-400" />
             <span className="truncate max-w-[120px]">{domain.domain}</span>
           </div>
         </div>
       ) : (
         <div className="flex flex-wrap gap-2 pt-3 border-t border-green-100">
           <div className="flex items-center gap-1.5 text-xs text-gray-400 bg-white rounded-lg px-2.5 py-1.5 border border-gray-100">
-            <span className="text-green-500">🔒</span>
+            <LockIcon className="w-3 h-3 text-green-500" />
             <span>SSL ativo</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-gray-400 bg-white rounded-lg px-2.5 py-1.5 border border-gray-100">
-            <span>⚡</span>
+            <ZapIcon className="w-3 h-3 text-gray-400" />
             <span>Hospedagem ativa</span>
           </div>
         </div>
@@ -207,7 +211,6 @@ function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> })
   if (offer.kind === 'upgrade_landing') {
     const hasDiscount = offer.planDiscount > 0 && offer.discountedPrice !== null
     const isInstit = offer.upgradeName.includes('Institucional')
-    const icon = isInstit ? '🏢' : '🚀'
     const headline = isInstit ? 'Evolua para Site Institucional' : 'Evolua para Landing Page'
     const description = isInstit
       ? 'Múltiplas páginas, mais credibilidade e presença profissional completa para o seu negócio.'
@@ -216,7 +219,10 @@ function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> })
       <Card className="border-brand-200 bg-brand-50/40">
         <OfferLabel>Para você</OfferLabel>
         <div className="flex items-start gap-3 mb-4">
-          <span className="text-2xl shrink-0">{icon}</span>
+          {isInstit
+            ? <BuildingIcon className="w-6 h-6 text-gray-700 shrink-0 mt-0.5" />
+            : <RocketIcon className="w-6 h-6 text-brand-text shrink-0 mt-0.5" />
+          }
           <div>
             <h3 className="font-bold text-gray-900 text-base leading-snug">{headline}</h3>
             <p className="text-sm text-gray-600 mt-1">{description}</p>
@@ -248,7 +254,7 @@ function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> })
       <Card className="border-brand-200 bg-brand-50/40">
         <OfferLabel>Sabia que</OfferLabel>
         <div className="flex items-start gap-3 mb-4">
-          <span className="text-2xl shrink-0">📊</span>
+          <BarChartIcon className="w-6 h-6 text-gray-600 shrink-0 mt-0.5" />
           <div>
             <h3 className="font-bold text-gray-900 text-base leading-snug">
               Veja quem está visitando seu site
@@ -264,7 +270,7 @@ function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> })
             <p className="text-2xl font-bold text-gray-300">???</p>
             <p className="text-xs text-gray-400">visitas este mês</p>
           </div>
-          <span className="text-3xl">🔒</span>
+          <LockIcon className="w-7 h-7 text-gray-300" />
         </div>
         <Link href="/painel/assinatura" className={buttonVariantClass('conversion', 'md') + ' inline-flex w-full justify-center'}>
           Desbloquear por R$29/mês →
@@ -279,7 +285,7 @@ function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> })
       <Card className="border-brand-200 bg-brand-50/40">
         <OfferLabel>Economize</OfferLabel>
         <div className="flex items-start gap-3 mb-4">
-          <span className="text-2xl shrink-0">💡</span>
+          <LightbulbIcon className="w-6 h-6 text-amber-500 shrink-0 mt-0.5" />
           <div>
             <h3 className="font-bold text-gray-900 text-base leading-snug">
               No Plus essa alteração estaria inclusa
@@ -304,7 +310,7 @@ function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> })
       <Card className="border-brand-200 bg-brand-50/40">
         <OfferLabel>Disponível para você</OfferLabel>
         <div className="flex items-start gap-3 mb-4">
-          <span className="text-2xl shrink-0">⭐</span>
+          <StarIcon className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
           <div>
             <h3 className="font-bold text-gray-900 text-base leading-snug">{offer.name}</h3>
             <p className="text-sm text-gray-600 mt-1">Adicione ao seu site com um clique.</p>

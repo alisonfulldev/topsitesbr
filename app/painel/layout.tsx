@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { NotificationBell } from '@/components/notification-bell'
 import { PainelDesktopSidebar, PainelBottomNav } from '@/components/painel/PainelNav'
+import Image from 'next/image'
 import { markNotificationRead, markAllNotificationsRead } from './actions'
 
 export default async function PainelLayout({ children }: { children: React.ReactNode }) {
@@ -44,7 +45,7 @@ export default async function PainelLayout({ children }: { children: React.React
       <div className="flex-1 flex flex-col min-h-screen min-w-0">
         {/* Mobile header — compact, only visible on small screens */}
         <header className="sticky top-0 z-30 flex items-center justify-between bg-brand-dark px-4 py-3 md:hidden shadow-sm">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-brand">TOP SITE</p>
+          <Image src="/logo.png" alt="TOP SITE" width={120} height={36} className="h-7 w-auto" priority />
           <NotificationBell
             unreadCount={unreadCount}
             notifications={notifications}

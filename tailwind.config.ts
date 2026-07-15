@@ -16,9 +16,9 @@ const config: Config = {
           DEFAULT: '#FFD100',
           hover: '#E0BC00',
           text: '#A08900',  // yellow dark enough for links on white bg
-          dark: '#0D0B1F',
-          'dark-hover': '#1A1635',
-          'dark-border': '#2D2850',
+          dark: '#000000',
+          'dark-hover': '#111111',
+          'dark-border': '#2a2a2a',
           50: '#FFFBE6',
           100: '#FFF3A3',
           200: '#FFE566',

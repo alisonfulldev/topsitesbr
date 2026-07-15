@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { EmptyState } from '@/components/ui/empty-state'
+import { CheckCircleIcon } from '@/components/ui/icons'
 
 // ── Static price table (mirrors the DB seed) ─────────────────────────────────
 const AVULSA_PRICE: Record<string, number> = {
@@ -231,7 +232,11 @@ export function SolicitacaoForm({
   if (successMsg) {
     return (
       <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
-        <div className="text-2xl mb-3">✅</div>
+        <div className="flex justify-center mb-3">
+          <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+            <CheckCircleIcon className="w-6 h-6 text-green-600" />
+          </div>
+        </div>
         <h3 className="text-base font-semibold text-green-800 mb-2">Solicitação enviada!</h3>
         <p className="text-sm text-green-700 max-w-sm mx-auto">{successMsg}</p>
         <button

@@ -6,6 +6,11 @@ import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
 import { revalidatePath } from 'next/cache'
 
+const NO_DISCOUNT_PRODUCT_NAMES = new Set([
+  'E-mail Profissional',
+  'Domínio Personalizado',
+])
+
 async function getClientId(): Promise<string | null> {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'client') return null
@@ -40,36 +45,47 @@ export async function purchaseProduct(
   if (!client) return { error: 'Cliente não encontrado.' }
   if (!product) return { error: 'Produto não encontrado.' }
 
-  const planDiscountPercent = client.subscriptions[0]?.plan.discountPercent ?? 0
-  const basePrice = Number(product.price)
-
-  // Find the best active promotion for this product (product-specific or general)
-  const now = new Date()
-  const promotions = await prisma.promotion.findMany({
-    where: {
-      active: true,
-      startDate: { lte: now },
-      endDate: { gte: now },
-      OR: [{ productId }, { productId: null }],
-    },
-  })
-
-  // Plan discount in R$
-  const planDiscountAmount = basePrice * (planDiscountPercent / 100)
-
-  // Best promotion discount in R$
-  let bestPromoDiscountAmount = 0
-  for (const promo of promotions) {
-    const amount =
-      promo.discountType === 'percent'
-        ? basePrice * (Number(promo.discountValue) / 100)
-        : Number(promo.discountValue)
-    if (amount > bestPromoDiscountAmount) bestPromoDiscountAmount = amount
+  const docDigits = client.document?.replace(/\D/g, '') ?? ''
+  if (docDigits.length !== 11 && docDigits.length !== 14) {
+    return { error: 'Para realizar a compra é necessário ter CPF ou CNPJ cadastrado. Entre em contato com o suporte para atualizar seu cadastro.' }
   }
 
-  // Use the higher of the two (not cumulative)
-  const discountAmount = Math.max(planDiscountAmount, bestPromoDiscountAmount)
-  const finalPrice = Math.max(0, Math.round((basePrice - discountAmount) * 100) / 100)
+  const planDiscountPercent = client.subscriptions[0]?.plan.discountPercent ?? 0
+  const basePrice = parseFloat(product.price.toString())
+  const noDiscount = NO_DISCOUNT_PRODUCT_NAMES.has(product.name)
+
+  let finalPrice = basePrice
+
+  if (!noDiscount) {
+    // Find the best active promotion for this product (product-specific or general)
+    const now = new Date()
+    const promotions = await prisma.promotion.findMany({
+      where: {
+        active: true,
+        startDate: { lte: now },
+        endDate: { gte: now },
+        OR: [{ productId }, { productId: null }],
+      },
+    })
+
+    const planDiscountAmount = basePrice * (planDiscountPercent / 100)
+
+    let bestPromoDiscountAmount = 0
+    for (const promo of promotions) {
+      const amount =
+        promo.discountType === 'percent'
+          ? basePrice * (Number(promo.discountValue) / 100)
+          : Number(promo.discountValue)
+      if (amount > bestPromoDiscountAmount) bestPromoDiscountAmount = amount
+    }
+
+    const discountAmount = Math.max(planDiscountAmount, bestPromoDiscountAmount)
+    finalPrice = Math.max(0, Math.round((basePrice - discountAmount) * 100) / 100)
+  }
+
+  if (!finalPrice || isNaN(finalPrice) || finalPrice <= 0) {
+    return { error: 'Não foi possível calcular o valor da compra. Entre em contato com o suporte.' }
+  }
 
   const provider = getPaymentProvider()
   const { customerId } = await provider.createCustomer({

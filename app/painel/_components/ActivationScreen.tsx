@@ -5,11 +5,13 @@ import { activateBasicPlan, markRetentionShown, requestZipUploadNotification } f
 import { Button } from '@/components/ui/button'
 import { Modal, ModalActions } from '@/components/ui/modal'
 import { BottomSheet } from '@/components/ui/bottom-sheet'
+import { SparklesIcon, DownloadIcon } from '@/components/ui/icons'
 
 type Props = {
   siteId: string
   filesZipUrl: string | null
   retentionAlreadyShown: boolean
+  pendingPayment?: boolean
 }
 
 const PLAN_BENEFITS = [
@@ -19,7 +21,7 @@ const PLAN_BENEFITS = [
   'Suporte via painel sempre que precisar',
 ]
 
-export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown }: Props) {
+export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown, pendingPayment }: Props) {
   const [showRetention, setShowRetention] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [zipMsg, setZipMsg] = useState<string | null>(null)
@@ -81,7 +83,11 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown }:
       <div className="bg-brand-dark rounded-2xl overflow-hidden">
         {/* Hero */}
         <div className="text-center px-6 pt-10 pb-8">
-          <div className="text-5xl mb-4">🎉</div>
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-brand/15 flex items-center justify-center">
+              <SparklesIcon className="w-8 h-8 text-brand" />
+            </div>
+          </div>
           <h1 className="text-2xl font-bold text-white mb-2 leading-tight">
             Seu site está pronto!
           </h1>
@@ -128,6 +134,12 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown }:
               ))}
             </ul>
 
+            {pendingPayment && (
+              <p className="text-yellow-700 text-xs bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2 mb-3">
+                Pagamento gerado! Verifique seu e-mail ou clique abaixo para acessar o boleto/PIX novamente.
+              </p>
+            )}
+
             {error && (
               <p className="text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
                 {error}
@@ -141,13 +153,15 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown }:
               onClick={handleActivate}
               loading={isPending}
             >
-              Ativar por R$17/mês
+              {pendingPayment ? 'Ver boleto / PIX' : 'Ativar por R$17/mês'}
             </Button>
           </div>
 
           {/* Card 2: Download */}
           <div className="bg-brand-dark-hover border border-brand-dark-border rounded-xl p-5 flex flex-col flex-1">
-            <div className="text-2xl mb-3">📦</div>
+            <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+              <DownloadIcon className="w-5 h-5 text-gray-400" />
+            </div>
             <h2 className="text-base font-bold text-white mb-1">Baixar os arquivos</h2>
             <p className="text-xs text-gray-400 mb-5 leading-relaxed flex-1">
               Receba o zip com todos os arquivos e hospede onde e como quiser.

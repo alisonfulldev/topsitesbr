@@ -43,6 +43,7 @@ enum SslStatus {
 }
 
 enum SubscriptionStatus {
+  pending
   active
   overdue
   canceled
@@ -58,6 +59,7 @@ enum ProductType {
   upgrade_site
   service
   addon
+  whatsapp_lead
 }
 
 enum DiscountType {
