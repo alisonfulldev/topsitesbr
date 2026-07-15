@@ -25,11 +25,9 @@ export default async function PainelPage({
 
   const clientId = user.clientId
 
-  // Se o cliente voltou do checkout, confirma o pagamento direto na API do Asaas
-  // sem esperar o webhook — resolve o caso de localhost e webhooks atrasados.
-  if (searchParams.ativado === '1') {
-    await syncSubscriptionPayment(clientId)
-  }
+  // Confirma o pagamento direto na API do Asaas sempre que a assinatura estiver
+  // pendente — resolve webhooks atrasados, localhost e retornos sem ?ativado=1.
+  await syncSubscriptionPayment(clientId)
 
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)

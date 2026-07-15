@@ -35,9 +35,7 @@ export default async function UpgradesPage({
   const clientId = user?.clientId
   if (!clientId) redirect('/painel')
 
-  if (searchParams.pago === '1') {
-    await syncOrderPayment(clientId)
-  }
+  await syncOrderPayment(clientId)
 
   const [client, allProducts, now] = await Promise.all([
     prisma.client.findUnique({
