@@ -119,10 +119,12 @@ export default async function PainelPage({
     where: { type: 'upgrade_site' },
     orderBy: { price: 'asc' },
   })
+  const clientEntryFee = client.siteEntryFee != null ? Number(client.siteEntryFee) : 0
   const eligibleSiteUpgrade = allUpgradeProducts.find(
     (p) =>
       !ownedProductIds.includes(p.id) &&
-      (p.eligibleSiteTypes?.split(',') ?? []).includes(primarySiteType),
+      (p.eligibleSiteTypes?.split(',') ?? []).includes(primarySiteType) &&
+      clientEntryFee < Number(p.price),
   )
 
   let contextualOffer: ContextualOffer = null
