@@ -98,9 +98,12 @@ export default async function UpgradesPage() {
     if (HIDDEN_PRODUCT_NAMES.has(product.name)) continue
 
     // For upgrade_site, only show if client's current siteType is in the eligible list
+    // and the client didn't already pay more than the upgrade price
     if (product.type === 'upgrade_site') {
       const eligible = product.eligibleSiteTypes?.split(',') ?? []
       if (eligible.length === 0 || !clientSiteType || !eligible.includes(clientSiteType as string)) continue
+      const entryFee = client.siteEntryFee != null ? Number(client.siteEntryFee) : 0
+      if (entryFee >= Number(product.price)) continue
     }
 
     const basePrice = Number(product.price)
