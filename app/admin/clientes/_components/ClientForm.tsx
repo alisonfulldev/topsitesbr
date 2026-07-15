@@ -17,6 +17,7 @@ type InitialData = {
   email: string
   phone: string
   document: string
+  siteEntryFee?: number | null
 }
 
 interface Props {
@@ -61,6 +62,9 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
   const [email, setEmail] = useState(initialData?.email ?? '')
   const [phone, setPhone] = useState(initialData?.phone ?? '')
   const [document, setDocument] = useState(initialData?.document ?? '')
+  const [siteEntryFee, setSiteEntryFee] = useState(
+    initialData?.siteEntryFee != null ? String(initialData.siteEntryFee) : ''
+  )
 
   // Referral code (create only)
   const [referralCode, setReferralCode] = useState('')
@@ -111,6 +115,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           document: document || undefined,
           referralCode: referralCode.trim() || undefined,
           createUserPassword: createLogin ? loginPassword : undefined,
+          siteEntryFee: siteEntryFee ? parseFloat(siteEntryFee) : undefined,
         })
         if (result?.error) {
           setError(result.error)
@@ -125,6 +130,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           email,
           phone: phone || undefined,
           document: document || undefined,
+          siteEntryFee: siteEntryFee ? parseFloat(siteEntryFee) : undefined,
         })
         if (result?.error) {
           setError(result.error)
@@ -189,6 +195,26 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
             placeholder="000.000.000-00"
             className={INPUT}
           />
+        </Field>
+
+        <Field
+          label="Valor pago pelo site (entrada)"
+          hint="Quanto o cliente pagou fora do sistema para ter o site criado (ex: R$97, R$500…)"
+        >
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
+              R$
+            </span>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={siteEntryFee}
+              onChange={(e) => setSiteEntryFee(e.target.value)}
+              placeholder="97,00"
+              className={`${INPUT} pl-9`}
+            />
+          </div>
         </Field>
 
         {/* Referral code — only on create */}

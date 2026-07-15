@@ -88,12 +88,12 @@ export default async function AdminFinanceiroPage({
       }),
       prisma.client.findMany({
         where: { createdAt: { gte: start, lte: end } },
-        select: { createdAt: true },
+        select: { createdAt: true, siteEntryFee: true },
       }),
     ])
 
   // Revenue maps
-  const revMap: Record<string, { subscriptions: number; upsells: number; maintenance: number }> =
+  const revMap: Record<string, { subscriptions: number; upsells: number; maintenance: number; siteRevenue: number }> =
     {}
   const costMap: Record<
     string,
@@ -102,7 +102,7 @@ export default async function AdminFinanceiroPage({
   const clientMap: Record<string, number> = {}
 
   for (const m of months) {
-    revMap[m] = { subscriptions: 0, upsells: 0, maintenance: 0 }
+    revMap[m] = { subscriptions: 0, upsells: 0, maintenance: 0, siteRevenue: 0 }
     costMap[m] = { ia: 0, trafego_pago: 0, hospedagem_ferramentas: 0, outro: 0 }
     clientMap[m] = 0
   }
@@ -132,12 +132,15 @@ export default async function AdminFinanceiroPage({
   for (const c of newClients) {
     const k = monthKey(c.createdAt)
     if (clientMap[k] !== undefined) clientMap[k]++
+    if (revMap[k] && c.siteEntryFee != null) {
+      revMap[k].siteRevenue += Number(c.siteEntryFee)
+    }
   }
 
   const monthlyData: MonthlyRow[] = months.map((m) => {
     const rev = revMap[m]
     const cos = costMap[m]
-    const totalRevenue = rev.subscriptions + rev.upsells + rev.maintenance
+    const totalRevenue = rev.subscriptions + rev.upsells + rev.maintenance + rev.siteRevenue
     const totalCosts = cos.ia + cos.trafego_pago + cos.hospedagem_ferramentas + cos.outro
     const profit = totalRevenue - totalCosts
     return {
@@ -146,6 +149,7 @@ export default async function AdminFinanceiroPage({
       subscriptions: rev.subscriptions,
       upsells: rev.upsells,
       maintenance: rev.maintenance,
+      siteRevenue: rev.siteRevenue,
       totalRevenue,
       ia: cos.ia,
       trafego_pago: cos.trafego_pago,

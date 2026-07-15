@@ -44,6 +44,7 @@ export async function createClient(data: {
   document?: string
   referralCode?: string
   createUserPassword?: string
+  siteEntryFee?: number
 }): Promise<{ error?: string; success?: boolean; clientId?: string }> {
   const parsed = clientSchema.safeParse(data)
   if (!parsed.success) {
@@ -77,6 +78,7 @@ export async function createClient(data: {
       phone: data.phone?.trim() || null,
       document: data.document?.trim() || null,
       referralCode: newReferralCode,
+      siteEntryFee: data.siteEntryFee != null ? data.siteEntryFee : null,
     },
   })
 
@@ -112,7 +114,7 @@ export async function createClient(data: {
 
 export async function updateClient(
   id: string,
-  data: { name: string; email: string; phone?: string; document?: string }
+  data: { name: string; email: string; phone?: string; document?: string; siteEntryFee?: number }
 ): Promise<{ error?: string; success?: boolean }> {
   const parsed = clientSchema.safeParse(data)
   if (!parsed.success) {
@@ -134,6 +136,7 @@ export async function updateClient(
       email,
       phone: data.phone?.trim() || null,
       document: data.document?.trim() || null,
+      ...(data.siteEntryFee !== undefined && { siteEntryFee: data.siteEntryFee }),
     },
   })
 

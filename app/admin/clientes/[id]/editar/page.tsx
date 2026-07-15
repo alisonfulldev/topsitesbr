@@ -16,6 +16,7 @@ export default async function EditarClientePage({
       email: true,
       phone: true,
       document: true,
+      siteEntryFee: true,
     },
   })
 
@@ -54,6 +55,7 @@ export default async function EditarClientePage({
           email: client.email,
           phone: client.phone ?? '',
           document: client.document ?? '',
+          siteEntryFee: client.siteEntryFee != null ? Number(client.siteEntryFee) : null,
         }}
       />
     </div>

@@ -117,6 +117,7 @@ model Client {
   phone                    String?
   document                 String?
   referralCode             String    @unique
+  siteEntryFee             Decimal?  @map("site_entry_fee") @db.Decimal(10, 2)
   monthlyFeeAcknowledgedAt DateTime?
   downloadRetentionShownAt DateTime?
   createdAt                DateTime  @default(now()) @map("created_at")

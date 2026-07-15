@@ -23,6 +23,7 @@ export type MonthlyRow = {
   subscriptions: number
   upsells: number
   maintenance: number
+  siteRevenue: number
   totalRevenue: number
   ia: number
   trafego_pago: number
@@ -179,6 +180,7 @@ function downloadCSV(rows: MonthlyRow[]) {
   const headers = [
     'Mês',
     'Faturamento Total',
+    'Venda de Site',
     'Assinaturas',
     'Upsells',
     'Manutenção',
@@ -197,6 +199,7 @@ function downloadCSV(rows: MonthlyRow[]) {
       [
         r.label,
         r.totalRevenue.toFixed(2).replace('.', ','),
+        r.siteRevenue.toFixed(2).replace('.', ','),
         r.subscriptions.toFixed(2).replace('.', ','),
         r.upsells.toFixed(2).replace('.', ','),
         r.maintenance.toFixed(2).replace('.', ','),
@@ -332,6 +335,7 @@ export function FinanceiroClient({
                   formatter={(v: any, name: any) => [fmtBRL(v), name]}
                 />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Bar dataKey="siteRevenue" name="Venda de Site" stackId="a" fill="#10b981" />
                 <Bar dataKey="subscriptions" name="Assinaturas" stackId="a" fill="#0D0B1F" />
                 <Bar dataKey="upsells" name="Upsells" stackId="a" fill="#2D2850" />
                 <Bar
