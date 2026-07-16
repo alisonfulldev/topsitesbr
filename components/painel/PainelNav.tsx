@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
@@ -106,6 +107,17 @@ export function PainelBottomNav() {
             </Link>
           )
         })}
+
+        {/* Botão Sair */}
+        <button
+          onClick={() => signOut({ callbackUrl: '/login' })}
+          className="flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] hover:bg-brand-dark-hover transition-colors"
+        >
+          <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span className="text-[10px] font-medium text-gray-400">Sair</span>
+        </button>
       </div>
     </nav>
   )
@@ -118,8 +130,8 @@ export function PainelDesktopSidebar({ userName }: { userName: string }) {
   return (
     <aside className="hidden md:flex w-56 shrink-0 bg-brand-dark flex-col sticky top-0 h-screen">
       <div className="px-5 py-4 border-b border-brand-dark-border">
-        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-brand">TOP SITE</p>
-        <p className="text-[10px] text-gray-400 mt-0.5 uppercase tracking-wider">Painel do Cliente</p>
+        <Image src="/logo.png" alt="TOP SITE" width={140} height={42} className="h-9 w-auto mb-1" priority />
+        <p className="text-[10px] text-gray-400 uppercase tracking-wider">Painel do Cliente</p>
       </div>
 
       <nav className="flex-1 p-3 space-y-0.5 text-sm overflow-y-auto">
