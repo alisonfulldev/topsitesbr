@@ -35,7 +35,7 @@ export function BottomSheet({ open, onClose, title, children, className }: Botto
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-end" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-[70] flex flex-col justify-end" role="dialog" aria-modal="true">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50"
@@ -73,7 +73,7 @@ export function BottomSheet({ open, onClose, title, children, className }: Botto
         )}
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto overscroll-contain p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+        <div className="flex-1 overflow-y-auto overscroll-contain p-5 pb-[max(5rem,env(safe-area-inset-bottom))]">
           {children}
         </div>
       </div>
