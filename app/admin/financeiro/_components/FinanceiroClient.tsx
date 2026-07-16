@@ -281,6 +281,12 @@ export function FinanceiroClient({
         </div>
         <div className="flex items-center gap-2">
           <a
+            href="/admin/financeiro/distribuicao"
+            className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors"
+          >
+            Distribuição
+          </a>
+          <a
             href="/admin/financeiro/receitas"
             className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors"
           >

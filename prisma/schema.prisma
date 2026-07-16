@@ -389,6 +389,25 @@ model PlanChangeHistory {
   @@map("plan_change_history")
 }
 
+model AllocationFixedCost {
+  id     String  @id @default(uuid())
+  name   String
+  amount Decimal @db.Decimal(10, 2)
+  order  Int     @default(0)
+
+  @@map("allocation_fixed_costs")
+}
+
+model AllocationRule {
+  id      String  @id @default(uuid())
+  name    String
+  percent Decimal @db.Decimal(5, 2)
+  color   String  @default("#6b7280")
+  order   Int     @default(0)
+
+  @@map("allocation_rules")
+}
+
 model ExtraRevenue {
   id          String               @id @default(uuid())
   category    ExtraRevenueCategory
