@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { signOut } from 'next-auth/react'
@@ -95,8 +96,8 @@ export function AdminSidebar({ userName, unreadCount }: AdminSidebarProps) {
   const sidebarContent = (onNavigate?: () => void) => (
     <>
       <div className="px-5 py-4 border-b border-brand-dark-border">
-        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-brand">TOP SITE</p>
-        <p className="text-[10px] text-gray-400 mt-0.5 uppercase tracking-wider">Painel Admin</p>
+        <Image src="/logo.png" alt="TOP SITE" width={140} height={42} className="h-9 w-auto mb-1" priority />
+        <p className="text-[10px] text-gray-400 uppercase tracking-wider">Painel Admin</p>
       </div>
       <NavLinks onNavigate={onNavigate} unreadCount={unreadCount} />
       <div className="p-4 border-t border-brand-dark-border space-y-2">
@@ -118,16 +119,28 @@ export function AdminSidebar({ userName, unreadCount }: AdminSidebarProps) {
         {sidebarContent()}
       </aside>
 
-      {/* Mobile hamburger button — only on small screens */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed top-3 left-3 z-40 p-2.5 rounded-lg bg-brand-dark text-gray-300 hover:text-white transition-colors"
-        aria-label="Abrir menu"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+      {/* Mobile top bar — hambúrguer + botão Sair */}
+      <div className="md:hidden fixed top-0 inset-x-0 z-40 flex items-center justify-between px-3 py-2 bg-brand-dark border-b border-brand-dark-border">
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="p-2 rounded-lg text-gray-300 hover:text-white transition-colors"
+          aria-label="Abrir menu"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <span className="text-xs font-semibold text-gray-300 uppercase tracking-widest">Admin</span>
+        <button
+          onClick={() => signOut({ callbackUrl: '/login' })}
+          className="p-2 rounded-lg text-gray-400 hover:text-white transition-colors"
+          aria-label="Sair"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+        </button>
+      </div>
 
       {/* Mobile sidebar overlay */}
       {mobileOpen && (

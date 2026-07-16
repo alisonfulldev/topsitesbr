@@ -40,9 +40,9 @@ export default async function AdminLayout({
       />
 
       {/* Main content area */}
-      <div className="flex-1 flex flex-col min-h-screen min-w-0">
+      <div className="flex-1 flex flex-col min-h-screen min-w-0 pt-11 md:pt-0">
         {/* Top header */}
-        <header className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 md:px-6 py-3 flex items-center justify-end gap-3 shadow-sm pl-14 md:pl-6">
+        <header className="sticky top-0 z-20 bg-white border-b border-gray-200 px-4 md:px-6 py-3 flex items-center justify-end gap-3 shadow-sm">
           <NotificationBell
             unreadCount={unreadCount}
             notifications={notifications}
