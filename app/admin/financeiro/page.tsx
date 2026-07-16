@@ -60,7 +60,7 @@ export default async function AdminFinanceiroPage({
   const { start, end } = getDateRange(period, searchParams.from, searchParams.to)
   const months = buildMonthsList(start, end)
 
-  const [paidInvoices, paidOrders, allCosts, overdueInvoices, activeSubscriptions, newClients] =
+  const [paidInvoices, paidOrders, allCosts, overdueInvoices, activeSubscriptions, newClients, extraRevenues] =
     await Promise.all([
       prisma.invoice.findMany({
         where: { status: 'paid', paidAt: { gte: start, lte: end } },
@@ -90,10 +90,14 @@ export default async function AdminFinanceiroPage({
         where: { createdAt: { gte: start, lte: end } },
         select: { createdAt: true, siteEntryFee: true },
       }),
+      prisma.extraRevenue.findMany({
+        where: { revenueDate: { gte: start, lte: end } },
+        select: { amount: true, revenueDate: true },
+      }),
     ])
 
   // Revenue maps
-  const revMap: Record<string, { subscriptions: number; upsells: number; maintenance: number; siteRevenue: number }> =
+  const revMap: Record<string, { subscriptions: number; upsells: number; maintenance: number; siteRevenue: number; extraRevenue: number }> =
     {}
   const costMap: Record<
     string,
@@ -102,7 +106,7 @@ export default async function AdminFinanceiroPage({
   const clientMap: Record<string, number> = {}
 
   for (const m of months) {
-    revMap[m] = { subscriptions: 0, upsells: 0, maintenance: 0, siteRevenue: 0 }
+    revMap[m] = { subscriptions: 0, upsells: 0, maintenance: 0, siteRevenue: 0, extraRevenue: 0 }
     costMap[m] = { ia: 0, trafego_pago: 0, hospedagem_ferramentas: 0, outro: 0 }
     clientMap[m] = 0
   }
@@ -137,10 +141,15 @@ export default async function AdminFinanceiroPage({
     }
   }
 
+  for (const er of extraRevenues) {
+    const k = monthKey(er.revenueDate)
+    if (revMap[k]) revMap[k].extraRevenue += Number(er.amount)
+  }
+
   const monthlyData: MonthlyRow[] = months.map((m) => {
     const rev = revMap[m]
     const cos = costMap[m]
-    const totalRevenue = rev.subscriptions + rev.upsells + rev.maintenance + rev.siteRevenue
+    const totalRevenue = rev.subscriptions + rev.upsells + rev.maintenance + rev.siteRevenue + rev.extraRevenue
     const totalCosts = cos.ia + cos.trafego_pago + cos.hospedagem_ferramentas + cos.outro
     const profit = totalRevenue - totalCosts
     return {
@@ -150,6 +159,7 @@ export default async function AdminFinanceiroPage({
       upsells: rev.upsells,
       maintenance: rev.maintenance,
       siteRevenue: rev.siteRevenue,
+      extraRevenue: rev.extraRevenue,
       totalRevenue,
       ia: cos.ia,
       trafego_pago: cos.trafego_pago,

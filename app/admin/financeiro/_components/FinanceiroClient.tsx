@@ -24,6 +24,7 @@ export type MonthlyRow = {
   upsells: number
   maintenance: number
   siteRevenue: number
+  extraRevenue: number
   totalRevenue: number
   ia: number
   trafego_pago: number
@@ -181,6 +182,7 @@ function downloadCSV(rows: MonthlyRow[]) {
     'Mês',
     'Faturamento Total',
     'Venda de Site',
+    'Receitas Avulsas',
     'Assinaturas',
     'Upsells',
     'Manutenção',
@@ -200,6 +202,7 @@ function downloadCSV(rows: MonthlyRow[]) {
         r.label,
         r.totalRevenue.toFixed(2).replace('.', ','),
         r.siteRevenue.toFixed(2).replace('.', ','),
+        r.extraRevenue.toFixed(2).replace('.', ','),
         r.subscriptions.toFixed(2).replace('.', ','),
         r.upsells.toFixed(2).replace('.', ','),
         r.maintenance.toFixed(2).replace('.', ','),
@@ -278,6 +281,12 @@ export function FinanceiroClient({
         </div>
         <div className="flex items-center gap-2">
           <a
+            href="/admin/financeiro/receitas"
+            className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors"
+          >
+            Receitas Avulsas
+          </a>
+          <a
             href="/admin/financeiro/custos"
             className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors"
           >
@@ -335,6 +344,7 @@ export function FinanceiroClient({
                   formatter={(v: any, name: any) => [fmtBRL(v), name]}
                 />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Bar dataKey="extraRevenue" name="Receitas Avulsas" stackId="a" fill="#f59e0b" />
                 <Bar dataKey="siteRevenue" name="Venda de Site" stackId="a" fill="#10b981" />
                 <Bar dataKey="subscriptions" name="Assinaturas" stackId="a" fill="#0D0B1F" />
                 <Bar dataKey="upsells" name="Upsells" stackId="a" fill="#2D2850" />

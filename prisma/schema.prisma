@@ -103,6 +103,13 @@ enum CostCategory {
   outro
 }
 
+enum ExtraRevenueCategory {
+  servico_avulso
+  consultoria
+  venda_site
+  outro
+}
+
 enum ReferralStatus {
   confirmado
   recompensado
@@ -380,4 +387,15 @@ model PlanChangeHistory {
   toPlan   Plan   @relation("PlanChangeTo", fields: [toPlanId], references: [id])
 
   @@map("plan_change_history")
+}
+
+model ExtraRevenue {
+  id          String               @id @default(uuid())
+  category    ExtraRevenueCategory
+  description String
+  amount      Decimal              @db.Decimal(10, 2)
+  revenueDate DateTime             @map("revenue_date") @db.Date
+  createdAt   DateTime             @default(now()) @map("created_at")
+
+  @@map("extra_revenues")
 }
