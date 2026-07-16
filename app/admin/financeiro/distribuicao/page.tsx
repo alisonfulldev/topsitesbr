@@ -10,13 +10,21 @@ function monthLabel(d: Date) {
   return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`
 }
 
-export default async function DistribuicaoPage() {
+export default async function DistribuicaoPage({
+  searchParams,
+}: {
+  searchParams: { month?: string }
+}) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'admin') redirect('/login')
 
   const now = new Date()
-  const start = new Date(now.getFullYear(), now.getMonth(), 1)
-  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+  const defaultMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  const selectedMonth = searchParams.month ?? defaultMonth
+
+  const [year, month] = selectedMonth.split('-').map(Number)
+  const start = new Date(year, month - 1, 1)
+  const end = new Date(year, month, 0, 23, 59, 59)
 
   const [fixedCosts, rules, paidInvoices, paidOrders, newClients, extraRevenues] = await Promise.all([
     prisma.allocationFixedCost.findMany({ orderBy: { order: 'asc' } }),
@@ -55,24 +63,49 @@ export default async function DistribuicaoPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
-          <Link href="/admin/financeiro" className="hover:text-brand-text">Financeiro</Link>
-          <span>/</span>
-          <span className="text-gray-800">Distribuição</span>
+      <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+            <Link href="/admin/financeiro" className="hover:text-brand-text">Financeiro</Link>
+            <span>/</span>
+            <span className="text-gray-800">Distribuição</span>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900">Distribuição de Receita</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Para onde vai cada real que entra — custos fixos e alocação do lucro
+          </p>
         </div>
-        <h2 className="text-xl font-semibold text-gray-900">Distribuição de Receita</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Para onde vai cada real que entra — custos fixos e alocação do lucro
-        </p>
+        <MonthPicker selected={selectedMonth} />
       </div>
 
       <DistribuicaoClient
         fixedCosts={fixedRows}
         rules={ruleRows}
         monthRevenue={monthRevenue}
-        monthLabel={monthLabel(now)}
+        monthLabel={monthLabel(start)}
       />
     </div>
+  )
+}
+
+function MonthPicker({ selected }: { selected: string }) {
+  return (
+    <form method="GET">
+      <div className="flex items-center gap-2">
+        <label className="text-sm text-gray-500 whitespace-nowrap">Mês:</label>
+        <input
+          type="month"
+          name="month"
+          defaultValue={selected}
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+        />
+        <button
+          type="submit"
+          className="px-3 py-1.5 bg-gray-900 text-white text-sm rounded-md hover:bg-gray-700 transition-colors"
+        >
+          Ver
+        </button>
+      </div>
+    </form>
   )
 }
