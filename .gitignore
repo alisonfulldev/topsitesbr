@@ -36,3 +36,5 @@ next-env.d.ts
 
 # prisma — migrations são versionadas no git
 # prisma/migrations/
+
+.vercel
