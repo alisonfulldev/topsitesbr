@@ -217,7 +217,7 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown, p
               Quero ativar por R$17/mês
             </Button>
             <Button
-              variant="ghost"
+              variant="secondary"
               size="md"
               fullWidth
               onClick={handleRetentionDownload}
@@ -245,7 +245,7 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown, p
               Quero ativar por R$17/mês
             </Button>
             <Button
-              variant="ghost"
+              variant="secondary"
               size="md"
               fullWidth
               onClick={handleRetentionDownload}
