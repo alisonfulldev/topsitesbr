@@ -99,7 +99,6 @@ export default async function PainelPage({
       <ActivationScreen
         siteId={pendingSite.id}
         filesZipUrl={pendingSite.filesZipUrl}
-        retentionAlreadyShown={!!client.downloadRetentionShownAt}
         pendingPayment={hasPendingSubscription}
       />
     )

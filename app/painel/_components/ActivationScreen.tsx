@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition, useEffect } from 'react'
-import { activateBasicPlan, markRetentionShown, requestZipUploadNotification } from '../actions'
+import { activateBasicPlan, requestZipUploadNotification } from '../actions'
 import { Button } from '@/components/ui/button'
 import { Modal, ModalActions } from '@/components/ui/modal'
 import { BottomSheet } from '@/components/ui/bottom-sheet'
@@ -10,7 +10,6 @@ import { SparklesIcon, DownloadIcon } from '@/components/ui/icons'
 type Props = {
   siteId: string
   filesZipUrl: string | null
-  retentionAlreadyShown: boolean
   pendingPayment?: boolean
 }
 
@@ -21,7 +20,7 @@ const PLAN_BENEFITS = [
   'Suporte via painel sempre que precisar',
 ]
 
-export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown, pendingPayment }: Props) {
+export function ActivationScreen({ siteId, filesZipUrl, pendingPayment }: Props) {
   const [showRetention, setShowRetention] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [zipMsg, setZipMsg] = useState<string | null>(null)
@@ -59,12 +58,7 @@ export function ActivationScreen({ siteId, filesZipUrl, retentionAlreadyShown, p
       })
       return
     }
-    if (!retentionAlreadyShown) {
-      startTransition(() => markRetentionShown())
-      setShowRetention(true)
-    } else {
-      window.location.href = filesZipUrl
-    }
+    setShowRetention(true)
   }
 
   function handleRetentionActivate() {
