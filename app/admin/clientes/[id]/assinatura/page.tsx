@@ -19,7 +19,7 @@ export default async function AssinaturaPage({
         },
       },
     }),
-    prisma.plan.findMany({ orderBy: { price: 'asc' } }),
+    prisma.plan.findMany({ where: { price: { lte: 29 } }, orderBy: { price: 'asc' } }),
   ])
 
   if (!client) notFound()

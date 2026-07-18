@@ -50,10 +50,20 @@ const navItems = [
       </svg>
     ),
   },
+  {
+    href: '/painel/assinatura',
+    label: 'Plano',
+    exact: false,
+    icon: (active: boolean) => (
+      <svg className={cn('w-6 h-6', active ? 'text-white' : 'text-gray-400')} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <rect x="2" y="5" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round" strokeWidth={active ? 2.5 : 2} />
+        <line x1="2" y1="10" x2="22" y2="10" strokeLinecap="round" strokeLinejoin="round" strokeWidth={active ? 2.5 : 2} />
+      </svg>
+    ),
+  },
 ]
 
 const desktopSecondaryItems = [
-  { href: '/painel/assinatura', label: 'Assinatura' },
   { href: '/painel/notificacoes', label: 'Notificações' },
 ]
 
