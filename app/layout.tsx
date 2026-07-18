@@ -56,6 +56,11 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
+        <script
+          defer
+          src="https://umamirepo.vercel.app/script.js"
+          data-website-id="7cd11197-5137-4e75-a703-0bebe2e21fc2"
+        />
       </body>
     </html>
   )

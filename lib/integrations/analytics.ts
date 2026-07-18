@@ -1,5 +1,3 @@
-const CF_GRAPHQL = 'https://api.cloudflare.com/client/v4/graphql'
-
 export type SiteAnalytics = {
   visits: number
   pageViews: number
@@ -12,100 +10,56 @@ export type AnalyticsResult =
   | { ok: true; data: SiteAnalytics }
   | { ok: false; message: string }
 
-const QUERY = `
-  query SiteAnalytics($accountTag: String!, $siteTag: String!, $since: Date!, $until: Date!) {
-    viewer {
-      accounts(filter: { accountTag: $accountTag }) {
-        total: rumPageloadEventsAdaptiveGroups(
-          filter: { siteTag: $siteTag, date_geq: $since, date_leq: $until }
-          limit: 1
-        ) {
-          sum { visits pageViews }
-        }
-        byReferrer: rumPageloadEventsAdaptiveGroups(
-          filter: { siteTag: $siteTag, date_geq: $since, date_leq: $until }
-          orderBy: [count_DESC]
-          limit: 5
-        ) {
-          count
-          dimensions { refererHost }
-        }
-        byPage: rumPageloadEventsAdaptiveGroups(
-          filter: { siteTag: $siteTag, date_geq: $since, date_leq: $until }
-          orderBy: [count_DESC]
-          limit: 5
-        ) {
-          count
-          dimensions { requestPath }
-        }
-      }
-    }
-  }
-`
-
 export async function getSiteAnalytics(
-  siteTag: string,
+  websiteId: string,
   since: string,
   until: string,
 ): Promise<AnalyticsResult> {
-  const token = process.env.CLOUDFLARE_API_TOKEN
-  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID
+  const apiUrl = process.env.UMAMI_API_URL
+  const apiKey = process.env.UMAMI_API_KEY
 
-  if (!token || !accountId) {
+  if (!apiUrl || !apiKey) {
     return { ok: false, message: 'Coletando dados...' }
   }
 
+  const startAt = new Date(since).getTime()
+  const endAt = new Date(until + 'T23:59:59').getTime()
+
   try {
-    const res = await fetch(CF_GRAPHQL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        query: QUERY,
-        variables: { accountTag: accountId, siteTag, since, until },
+    const [statsRes, pagesRes, referrersRes] = await Promise.all([
+      fetch(`${apiUrl}/api/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        next: { revalidate: 3600 },
       }),
-      next: { revalidate: 3600 },
-    })
+      fetch(`${apiUrl}/api/websites/${websiteId}/metrics?startAt=${startAt}&endAt=${endAt}&type=url&limit=5`, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        next: { revalidate: 3600 },
+      }),
+      fetch(`${apiUrl}/api/websites/${websiteId}/metrics?startAt=${startAt}&endAt=${endAt}&type=referrer&limit=5`, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        next: { revalidate: 3600 },
+      }),
+    ])
 
-    if (!res.ok) {
-      return { ok: false, message: 'Coletando dados...' }
-    }
+    if (!statsRes.ok) return { ok: false, message: 'Coletando dados...' }
 
-    const json = await res.json()
-
-    if (json.errors?.length) {
-      return { ok: false, message: 'Coletando dados...' }
-    }
-
-    const accounts: unknown[] = json.data?.viewer?.accounts ?? []
-    if (accounts.length === 0) {
-      return { ok: false, message: 'Sem dados neste período.' }
-    }
-
-    const account = accounts[0] as Record<string, unknown[]>
-    const totalRow = (account.total as { sum: { visits: number; pageViews: number } }[])?.[0]
-    const visits = totalRow?.sum?.visits ?? 0
-    const pageViews = totalRow?.sum?.pageViews ?? 0
+    const stats = await statsRes.json()
+    const visits = stats?.visits?.value ?? 0
+    const pageViews = stats?.pageviews?.value ?? 0
 
     if (!visits && !pageViews) {
       return { ok: false, message: 'Sem visitas neste período.' }
     }
 
-    type ReferrerRow = { count: number; dimensions: { refererHost: string } }
-    type PageRow = { count: number; dimensions: { requestPath: string } }
+    const pagesData = pagesRes.ok ? await pagesRes.json() : []
+    const referrersData = referrersRes.ok ? await referrersRes.json() : []
 
-    const byReferrer = (account.byReferrer as ReferrerRow[]) ?? []
-    const byPage = (account.byPage as PageRow[]) ?? []
+    const topPages = (Array.isArray(pagesData) ? pagesData : [])
+      .map((p: { x: string; y: number }) => ({ path: p.x, count: p.y }))
 
-    const topReferrers = byReferrer
-      .filter((r) => r.dimensions?.refererHost)
-      .map((r) => ({ host: r.dimensions.refererHost, count: r.count }))
-
-    const topPages = byPage
-      .filter((p) => p.dimensions?.requestPath)
-      .map((p) => ({ path: p.dimensions.requestPath, count: p.count }))
+    const topReferrers = (Array.isArray(referrersData) ? referrersData : [])
+      .filter((r: { x: string; y: number }) => r.x)
+      .map((r: { x: string; y: number }) => ({ host: r.x, count: r.y }))
 
     const periodLabel = new Date(since + 'T12:00:00').toLocaleDateString('pt-BR', {
       month: 'long',
