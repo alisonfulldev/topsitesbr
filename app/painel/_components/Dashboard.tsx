@@ -365,6 +365,12 @@ function VisitsInfoCard({
           <p className="text-3xl font-bold text-gray-200">—</p>
           <p className="text-xs text-gray-400 mt-1">disponível no Plus</p>
         </div>
+        <Link
+          href="/painel/assinatura"
+          className={buttonVariantClass('conversion', 'sm') + ' inline-flex w-full justify-center mt-2'}
+        >
+          Assinar Plus →
+        </Link>
       </Card>
     )
   }
