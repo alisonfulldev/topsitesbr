@@ -10,6 +10,25 @@ export type AnalyticsResult =
   | { ok: true; data: SiteAnalytics }
   | { ok: false; message: string }
 
+async function getUmamiToken(apiUrl: string): Promise<string | null> {
+  const username = process.env.UMAMI_USERNAME
+  const password = process.env.UMAMI_PASSWORD
+  if (!username || !password) return null
+  try {
+    const res = await fetch(`${apiUrl}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+      cache: 'no-store',
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data?.token ?? null
+  } catch {
+    return null
+  }
+}
+
 export async function getSiteAnalytics(
   websiteId: string,
   since: string,
@@ -18,7 +37,12 @@ export async function getSiteAnalytics(
   const apiUrl = process.env.UMAMI_API_URL
   const apiKey = process.env.UMAMI_API_KEY
 
-  if (!apiUrl || !apiKey) {
+  if (!apiUrl) {
+    return { ok: false, message: 'Coletando dados...' }
+  }
+
+  const token = apiKey ?? (await getUmamiToken(apiUrl))
+  if (!token) {
     return { ok: false, message: 'Coletando dados...' }
   }
 
@@ -26,17 +50,18 @@ export async function getSiteAnalytics(
   const endAt = new Date(until + 'T23:59:59').getTime()
 
   try {
+    const headers = { Authorization: `Bearer ${token}` }
     const [statsRes, pagesRes, referrersRes] = await Promise.all([
       fetch(`${apiUrl}/api/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`, {
-        headers: { Authorization: `Bearer ${apiKey}` },
+        headers,
         next: { revalidate: 3600 },
       }),
       fetch(`${apiUrl}/api/websites/${websiteId}/metrics?startAt=${startAt}&endAt=${endAt}&type=url&limit=5`, {
-        headers: { Authorization: `Bearer ${apiKey}` },
+        headers,
         next: { revalidate: 3600 },
       }),
       fetch(`${apiUrl}/api/websites/${websiteId}/metrics?startAt=${startAt}&endAt=${endAt}&type=referrer&limit=5`, {
-        headers: { Authorization: `Bearer ${apiKey}` },
+        headers,
         next: { revalidate: 3600 },
       }),
     ])
