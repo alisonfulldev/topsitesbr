@@ -11,8 +11,8 @@ export type AnalyticsResult =
   | { ok: false; message: string }
 
 async function getUmamiToken(apiUrl: string): Promise<string | null> {
-  const username = process.env.UMAMI_USERNAME
-  const password = process.env.UMAMI_PASSWORD
+  const username = process.env.UMAMI_USERNAME?.trim()
+  const password = process.env.UMAMI_PASSWORD?.trim()
   if (!username || !password) return null
   try {
     const res = await fetch(`${apiUrl}/api/auth/login`, {
@@ -34,8 +34,8 @@ export async function getSiteAnalytics(
   since: string,
   until: string,
 ): Promise<AnalyticsResult> {
-  const apiUrl = process.env.UMAMI_API_URL
-  const apiKey = process.env.UMAMI_API_KEY
+  const apiUrl = process.env.UMAMI_API_URL?.trim()
+  const apiKey = process.env.UMAMI_API_KEY?.trim()
 
   if (!apiUrl) {
     return { ok: false, message: 'Coletando dados...' }
