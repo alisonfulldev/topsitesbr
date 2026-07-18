@@ -69,8 +69,9 @@ export async function getSiteAnalytics(
     if (!statsRes.ok) return { ok: false, message: 'Coletando dados...' }
 
     const stats = await statsRes.json()
-    const visits = stats?.visits?.value ?? 0
-    const pageViews = stats?.pageviews?.value ?? 0
+    // Umami v2 retorna número direto; v1 retorna { value: number }
+    const visits = typeof stats?.visits === 'object' ? (stats.visits?.value ?? 0) : (stats?.visits ?? 0)
+    const pageViews = typeof stats?.pageviews === 'object' ? (stats.pageviews?.value ?? 0) : (stats?.pageviews ?? 0)
 
     if (!visits && !pageViews) {
       return { ok: false, message: 'Sem visitas neste período.' }
