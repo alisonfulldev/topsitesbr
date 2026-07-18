@@ -660,10 +660,11 @@ export function Dashboard({
       {/* 1. Status do site */}
       {primarySite && <SiteStatusCard site={primarySite} />}
 
-      {/* 2. Desempenho do site — só exibe quando online e com URL */}
-      {primarySite?.status === 'online' && primarySite.siteUrl && (
-        <DesempenhoCard siteUrl={primarySite.siteUrl} />
-      )}
+      {/* 2. Desempenho do site — exibe quando o site está acessível (não suspenso/offline) */}
+      {primarySite?.siteUrl &&
+        !['suspenso', 'offline'].includes(primarySite.status) && (
+          <DesempenhoCard siteUrl={primarySite.siteUrl} />
+        )}
 
       {/* 3. Cards informativos em grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
