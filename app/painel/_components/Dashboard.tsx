@@ -670,8 +670,10 @@ export function Dashboard({
         <BillingInfoCard subscription={subscription} />
       </div>
 
-      {/* 4. Desempenho do site — carregado client-side para não atrasar a página */}
-      {primarySite?.siteUrl && <DesempenhoCard siteUrl={primarySite.siteUrl} />}
+      {/* 4. Desempenho do site — só exibe quando o site está online e tem URL */}
+      {primarySite?.status === 'online' && primarySite.siteUrl && (
+        <DesempenhoCard siteUrl={primarySite.siteUrl} />
+      )}
 
       {/* 5. Benefícios do plano */}
       <PlanBenefitsCard subscription={subscription} />
