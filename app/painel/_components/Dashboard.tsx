@@ -660,8 +660,10 @@ export function Dashboard({
       {/* 1. Status do site */}
       {primarySite && <SiteStatusCard site={primarySite} />}
 
-      {/* 2. Oferta contextual — nunca mais de uma */}
-      {contextualOffer && <ContextualOfferCard offer={contextualOffer} />}
+      {/* 2. Desempenho do site — só exibe quando online e com URL */}
+      {primarySite?.status === 'online' && primarySite.siteUrl && (
+        <DesempenhoCard siteUrl={primarySite.siteUrl} />
+      )}
 
       {/* 3. Cards informativos em grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -670,10 +672,8 @@ export function Dashboard({
         <BillingInfoCard subscription={subscription} />
       </div>
 
-      {/* 4. Desempenho do site — só exibe quando o site está online e tem URL */}
-      {primarySite?.status === 'online' && primarySite.siteUrl && (
-        <DesempenhoCard siteUrl={primarySite.siteUrl} />
-      )}
+      {/* 4. Oferta contextual — nunca mais de uma */}
+      {contextualOffer && <ContextualOfferCard offer={contextualOffer} />}
 
       {/* 5. Benefícios do plano */}
       <PlanBenefitsCard subscription={subscription} />
