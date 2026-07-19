@@ -28,7 +28,7 @@ const PLAN_BENEFITS = [
 ]
 
 const REASONS = [
-  { value: 'preco', label: 'Achei o preço caro' },
+  { value: 'preco', label: 'Encontrei um serviço ou hospedagem mais barata' },
   { value: 'hospedagem', label: 'Já tenho hospedagem' },
   { value: 'outro_lugar', label: 'Vou hospedar em outro lugar' },
   { value: 'nao_usar', label: 'Não vou usar o site agora' },
