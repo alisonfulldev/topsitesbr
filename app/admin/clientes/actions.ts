@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import { hashPassword } from '@/lib/password'
 import { generateReferralCode } from '@/lib/referral'
+import { sendEmail } from '@/lib/integrations/resend'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -105,6 +106,36 @@ export async function createClient(data: {
           clientId: client.id,
         },
       })
+
+      const appUrl = process.env.NEXTAUTH_URL ?? 'https://topsitebr.com.br'
+      await sendEmail({
+        to: email,
+        subject: '🎉 Seu site está pronto — acesse o painel',
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
+            <div style="background:#facc15;border-radius:12px;padding:20px 24px;margin-bottom:24px">
+              <h1 style="margin:0;font-size:20px;color:#1a1a1a">Olá, ${client.name}! 👋</h1>
+            </div>
+            <p style="color:#374151;font-size:15px;line-height:1.6">
+              Seu site foi cadastrado e está pronto para você acessar o painel.
+              Aqui estão suas credenciais de acesso:
+            </p>
+            <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
+              <p style="margin:0 0 8px;font-size:14px;color:#6b7280">E-mail de acesso</p>
+              <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${email}</p>
+              <p style="margin:16px 0 8px;font-size:14px;color:#6b7280">Senha temporária</p>
+              <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${data.createUserPassword}</p>
+            </div>
+            <a href="${appUrl}/login"
+               style="display:block;text-align:center;background:#facc15;color:#1a1a1a;font-weight:700;padding:14px 24px;border-radius:8px;text-decoration:none;font-size:15px;margin:24px 0">
+              Acessar o painel →
+            </a>
+            <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:24px">
+              Recomendamos trocar a senha após o primeiro acesso.
+            </p>
+          </div>
+        `,
+      }).catch(() => {})
     }
   }
 
