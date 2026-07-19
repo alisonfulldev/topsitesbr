@@ -26,7 +26,8 @@ export async function POST(req: NextRequest) {
   try {
     body = (await req.json()) as AsaasWebhookPayload
   } catch {
-    return NextResponse.json({ error: 'Payload inválido.' }, { status: 400 })
+    // Corpo vazio ou inválido (ex: ping de verificação do Asaas) — retorna 200
+    return NextResponse.json({ ok: true, message: 'Evento recebido.' })
   }
 
   const { event, payment } = body
