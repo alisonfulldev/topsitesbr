@@ -30,10 +30,13 @@ export async function activateBasicPlan(): Promise<{ error?: string; paymentUrl?
   })
   if (existing) {
     if (existing.status === 'active') return { error: 'Você já possui uma assinatura ativa.' }
-    // Já existe cobrança pendente — devolve a URL do boleto/PIX gerado anteriormente
+    // Já existe cobrança pendente — tenta recuperar a URL do boleto/PIX
     const chargeId = existing.invoices[0]?.asaasChargeId ?? null
     const paymentUrl = chargeId ? await getAsaasInvoiceUrl(chargeId) : null
-    return { paymentUrl: paymentUrl ?? undefined }
+    if (paymentUrl) return { paymentUrl }
+    // chargeId inválido (ex: criado em sandbox antes de ir para produção)
+    // Marca como cancelada e cria nova assinatura em produção
+    await prisma.subscription.update({ where: { id: existing.id }, data: { status: 'canceled' } })
   }
 
   const [client, basicPlan] = await Promise.all([
