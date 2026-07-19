@@ -100,6 +100,7 @@ export default async function PainelPage({
         siteId={pendingSite.id}
         filesZipUrl={pendingSite.filesZipUrl}
         pendingPayment={hasPendingSubscription}
+        whatsappNumber={process.env.WHATSAPP_BUSINESS_NUMBER ?? ''}
       />
     )
   }

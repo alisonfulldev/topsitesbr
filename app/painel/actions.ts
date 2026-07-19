@@ -130,6 +130,41 @@ export async function requestZipUploadNotification(siteId: string): Promise<void
   })
 }
 
+const REASON_LABELS: Record<string, string> = {
+  preco: 'Achou o preço caro',
+  hospedagem: 'Já tem hospedagem',
+  outro_lugar: 'Vai hospedar em outro lugar',
+  nao_usar: 'Não vai usar o site agora',
+  outro: 'Outro motivo',
+}
+
+export async function submitDownloadReason(
+  siteId: string,
+  reason: string,
+  detail: string,
+): Promise<void> {
+  const clientId = await getClientId()
+  if (!clientId) return
+
+  const site = await prisma.site.findUnique({
+    where: { id: siteId, clientId },
+    include: { client: { select: { name: true } } },
+  })
+  if (!site) return
+
+  const label = REASON_LABELS[reason] ?? reason
+  const msg = `Cliente ${site.client.name} optou por baixar os arquivos. Motivo: ${label}${detail ? ` — "${detail}"` : ''}`
+
+  await prisma.notification.create({
+    data: {
+      clientId: null,
+      title: 'Download solicitado — arquivos via WhatsApp',
+      message: msg,
+      channel: 'painel',
+    },
+  })
+}
+
 export async function markNotificationRead(id: string): Promise<void> {
   const clientId = await getClientId()
   if (!clientId) return

@@ -1,9 +1,13 @@
 'use client'
 
 import { useState, useTransition, useEffect } from 'react'
-import { activateBasicPlan, requestZipUploadNotification } from '../actions'
+import {
+  activateBasicPlan,
+  requestZipUploadNotification,
+  submitDownloadReason,
+} from '../actions'
 import { Button } from '@/components/ui/button'
-import { Modal, ModalActions } from '@/components/ui/modal'
+import { Modal } from '@/components/ui/modal'
 import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { SparklesIcon, DownloadIcon } from '@/components/ui/icons'
 
@@ -11,7 +15,10 @@ type Props = {
   siteId: string
   filesZipUrl: string | null
   pendingPayment?: boolean
+  whatsappNumber: string
 }
+
+type RetentionStep = 'retention' | 'reason' | 'whatsapp'
 
 const PLAN_BENEFITS = [
   'Hospedagem gerenciada — zero configuração',
@@ -20,8 +27,19 @@ const PLAN_BENEFITS = [
   'Suporte via painel sempre que precisar',
 ]
 
-export function ActivationScreen({ siteId, filesZipUrl, pendingPayment }: Props) {
+const REASONS = [
+  { value: 'preco', label: 'Achei o preço caro' },
+  { value: 'hospedagem', label: 'Já tenho hospedagem' },
+  { value: 'outro_lugar', label: 'Vou hospedar em outro lugar' },
+  { value: 'nao_usar', label: 'Não vou usar o site agora' },
+  { value: 'outro', label: 'Outro motivo' },
+]
+
+export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsappNumber }: Props) {
   const [showRetention, setShowRetention] = useState(false)
+  const [retentionStep, setRetentionStep] = useState<RetentionStep>('retention')
+  const [selectedReason, setSelectedReason] = useState('')
+  const [reasonDetail, setReasonDetail] = useState('')
   const [isMobile, setIsMobile] = useState(false)
   const [zipMsg, setZipMsg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -58,6 +76,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment }: Props)
       })
       return
     }
+    setRetentionStep('retention')
     setShowRetention(true)
   }
 
@@ -67,9 +86,150 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment }: Props)
   }
 
   function handleRetentionDownload() {
-    setShowRetention(false)
-    if (filesZipUrl) window.location.href = filesZipUrl
+    setRetentionStep('reason')
   }
+
+  function handleReasonSubmit() {
+    if (!selectedReason) return
+    startTransition(async () => {
+      await submitDownloadReason(siteId, selectedReason, reasonDetail)
+      setRetentionStep('whatsapp')
+    })
+  }
+
+  function handleWhatsApp() {
+    const msg = encodeURIComponent(
+      'Olá! Gostaria de receber os arquivos do meu site. 😊',
+    )
+    const number = whatsappNumber.replace(/\D/g, '')
+    window.open(`https://wa.me/${number}?text=${msg}`, '_blank')
+    setShowRetention(false)
+    setRetentionStep('retention')
+  }
+
+  function handleClose() {
+    setShowRetention(false)
+    setRetentionStep('retention')
+    setSelectedReason('')
+    setReasonDetail('')
+  }
+
+  const retentionTitle =
+    retentionStep === 'retention'
+      ? 'Tem certeza que não quer o site no ar?'
+      : retentionStep === 'reason'
+        ? 'Só uma pergunta rápida'
+        : 'Receba os arquivos pelo WhatsApp'
+
+  const retentionContent = (
+    <>
+      {retentionStep === 'retention' && (
+        <>
+          <p className="text-sm text-gray-600 leading-relaxed mb-3">
+            Só pra você comparar: hospedagem mensal{' '}
+            <strong className="text-gray-900">sem fidelidade</strong> custa de R$40 a R$70 nas
+            grandes empresas — os planos baratos exigem contrato de 2 a 4 anos adiantado.
+          </p>
+          <p className="text-sm text-gray-600 leading-relaxed mb-6">
+            Aqui são <strong className="text-gray-900">R$17/mês, sem contrato</strong>, com
+            hospedagem, SSL, monitoramento e suporte. A gente cuida de tudo.
+          </p>
+          <div className="flex flex-col gap-3">
+            <Button
+              variant="conversion"
+              size="md"
+              fullWidth
+              onClick={handleRetentionActivate}
+              loading={isPending}
+            >
+              Quero ativar por R$17/mês
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              fullWidth
+              onClick={handleRetentionDownload}
+              disabled={isPending}
+            >
+              Não, quero apenas baixar os arquivos
+            </Button>
+          </div>
+        </>
+      )}
+
+      {retentionStep === 'reason' && (
+        <>
+          <p className="text-sm text-gray-500 mb-4">
+            Qual o principal motivo para não querer manter o site hospedado agora?
+          </p>
+          <div className="space-y-2 mb-4">
+            {REASONS.map((r) => (
+              <label
+                key={r.value}
+                className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                  selectedReason === r.value
+                    ? 'border-brand bg-brand/5'
+                    : 'border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="reason"
+                  value={r.value}
+                  checked={selectedReason === r.value}
+                  onChange={() => setSelectedReason(r.value)}
+                  className="accent-brand"
+                />
+                <span className="text-sm text-gray-700">{r.label}</span>
+              </label>
+            ))}
+          </div>
+          {selectedReason && (
+            <textarea
+              value={reasonDetail}
+              onChange={(e) => setReasonDetail(e.target.value)}
+              placeholder="Algum detalhe que queira adicionar? (opcional)"
+              rows={2}
+              className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-brand resize-none"
+            />
+          )}
+          <Button
+            variant="conversion"
+            size="md"
+            fullWidth
+            onClick={handleReasonSubmit}
+            loading={isPending}
+            disabled={!selectedReason}
+          >
+            Enviar e ver como baixar
+          </Button>
+        </>
+      )}
+
+      {retentionStep === 'whatsapp' && (
+        <>
+          <p className="text-sm text-gray-600 leading-relaxed mb-2">
+            Envie os arquivos do seu site diretamente pelo WhatsApp. Nossa equipe
+            vai te mandar o arquivo assim que possível.
+          </p>
+          <p className="text-xs text-gray-400 mb-6">
+            Você pode ativar o plano a qualquer momento no futuro, mesmo após baixar.
+          </p>
+          <Button
+            variant="conversion"
+            size="md"
+            fullWidth
+            onClick={handleWhatsApp}
+          >
+            <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            Falar no WhatsApp para receber os arquivos
+          </Button>
+        </>
+      )}
+    </>
+  )
 
   return (
     <>
@@ -90,7 +250,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment }: Props)
           </p>
         </div>
 
-        {/* Option cards — stacked on mobile, side-by-side on sm+ */}
+        {/* Option cards */}
         <div className="px-4 pb-6 flex flex-col sm:flex-row gap-4">
           {/* Card 1: Publish */}
           <div className="bg-white rounded-xl p-5 flex flex-col flex-1">
@@ -158,7 +318,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment }: Props)
             </div>
             <h2 className="text-base font-bold text-white mb-1">Baixar os arquivos</h2>
             <p className="text-xs text-gray-400 mb-5 leading-relaxed flex-1">
-              Receba o zip com todos os arquivos e hospede onde e como quiser.
+              Receba o arquivo com o seu site e hospede onde e como quiser.
             </p>
 
             {zipMsg && (
@@ -188,66 +348,18 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment }: Props)
       {isMobile ? (
         <BottomSheet
           open={showRetention}
-          onClose={() => setShowRetention(false)}
-          title="Tem certeza que não quer o site no ar?"
+          onClose={handleClose}
+          title={retentionTitle}
         >
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Só pra você comparar: hospedagem mensal{' '}
-            <strong className="text-gray-900">sem fidelidade</strong> custa de R$40 a R$70 nas
-            grandes empresas — os planos baratos exigem contrato de 2 a 4 anos adiantado.
-          </p>
-          <p className="text-sm text-gray-600 leading-relaxed mb-6">
-            Aqui são <strong className="text-gray-900">R$17/mês, sem contrato</strong>, com
-            hospedagem, SSL, monitoramento e suporte. A gente cuida de tudo.
-          </p>
-          <div className="flex flex-col gap-3">
-            <Button
-              variant="conversion"
-              size="md"
-              fullWidth
-              onClick={handleRetentionActivate}
-              loading={isPending}
-            >
-              Quero ativar por R$17/mês
-            </Button>
-            <Button
-              variant="secondary"
-              size="md"
-              fullWidth
-              onClick={handleRetentionDownload}
-              disabled={isPending}
-            >
-              Não, quero apenas baixar os arquivos
-            </Button>
-          </div>
+          {retentionContent}
         </BottomSheet>
       ) : (
         <Modal
           open={showRetention}
-          onClose={() => setShowRetention(false)}
-          title="Tem certeza que não quer o site no ar por R$17/mês?"
-          description="Só pra você comparar antes de decidir: uma hospedagem mensal sem fidelidade custa de R$40 a R$70 nas grandes empresas — os planos baratos exigem contrato de 2 a 4 anos pagos adiantado. Aqui são R$17 por mês, sem contrato de permanência, com hospedagem, SSL, monitoramento e suporte inclusos. A gente cuida de tudo."
+          onClose={handleClose}
+          title={retentionTitle}
         >
-          <ModalActions>
-            <Button
-              variant="conversion"
-              size="md"
-              fullWidth
-              onClick={handleRetentionActivate}
-              loading={isPending}
-            >
-              Quero ativar por R$17/mês
-            </Button>
-            <Button
-              variant="secondary"
-              size="md"
-              fullWidth
-              onClick={handleRetentionDownload}
-              disabled={isPending}
-            >
-              Não, quero apenas baixar os arquivos
-            </Button>
-          </ModalActions>
+          {retentionContent}
         </Modal>
       )}
     </>
