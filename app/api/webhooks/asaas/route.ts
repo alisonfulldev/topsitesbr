@@ -12,9 +12,9 @@ interface AsaasWebhookPayload {
 }
 
 export async function POST(req: NextRequest) {
-  // O Asaas envia o token no header "asaas-access-token"
   const token = req.headers.get('asaas-access-token') ?? ''
-  if (!validateAsaasWebhook(token)) {
+  // Sem token = health check do Asaas; token errado = rejeitar
+  if (token && !validateAsaasWebhook(token)) {
     return NextResponse.json({ error: 'Token inválido.' }, { status: 401 })
   }
 
