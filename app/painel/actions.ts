@@ -18,6 +18,7 @@ async function getClientId(): Promise<string | null> {
 }
 
 export async function activateBasicPlan(): Promise<{ error?: string; paymentUrl?: string }> {
+  try {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'client') return { error: 'Não autorizado.' }
 
@@ -44,7 +45,7 @@ export async function activateBasicPlan(): Promise<{ error?: string; paymentUrl?
     prisma.plan.findFirst({ where: { name: 'Básico' } }),
   ])
   if (!client) return { error: 'Cliente não encontrado.' }
-  if (!basicPlan) return { error: 'Plano básico não encontrado.' }
+  if (!basicPlan) return { error: 'Plano básico não encontrado no banco de dados.' }
 
   const docDigits = client.document?.replace(/\D/g, '') ?? ''
   if (docDigits.length !== 11 && docDigits.length !== 14) {
@@ -95,6 +96,11 @@ export async function activateBasicPlan(): Promise<{ error?: string; paymentUrl?
 
   revalidatePath('/painel')
   return { paymentUrl }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('[activateBasicPlan]', msg)
+    return { error: `Erro ao processar pagamento: ${msg}` }
+  }
 }
 
 export async function markRetentionShown(): Promise<void> {
