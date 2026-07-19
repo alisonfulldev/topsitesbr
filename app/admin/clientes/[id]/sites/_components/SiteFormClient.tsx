@@ -34,7 +34,6 @@ export function SiteFormClient({ clientId }: { clientId: string }) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
-  const [fileName, setFileName] = useState<string | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
   function handleSubmit(e: React.FormEvent) {
@@ -110,47 +109,8 @@ export function SiteFormClient({ clientId }: { clientId: string }) {
         </Field>
 
         <Field
-          label="Arquivo do site (ZIP ou RAR)"
-          hint="Compactado com os arquivos HTML/CSS/JS — o cliente poderá baixar pelo painel"
-        >
-          <div className="flex items-center gap-3">
-            <label className="flex-1 flex items-center gap-2 px-3 py-2 border border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-              <span className="text-gray-400 text-xs">
-                {fileName ?? 'Clique para selecionar um arquivo .zip ou .rar'}
-              </span>
-              <input
-                type="file"
-                name="filesZip"
-                accept=".zip,.rar,application/zip,application/x-zip-compressed,application/x-rar-compressed,application/vnd.rar"
-                className="hidden"
-                onChange={(e) =>
-                  setFileName(e.target.files?.[0]?.name ?? null)
-                }
-              />
-            </label>
-            {fileName && (
-              <button
-                type="button"
-                onClick={() => {
-                  setFileName(null)
-                  if (formRef.current) {
-                    const input = formRef.current.querySelector<HTMLInputElement>(
-                      'input[name="filesZip"]'
-                    )
-                    if (input) input.value = ''
-                  }
-                }}
-                className="text-xs text-gray-400 hover:text-gray-600"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        </Field>
-
-        <Field
-          label="Analytics Site Tag (Cloudflare)"
-          hint="ID do site no Cloudflare Web Analytics — ex: a1b2c3d4e5f6... (deixe em branco se ainda não configurou)"
+          label="Analytics Site ID (Umami)"
+          hint="ID do site no Umami — encontrado na URL da página do site (deixe em branco se ainda não configurou)"
         >
           <input
             type="text"

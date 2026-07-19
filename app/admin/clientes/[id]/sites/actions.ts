@@ -1,7 +1,6 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { uploadSiteFile } from '@/lib/storage'
 import { revalidatePath } from 'next/cache'
 import { SiteType, SiteStatus, DnsStatus, SslStatus } from '@prisma/client'
 
@@ -15,7 +14,6 @@ export async function createSite(
   const templateUsed = (formData.get('templateUsed') as string) || null
   const analyticsSiteId = (formData.get('analyticsSiteId') as string) || null
   const notes = (formData.get('notes') as string) || null
-  const file = formData.get('filesZip') as File | null
 
   if (!clientId || !siteType) {
     return { error: 'Tipo de site é obrigatório.' }
@@ -23,18 +21,6 @@ export async function createSite(
 
   if (!Object.values(SiteType).includes(siteType as SiteType)) {
     return { error: 'Tipo de site inválido.' }
-  }
-
-  let filesZipUrl: string | null = null
-  if (file && file.size > 0) {
-    try {
-      const buffer = Buffer.from(await file.arrayBuffer())
-      const ext = file.name.split('.').pop() ?? 'zip'
-      const path = `${clientId}/${Date.now()}.${ext}`
-      filesZipUrl = await uploadSiteFile(path, buffer, file.type || 'application/zip') ?? null
-    } catch (err) {
-      return { error: 'Erro ao fazer upload do arquivo. Verifique a configuração do Storage.' }
-    }
   }
 
   const site = await prisma.site.create({
@@ -45,7 +31,6 @@ export async function createSite(
       templateUsed: templateUsed?.trim() || null,
       analyticsSiteId: analyticsSiteId?.trim() || null,
       status: status as SiteStatus,
-      filesZipUrl,
       notes: notes?.trim() || null,
     },
   })
@@ -66,21 +51,8 @@ export async function updateSite(
   const templateUsed = (formData.get('templateUsed') as string) || null
   const analyticsSiteId = (formData.get('analyticsSiteId') as string) || null
   const notes = (formData.get('notes') as string) || null
-  const file = formData.get('filesZip') as File | null
 
   if (!siteType) return { error: 'Tipo de site é obrigatório.' }
-
-  let filesZipUrl: string | null | undefined
-  if (file && file.size > 0) {
-    try {
-      const buffer = Buffer.from(await file.arrayBuffer())
-      const ext = file.name.split('.').pop() ?? 'zip'
-      const path = `${clientId}/${Date.now()}.${ext}`
-      filesZipUrl = await uploadSiteFile(path, buffer, file.type || 'application/zip')
-    } catch {
-      return { error: 'Erro ao fazer upload do arquivo.' }
-    }
-  }
 
   await prisma.site.update({
     where: { id },
@@ -92,7 +64,6 @@ export async function updateSite(
       status: status as SiteStatus,
       notes: notes?.trim() || null,
       publishedAt: status === 'online' ? new Date() : undefined,
-      ...(filesZipUrl ? { filesZipUrl } : {}),
     },
   })
 
