@@ -21,7 +21,7 @@ export default async function PainelAssinaturaPage() {
       include: { plan: true },
       orderBy: { createdAt: 'desc' },
     }),
-    prisma.plan.findMany({ orderBy: { price: 'asc' } }),
+    prisma.plan.findMany({ where: { price: { lte: 29 } }, orderBy: { price: 'asc' } }),
   ])
 
   if (!subscriptionRaw) {
