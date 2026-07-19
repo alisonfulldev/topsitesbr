@@ -11,6 +11,10 @@ interface AsaasWebhookPayload {
   payment?: { id: string }
 }
 
+export async function GET() {
+  return NextResponse.json({ ok: true })
+}
+
 export async function POST(req: NextRequest) {
   const token = req.headers.get('asaas-access-token') ?? ''
   // Sem token = health check do Asaas; token errado = rejeitar
