@@ -1,11 +1,7 @@
 'use client'
 
 import { useState, useTransition, useEffect } from 'react'
-import {
-  activateBasicPlan,
-  requestZipUploadNotification,
-  submitDownloadReason,
-} from '../actions'
+import { activateBasicPlan, submitDownloadReason } from '../actions'
 import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/ui/modal'
 import { BottomSheet } from '@/components/ui/bottom-sheet'
@@ -41,7 +37,6 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
   const [selectedReason, setSelectedReason] = useState('')
   const [reasonDetail, setReasonDetail] = useState('')
   const [isMobile, setIsMobile] = useState(false)
-  const [zipMsg, setZipMsg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
@@ -66,16 +61,6 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
   }
 
   function handleDownloadClick() {
-    if (!filesZipUrl) {
-      if (zipMsg) return
-      startTransition(async () => {
-        await requestZipUploadNotification(siteId)
-        setZipMsg(
-          'Arquivos em preparação. Você será notificado assim que estiverem prontos para download.',
-        )
-      })
-      return
-    }
     setRetentionStep('retention')
     setShowRetention(true)
   }
@@ -321,20 +306,14 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
               Receba o arquivo com o seu site e hospede onde e como quiser.
             </p>
 
-            {zipMsg && (
-              <p className="text-blue-300 text-xs bg-blue-950/40 border border-blue-900/50 rounded-lg px-3 py-2 mb-3">
-                {zipMsg}
-              </p>
-            )}
-
             <Button
               variant="secondary"
               size="md"
               fullWidth
               onClick={handleDownloadClick}
-              disabled={isPending || !!zipMsg}
+              disabled={isPending}
             >
-              {zipMsg ? 'Aguardando arquivos…' : 'Baixar arquivos (grátis)'}
+              Baixar arquivos (grátis)
             </Button>
           </div>
         </div>
