@@ -27,8 +27,9 @@ export async function POST(req: NextRequest) {
 
   const { event, payment } = body
 
+  // Evento sem payment (ex: teste de verificação do Asaas) — retorna 200 para não pausar a fila
   if (!event || !payment?.id) {
-    return NextResponse.json({ error: 'Campos event e payment.id são obrigatórios.' }, { status: 400 })
+    return NextResponse.json({ ok: true, message: 'Evento recebido.' })
   }
 
   const chargeId = payment.id
