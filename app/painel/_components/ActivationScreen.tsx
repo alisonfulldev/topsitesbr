@@ -194,8 +194,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
       {retentionStep === 'whatsapp' && (
         <>
           <p className="text-sm text-gray-600 leading-relaxed mb-2">
-            Envie os arquivos do seu site diretamente pelo WhatsApp. Nossa equipe
-            vai te mandar o arquivo assim que possível.
+            Fale com a gente pelo WhatsApp e receba os arquivos do seu site diretamente no chat.
           </p>
           <p className="text-xs text-gray-400 mb-6">
             Você pode ativar o plano a qualquer momento no futuro, mesmo após baixar.
