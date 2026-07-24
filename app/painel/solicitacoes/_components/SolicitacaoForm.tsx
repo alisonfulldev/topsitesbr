@@ -14,8 +14,8 @@ const AVULSA_PRICE: Record<string, number> = {
   texto: 20,
   imagem: 40,
   texto_e_imagem: 60,
-  nova_secao: 40,
-  nova_pagina: 70,
+  nova_secao: 50,
+  nova_pagina: 97,
 }
 
 type PlanInfo = {
@@ -103,7 +103,9 @@ function buildOptions(plan: PlanInfo, monthlyUsed: number): OptionConfig[] {
       group: 'fixo',
       included: false,
       avulsaBase: AVULSA_PRICE.nova_secao,
-      badge: `${priceAfterDiscount(AVULSA_PRICE.nova_secao, plan.discountPercent)} · sempre cobrado à parte`,
+      badge: plan.discountPercent > 0
+        ? `R$${AVULSA_PRICE.nova_secao.toFixed(2).replace('.',',')} → ${priceAfterDiscount(AVULSA_PRICE.nova_secao, plan.discountPercent)} · com ${plan.discountPercent}% do seu plano`
+        : `R$${AVULSA_PRICE.nova_secao.toFixed(2).replace('.',',')} · sempre cobrado à parte`,
     },
     {
       changeType: 'nova_pagina',
@@ -111,7 +113,9 @@ function buildOptions(plan: PlanInfo, monthlyUsed: number): OptionConfig[] {
       group: 'fixo',
       included: false,
       avulsaBase: AVULSA_PRICE.nova_pagina,
-      badge: `${priceAfterDiscount(AVULSA_PRICE.nova_pagina, plan.discountPercent)} · sempre cobrado à parte`,
+      badge: plan.discountPercent > 0
+        ? `R$${AVULSA_PRICE.nova_pagina.toFixed(2).replace('.',',')} → ${priceAfterDiscount(AVULSA_PRICE.nova_pagina, plan.discountPercent)} · com ${plan.discountPercent}% do seu plano`
+        : `R$${AVULSA_PRICE.nova_pagina.toFixed(2).replace('.',',')} · sempre cobrado à parte`,
     },
   ]
 }

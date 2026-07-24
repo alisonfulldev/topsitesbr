@@ -93,11 +93,12 @@ export default function TermosPage() {
               <li>Alteração de texto: R$ 20,00</li>
               <li>Alteração de imagem: R$ 40,00</li>
               <li>Alteração de texto e imagem: R$ 60,00</li>
-              <li>Nova seção: R$ 40,00</li>
-              <li>Nova página: R$ 70,00</li>
+              <li>Nova seção: R$ 50,00</li>
+              <li>Nova página: R$ 97,00</li>
             </ul>
             <p className="mt-2">
-              Serviços avulsos têm desconto de 10% para assinantes do plano Site no Ar.
+              Serviços avulsos têm desconto de 10% para assinantes do plano Site no Ar
+              (ex: nova seção por R$ 45,00 e nova página por R$ 87,30).
             </p>
           </section>
 
