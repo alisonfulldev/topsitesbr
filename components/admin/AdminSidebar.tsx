@@ -102,12 +102,22 @@ export function AdminSidebar({ userName, unreadCount }: AdminSidebarProps) {
       <NavLinks onNavigate={onNavigate} unreadCount={unreadCount} />
       <div className="p-4 border-t border-brand-dark-border space-y-2">
         <p className="text-xs text-gray-400 truncate">{userName}</p>
-        <button
-          onClick={() => signOut({ callbackUrl: '/login' })}
-          className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
-        >
-          Sair
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/conta"
+            onClick={onNavigate}
+            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            Minha Conta
+          </Link>
+          <span className="text-gray-700 text-xs">·</span>
+          <button
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            Sair
+          </button>
+        </div>
       </div>
     </>
   )

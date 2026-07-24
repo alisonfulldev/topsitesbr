@@ -65,6 +65,7 @@ const navItems = [
 
 const desktopSecondaryItems = [
   { href: '/painel/notificacoes', label: 'Notificações' },
+  { href: '/painel/conta', label: 'Minha Conta' },
   { href: '/painel/alterar-senha', label: 'Alterar senha' },
 ]
 
