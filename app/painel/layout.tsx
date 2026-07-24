@@ -72,6 +72,17 @@ export default async function PainelLayout({ children }: { children: React.React
         <main className="flex-1 p-4 md:p-6 pb-24 md:pb-6">
           {children}
         </main>
+
+        {/* Footer with legal links */}
+        <footer className="hidden md:flex items-center justify-center gap-4 py-3 border-t border-gray-100 text-xs text-gray-400">
+          <a href="/termos" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 hover:underline">
+            Termos de Uso
+          </a>
+          <span>·</span>
+          <a href="/privacidade" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 hover:underline">
+            Privacidade
+          </a>
+        </footer>
       </div>
 
       {/* Mobile bottom navigation — hidden on desktop */}

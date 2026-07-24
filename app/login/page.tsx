@@ -113,6 +113,17 @@ export default function LoginPage() {
         <Suspense fallback={<div className="h-64 animate-pulse rounded-2xl bg-zinc-900" />}>
           <LoginForm />
         </Suspense>
+
+        {/* Legal links */}
+        <p className="mt-8 text-center text-xs text-zinc-600">
+          <a href="/termos" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 hover:underline">
+            Termos de Uso
+          </a>
+          {' · '}
+          <a href="/privacidade" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 hover:underline">
+            Privacidade
+          </a>
+        </p>
       </div>
     </main>
   )

@@ -130,6 +130,19 @@ export default async function ClientePage({
               </code>
             }
           />
+          {'termsAcceptedAt' in client && client.termsAcceptedAt ? (
+            <Row
+              label="Termos aceitos"
+              value={
+                <span className="text-green-700">
+                  {(client.termsAcceptedAt as Date).toLocaleDateString('pt-BR')}{' '}
+                  {('termsVersion' in client && client.termsVersion)
+                    ? <span className="text-gray-400 text-xs">(v{client.termsVersion as string})</span>
+                    : null}
+                </span>
+              }
+            />
+          ) : null}
           <Row
             label="Plano"
             value={

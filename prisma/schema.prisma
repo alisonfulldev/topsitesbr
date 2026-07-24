@@ -127,6 +127,8 @@ model Client {
   siteEntryFee             Decimal?  @map("site_entry_fee") @db.Decimal(10, 2)
   monthlyFeeAcknowledgedAt DateTime?
   downloadRetentionShownAt DateTime?
+  termsAcceptedAt          DateTime? @map("terms_accepted_at")
+  termsVersion             String?   @map("terms_version")
   createdAt                DateTime  @default(now()) @map("created_at")
   updatedAt                DateTime  @updatedAt @map("updated_at")
 
@@ -234,15 +236,18 @@ model Subscription {
 }
 
 model Invoice {
-  id             String        @id @default(uuid())
-  subscriptionId String        @map("subscription_id")
-  amount         Decimal       @db.Decimal(10, 2)
-  status         InvoiceStatus @default(pending)
-  dueDate        DateTime      @map("due_date")
-  paidAt         DateTime?     @map("paid_at")
-  asaasChargeId  String?       @map("asaas_charge_id")
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
+  id                  String        @id @default(uuid())
+  subscriptionId      String        @map("subscription_id")
+  amount              Decimal       @db.Decimal(10, 2)
+  status              InvoiceStatus @default(pending)
+  dueDate             DateTime      @map("due_date")
+  paidAt              DateTime?     @map("paid_at")
+  asaasChargeId       String?       @map("asaas_charge_id")
+  overdueDay0SentAt   DateTime?     @map("overdue_day0_sent_at")
+  overdueDay5SentAt   DateTime?     @map("overdue_day5_sent_at")
+  overdueDay10SentAt  DateTime?     @map("overdue_day10_sent_at")
+  createdAt           DateTime      @default(now()) @map("created_at")
+  updatedAt           DateTime      @updatedAt @map("updated_at")
 
   subscription Subscription @relation(fields: [subscriptionId], references: [id])
 

@@ -36,7 +36,7 @@ export function IndicacoesClientPage({
   }
 
   async function handleWhatsAppShare() {
-    const text = `Olá! Tenho um site profissional por apenas R$97 e pago só R$17/mês pela hospedagem. Você pode ter o seu também: ${referralLink}`
+    const text = `Olá! Tenho um site profissional com hospedagem, SSL e suporte. O primeiro mês é grátis e depois R$29/mês. Você pode ter o seu também: ${referralLink}`
 
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {

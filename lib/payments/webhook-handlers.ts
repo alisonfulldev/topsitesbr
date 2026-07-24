@@ -1,5 +1,11 @@
 import { prisma } from '@/lib/prisma'
-import { sendNotification } from '@/lib/notifications'
+import {
+  sendNotification,
+  sendOverdueDay0,
+  sendOverdueDay5,
+  sendOverdueDay10,
+  sendPaymentRegularized,
+} from '@/lib/notifications'
 import { asaasFetch } from '@/lib/integrations/asaas'
 
 interface AsaasPaymentStatus {
@@ -80,6 +86,7 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
   const { subscription } = invoice
   const { client } = subscription
   const isFirstPayment = subscription.invoices.length === 0
+  const wasOverdue = invoice.status === 'overdue'
 
   // Apenas atualizações financeiras na transaction — notificações ficam fora
   await prisma.$transaction([
@@ -100,6 +107,22 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
     'painel',
     'payment-confirmed',
   )
+
+  // Se o pagamento regularizou uma inadimplência, notifica admin para republicar
+  if (wasOverdue) {
+    const clientEmail = await prisma.client.findUnique({
+      where: { id: client.id },
+      select: { email: true },
+    })
+    if (clientEmail?.email) {
+      await sendPaymentRegularized(clientEmail.email, client.name)
+    }
+    await sendNotification(
+      null,
+      `Republicar site de ${client.name} — pagamento regularizado`,
+      `Cliente ${client.name} regularizou o pagamento. Publique o site e marque o status como "online" no painel.`,
+    )
+  }
 
   if (isFirstPayment) {
     const hasPendingSite = client.sites.some((s) => s.status === 'pendente_ativacao')
@@ -123,7 +146,7 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
 
   return {
     ok: true,
-    message: `Pagamento confirmado para ${client.name}${isFirstPayment ? ' (primeiro pagamento)' : ''}.`,
+    message: `Pagamento confirmado para ${client.name}${isFirstPayment ? ' (primeiro pagamento)' : ''}${wasOverdue ? ' (regularizou inadimplência)' : ''}.`,
   }
 }
 
@@ -136,7 +159,7 @@ export async function handlePaymentOverdue(chargeId: string): Promise<{
     include: {
       subscription: {
         include: {
-          client: { select: { id: true, name: true } },
+          client: { select: { id: true, name: true, email: true } },
           plan: { select: { name: true } },
         },
       },
@@ -153,7 +176,7 @@ export async function handlePaymentOverdue(chargeId: string): Promise<{
   await prisma.$transaction([
     prisma.invoice.update({
       where: { id: invoice.id },
-      data: { status: 'overdue' },
+      data: { status: 'overdue', overdueDay0SentAt: new Date() },
     }),
     prisma.subscription.update({
       where: { id: subscription.id },
@@ -169,9 +192,60 @@ export async function handlePaymentOverdue(chargeId: string): Promise<{
     'payment-overdue',
   )
 
+  // Envia e-mail de dia 0 (tom gentil)
+  if (client.email) {
+    await sendOverdueDay0(client.email, client.name, null)
+  }
+
   return {
     ok: true,
     message: `Assinatura de ${client.name} marcada como inadimplente.`,
+  }
+}
+
+// ── Verificação periódica de inadimplência (chamada no carregamento do admin) ──
+
+export async function checkOverdueSubscriptions(): Promise<void> {
+  const now = new Date()
+  const DAY_MS = 24 * 60 * 60 * 1000
+
+  const overdueInvoices = await prisma.invoice.findMany({
+    where: { status: 'overdue' },
+    include: {
+      subscription: {
+        include: {
+          client: { select: { id: true, name: true, email: true } },
+        },
+      },
+    },
+  })
+
+  for (const invoice of overdueInvoices) {
+    const { client } = invoice.subscription
+    const daysSinceDue = Math.floor((now.getTime() - invoice.dueDate.getTime()) / DAY_MS)
+
+    // Dia 5
+    if (daysSinceDue >= 5 && !invoice.overdueDay5SentAt) {
+      if (client.email) await sendOverdueDay5(client.email, client.name, null)
+      await prisma.invoice.update({
+        where: { id: invoice.id },
+        data: { overdueDay5SentAt: now },
+      })
+    }
+
+    // Dia 10
+    if (daysSinceDue >= 10 && !invoice.overdueDay10SentAt) {
+      if (client.email) await sendOverdueDay10(client.email, client.name, null)
+      await sendNotification(
+        null,
+        `Despublicar site de ${client.name} — 10 dias de atraso`,
+        `Cliente ${client.name} está com a fatura em atraso há ${daysSinceDue} dias. Despublique o site e marque o status como "suspenso".`,
+      )
+      await prisma.invoice.update({
+        where: { id: invoice.id },
+        data: { overdueDay10SentAt: now },
+      })
+    }
   }
 }
 
