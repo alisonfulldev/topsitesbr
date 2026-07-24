@@ -111,61 +111,66 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
 
   const retentionTitle =
     retentionStep === 'retention'
-      ? 'Tem certeza? Seu site está pronto pra ir ao ar hoje'
+      ? 'Espera! Seu site pode estar no ar hoje'
       : retentionStep === 'reason'
         ? 'Só uma pergunta rápida'
         : 'Receba os arquivos pelo WhatsApp'
-
-  const RETENTION_BENEFITS = [
-    'Publicação e configuração completa, feita por nós',
-    'Correções ilimitadas e gratuitas, sempre que precisar',
-    'Monitoramento 24h — se sair do ar, a gente resolve',
-    'Suporte especializado direto no WhatsApp',
-    'Relatório de visitas do seu site',
-    'Primeiro mês grátis, sem contrato de permanência',
-  ]
 
   const retentionContent = (
     <>
       {retentionStep === 'retention' && (
         <>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Baixando os arquivos, você fica responsável por: contratar e configurar uma
-            hospedagem, instalar o certificado SSL, apontar o domínio, subir os arquivos
-            por FTP e resolver sozinho qualquer erro ou queda do servidor.
+          {/* Lista de trabalho técnico */}
+          <p className="text-xs text-gray-500 mb-2">
+            Baixando os arquivos, todo o trabalho técnico fica com você:
           </p>
-          <p className="text-sm text-gray-600 leading-relaxed mb-4">
-            Ativando agora, <strong className="text-gray-900">seu site entra no ar hoje mesmo</strong>{' '}
-            — e o primeiro mês é gratuito. Você não digita uma linha de código: a gente
-            publica, monitora 24h, corrige o que quebrar e mantém tudo funcionando.
-          </p>
-          <ul className="space-y-2 mb-6">
-            {RETENTION_BENEFITS.map((b) => (
-              <li key={b} className="flex items-start gap-2 text-sm text-gray-700">
-                <svg className="w-4 h-4 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                </svg>
-                {b}
+          <ul className="space-y-1.5 mb-4">
+            {[
+              'Contratar e configurar hospedagem',
+              'Instalar o certificado SSL',
+              'Apontar o domínio',
+              'Subir arquivos por FTP',
+              'Resolver quedas e erros sozinho',
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2 text-sm text-gray-500">
+                <span className="w-4 h-4 rounded-full bg-red-50 flex items-center justify-center shrink-0 text-red-400 text-xs font-bold">✕</span>
+                {item}
               </li>
             ))}
           </ul>
+
+          {/* Divisor */}
+          <div className="border-t border-gray-100 my-3" />
+
+          {/* Lista de benefícios */}
+          <p className="text-xs font-semibold text-gray-700 mb-2">
+            Ativando agora, a gente faz tudo por você:
+          </p>
+          <ul className="space-y-1.5 mb-4">
+            {[
+              'Publicação e configuração completa',
+              'Correções ilimitadas e gratuitas',
+              'Monitoramento 24h — se cair, resolvemos',
+              'Suporte no WhatsApp',
+              'Relatório de visitas do site',
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2 text-sm text-gray-700">
+                <span className="w-4 h-4 rounded-full bg-green-50 flex items-center justify-center shrink-0 text-green-500 text-xs font-bold">✓</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          {/* Fechamento */}
+          <p className="text-center text-xs font-semibold text-brand-text bg-brand/8 rounded-lg py-2 px-3 mb-4">
+            Primeiro mês grátis · Sem contrato · Cancele quando quiser
+          </p>
+
           <div className="flex flex-col gap-3">
-            <Button
-              variant="conversion"
-              size="md"
-              fullWidth
-              onClick={handleRetentionActivate}
-              loading={isPending}
-            >
+            <Button variant="conversion" size="md" fullWidth onClick={handleRetentionActivate} loading={isPending}>
               Ativar com 1 mês grátis
             </Button>
-            <Button
-              variant="secondary"
-              size="md"
-              fullWidth
-              onClick={handleRetentionDownload}
-              disabled={isPending}
-            >
+            <Button variant="secondary" size="md" fullWidth onClick={handleRetentionDownload} disabled={isPending}>
               Continuar e baixar os arquivos
             </Button>
           </div>
