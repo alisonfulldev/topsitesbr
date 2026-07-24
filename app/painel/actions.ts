@@ -92,16 +92,14 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
 
   const now = new Date()
 
-  // Update client's terms acceptance
-  if (opts?.termsAccepted !== false) {
-    await prisma.client.update({
-      where: { id: clientId },
-      data: {
-        termsAcceptedAt: now,
-        termsVersion: TERMS_VERSION,
-      },
-    })
-  }
+  // Record terms acceptance (activation always implies acceptance)
+  await prisma.client.update({
+    where: { id: clientId },
+    data: {
+      termsAcceptedAt: now,
+      termsVersion: TERMS_VERSION,
+    },
+  })
 
   if (freeMonth) {
     // Mês grátis: ativa direto sem cobrança imediata
