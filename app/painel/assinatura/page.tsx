@@ -15,14 +15,11 @@ export default async function PainelAssinaturaPage() {
 
   if (!user?.clientId) redirect('/painel')
 
-  const [subscriptionRaw, plans] = await Promise.all([
-    prisma.subscription.findFirst({
-      where: { clientId: user.clientId, status: { not: 'canceled' } },
-      include: { plan: true },
-      orderBy: { createdAt: 'desc' },
-    }),
-    prisma.plan.findMany({ where: { price: { lte: 29 } }, orderBy: { price: 'asc' } }),
-  ])
+  const subscriptionRaw = await prisma.subscription.findFirst({
+    where: { clientId: user.clientId, status: { not: 'canceled' } },
+    include: { plan: true },
+    orderBy: { createdAt: 'desc' },
+  })
 
   if (!subscriptionRaw) {
     return (
@@ -46,20 +43,9 @@ export default async function PainelAssinaturaPage() {
   }
 
   return (
-    <div className="max-w-3xl">
+    <div className="max-w-xl">
       <h2 className="text-xl font-semibold text-gray-900 mb-6">Minha Assinatura</h2>
-      <AssinaturaPageClient
-        subscription={subscription}
-        plans={plans.map((p) => ({
-          id: p.id,
-          name: p.name,
-          price: Number(p.price),
-          monthlyChangesIncluded: p.monthlyChangesIncluded,
-          allowedChangeTypes: p.allowedChangeTypes,
-          changeDeadlineDays: p.changeDeadlineDays,
-          discountPercent: p.discountPercent,
-        }))}
-      />
+      <AssinaturaPageClient subscription={subscription} />
     </div>
   )
 }

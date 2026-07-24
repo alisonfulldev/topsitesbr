@@ -86,12 +86,9 @@ async function main() {
   console.log('🌱 Iniciando seed de demonstração...\n')
 
   // ── Fetch plans & products ──────────────────────────────────────────────────
-  const planBasico = await prisma.plan.findUniqueOrThrow({ where: { name: 'Básico' } })
-  const planPlus = await prisma.plan.findUniqueOrThrow({ where: { name: 'Plus' } })
+  const planSiteNoAr = await prisma.plan.findUniqueOrThrow({ where: { name: 'Site no Ar' } })
 
   const prodLogo = await prisma.product.findFirstOrThrow({ where: { name: 'Logo Profissional' } })
-  const prodDominio = await prisma.product.findFirstOrThrow({ where: { name: 'Domínio Personalizado' } })
-  const prodSEO = await prisma.product.findFirstOrThrow({ where: { name: 'SEO (Otimização para Buscadores)' } })
   const prodAlteracaoImagem = await prisma.product.findFirstOrThrow({ where: { name: 'Alteração de Imagem (avulsa)' } })
   const prodNovaPagina = await prisma.product.findFirstOrThrow({ where: { name: 'Nova Página' } })
   const prodNovaSec = await prisma.product.findFirstOrThrow({ where: { name: 'Nova Seção' } })
@@ -173,7 +170,7 @@ async function main() {
   console.log('✅ 1. Maria Santos — pendente_ativacao, sem assinatura')
 
   // ──────────────────────────────────────────────────────────────────────────
-  // 2. JOÃO PEREIRA — Plus, online, 5 faturas pagas, tickets, domínio
+  // 2. JOÃO PEREIRA — Site no Ar, online, 5 faturas pagas, tickets, domínio
   // ──────────────────────────────────────────────────────────────────────────
   const joao = await mkClient({
     name: 'João Pereira',
@@ -206,7 +203,7 @@ async function main() {
   const joaoSub = await prisma.subscription.create({
     data: {
       clientId: joao.id,
-      planId: planPlus.id,
+      planId: planSiteNoAr.id,
       status: 'active',
       asaasSubscriptionId: 'sub_demo_joao_plus',
       nextDueDate: daysFromNow(15),
@@ -253,15 +250,6 @@ async function main() {
       isExtraPaid: false,
     },
   })
-  await prisma.order.create({
-    data: {
-      clientId: joao.id,
-      productId: prodDominio.id,
-      amount: 39.0,
-      status: 'delivered',
-      asaasChargeId: 'chg_demo_joao_dom',
-    },
-  })
   await prisma.notification.createMany({
     data: [
       {
@@ -280,7 +268,7 @@ async function main() {
       },
     ],
   })
-  console.log('✅ 2. João Pereira — Plus, online, 5 faturas pagas')
+  console.log('✅ 2. João Pereira — Site no Ar, online, 5 faturas pagas')
 
   // ──────────────────────────────────────────────────────────────────────────
   // 3. ANA LIMA — Plus, online, tickets, indicou Carlos (recompensado)
@@ -316,7 +304,7 @@ async function main() {
   const anaSub = await prisma.subscription.create({
     data: {
       clientId: ana.id,
-      planId: planPlus.id,
+      planId: planSiteNoAr.id,
       status: 'active',
       asaasSubscriptionId: 'sub_demo_ana_plus2',
       nextDueDate: daysFromNow(8),
@@ -376,15 +364,6 @@ async function main() {
   await prisma.order.create({
     data: {
       clientId: ana.id,
-      productId: prodSEO.id,
-      amount: 149.0,
-      status: 'delivered',
-      asaasChargeId: 'chg_demo_ana_seo',
-    },
-  })
-  await prisma.order.create({
-    data: {
-      clientId: ana.id,
       productId: prodUpgradeLanding.id,
       amount: 199.0,
       status: 'delivered',
@@ -400,10 +379,10 @@ async function main() {
       read: false,
     },
   })
-  console.log('✅ 3. Ana Lima — Plus, online, indicou Carlos (recompensado)')
+  console.log('✅ 3. Ana Lima — Site no Ar, online, indicou Carlos (recompensado)')
 
   // ──────────────────────────────────────────────────────────────────────────
-  // 4. CARLOS SOUZA — Básico, online, fatura OVERDUE, indicado por Ana
+  // 4. CARLOS SOUZA — Site no Ar, fatura OVERDUE, indicado por Ana
   // ──────────────────────────────────────────────────────────────────────────
   const carlos = await mkClient({
     name: 'Carlos Souza',
@@ -427,7 +406,7 @@ async function main() {
   const carlosSub = await prisma.subscription.create({
     data: {
       clientId: carlos.id,
-      planId: planBasico.id,
+      planId: planSiteNoAr.id,
       status: 'overdue',
       asaasSubscriptionId: 'sub_demo_carlos_basico',
       nextDueDate: daysAgo(15),
@@ -438,7 +417,7 @@ async function main() {
     await prisma.invoice.create({
       data: {
         subscriptionId: carlosSub.id,
-        amount: 17.0,
+        amount: 29.0,
         status: 'paid',
         dueDate: monthsAgo(i),
         paidAt: monthsAgo(i),
@@ -449,7 +428,7 @@ async function main() {
   await prisma.invoice.create({
     data: {
       subscriptionId: carlosSub.id,
-      amount: 17.0,
+      amount: 29.0,
       status: 'overdue',
       dueDate: daysAgo(15),
     },
@@ -488,7 +467,7 @@ async function main() {
     data: {
       clientId: carlos.id,
       title: 'Fatura em atraso',
-      message: 'Sua fatura de R$17,00 está em atraso. Regularize para evitar suspensão do site.',
+      message: 'Sua fatura de R$29,00 está em atraso. Regularize para evitar suspensão do site.',
       channel: 'painel',
       read: false,
     },
@@ -503,7 +482,7 @@ async function main() {
       rewardedAt: daysAgo(30),
     },
   })
-  console.log('✅ 4. Carlos Souza — Básico, fatura overdue, indicado por Ana (recompensado)')
+  console.log('✅ 4. Carlos Souza — Site no Ar, fatura overdue, indicado por Ana (recompensado)')
 
   // ──────────────────────────────────────────────────────────────────────────
   // 5. FERNANDA OLIVEIRA — Plus, online, indicou Pedro (pendente recompensa)
@@ -529,7 +508,7 @@ async function main() {
   const fernandaSub = await prisma.subscription.create({
     data: {
       clientId: fernanda.id,
-      planId: planPlus.id,
+      planId: planSiteNoAr.id,
       status: 'active',
       asaasSubscriptionId: 'sub_demo_fernanda_plus',
       nextDueDate: daysFromNow(20),
@@ -581,10 +560,10 @@ async function main() {
       read: true,
     },
   })
-  console.log('✅ 5. Fernanda Oliveira — Plus, online, indicou Pedro')
+  console.log('✅ 5. Fernanda Oliveira — Site no Ar, online, indicou Pedro')
 
   // ──────────────────────────────────────────────────────────────────────────
-  // 6. PEDRO ALVES — Básico, online, indicado por Fernanda
+  // 6. PEDRO ALVES — Site no Ar, online, indicado por Fernanda
   // ──────────────────────────────────────────────────────────────────────────
   const pedro = await mkClient({
     name: 'Pedro Alves',
@@ -607,7 +586,7 @@ async function main() {
   const pedroSub = await prisma.subscription.create({
     data: {
       clientId: pedro.id,
-      planId: planBasico.id,
+      planId: planSiteNoAr.id,
       status: 'active',
       asaasSubscriptionId: 'sub_demo_pedro_basico',
       nextDueDate: daysFromNow(10),
@@ -617,7 +596,7 @@ async function main() {
   await prisma.invoice.create({
     data: {
       subscriptionId: pedroSub.id,
-      amount: 17.0,
+      amount: 29.0,
       status: 'paid',
       dueDate: monthsAgo(1),
       paidAt: monthsAgo(1),
@@ -627,7 +606,7 @@ async function main() {
   await prisma.invoice.create({
     data: {
       subscriptionId: pedroSub.id,
-      amount: 17.0,
+      amount: 29.0,
       status: 'pending',
       dueDate: daysFromNow(10),
     },
@@ -659,10 +638,10 @@ async function main() {
       read: false,
     },
   })
-  console.log('✅ 6. Pedro Alves — Básico, online, indicado por Fernanda')
+  console.log('✅ 6. Pedro Alves — Site no Ar, online, indicado por Fernanda')
 
   // ──────────────────────────────────────────────────────────────────────────
-  // 7. LUCIA COSTA — Plus, em manutenção para atualização do site
+  // 7. LUCIA COSTA — Site no Ar, em manutenção para atualização do site
   // ──────────────────────────────────────────────────────────────────────────
   const lucia = await mkClient({
     name: 'Lucia Costa',
@@ -686,7 +665,7 @@ async function main() {
   const luciaSub = await prisma.subscription.create({
     data: {
       clientId: lucia.id,
-      planId: planPlus.id,
+      planId: planSiteNoAr.id,
       status: 'active',
       asaasSubscriptionId: 'sub_demo_lucia_plus',
       nextDueDate: daysFromNow(5),
@@ -751,10 +730,10 @@ async function main() {
       read: true,
     },
   })
-  console.log('✅ 7. Lucia Costa — Plus, em manutenção')
+  console.log('✅ 7. Lucia Costa — Site no Ar, em manutenção')
 
   // ──────────────────────────────────────────────────────────────────────────
-  // 8. ROBERTO NUNES — Básico, SUSPENSO, 2 faturas overdue
+  // 8. ROBERTO NUNES — Site no Ar, SUSPENSO, 2 faturas overdue
   // ──────────────────────────────────────────────────────────────────────────
   const roberto = await mkClient({
     name: 'Roberto Nunes',
@@ -776,7 +755,7 @@ async function main() {
   const robertoSub = await prisma.subscription.create({
     data: {
       clientId: roberto.id,
-      planId: planBasico.id,
+      planId: planSiteNoAr.id,
       status: 'overdue',
       asaasSubscriptionId: 'sub_demo_roberto_basico',
       nextDueDate: daysAgo(45),
@@ -787,7 +766,7 @@ async function main() {
     await prisma.invoice.create({
       data: {
         subscriptionId: robertoSub.id,
-        amount: 17.0,
+        amount: 29.0,
         status: 'paid',
         dueDate: monthsAgo(i),
         paidAt: monthsAgo(i),
@@ -798,7 +777,7 @@ async function main() {
   await prisma.invoice.create({
     data: {
       subscriptionId: robertoSub.id,
-      amount: 17.0,
+      amount: 29.0,
       status: 'overdue',
       dueDate: monthsAgo(2),
     },
@@ -806,7 +785,7 @@ async function main() {
   await prisma.invoice.create({
     data: {
       subscriptionId: robertoSub.id,
-      amount: 17.0,
+      amount: 29.0,
       status: 'overdue',
       dueDate: daysAgo(45),
     },
@@ -824,12 +803,12 @@ async function main() {
     data: {
       clientId: null,
       title: 'Site suspenso — Roberto Nunes [DEMO]',
-      message: 'Roberto Nunes tem 2 faturas overdue (R$34,00). Site marcado como suspenso. Considerar retirar do ar.',
+      message: 'Roberto Nunes tem 2 faturas overdue (R$58,00). Site marcado como suspenso. Considerar retirar do ar.',
       channel: 'painel',
       read: true,
     },
   })
-  console.log('✅ 8. Roberto Nunes — Básico, suspenso, 2 faturas overdue')
+  console.log('✅ 8. Roberto Nunes — Site no Ar, suspenso, 2 faturas overdue')
 
   // ──────────────────────────────────────────────────────────────────────────
   // 9. SANDRA FERREIRA — Plus, online, comprou logo + nova seção
@@ -855,7 +834,7 @@ async function main() {
   const sandraSub = await prisma.subscription.create({
     data: {
       clientId: sandra.id,
-      planId: planPlus.id,
+      planId: planSiteNoAr.id,
       status: 'active',
       asaasSubscriptionId: 'sub_demo_sandra_plus',
       nextDueDate: daysFromNow(12),
@@ -921,7 +900,7 @@ async function main() {
       read: true,
     },
   })
-  console.log('✅ 9. Sandra Ferreira — Plus, online, logo entregue + nova seção')
+  console.log('✅ 9. Sandra Ferreira — Site no Ar, online, logo entregue + nova seção')
 
   // ──────────────────────────────────────────────────────────────────────────
   // 10. MARCOS RIBEIRO — pendente_ativacao, viu a tela, optou por baixar arquivos
@@ -960,7 +939,7 @@ async function main() {
     data: {
       clientId: null,
       title: 'Publicar site — Maria Santos [DEMO]',
-      message: 'Maria Santos ativou o Plano Básico (R$17/mês). Publicar o site no GitHub Pages e marcar status como "online".',
+      message: 'Maria Santos ativou o Plano Site no Ar (R$29/mês). Publicar o site no GitHub Pages e marcar status como "online".',
       channel: 'painel',
       read: false,
     },
@@ -1040,13 +1019,13 @@ async function main() {
   console.log('  ─────────────────────────────────────────────────────────')
   console.log('  1   maria@teste.com        pendente_ativacao, SEM assinatura')
   console.log('  2   joao@teste.com         Plus, online, 5 faturas pagas')
-  console.log('  3   ana@teste.com          Plus, online, indicou Carlos (recompensado)')
+  console.log('  3   ana@teste.com          Site no Ar, online, indicou Carlos (recompensado)')
   console.log('  4   carlos@teste.com       Básico, online, fatura OVERDUE')
-  console.log('  5   fernanda@teste.com     Plus, online, indicou Pedro (pendente)')
+  console.log('  5   fernanda@teste.com     Site no Ar, online, indicou Pedro (pendente)')
   console.log('  6   pedro@teste.com        Básico, online, indicado por Fernanda')
   console.log('  7   lucia@teste.com        Plus, em manutenção')
   console.log('  8   roberto@teste.com      Básico, SUSPENSO, 2 faturas overdue')
-  console.log('  9   sandra@teste.com       Plus, online, logo entregue + nova seção')
+  console.log('  9   sandra@teste.com       Site no Ar, online, logo entregue + nova seção')
   console.log(' 10   marcos@teste.com       pendente_ativacao, viu tela, baixou arquivos')
   console.log()
   console.log('═'.repeat(62))

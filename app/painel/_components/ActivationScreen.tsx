@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useTransition, useEffect } from 'react'
-import { activateBasicPlan, submitDownloadReason } from '../actions'
+import { activatePlan, submitDownloadReason } from '../actions'
 import { Button } from '@/components/ui/button'
 import { Modal } from '@/components/ui/modal'
 import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { SparklesIcon, DownloadIcon } from '@/components/ui/icons'
+import Link from 'next/link'
 
 type Props = {
   siteId: string
@@ -17,10 +18,14 @@ type Props = {
 type RetentionStep = 'retention' | 'reason' | 'whatsapp'
 
 const PLAN_BENEFITS = [
-  'Hospedagem gerenciada — zero configuração',
-  'SSL gratuito renovado automaticamente',
-  'Monitoramento 24h do site',
-  'Suporte via painel sempre que precisar',
+  'Site no ar com hospedagem e SSL',
+  'Correções ilimitadas e gratuitas (bugs, erros, links quebrados)',
+  'Monitoramento 24h e recuperação em caso de queda do servidor',
+  '1 alteração de conteúdo por mês inclusa (texto ou imagem)',
+  'Prazo de atendimento de até 7 dias',
+  'Suporte especializado direto pelo WhatsApp',
+  'Relatório de visitas: quantas pessoas acessam, de onde vêm e páginas mais vistas',
+  '10% de desconto em serviços e upgrades',
 ]
 
 const REASONS = [
@@ -38,6 +43,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
   const [reasonDetail, setReasonDetail] = useState('')
   const [isMobile, setIsMobile] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [termsAccepted, setTermsAccepted] = useState(false)
   const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
@@ -49,9 +55,13 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
   }, [])
 
   function handleActivate() {
+    if (!termsAccepted) {
+      setError('Você precisa aceitar os Termos de Uso para continuar.')
+      return
+    }
     setError(null)
     startTransition(async () => {
-      const result = await activateBasicPlan()
+      const result = await activatePlan({ termsAccepted: true })
       if (result.error) {
         setError(result.error)
       } else if (result.paymentUrl) {
@@ -115,9 +125,13 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
             <strong className="text-gray-900">sem fidelidade</strong> custa de R$40 a R$70 nas
             grandes empresas — os planos baratos exigem contrato de 2 a 4 anos adiantado.
           </p>
-          <p className="text-sm text-gray-600 leading-relaxed mb-6">
-            Aqui são <strong className="text-gray-900">R$17/mês, sem contrato</strong>, com
-            hospedagem, SSL, monitoramento e suporte. A gente cuida de tudo.
+          <p className="text-sm text-gray-600 leading-relaxed mb-1">
+            Aqui é <strong className="text-gray-900">R$29/mês, sem contrato</strong>, com
+            hospedagem, SSL, monitoramento, suporte direto no WhatsApp e 1 alteração de
+            conteúdo inclusa por mês.
+          </p>
+          <p className="text-sm font-medium text-brand-text mb-6">
+            E o primeiro mês é grátis — você testa antes de pagar.
           </p>
           <div className="flex flex-col gap-3">
             <Button
@@ -127,7 +141,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
               onClick={handleRetentionActivate}
               loading={isPending}
             >
-              Quero ativar por R$17/mês
+              Ativar com 1 mês grátis
             </Button>
             <Button
               variant="secondary"
@@ -220,99 +234,114 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
       {/* Dark landing container */}
       <div className="bg-brand-dark rounded-2xl overflow-hidden">
         {/* Hero */}
-        <div className="text-center px-6 pt-10 pb-8">
+        <div className="text-center px-6 pt-10 pb-6">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-16 rounded-2xl bg-brand/15 flex items-center justify-center">
               <SparklesIcon className="w-8 h-8 text-brand" />
             </div>
           </div>
           <h1 className="text-2xl font-bold text-white mb-2 leading-tight">
-            Seu site está pronto!
+            Seu site está pronto! 🎉
           </h1>
+          <div className="inline-flex items-center gap-2 bg-green-500/20 border border-green-500/30 rounded-full px-4 py-1.5 mb-3">
+            <span className="text-green-400 text-sm font-bold">Primeiro mês grátis</span>
+          </div>
           <p className="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">
-            Escolha como quer colocá-lo no ar.
+            Depois R$29/mês, sem contrato. Cancele quando quiser.
           </p>
         </div>
 
-        {/* Option cards */}
-        <div className="px-4 pb-6 flex flex-col sm:flex-row gap-4">
-          {/* Card 1: Publish */}
-          <div className="bg-white rounded-xl p-5 flex flex-col flex-1">
-            <div className="flex items-baseline gap-1.5 mb-3">
-              <span className="text-2xl font-bold text-gray-900">R$17</span>
-              <span className="text-xs text-gray-500 font-medium">/mês</span>
-              <span className="ml-auto text-xs bg-brand text-brand-dark font-semibold px-2 py-0.5 rounded-full">
-                Recomendado
-              </span>
-            </div>
+        {/* Benefits card */}
+        <div className="mx-4 mb-4 bg-white rounded-xl p-5">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">
+            O que está incluído
+          </p>
+          <ul className="space-y-2.5 mb-5">
+            {PLAN_BENEFITS.map((b) => (
+              <li key={b} className="flex items-start gap-2 text-sm text-gray-700">
+                <svg
+                  className="w-4 h-4 text-green-500 shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                {b}
+              </li>
+            ))}
+          </ul>
 
-            <h2 className="text-base font-bold text-gray-900 mb-1">Publicar meu site</h2>
-            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
-              Sem contrato de fidelidade. Cancele quando quiser.
+          {/* Terms checkbox */}
+          <label className="flex items-start gap-3 mb-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => {
+                setTermsAccepted(e.target.checked)
+                if (e.target.checked) setError(null)
+              }}
+              className="mt-0.5 accent-brand shrink-0"
+            />
+            <span className="text-xs text-gray-500 leading-relaxed">
+              Li e concordo com os{' '}
+              <Link href="/termos" target="_blank" className="text-brand-text hover:underline">
+                Termos de Uso
+              </Link>{' '}
+              e a{' '}
+              <Link href="/privacidade" target="_blank" className="text-brand-text hover:underline">
+                Política de Privacidade
+              </Link>
+              , incluindo a renovação automática mensal de R$29 após o primeiro mês gratuito.
+            </span>
+          </label>
+
+          {pendingPayment && (
+            <p className="text-yellow-700 text-xs bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2 mb-3">
+              Pagamento gerado! Verifique seu e-mail ou clique abaixo para acessar o boleto/PIX novamente.
             </p>
+          )}
 
-            <ul className="space-y-2 mb-5 flex-1">
-              {PLAN_BENEFITS.map((b) => (
-                <li key={b} className="flex items-center gap-2 text-xs text-gray-700">
-                  <svg
-                    className="w-3.5 h-3.5 text-green-500 shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  {b}
-                </li>
-              ))}
-            </ul>
+          {error && (
+            <p className="text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
+              {error}
+            </p>
+          )}
 
-            {pendingPayment && (
-              <p className="text-yellow-700 text-xs bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2 mb-3">
-                Pagamento gerado! Verifique seu e-mail ou clique abaixo para acessar o boleto/PIX novamente.
-              </p>
-            )}
+          <Button
+            variant="conversion"
+            size="md"
+            fullWidth
+            onClick={handleActivate}
+            loading={isPending}
+            disabled={!termsAccepted}
+          >
+            {pendingPayment ? 'Ver boleto / PIX' : 'Ativar com 1 mês grátis'}
+          </Button>
+        </div>
 
-            {error && (
-              <p className="text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
-                {error}
-              </p>
-            )}
-
-            <Button
-              variant="conversion"
-              size="md"
-              fullWidth
-              onClick={handleActivate}
-              loading={isPending}
-            >
-              {pendingPayment ? 'Ver boleto / PIX' : 'Ativar por R$17/mês'}
-            </Button>
-          </div>
-
-          {/* Card 2: Download */}
-          <div className="bg-brand-dark-hover border border-brand-dark-border rounded-xl p-5 flex flex-col flex-1">
-            <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center mb-3">
+        {/* Download option */}
+        <div className="px-4 pb-6">
+          <div className="bg-brand-dark-hover border border-brand-dark-border rounded-xl p-4 flex items-center gap-4">
+            <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
               <DownloadIcon className="w-5 h-5 text-gray-400" />
             </div>
-            <h2 className="text-base font-bold text-white mb-1">Baixar os arquivos</h2>
-            <p className="text-xs text-gray-400 mb-5 leading-relaxed flex-1">
-              Receba o arquivo com o seu site e hospede onde e como quiser.
-            </p>
-
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white">Preferir hospedar em outro lugar?</p>
+              <p className="text-xs text-gray-400 mt-0.5">Receba os arquivos e publique como quiser.</p>
+            </div>
             <Button
               variant="secondary"
-              size="md"
-              fullWidth
+              size="sm"
               onClick={handleDownloadClick}
               disabled={isPending}
             >
-              Baixar arquivos (grátis)
+              Baixar (grátis)
             </Button>
           </div>
         </div>

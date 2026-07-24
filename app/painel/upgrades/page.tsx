@@ -12,13 +12,16 @@ const HIDDEN_PRODUCT_NAMES = new Set([
   'Alteração de Texto (avulsa)',
   'Alteração de Imagem (avulsa)',
   'Alteração de Texto e Imagem (avulsa)',
+  'Domínio Personalizado',
+  'E-mail Profissional',
+  'SEO (Otimização para Buscadores)',
+  'WhatsApp Business',
+  'Blog',
+  'Loja Virtual',
 ])
 
 // Products that do NOT accept promotions or plan discounts (preço fixo)
-const NO_DISCOUNT_PRODUCT_NAMES = new Set([
-  'E-mail Profissional',
-  'Domínio Personalizado',
-])
+const NO_DISCOUNT_PRODUCT_NAMES = new Set<string>([])
 
 export default async function UpgradesPage({
   searchParams,
@@ -131,7 +134,7 @@ export default async function UpgradesPage({
       planDiscountPercent: noDiscount || promo.amount >= planDiscountAmount ? 0 : planDiscountPercent,
       promoTitle: noDiscount ? null : (promo.amount >= planDiscountAmount ? promo.title : null),
       promoDiscountLabel: noDiscount ? null : (promo.amount >= planDiscountAmount ? promo.label : null),
-      periodLabel: product.name.toLowerCase().includes('domínio') ? '/ano' : undefined,
+      periodLabel: undefined,
     })
   }
 

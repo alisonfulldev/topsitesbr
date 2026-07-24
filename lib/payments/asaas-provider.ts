@@ -73,13 +73,16 @@ export class AsaasPaymentProvider implements PaymentProvider {
     input: CreateSubscriptionInput,
   ): Promise<CreateSubscriptionResult> {
     try {
+      // Se freeMonth, a primeira cobrança só começa em 30 dias
+      const startDate = input.freeMonth ? daysFromNow(30) : daysFromNow(1)
+
       const sub = await asaasFetch<AsaasSubscription>('/subscriptions', {
         method: 'POST',
         body: JSON.stringify({
           customer: input.customerId,
           billingType: 'UNDEFINED',
           value: input.price,
-          nextDueDate: daysFromNow(1),
+          nextDueDate: startDate,
           cycle: 'MONTHLY',
           description: input.planName,
           ...(input.successUrl && {
@@ -87,6 +90,16 @@ export class AsaasPaymentProvider implements PaymentProvider {
           }),
         }),
       })
+
+      if (input.freeMonth) {
+        // Sem cobrança imediata — ativa direto
+        return {
+          subscriptionId: sub.id,
+          chargeId: null,
+          nextDueDate: new Date(sub.nextDueDate),
+          paymentUrl: '/painel?ativado=1',
+        }
+      }
 
       // Busca a primeira cobrança gerada pela assinatura
       const list = await asaasFetch<AsaasPaymentList>(

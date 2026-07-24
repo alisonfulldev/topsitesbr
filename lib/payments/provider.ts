@@ -10,11 +10,12 @@ export interface CreateSubscriptionInput {
   planName: string
   price: number
   successUrl?: string
+  freeMonth?: boolean
 }
 
 export interface CreateSubscriptionResult {
   subscriptionId: string
-  chargeId: string
+  chargeId: string | null
   nextDueDate: Date
   paymentUrl: string
 }
@@ -66,7 +67,15 @@ const mockProvider: PaymentProvider = {
   },
 
   async createSubscription(input) {
-    console.log('[MOCK:createSubscription]', input.planName, `R$${input.price}`)
+    console.log('[MOCK:createSubscription]', input.planName, `R$${input.price}`, input.freeMonth ? '(mês grátis)' : '')
+    if (input.freeMonth) {
+      return {
+        subscriptionId: mockId('sub'),
+        chargeId: null,
+        nextDueDate: addDays(30),
+        paymentUrl: '/painel?ativado=1',
+      }
+    }
     return {
       subscriptionId: mockId('sub'),
       chargeId: mockId('chg'),

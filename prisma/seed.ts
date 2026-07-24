@@ -7,16 +7,7 @@ async function main() {
   // ── Plans ──────────────────────────────────────────────────────────────────
   const plans = [
     {
-      name: 'Básico',
-      price: 17.0,
-      monthlyChangesIncluded: 0,
-      prioritySupport: false,
-      allowedChangeTypes: '',
-      changeDeadlineDays: 15,
-      discountPercent: 0,
-    },
-    {
-      name: 'Plus',
+      name: 'Site no Ar',
       price: 29.0,
       monthlyChangesIncluded: 1,
       prioritySupport: false,
@@ -70,13 +61,7 @@ async function main() {
       eligibleSiteTypes: 'mini_site,landing_page',
     },
     { name: 'Logo Profissional', price: 97.0, type: 'service' as const },
-    { name: 'SEO (Otimização para Buscadores)', price: 149.0, type: 'service' as const },
     { name: 'Configuração de Tráfego Pago', price: 197.0, type: 'service' as const },
-    { name: 'Domínio Personalizado', price: 39.0, type: 'addon' as const },
-    { name: 'E-mail Profissional', price: 19.0, type: 'addon' as const },
-    { name: 'WhatsApp Business', price: 49.0, type: 'service' as const },
-    { name: 'Blog', price: 149.0, type: 'addon' as const },
-    { name: 'Loja Virtual', price: 499.0, type: 'service' as const },
   ]
 
   for (const product of upsellProducts) {

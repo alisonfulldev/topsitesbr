@@ -53,18 +53,20 @@ export async function activateSubscription(
     },
   })
 
-  const dueDate = new Date()
-  dueDate.setDate(dueDate.getDate() + 1)
+  if (chargeId) {
+    const dueDate = new Date()
+    dueDate.setDate(dueDate.getDate() + 1)
 
-  await prisma.invoice.create({
-    data: {
-      subscriptionId: subscription.id,
-      amount: plan.price,
-      status: 'pending',
-      dueDate,
-      asaasChargeId: chargeId,
-    },
-  })
+    await prisma.invoice.create({
+      data: {
+        subscriptionId: subscription.id,
+        amount: plan.price,
+        status: 'pending',
+        dueDate,
+        asaasChargeId: chargeId,
+      },
+    })
+  }
 
   revalidatePath(`/admin/clientes/${clientId}`)
   revalidatePath(`/admin/clientes/${clientId}/assinatura`)

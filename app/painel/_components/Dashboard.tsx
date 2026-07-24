@@ -15,8 +15,6 @@ import { DesempenhoCard } from './DesempenhoCard'
 
 export type ContextualOffer =
   | { kind: 'upgrade_landing'; upgradeName: string; originalPrice: number; discountedPrice: number | null; planDiscount: number }
-  | { kind: 'visits_locked' }
-  | { kind: 'plan_pitch' }
   | { kind: 'upsell'; productId: string; name: string; originalPrice: number; discountedPrice: number | null; planDiscount: number }
   | null
 
@@ -249,67 +247,7 @@ function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> })
     )
   }
 
-  // (b) Plano Básico: visitas bloqueadas
-  if (offer.kind === 'visits_locked') {
-    return (
-      <Card className="border-brand-200 bg-brand-50/40">
-        <OfferLabel>Seu site pode estar crescendo</OfferLabel>
-        <div className="flex items-start gap-3 mb-4">
-          <BarChartIcon className="w-6 h-6 text-gray-600 shrink-0 mt-0.5" />
-          <div>
-            <h3 className="font-bold text-gray-900 text-base leading-snug">
-              Veja quem está visitando seu site — agora bloqueado
-            </h3>
-            <p className="text-sm text-gray-600 mt-1">
-              Sem saber quantas visitas chegam, você está gerindo no escuro. No Plus
-              você acompanha visitantes, origem do tráfego e páginas mais vistas
-              — tudo no painel.
-            </p>
-          </div>
-        </div>
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          {['Visitas', 'Origem', 'Páginas'].map((label) => (
-            <div key={label} className="flex flex-col items-center p-2.5 rounded-xl bg-white border border-gray-100 gap-1">
-              <p className="text-lg font-bold text-gray-200 blur-[2px]">—</p>
-              <p className="text-[10px] text-gray-300">{label}</p>
-            </div>
-          ))}
-        </div>
-        <Link href="/painel/assinatura" className={buttonVariantClass('conversion', 'md') + ' inline-flex w-full justify-center'}>
-          Desbloquear dados por R$29/mês →
-        </Link>
-        <p className="text-center text-[11px] text-gray-400 mt-2">
-          + 1 alteração/mês inclusa · 10% de desconto em upgrades
-        </p>
-      </Card>
-    )
-  }
-
-  // (c) Pagou alteração avulsa — sugerir upgrade de plano
-  if (offer.kind === 'plan_pitch') {
-    return (
-      <Card className="border-brand-200 bg-brand-50/40">
-        <OfferLabel>Economize</OfferLabel>
-        <div className="flex items-start gap-3 mb-4">
-          <LightbulbIcon className="w-6 h-6 text-amber-500 shrink-0 mt-0.5" />
-          <div>
-            <h3 className="font-bold text-gray-900 text-base leading-snug">
-              No Plus essa alteração estaria inclusa
-            </h3>
-            <p className="text-sm text-gray-600 mt-1">
-              Você pagou por uma alteração avulsa esse mês. No plano Plus (R$29/mês),
-              1 alteração já está inclusa — sem custo extra.
-            </p>
-          </div>
-        </div>
-        <Link href="/painel/assinatura" className={buttonVariantClass('conversion', 'md') + ' inline-flex w-full justify-center'}>
-          Fazer upgrade para Plus →
-        </Link>
-      </Card>
-    )
-  }
-
-  // (d) Próximo upsell
+  // (b) Próximo upsell
   if (offer.kind === 'upsell') {
     const hasDiscount = offer.planDiscount > 0 && offer.discountedPrice !== null
     return (
@@ -354,26 +292,7 @@ function VisitsInfoCard({
   plan: PlanFeatures
   analytics: AnalyticsResult | null
 }) {
-  const isPlus = plan.monthlyChangesIncluded >= 1
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ''
-
-  if (!isPlus) {
-    return (
-      <Card className="flex flex-col justify-between">
-        <CardTitle>Visitas do Site</CardTitle>
-        <div className="flex-1 flex flex-col justify-center py-3">
-          <p className="text-3xl font-bold text-gray-200">—</p>
-          <p className="text-xs text-gray-400 mt-1">disponível no Plus</p>
-        </div>
-        <Link
-          href="/painel/assinatura"
-          className={buttonVariantClass('conversion', 'sm') + ' inline-flex w-full justify-center mt-2'}
-        >
-          Assinar Plus →
-        </Link>
-      </Card>
-    )
-  }
 
   if (!analytics || !analytics.ok) {
     return (
@@ -455,22 +374,6 @@ function VisitsInfoCard({
 }
 
 function ChangesInfoCard({ plan, used }: { plan: PlanFeatures; used: number }) {
-  if (plan.monthlyChangesIncluded === 0) {
-    return (
-      <Card className="flex flex-col justify-between">
-        <CardTitle>Alterações</CardTitle>
-        <div className="flex-1 flex flex-col justify-center py-3">
-          <p className="text-sm text-gray-500">
-            Plano Básico — cada alteração é cobrada à parte.
-          </p>
-          <Link href="/painel/solicitacoes" className="mt-2 text-xs text-brand-text hover:underline">
-            Solicitar alteração →
-          </Link>
-        </div>
-      </Card>
-    )
-  }
-
   const remaining = Math.max(0, plan.monthlyChangesIncluded - used)
   const pct = Math.min(100, (used / plan.monthlyChangesIncluded) * 100)
   const isOver = pct >= 100

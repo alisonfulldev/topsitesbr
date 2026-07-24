@@ -111,7 +111,6 @@ export default async function PainelPage({
   const primarySite = client.sites[0] ?? null
   const primarySiteType = (primarySite?.siteType as string | undefined) ?? 'mini_site'
   const planDiscount = subscription?.plan.discountPercent ?? 0
-  const planMonthlyChanges = subscription?.plan.monthlyChangesIncluded ?? 0
   const ownedProductIds = paidOrders.map((o) => o.productId)
 
   // Busca upgrade de site elegível para o siteType do cliente
@@ -141,18 +140,13 @@ export default async function PainelPage({
       discountedPrice,
       planDiscount,
     }
-  } else if (planMonthlyChanges === 0) {
-    // (b) Plano Básico — visitas bloqueadas
-    contextualOffer = { kind: 'visits_locked' }
-  } else if (extraPaidLastMonth > 0 && planMonthlyChanges === 0) {
-    // (c) Plano Básico e pagou alteração avulsa — sugerir upgrade para Plus
-    contextualOffer = { kind: 'plan_pitch' }
   } else {
-    // (d) Próximo upsell disponível não adquirido
+    // (b) Próximo upsell disponível não adquirido
     const nextUpsell = await prisma.product.findFirst({
       where: {
         id: { notIn: ownedProductIds },
         type: { not: 'upgrade_site' },
+        name: { notIn: ['Nova Seção', 'Nova Página', 'Alteração de Texto (avulsa)', 'Alteração de Imagem (avulsa)', 'Alteração de Texto e Imagem (avulsa)'] },
       },
       orderBy: { price: 'asc' },
     })
@@ -173,12 +167,11 @@ export default async function PainelPage({
     }
   }
 
-  // ── Analytics (somente para plano Plus com analyticsSiteId configurado) ───────
-  const isPlus = (subscription?.plan.monthlyChangesIncluded ?? 0) >= 1
+  // ── Analytics (para qualquer assinante com analyticsSiteId configurado) ─────
   const analyticsSiteId = client.sites[0]?.analyticsSiteId ?? null
   let analyticsResult: AnalyticsResult | null = null
 
-  if (isPlus && analyticsSiteId) {
+  if (analyticsSiteId) {
     const sinceDate = new Date(now.getFullYear(), now.getMonth(), 1)
     const untilDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
     const fmt = (d: Date) =>
