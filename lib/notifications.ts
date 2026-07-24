@@ -17,6 +17,7 @@ export type EmailType =
   | 'ticket-done'
   | 'promotion'
   | 'referral-reward'
+  | 'password-reset-request'
   | 'generic'
 
 const EMAIL_CONFIG: Record<EmailType, { color: string; icon: string; label: string }> = {
@@ -32,6 +33,7 @@ const EMAIL_CONFIG: Record<EmailType, { color: string; icon: string; label: stri
   'ticket-done':              { color: '#10b981', icon: '🎉', label: 'Solicitação concluída' },
   'promotion':                { color: '#f97316', icon: '🎁', label: 'Promoção especial' },
   'referral-reward':          { color: '#eab308', icon: '⭐', label: 'Recompensa de indicação' },
+  'password-reset-request':   { color: '#6366f1', icon: '🔐', label: 'Redefinição de senha' },
   'generic':                  { color: '#6b7280', icon: '🔔', label: 'Notificação' },
 }
 
@@ -372,5 +374,58 @@ export async function sendPaymentRegularized(
     await sendEmail({ to: email, subject, html })
   } catch (err) {
     console.error('[sendPaymentRegularized] Falha:', err instanceof Error ? err.message : err)
+  }
+}
+
+// ── E-mail de redefinição de senha ────────────────────────────────────────────
+
+export async function sendPasswordResetEmail(
+  email: string,
+  resetLink: string,
+): Promise<void> {
+  const subject = `Redefinição de senha — ${COMPANY_NAME}`
+  const message =
+    'Recebemos uma solicitação para redefinir a senha da sua conta. ' +
+    'Clique no botão abaixo para criar uma nova senha. ' +
+    'Este link é válido por 1 hora.'
+
+  const extraHtml = `
+    <!-- Botão de redefinição -->
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px;">
+      <tr>
+        <td align="center">
+          <a href="${resetLink}"
+             style="display:inline-block;background:#6366f1;color:#ffffff;
+                    text-decoration:none;font-size:14px;font-weight:600;
+                    padding:13px 30px;border-radius:7px;letter-spacing:0.3px;">
+            Redefinir senha
+          </a>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Aviso de expiração e segurança -->
+    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px 18px;margin-bottom:24px;">
+      <p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.6px;">Importante</p>
+      <ul style="margin:0;padding-left:16px;font-size:12px;color:#6b7280;line-height:1.8;">
+        <li>Este link expira em <strong>1 hora</strong>.</li>
+        <li>Se você não solicitou a redefinição de senha, ignore este e-mail — sua senha permanece a mesma.</li>
+        <li>Nunca compartilhe este link com ninguém.</li>
+      </ul>
+    </div>
+
+    <!-- Link alternativo em texto -->
+    <p style="margin:0 0 24px;font-size:12px;color:#9ca3af;word-break:break-all;">
+      Se o botão não funcionar, copie e cole este endereço no seu navegador:<br>
+      <a href="${resetLink}" style="color:#6366f1;text-decoration:underline;">${resetLink}</a>
+    </p>
+  `
+
+  const html = buildHtml(subject, message, 'password-reset-request', extraHtml)
+
+  try {
+    await sendEmail({ to: email, subject, html })
+  } catch (err) {
+    console.error('[sendPasswordResetEmail] Falha:', err instanceof Error ? err.message : err)
   }
 }

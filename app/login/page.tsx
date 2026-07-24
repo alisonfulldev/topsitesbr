@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const ERROR_MESSAGES: Record<string, string> = {
   CredentialsSignin: 'E-mail ou senha inválidos.',
@@ -91,6 +92,15 @@ function LoginForm() {
         >
           {loading ? 'Entrando…' : 'Entrar'}
         </button>
+      </div>
+
+      <div className="text-center">
+        <Link
+          href="/esqueci-senha"
+          className="text-xs text-zinc-600 hover:text-zinc-400 hover:underline transition-colors"
+        >
+          Esqueci minha senha
+        </Link>
       </div>
     </form>
   )
