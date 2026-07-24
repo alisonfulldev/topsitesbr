@@ -10,6 +10,7 @@ declare module 'next-auth' {
       role: 'admin' | 'client'
       clientId: string | null
       active: boolean
+      mustChangePassword: boolean
     }
   }
 
@@ -17,6 +18,7 @@ declare module 'next-auth' {
     role: 'admin' | 'client'
     clientId: string | null
     active: boolean
+    mustChangePassword: boolean
   }
 }
 
@@ -26,5 +28,6 @@ declare module 'next-auth/jwt' {
     role: 'admin' | 'client'
     clientId: string | null
     active: boolean
+    mustChangePassword: boolean
   }
 }

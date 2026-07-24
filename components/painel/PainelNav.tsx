@@ -65,6 +65,7 @@ const navItems = [
 
 const desktopSecondaryItems = [
   { href: '/painel/notificacoes', label: 'Notificações' },
+  { href: '/painel/alterar-senha', label: 'Alterar senha' },
 ]
 
 function isActive(pathname: string, href: string, exact: boolean) {

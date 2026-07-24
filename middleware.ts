@@ -24,6 +24,15 @@ export default withAuth(
       return NextResponse.redirect(new URL('/admin', req.url))
     }
 
+    // Usuário com senha temporária — força troca antes de continuar
+    if (
+      token.mustChangePassword &&
+      pathname.startsWith('/painel') &&
+      pathname !== '/painel/alterar-senha'
+    ) {
+      return NextResponse.redirect(new URL('/painel/alterar-senha', req.url))
+    }
+
     return NextResponse.next()
   },
   {

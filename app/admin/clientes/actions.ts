@@ -104,6 +104,7 @@ export async function createClient(data: {
           passwordHash,
           role: 'client',
           clientId: client.id,
+          mustChangePassword: true,
         },
       })
 

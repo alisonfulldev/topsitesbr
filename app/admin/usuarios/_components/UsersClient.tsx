@@ -15,6 +15,7 @@ type User = {
   email: string
   role: Role
   active: boolean
+  mustChangePassword: boolean
   lastLoginAt: string | null
   createdAt: string
   client: { id: string; name: string } | null
@@ -187,7 +188,14 @@ export function UsersClient({
               ) : (
                 users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50/60">
-                    <td className="px-4 py-3 font-medium text-gray-900">{user.name}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900">
+                      <span className="inline-flex items-center gap-2">
+                        {user.name}
+                        {user.mustChangePassword && (
+                          <Badge variant="warning">Senha temporária</Badge>
+                        )}
+                      </span>
+                    </td>
                     <td className="px-4 py-3 text-gray-600">{user.email}</td>
                     <td className="px-4 py-3">
                       <Badge variant={user.role === 'admin' ? 'purple' : 'info'}>

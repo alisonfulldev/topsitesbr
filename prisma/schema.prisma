@@ -146,16 +146,17 @@ model Client {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  clientId     String?   @map("client_id")
-  name         String
-  email        String    @unique
-  passwordHash String    @map("password_hash")
-  role         UserRole
-  active       Boolean   @default(true)
-  lastLoginAt  DateTime? @map("last_login_at")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  id                 String    @id @default(uuid())
+  clientId           String?   @map("client_id")
+  name               String
+  email              String    @unique
+  passwordHash       String    @map("password_hash")
+  role               UserRole
+  active             Boolean   @default(true)
+  mustChangePassword Boolean   @default(false) @map("must_change_password")
+  lastLoginAt        DateTime? @map("last_login_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
 
   client Client? @relation(fields: [clientId], references: [id])
 

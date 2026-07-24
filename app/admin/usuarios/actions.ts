@@ -23,6 +23,7 @@ export async function getUsers() {
   })
   return users.map((u) => ({
     ...u,
+    mustChangePassword: u.mustChangePassword,
     lastLoginAt: u.lastLoginAt?.toISOString() ?? null,
     createdAt: u.createdAt.toISOString(),
     updatedAt: u.updatedAt.toISOString(),
@@ -62,6 +63,7 @@ export async function createUser(data: {
       passwordHash,
       role: data.role,
       clientId: data.clientId || null,
+      mustChangePassword: true,
     },
   })
 
@@ -77,7 +79,7 @@ export async function toggleUserActive(id: string, active: boolean): Promise<voi
 export async function resetPassword(id: string): Promise<{ tempPassword: string }> {
   const tempPassword = generateTempPassword()
   const passwordHash = await hashPassword(tempPassword)
-  await prisma.user.update({ where: { id }, data: { passwordHash } })
+  await prisma.user.update({ where: { id }, data: { passwordHash, mustChangePassword: true } })
   revalidatePath('/admin/usuarios')
   return { tempPassword }
 }
