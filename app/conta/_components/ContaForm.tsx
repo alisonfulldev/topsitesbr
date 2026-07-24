@@ -285,7 +285,7 @@ export function ContaForm({ user }: Props) {
         <h2 className="text-lg font-semibold text-gray-900 mb-1">Sair da conta</h2>
         <p className="text-sm text-gray-500 mb-4">Encerra a sessão neste dispositivo.</p>
         <Button
-          variant="outline"
+          variant="secondary"
           size="md"
           onClick={() => signOut({ callbackUrl: '/login' })}
         >
