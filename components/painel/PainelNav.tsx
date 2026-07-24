@@ -120,16 +120,23 @@ export function PainelBottomNav() {
           )
         })}
 
-        {/* Botão Sair */}
-        <button
-          onClick={() => signOut({ callbackUrl: '/login' })}
-          className="flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] hover:bg-brand-dark-hover transition-colors"
+        {/* Botão Conta/Perfil */}
+        <Link
+          href="/painel/conta"
+          className={cn(
+            'flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] transition-colors',
+            pathname.startsWith('/painel/conta') || pathname.startsWith('/painel/alterar-senha')
+              ? 'bg-brand-dark-hover'
+              : 'hover:bg-brand-dark-hover',
+          )}
         >
-          <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          <svg className={cn('w-6 h-6', pathname.startsWith('/painel/conta') || pathname.startsWith('/painel/alterar-senha') ? 'text-white' : 'text-gray-400')} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
-          <span className="text-[10px] font-medium text-gray-400">Sair</span>
-        </button>
+          <span className={cn('text-[10px] font-medium', pathname.startsWith('/painel/conta') || pathname.startsWith('/painel/alterar-senha') ? 'text-white' : 'text-gray-400')}>
+            Conta
+          </span>
+        </Link>
       </div>
     </nav>
   )
