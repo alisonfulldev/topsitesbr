@@ -29,10 +29,10 @@ const PLAN_BENEFITS = [
 ]
 
 const REASONS = [
-  { value: 'preco', label: 'Encontrei um serviço ou hospedagem mais barata' },
-  { value: 'hospedagem', label: 'Já tenho hospedagem' },
+  { value: 'hospedagem', label: 'Já tenho uma solução de hospedagem' },
   { value: 'outro_lugar', label: 'Vou hospedar em outro lugar' },
   { value: 'nao_usar', label: 'Não vou usar o site agora' },
+  { value: 'tecnico', label: 'Prefiro gerenciar o site por conta própria' },
   { value: 'outro', label: 'Outro motivo' },
 ]
 
@@ -111,28 +111,44 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
 
   const retentionTitle =
     retentionStep === 'retention'
-      ? 'Tem certeza que não quer o site no ar?'
+      ? 'Tem certeza? Seu site está pronto pra ir ao ar hoje'
       : retentionStep === 'reason'
         ? 'Só uma pergunta rápida'
         : 'Receba os arquivos pelo WhatsApp'
+
+  const RETENTION_BENEFITS = [
+    'Publicação e configuração completa, feita por nós',
+    'Correções ilimitadas e gratuitas, sempre que precisar',
+    'Monitoramento 24h — se sair do ar, a gente resolve',
+    'Suporte especializado direto no WhatsApp',
+    'Relatório de visitas do seu site',
+    'Primeiro mês grátis, sem contrato de permanência',
+  ]
 
   const retentionContent = (
     <>
       {retentionStep === 'retention' && (
         <>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Só pra você comparar: hospedagem mensal{' '}
-            <strong className="text-gray-900">sem fidelidade</strong> custa de R$40 a R$70 nas
-            grandes empresas — os planos baratos exigem contrato de 2 a 4 anos adiantado.
+            Baixando os arquivos, você fica responsável por: contratar e configurar uma
+            hospedagem, instalar o certificado SSL, apontar o domínio, subir os arquivos
+            por FTP e resolver sozinho qualquer erro ou queda do servidor.
           </p>
-          <p className="text-sm text-gray-600 leading-relaxed mb-1">
-            Aqui é <strong className="text-gray-900">R$29/mês, sem contrato</strong>, com
-            hospedagem, SSL, monitoramento, suporte direto no WhatsApp e 1 alteração de
-            conteúdo inclusa por mês.
+          <p className="text-sm text-gray-600 leading-relaxed mb-4">
+            Ativando agora, <strong className="text-gray-900">seu site entra no ar hoje mesmo</strong>{' '}
+            — e o primeiro mês é gratuito. Você não digita uma linha de código: a gente
+            publica, monitora 24h, corrige o que quebrar e mantém tudo funcionando.
           </p>
-          <p className="text-sm font-medium text-brand-text mb-6">
-            E o primeiro mês é grátis — você testa antes de pagar.
-          </p>
+          <ul className="space-y-2 mb-6">
+            {RETENTION_BENEFITS.map((b) => (
+              <li key={b} className="flex items-start gap-2 text-sm text-gray-700">
+                <svg className="w-4 h-4 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+                {b}
+              </li>
+            ))}
+          </ul>
           <div className="flex flex-col gap-3">
             <Button
               variant="conversion"
@@ -150,7 +166,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
               onClick={handleRetentionDownload}
               disabled={isPending}
             >
-              Não, quero apenas baixar os arquivos
+              Continuar e baixar os arquivos
             </Button>
           </div>
         </>

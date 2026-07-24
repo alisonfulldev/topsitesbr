@@ -223,10 +223,10 @@ export async function requestZipUploadNotification(siteId: string): Promise<void
 }
 
 const REASON_LABELS: Record<string, string> = {
-  preco: 'Achou o preço caro',
-  hospedagem: 'Já tem hospedagem',
+  hospedagem: 'Já tem uma solução de hospedagem',
   outro_lugar: 'Vai hospedar em outro lugar',
   nao_usar: 'Não vai usar o site agora',
+  tecnico: 'Prefere gerenciar o site por conta própria',
   outro: 'Outro motivo',
 }
 
