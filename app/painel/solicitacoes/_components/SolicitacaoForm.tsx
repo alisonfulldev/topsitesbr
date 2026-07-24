@@ -417,6 +417,7 @@ export function SolicitacaoForm({
         size="lg"
         fullWidth
         loading={isPending}
+        loadingText="Enviando..."
         disabled={!selectedType}
       >
         Enviar solicitação

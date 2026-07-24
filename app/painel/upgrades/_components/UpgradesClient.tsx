@@ -146,7 +146,14 @@ function ProductCard({
 
       {error && <p className="text-xs text-red-600 mb-3">{error}</p>}
 
-      <Button variant="conversion" size="md" fullWidth onClick={handleBuy} loading={isPending}>
+      <Button
+        variant="conversion"
+        size="md"
+        fullWidth
+        onClick={handleBuy}
+        loading={isPending}
+        loadingText="Processando..."
+      >
         {isWhatsappLead ? 'Falar com especialista' : 'Comprar'}
       </Button>
     </div>

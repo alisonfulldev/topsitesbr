@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { createCost, updateCost, deleteCost } from '../actions'
 import { CostCategory } from '@prisma/client'
+import { useToastContext } from '@/components/ui/ToastProvider'
 
 export type CostRow = {
   id: string
@@ -58,10 +59,12 @@ function CostForm({
   initial,
   onSuccess,
   onCancel,
+  onToast,
 }: {
   initial?: CostRow
   onSuccess: () => void
   onCancel: () => void
+  onToast?: (msg: string) => void
 }) {
   const [form, setForm] = useState<FormState>(
     initial
@@ -93,8 +96,10 @@ function CostForm({
     startTransition(async () => {
       if (initial) {
         await updateCost(initial.id, form)
+        onToast?.('Custo atualizado com sucesso!')
       } else {
         await createCost(form)
+        onToast?.('Custo adicionado com sucesso!')
       }
       onSuccess()
     })
@@ -185,8 +190,14 @@ function CostForm({
         <button
           type="submit"
           disabled={pending}
-          className="flex-1 bg-brand text-brand-dark text-sm font-medium py-2 rounded-md hover:bg-brand-hover disabled:opacity-50 transition-colors"
+          className="flex-1 inline-flex items-center justify-center gap-2 bg-brand text-brand-dark text-sm font-medium py-2 rounded-md hover:bg-brand-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
+          {pending && (
+            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+          )}
           {pending ? 'Salvando…' : initial ? 'Salvar alterações' : 'Adicionar custo'}
         </button>
         <button
@@ -214,6 +225,7 @@ export function CustosPageClient({
   const [filterCategory, setFilterCategory] = useState<CostCategory | 'all'>('all')
   const [filterMonth, setFilterMonth] = useState('')
   const [deletePending, startDeleteTransition] = useTransition()
+  const { showToast } = useToastContext()
 
   const filtered = costs.filter((c) => {
     if (filterCategory !== 'all' && c.category !== filterCategory) return false
@@ -291,6 +303,7 @@ export function CustosPageClient({
           <CostForm
             onSuccess={() => setShowForm(false)}
             onCancel={() => setShowForm(false)}
+            onToast={(msg) => showToast(msg, 'success')}
           />
         </div>
       )}
@@ -303,6 +316,7 @@ export function CustosPageClient({
             initial={editing}
             onSuccess={() => setEditing(null)}
             onCancel={() => setEditing(null)}
+            onToast={(msg) => showToast(msg, 'success')}
           />
         </div>
       )}

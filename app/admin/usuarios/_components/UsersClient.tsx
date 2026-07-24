@@ -349,6 +349,7 @@ export function UsersClient({
             fullWidth
             onClick={handleCreate}
             loading={isPending}
+            loadingText="Criando..."
           >
             Criar Usuário
           </Button>

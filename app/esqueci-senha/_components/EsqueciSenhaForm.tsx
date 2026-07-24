@@ -1,24 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { requestPasswordReset } from '../actions'
 
 export function EsqueciSenhaForm() {
   const [sent, setSent] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setLoading(true)
 
     const form = e.currentTarget
     const email = (form.elements.namedItem('email') as HTMLInputElement).value
 
-    await requestPasswordReset(email)
-
-    // Always show the same message regardless of whether the email exists (security)
-    setSent(true)
-    setLoading(false)
+    startTransition(async () => {
+      await requestPasswordReset(email)
+      // Always show the same message regardless of whether the email exists (security)
+      setSent(true)
+    })
   }
 
   if (sent) {
@@ -59,10 +58,16 @@ export function EsqueciSenhaForm() {
       <div className="pt-2">
         <button
           type="submit"
-          disabled={loading}
-          className="w-full rounded-xl bg-brand px-4 py-3.5 text-sm font-bold text-black tracking-wide hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 focus:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50 transition-all"
+          disabled={isPending}
+          className="w-full rounded-xl bg-brand px-4 py-3.5 text-sm font-bold text-black tracking-wide hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 focus:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
         >
-          {loading ? 'Enviando…' : 'Enviar instruções'}
+          {isPending && (
+            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+          )}
+          {isPending ? 'Enviando…' : 'Enviar instruções'}
         </button>
       </div>
     </form>

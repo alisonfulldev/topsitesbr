@@ -45,6 +45,24 @@ export async function purchaseProduct(
   if (!client) return { error: 'Cliente não encontrado.' }
   if (!product) return { error: 'Produto não encontrado.' }
 
+  // Idempotency: if there is already a pending or paid order for this product, return an error
+  const existingOrder = await prisma.order.findFirst({
+    where: {
+      clientId,
+      productId,
+      status: { in: ['pending', 'paid'] },
+    },
+    select: { id: true, status: true },
+  })
+  if (existingOrder) {
+    return {
+      error:
+        existingOrder.status === 'paid'
+          ? 'Você já adquiriu este produto. Entre em contato com o suporte se precisar de ajuda.'
+          : 'Você já possui uma cobrança pendente para este produto. Verifique seu e-mail ou entre em contato com o suporte.',
+    }
+  }
+
   const docDigits = client.document?.replace(/\D/g, '') ?? ''
   if (docDigits.length !== 11 && docDigits.length !== 14) {
     return { error: 'Para realizar a compra é necessário ter CPF ou CNPJ cadastrado. Entre em contato com o suporte para atualizar seu cadastro.' }

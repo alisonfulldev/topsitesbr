@@ -95,6 +95,21 @@ export async function createTicket(
     return { error: 'Upload de imagem obrigatório para este tipo de solicitação.' }
   }
 
+  // ── 1b. Idempotency: prevent duplicate submissions within 30 seconds ────
+  const thirtySecondsAgo = new Date(Date.now() - 30_000)
+  const recentDuplicate = await prisma.ticket.findFirst({
+    where: {
+      clientId,
+      changeType: changeType as ChangeType,
+      siteId,
+      createdAt: { gte: thirtySecondsAgo },
+    },
+    select: { id: true },
+  })
+  if (recentDuplicate) {
+    return { error: 'Solicitação já enviada recentemente. Aguarde alguns segundos antes de tentar novamente.' }
+  }
+
   // ── 2. Validate site belongs to client ──────────────────────────────────
   const site = await prisma.site.findUnique({
     where: { id: siteId, clientId },

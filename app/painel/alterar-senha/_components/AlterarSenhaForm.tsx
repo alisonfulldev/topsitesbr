@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { changePassword } from '../actions'
 import { Button } from '@/components/ui/button'
+import { useToastContext } from '@/components/ui/ToastProvider'
 
 const INPUT =
   'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent'
@@ -30,6 +31,7 @@ export function AlterarSenhaForm({ mustChangePassword }: { mustChangePassword: b
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
+  const { showToast } = useToastContext()
 
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -52,6 +54,7 @@ export function AlterarSenhaForm({ mustChangePassword }: { mustChangePassword: b
         setError(result.error)
       } else {
         setSuccessMsg('Senha alterada com sucesso!')
+        showToast('Senha alterada com sucesso!', 'success')
         // Refresh session JWT so mustChangePassword flag is cleared in the token
         await updateSession()
         if (mustChangePassword) {
@@ -144,6 +147,7 @@ export function AlterarSenhaForm({ mustChangePassword }: { mustChangePassword: b
         fullWidth
         onClick={handleSubmit}
         loading={isPending}
+        loadingText="Salvando..."
       >
         {mustChangePassword ? 'Definir senha' : 'Alterar senha'}
       </Button>

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { updateTicketStatus } from '../actions'
+import { useToastContext } from '@/components/ui/ToastProvider'
 import { Card } from '@/components/ui/card'
 import {
   Badge,
@@ -54,10 +55,12 @@ function TicketCard({
   ticket,
   onStatusChange,
   onImageClick,
+  isPending,
 }: {
   ticket: TicketRow
   onStatusChange: (id: string, status: string) => void
   onImageClick: (url: string) => void
+  isPending?: boolean
 }) {
   const dl = deadlineState(ticket.deadlineAt)
   const isMock = ticket.attachmentUrl?.startsWith('/mock-uploads/')
@@ -155,6 +158,7 @@ function TicketCard({
               size="sm"
               variant="secondary"
               onClick={() => onStatusChange(ticket.id, 'in_progress')}
+              disabled={isPending}
             >
               Iniciar atendimento
             </Button>
@@ -164,6 +168,7 @@ function TicketCard({
               size="sm"
               variant="primary"
               onClick={() => onStatusChange(ticket.id, 'done')}
+              disabled={isPending}
             >
               Marcar como concluído
             </Button>
@@ -181,6 +186,12 @@ export function TicketListClient({ tickets: initial }: { tickets: TicketRow[] })
   const [imageModal, setImageModal] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const { showToast } = useToastContext()
+
+  const STATUS_TOAST: Record<string, string> = {
+    in_progress: 'Atendimento iniciado!',
+    done: 'Solicitação marcada como concluída!',
+  }
 
   function handleStatusChange(id: string, newStatus: string) {
     setError(null)
@@ -190,6 +201,9 @@ export function TicketListClient({ tickets: initial }: { tickets: TicketRow[] })
       if (result.error) {
         setError(result.error)
         setTickets(initial)
+      } else {
+        const msg = STATUS_TOAST[newStatus]
+        if (msg) showToast(msg, 'success')
       }
     })
   }
@@ -298,6 +312,7 @@ export function TicketListClient({ tickets: initial }: { tickets: TicketRow[] })
               ticket={ticket}
               onStatusChange={handleStatusChange}
               onImageClick={setImageModal}
+              isPending={isPending}
             />
           ))}
         </div>

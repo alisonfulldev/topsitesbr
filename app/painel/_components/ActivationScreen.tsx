@@ -167,7 +167,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
           </p>
 
           <div className="flex flex-col gap-3">
-            <Button variant="conversion" size="md" fullWidth onClick={handleRetentionActivate} loading={isPending}>
+            <Button variant="conversion" size="md" fullWidth onClick={handleRetentionActivate} loading={isPending} loadingText="Processando...">
               Ativar com 1 mês grátis
             </Button>
             <Button variant="secondary" size="md" fullWidth onClick={handleRetentionDownload} disabled={isPending}>
@@ -340,6 +340,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, whatsapp
             fullWidth
             onClick={handleActivate}
             loading={isPending}
+            loadingText="Processando..."
             disabled={!termsAccepted}
           >
             {pendingPayment ? 'Ver boleto / PIX' : 'Ativar com 1 mês grátis'}
