@@ -7,7 +7,8 @@ function getBaseUrl(): string {
 }
 
 function getApiKey(): string {
-  let key = (process.env.ASAAS_API_KEY ?? '').trim()
+  // Strip BOM, whitespace and any embedded newlines (can sneak in via Vercel CLI pipe on Windows)
+  let key = (process.env.ASAAS_API_KEY ?? '').replace(/\s/g, '')
   if (key.charCodeAt(0) === 0xFEFF) key = key.slice(1)
   return key
 }
