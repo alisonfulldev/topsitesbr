@@ -55,12 +55,12 @@ export function AlterarSenhaForm({ mustChangePassword }: { mustChangePassword: b
       } else {
         setSuccessMsg('Senha alterada com sucesso!')
         showToast('Senha alterada com sucesso!', 'success')
-        // Refresh session JWT so mustChangePassword flag is cleared in the token
-        await updateSession()
         if (mustChangePassword) {
-          // Small delay so user can see the success message
-          setTimeout(() => router.push('/painel'), 1200)
+          // Hard redirect after session update so middleware reads the fresh JWT cookie
+          await updateSession()
+          setTimeout(() => { window.location.href = '/painel' }, 1200)
         } else {
+          await updateSession()
           setCurrentPassword('')
           setNewPassword('')
           setConfirmPassword('')
