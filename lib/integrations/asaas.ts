@@ -7,8 +7,17 @@ function getBaseUrl(): string {
 }
 
 function getApiKey(): string {
-  // Strip BOM, whitespace and any embedded newlines (can sneak in via Vercel CLI pipe on Windows)
-  let key = (process.env.ASAAS_API_KEY ?? '').replace(/\s/g, '')
+  const raw = (process.env.ASAAS_API_KEY ?? '').replace(/\s/g, '')
+  // Vercel substitutes $ as variable references, so the key is stored base64-encoded.
+  // If the value doesn't start with $ it's base64 — decode it; otherwise use as-is (local dev).
+  if (!raw.startsWith('$') && raw.length > 0) {
+    try {
+      return Buffer.from(raw, 'base64').toString('utf-8').replace(/\s/g, '')
+    } catch {
+      return raw
+    }
+  }
+  let key = raw
   if (key.charCodeAt(0) === 0xFEFF) key = key.slice(1)
   return key
 }
