@@ -6,10 +6,16 @@ function getBaseUrl(): string {
     : 'https://sandbox.asaas.com/api/v3'
 }
 
+function getApiKey(): string {
+  const key = process.env.ASAAS_API_KEY ?? ''
+  // Strip UTF-8 BOM (﻿) that can sneak in via env var editors on Windows
+  return key.charCodeAt(0) === 0xFEFF ? key.slice(1) : key
+}
+
 function getHeaders() {
   return {
     'Content-Type': 'application/json',
-    access_token: process.env.ASAAS_API_KEY ?? '',
+    access_token: getApiKey(),
   }
 }
 
