@@ -56,9 +56,9 @@ export function AlterarSenhaForm({ mustChangePassword }: { mustChangePassword: b
         setSuccessMsg('Senha alterada com sucesso!')
         showToast('Senha alterada com sucesso!', 'success')
         if (mustChangePassword) {
-          // Hard redirect after session update so middleware reads the fresh JWT cookie
           await updateSession()
-          setTimeout(() => { window.location.href = '/painel' }, 1200)
+          await new Promise<void>((resolve) => setTimeout(resolve, 1200))
+          window.location.href = '/painel'
         } else {
           await updateSession()
           setCurrentPassword('')
