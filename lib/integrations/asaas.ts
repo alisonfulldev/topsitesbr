@@ -10,7 +10,9 @@ function getApiKey(): string {
   // Strip BOM, whitespace and any embedded newlines (can sneak in via Vercel CLI pipe on Windows)
   let key = (process.env.ASAAS_API_KEY ?? '').replace(/\s/g, '')
   if (key.charCodeAt(0) === 0xFEFF) key = key.slice(1)
-  console.log(`[Asaas] key len=${key.length} prefix=${key.substring(0, 20)} env=${process.env.ASAAS_ENV}`)
+  const rawEnv = process.env.ASAAS_ENV ?? ''
+  const envCodes = Array.from(rawEnv).map(c => c.charCodeAt(0)).join(',')
+  console.log(`[Asaas] key len=${key.length} prefix=${key.substring(0, 20)} env="${rawEnv}" codes=[${envCodes}] url=${getBaseUrl()}`)
   return key
 }
 
