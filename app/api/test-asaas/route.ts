@@ -11,6 +11,18 @@ export async function GET(req: NextRequest) {
   const cleanKey = rawKey.replace(/\s/g, '')
   const cleanEnv = rawEnv.trim()
 
+  // Decode base64 if value doesn't start with $ (production Vercel stores as b64)
+  let resolvedKey = cleanKey
+  let isBase64 = false
+  if (!cleanKey.startsWith('$') && cleanKey.length > 0) {
+    try {
+      resolvedKey = Buffer.from(cleanKey, 'base64').toString('utf-8').replace(/\s/g, '')
+      isBase64 = true
+    } catch {
+      resolvedKey = cleanKey
+    }
+  }
+
   const baseUrl = cleanEnv === 'production'
     ? 'https://api.asaas.com/v3'
     : 'https://sandbox.asaas.com/api/v3'
@@ -19,7 +31,7 @@ export async function GET(req: NextRequest) {
   let asaasBody = ''
   try {
     const res = await fetch(`${baseUrl}/customers?limit=1`, {
-      headers: { 'Content-Type': 'application/json', access_token: cleanKey },
+      headers: { 'Content-Type': 'application/json', access_token: resolvedKey },
     })
     asaasStatus = res.status
     asaasBody = await res.text()
@@ -31,8 +43,10 @@ export async function GET(req: NextRequest) {
     envRaw: JSON.stringify(rawEnv),
     envClean: cleanEnv,
     envMatches: cleanEnv === 'production',
-    keyLen: cleanKey.length,
-    keyPrefix: cleanKey.substring(0, 25),
+    rawKeyLen: cleanKey.length,
+    isBase64,
+    keyLen: resolvedKey.length,
+    keyPrefix: resolvedKey.substring(0, 25),
     baseUrl,
     asaasStatus,
     asaasBody: asaasBody.substring(0, 500),
