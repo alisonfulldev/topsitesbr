@@ -41,7 +41,7 @@ export async function asaasFetch<T>(
       const text = await res.text()
       console.error(`[Asaas] ${res.status} ${path}:`, text)
       const body = JSON.parse(text) as AsaasErrorBody
-      msg = body.errors?.[0]?.description ?? text || msg
+      msg = body.errors?.[0]?.description ?? (text || msg)
     } catch {
       msg = `HTTP ${res.status}`
     }
