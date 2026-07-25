@@ -1,7 +1,7 @@
 // ASAAS_ENV=sandbox usa https://sandbox.asaas.com/api/v3
 // ASAAS_ENV=production usa https://api.asaas.com/v3 (padrão)
 function getBaseUrl(): string {
-  return process.env.ASAAS_ENV === 'production'
+  return (process.env.ASAAS_ENV ?? '').trim() === 'production'
     ? 'https://api.asaas.com/v3'
     : 'https://sandbox.asaas.com/api/v3'
 }
