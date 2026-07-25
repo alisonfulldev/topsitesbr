@@ -7,9 +7,9 @@ function getBaseUrl(): string {
 }
 
 function getApiKey(): string {
-  const key = process.env.ASAAS_API_KEY ?? ''
-  // Strip UTF-8 BOM (﻿) that can sneak in via env var editors on Windows
-  return key.charCodeAt(0) === 0xFEFF ? key.slice(1) : key
+  let key = (process.env.ASAAS_API_KEY ?? '').trim()
+  if (key.charCodeAt(0) === 0xFEFF) key = key.slice(1)
+  return key
 }
 
 function getHeaders() {
@@ -38,10 +38,12 @@ export async function asaasFetch<T>(
   if (!res.ok) {
     let msg = `HTTP ${res.status}`
     try {
-      const body = (await res.json()) as AsaasErrorBody
-      msg = body.errors?.[0]?.description ?? JSON.stringify(body)
+      const text = await res.text()
+      console.error(`[Asaas] ${res.status} ${path}:`, text)
+      const body = JSON.parse(text) as AsaasErrorBody
+      msg = body.errors?.[0]?.description ?? text || msg
     } catch {
-      msg = (await res.text().catch(() => `HTTP ${res.status}`))
+      msg = `HTTP ${res.status}`
     }
     throw new Error(`Asaas: ${msg}`)
   }
