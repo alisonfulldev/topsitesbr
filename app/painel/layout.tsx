@@ -4,6 +4,9 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { NotificationBell } from '@/components/notification-bell'
 import { PainelDesktopSidebar, PainelBottomNav } from '@/components/painel/PainelNav'
+import { PwaSetup } from '@/components/painel/PwaSetup'
+import { InstallBanner } from '@/components/painel/InstallBanner'
+import { ReferralPopupWrapper } from '@/components/painel/ReferralPopupWrapper'
 import Image from 'next/image'
 import { markNotificationRead, markAllNotificationsRead } from './actions'
 
@@ -34,6 +37,26 @@ export default async function PainelLayout({ children }: { children: React.React
       read: n.read,
       createdAt: n.createdAt.toISOString(),
     }))
+  }
+
+  // Referral popup data
+  let showReferralPopup = false
+  let referralLink = ''
+
+  if (clientId) {
+    const client = await prisma.client.findUnique({
+      where: { id: clientId },
+      select: { lastReferralPromptAt: true, referralCode: true },
+    })
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+    referralLink = `${appUrl}/i/${client?.referralCode ?? ''}`
+
+    if (!client?.lastReferralPromptAt) {
+      showReferralPopup = true
+    } else {
+      const hoursSince = (Date.now() - client.lastReferralPromptAt.getTime()) / (1000 * 60 * 60)
+      showReferralPopup = hoursSince >= 24
+    }
   }
 
   return (
@@ -70,6 +93,7 @@ export default async function PainelLayout({ children }: { children: React.React
 
         {/* Page content — extra bottom padding on mobile to clear the fixed bottom nav (72px) */}
         <main className="flex-1 p-4 md:p-6 pb-24 md:pb-6">
+          <PwaSetup />
           {children}
         </main>
 
@@ -87,6 +111,18 @@ export default async function PainelLayout({ children }: { children: React.React
 
       {/* Mobile bottom navigation — hidden on desktop */}
       <PainelBottomNav />
+
+      {/* PWA install banner */}
+      <InstallBanner />
+
+      {/* Referral popup */}
+      {showReferralPopup && clientId && (
+        <ReferralPopupWrapper
+          referralLink={referralLink}
+          whatsappNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ''}
+          clientId={clientId}
+        />
+      )}
     </div>
   )
 }

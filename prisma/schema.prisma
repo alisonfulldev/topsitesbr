@@ -129,6 +129,7 @@ model Client {
   downloadRetentionShownAt DateTime?
   termsAcceptedAt          DateTime? @map("terms_accepted_at")
   termsVersion             String?   @map("terms_version")
+  lastReferralPromptAt     DateTime? @map("last_referral_prompt_at")
   createdAt                DateTime  @default(now()) @map("created_at")
   updatedAt                DateTime  @updatedAt @map("updated_at")
 
@@ -141,6 +142,8 @@ model Client {
   referralsGiven    Referral[]          @relation("ReferrerClient")
   referralReceived  Referral?           @relation("ReferredClient")
   planChangeHistory PlanChangeHistory[]
+  siteReports       SiteReport[]
+  pushSubscriptions PushSubscription[]
 
   @@map("clients")
 }
@@ -194,6 +197,7 @@ model Site {
   client  Client   @relation(fields: [clientId], references: [id])
   domains Domain[]
   tickets Ticket[]
+  reports SiteReport[]
 
   @@map("sites")
 }
@@ -437,4 +441,37 @@ model ExtraRevenue {
   createdAt   DateTime             @default(now()) @map("created_at")
 
   @@map("extra_revenues")
+}
+
+model SiteReport {
+  id          String    @id @default(uuid())
+  siteId      String    @map("site_id")
+  clientId    String    @map("client_id")
+  periodStart DateTime  @map("period_start")
+  periodEnd   DateTime  @map("period_end")
+  generatedAt DateTime  @default(now()) @map("generated_at")
+  viewedAt    DateTime? @map("viewed_at")
+  archivedAt  DateTime? @map("archived_at")
+  data        Json
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  site   Site   @relation(fields: [siteId], references: [id])
+  client Client @relation(fields: [clientId], references: [id])
+
+  @@map("site_reports")
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  clientId  String   @map("client_id")
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("push_subscriptions")
 }

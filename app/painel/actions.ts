@@ -282,3 +282,19 @@ export async function markAllNotificationsRead(): Promise<void> {
   revalidatePath('/painel')
   revalidatePath('/painel/notificacoes')
 }
+
+export async function updateLastReferralPromptAt(_snooze: boolean): Promise<void> {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.email) return
+
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { clientId: true },
+  })
+  if (!user?.clientId) return
+
+  await prisma.client.update({
+    where: { id: user.clientId },
+    data: { lastReferralPromptAt: new Date() },
+  })
+}

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { sendEmail } from '@/lib/integrations/resend'
 import { COMPANY_NAME, COMPANY_WHATSAPP, APP_URL } from '@/lib/config'
+import { sendPushToClient } from '@/lib/integrations/webpush'
 
 // ── Tipos de e-mail ───────────────────────────────────────────────────────────
 
@@ -17,6 +18,7 @@ export type EmailType =
   | 'ticket-done'
   | 'promotion'
   | 'referral-reward'
+  | 'weekly-report'
   | 'password-reset-request'
   | 'generic'
 
@@ -33,6 +35,7 @@ const EMAIL_CONFIG: Record<EmailType, { color: string; icon: string; label: stri
   'ticket-done':              { color: '#10b981', icon: '🎉', label: 'Solicitação concluída' },
   'promotion':                { color: '#f97316', icon: '🎁', label: 'Promoção especial' },
   'referral-reward':          { color: '#eab308', icon: '⭐', label: 'Recompensa de indicação' },
+  'weekly-report':            { color: '#0ea5e9', icon: '📊', label: 'Relatório semanal' },
   'password-reset-request':   { color: '#6366f1', icon: '🔐', label: 'Redefinição de senha' },
   'generic':                  { color: '#6b7280', icon: '🔔', label: 'Notificação' },
 }
@@ -44,6 +47,7 @@ function detectType(title: string): EmailType {
   if (t.includes('pagamento confirmado') || t.includes('compra confirmada')) return 'payment-confirmed'
   if (t.includes('atraso') || t.includes('vencido') || t.includes('inadimplente')) return 'payment-overdue'
   if (t.includes('mês grátis') || t.includes('mes gratis') || t.includes('ganhou') || t.includes('recompensa')) return 'referral-reward'
+  if (t.includes('relatório') || t.includes('relatorio') || t.includes('weekly')) return 'weekly-report'
   if (t.includes('promoção') || t.includes('promocao') || t.includes('promo')) return 'promotion'
   if (t.includes('site') && (t.includes('online') || t.includes('offline') || t.includes('publicado') || t.includes('status'))) return 'site-status'
   if (t.includes('cobrança') || t.includes('cobranca') || t.includes('boleto') || t.includes('fatura')) return 'charge-created'
@@ -176,6 +180,10 @@ export async function sendNotification(
     // Falha de e-mail não quebra a notificação (já foi salva no banco)
     console.error('[NOTIF:email] Falha:', err instanceof Error ? err.message : err)
   }
+
+  // Push notification (fire-and-forget, non-blocking)
+  const notifUrl = `${APP_URL}/painel`
+  sendPushToClient(clientId, title, message, notifUrl).catch(() => {})
 }
 
 // ── E-mail de boas-vindas na ativação da assinatura ───────────────────────────
@@ -374,6 +382,45 @@ export async function sendPaymentRegularized(
     await sendEmail({ to: email, subject, html })
   } catch (err) {
     console.error('[sendPaymentRegularized] Falha:', err instanceof Error ? err.message : err)
+  }
+}
+
+// ── E-mail de aviso: relatório semanal pronto ─────────────────────────────────
+
+export async function sendWeeklyReportEmail(
+  email: string,
+  clientName: string,
+  reportUrl: string,
+  periodLabel: string,
+): Promise<void> {
+  const subject = `Seu relatório semanal está pronto — ${periodLabel}`
+  const message = `Olá, ${clientName}! O relatório de desempenho do seu site da semana de ${periodLabel} já está disponível na plataforma.`
+
+  const extraHtml = `
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px;">
+      <tr>
+        <td align="center">
+          <a href="${reportUrl}"
+             style="display:inline-block;background:#0ea5e9;color:#ffffff;
+                    text-decoration:none;font-size:14px;font-weight:600;
+                    padding:13px 30px;border-radius:7px;letter-spacing:0.3px;">
+            Ver relatório
+          </a>
+        </td>
+      </tr>
+    </table>
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px 18px;margin-bottom:4px;">
+      <p style="margin:0;font-size:13px;color:#0369a1;">
+        O relatório mostra quantas pessoas visitaram seu site, de onde vieram e muito mais. Não deixe de conferir!
+      </p>
+    </div>
+  `
+
+  const html = buildHtml(subject, message, 'weekly-report', extraHtml)
+  try {
+    await sendEmail({ to: email, subject, html })
+  } catch (err) {
+    console.error('[sendWeeklyReportEmail] Falha:', err instanceof Error ? err.message : err)
   }
 }
 

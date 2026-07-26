@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
+import { PushNotificationButton } from './PushNotificationButton'
 
 const navItems = [
   {
@@ -24,6 +25,16 @@ const navItems = [
     icon: (active: boolean) => (
       <svg className={cn('w-6 h-6', active ? 'text-white' : 'text-gray-400')} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={active ? 2.5 : 2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+      </svg>
+    ),
+  },
+  {
+    href: '/painel/relatorios',
+    label: 'Relatórios',
+    exact: false,
+    icon: (active: boolean) => (
+      <svg className={cn('w-6 h-6', active ? 'text-white' : 'text-gray-400')} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={active ? 2.5 : 2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
       </svg>
     ),
   },
@@ -202,6 +213,9 @@ export function PainelDesktopSidebar({ userName }: { userName: string }) {
 
       <div className="p-4 border-t border-brand-dark-border">
         <p className="text-xs text-gray-400 truncate mb-2">{userName}</p>
+        <div className="mb-3">
+          <PushNotificationButton />
+        </div>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
           className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
