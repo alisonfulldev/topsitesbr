@@ -141,3 +141,33 @@ export async function generateReportsForAllClients(): Promise<{ generated: numbe
 
   return { generated, skipped }
 }
+
+// Dispara o e-mail semanal para TODOS os clientes com assinatura ativa,
+// independente de relatório gerado. O relatório é criado on-demand quando
+// o cliente acessa /painel/relatorios.
+export async function sendWeeklyEmailToAllActiveClients(): Promise<{ sent: number }> {
+  const now = new Date()
+  const periodEnd = new Date(now)
+  periodEnd.setDate(periodEnd.getDate() - 1)
+  const periodStart = new Date(periodEnd)
+  periodStart.setDate(periodStart.getDate() - 6)
+  const periodLabel = formatPeriodLabel(periodStart, periodEnd)
+
+  const clients = await prisma.client.findMany({
+    where: {
+      subscriptions: { some: { status: { in: ['active', 'overdue'] } } },
+    },
+    select: { id: true, name: true, email: true },
+  })
+
+  let sent = 0
+  for (const client of clients) {
+    const notifTitle = `Seu relatório semanal está disponível`
+    const notifMsg = `O relatório da semana de ${periodLabel} está pronto na plataforma. Acesse para ver o desempenho do seu site.`
+    await sendNotification(client.id, notifTitle, notifMsg, 'painel', 'weekly-report')
+    await sendWeeklyReportEmail(client.email, client.name, periodLabel)
+    sent++
+  }
+
+  return { sent }
+}
