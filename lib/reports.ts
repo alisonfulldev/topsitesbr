@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { getWeeklyAnalytics, WeeklyAnalyticsData } from '@/lib/integrations/analytics'
 import { sendNotification, sendWeeklyReportEmail } from '@/lib/notifications'
-import { APP_URL } from '@/lib/config'
 
 const REPORT_INTERVAL_DAYS = 7
 
@@ -105,12 +104,11 @@ export async function generateReportForSite(
   })
   if (!client) return true
 
-  const reportUrl = `${APP_URL}/painel/relatorios/${report.id}`
   const notifTitle = `Relatório semanal pronto — ${periodLabel}`
   const notifMsg = `Seu relatório de desempenho da semana de ${periodLabel} está disponível. Confira quantas pessoas visitaram seu site e dicas para crescer ainda mais.`
 
   await sendNotification(clientId, notifTitle, notifMsg, 'painel', 'weekly-report')
-  await sendWeeklyReportEmail(client.email, client.name, reportUrl, periodLabel)
+  await sendWeeklyReportEmail(client.email, client.name, periodLabel)
 
   return true
 }

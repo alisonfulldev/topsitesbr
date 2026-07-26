@@ -390,30 +390,25 @@ export async function sendPaymentRegularized(
 export async function sendWeeklyReportEmail(
   email: string,
   clientName: string,
-  reportUrl: string,
   periodLabel: string,
 ): Promise<void> {
+  const loginUrl = APP_URL + '/login'
   const subject = `Seu relatório semanal está pronto — ${periodLabel}`
-  const message = `Olá, ${clientName}! O relatório de desempenho do seu site da semana de ${periodLabel} já está disponível na plataforma.`
+  const message = `Olá, ${clientName}! O relatório de desempenho do seu site da semana de ${periodLabel} já está disponível na plataforma. Acesse para ver quantas pessoas visitaram seu site, de onde vieram e dicas para crescer ainda mais.`
 
   const extraHtml = `
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px;">
       <tr>
         <td align="center">
-          <a href="${reportUrl}"
+          <a href="${loginUrl}"
              style="display:inline-block;background:#0ea5e9;color:#ffffff;
                     text-decoration:none;font-size:14px;font-weight:600;
                     padding:13px 30px;border-radius:7px;letter-spacing:0.3px;">
-            Ver relatório
+            Acessar a plataforma
           </a>
         </td>
       </tr>
     </table>
-    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px 18px;margin-bottom:4px;">
-      <p style="margin:0;font-size:13px;color:#0369a1;">
-        O relatório mostra quantas pessoas visitaram seu site, de onde vieram e muito mais. Não deixe de conferir!
-      </p>
-    </div>
   `
 
   const html = buildHtml(subject, message, 'weekly-report', extraHtml)
