@@ -189,9 +189,10 @@ model Site {
   status          SiteStatus @default(pendente_ativacao)
   publishedAt     DateTime?  @map("published_at")
   filesZipUrl     String?    @map("files_zip_url")
-  analyticsSiteId String?    @map("analytics_site_id")
-  notes           String?
-  createdAt       DateTime   @default(now()) @map("created_at")
+  analyticsSiteId    String?    @map("analytics_site_id")
+  visitPushMilestone Int        @default(0) @map("visit_push_milestone")
+  notes              String?
+  createdAt          DateTime   @default(now()) @map("created_at")
   updatedAt       DateTime   @updatedAt @map("updated_at")
 
   client  Client   @relation(fields: [clientId], references: [id])

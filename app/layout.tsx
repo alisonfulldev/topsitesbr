@@ -55,6 +55,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="TOP SITE" />
       </head>
       <body className={inter.className}>
+        {/* Must be first — captures beforeinstallprompt before React hydrates */}
+        <script dangerouslySetInnerHTML={{ __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__deferredInstallPrompt=e;document.dispatchEvent(new CustomEvent('pwainstallready'));});` }} />
         <Providers>{children}</Providers>
         <script
           defer
