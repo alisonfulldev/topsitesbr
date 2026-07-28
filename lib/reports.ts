@@ -69,7 +69,7 @@ export async function generateReportForSite(
   periodStart.setDate(periodStart.getDate() - 6)
   periodStart.setHours(0, 0, 0, 0)
 
-  const result = await getWeeklyAnalytics(analyticsSiteId, periodStart, periodEnd)
+  const result = await getWeeklyAnalytics(siteId, periodStart, periodEnd)
   if (!result.ok) return false
 
   const insights = buildInsights(result.data)
@@ -115,17 +115,16 @@ export async function generateReportForSite(
 
 export async function maybeGenerateReportsForClient(clientId: string): Promise<void> {
   const sites = await prisma.site.findMany({
-    where: { clientId, status: 'online', analyticsSiteId: { not: null } },
+    where: { clientId, status: 'online' },
   })
   for (const site of sites) {
-    if (!site.analyticsSiteId) continue
-    await generateReportForSite(site.id, clientId, site.analyticsSiteId)
+    await generateReportForSite(site.id, clientId, site.id)
   }
 }
 
 export async function generateReportsForAllClients(): Promise<{ generated: number; skipped: number }> {
   const sites = await prisma.site.findMany({
-    where: { status: 'online', analyticsSiteId: { not: null } },
+    where: { status: 'online' },
     include: { client: { select: { id: true } } },
   })
 
@@ -133,8 +132,7 @@ export async function generateReportsForAllClients(): Promise<{ generated: numbe
   let skipped = 0
 
   for (const site of sites) {
-    if (!site.analyticsSiteId) continue
-    const ok = await generateReportForSite(site.id, site.client.id, site.analyticsSiteId, true)
+    const ok = await generateReportForSite(site.id, site.client.id, site.id, true)
     if (ok) generated++
     else skipped++
   }

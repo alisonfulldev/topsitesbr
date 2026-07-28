@@ -303,16 +303,14 @@ export async function checkVisitMilestone(): Promise<void> {
   if (!clientId) return
 
   const sites = await prisma.site.findMany({
-    where: { clientId, status: 'online', analyticsSiteId: { not: null } },
-    select: { id: true, analyticsSiteId: true, visitPushMilestone: true },
+    where: { clientId, status: 'online' },
+    select: { id: true, visitPushMilestone: true },
   })
 
   const today = new Date().toISOString().split('T')[0]
 
   for (const site of sites) {
-    if (!site.analyticsSiteId) continue
-
-    const result = await getSiteAnalytics(site.analyticsSiteId, '2024-01-01', today)
+    const result = await getSiteAnalytics(site.id, '2024-01-01', today)
     if (!result.ok) continue
 
     const { visits, topReferrers } = result.data

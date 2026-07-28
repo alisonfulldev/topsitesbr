@@ -195,12 +195,28 @@ model Site {
   createdAt          DateTime   @default(now()) @map("created_at")
   updatedAt       DateTime   @updatedAt @map("updated_at")
 
-  client  Client   @relation(fields: [clientId], references: [id])
-  domains Domain[]
-  tickets Ticket[]
-  reports SiteReport[]
+  client    Client     @relation(fields: [clientId], references: [id])
+  domains   Domain[]
+  tickets   Ticket[]
+  reports   SiteReport[]
+  pageViews PageView[]
 
   @@map("sites")
+}
+
+model PageView {
+  id        String   @id @default(uuid())
+  siteId    String   @map("site_id")
+  path      String   @default("/")
+  referrer  String?
+  sessionId String   @map("session_id")
+  timestamp DateTime @default(now())
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, timestamp])
+  @@index([siteId, sessionId])
+  @@map("page_views")
 }
 
 model Domain {

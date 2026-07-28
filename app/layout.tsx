@@ -58,11 +58,13 @@ export default function RootLayout({
         {/* Must be first — captures beforeinstallprompt before React hydrates */}
         <script dangerouslySetInnerHTML={{ __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__deferredInstallPrompt=e;document.dispatchEvent(new CustomEvent('pwainstallready'));});` }} />
         <Providers>{children}</Providers>
-        <script
-          defer
-          src="https://umamirepo.vercel.app/script.js"
-          data-website-id="7cd11197-5137-4e75-a703-0bebe2e21fc2"
-        />
+        {/* Own analytics tracker — set NEXT_PUBLIC_TRACK_SITE_ID to the site UUID for this domain */}
+        {process.env.NEXT_PUBLIC_TRACK_SITE_ID && (
+          <>
+            <script dangerouslySetInnerHTML={{ __html: `window.__ts_id="${process.env.NEXT_PUBLIC_TRACK_SITE_ID}";` }} />
+            <script defer src="/tracker.js" />
+          </>
+        )}
       </body>
     </html>
   )
