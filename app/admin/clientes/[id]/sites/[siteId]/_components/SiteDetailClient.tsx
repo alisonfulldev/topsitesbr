@@ -31,6 +31,7 @@ type Site = {
   filesZipUrl: string | null
   notes: string | null
   domains: Domain[]
+  appUrl: string
 }
 
 const INPUT =
@@ -473,18 +474,6 @@ function UpdateSiteForm({ site }: { site: Site }) {
         </label>
       </div>
 
-      <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Analytics Site Tag (Cloudflare)
-        </label>
-        <input
-          type="text"
-          name="analyticsSiteId"
-          defaultValue={site.analyticsSiteId ?? ''}
-          placeholder="a1b2c3d4e5f6..."
-          className={INPUT}
-        />
-      </div>
 
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Observações</label>
@@ -513,6 +502,40 @@ function UpdateSiteForm({ site }: { site: Site }) {
         </button>
       </div>
     </form>
+  )
+}
+
+// ─── Tracking code copy ──────────────────────────────────────────────────────
+
+function CopyTrackingCode({ siteId, appUrl }: { siteId: string; appUrl: string }) {
+  const [copied, setCopied] = useState(false)
+  const snippet = `<script src="${appUrl}/tracker.js" data-site-id="${siteId}"></script>`
+
+  function handleCopy() {
+    navigator.clipboard.writeText(snippet).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-5">
+      <h3 className="text-sm font-semibold text-gray-700 mb-1">Código de Rastreamento</h3>
+      <p className="text-xs text-gray-500 mb-3">
+        Cole este script no <code className="bg-gray-100 px-1 rounded">&lt;head&gt;</code> do site do cliente para rastrear visitas automaticamente.
+      </p>
+      <div className="flex items-start gap-2">
+        <code className="flex-1 block bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs font-mono text-gray-700 break-all select-all">
+          {snippet}
+        </code>
+        <button
+          onClick={handleCopy}
+          className="shrink-0 px-3 py-2 bg-brand text-brand-dark text-xs font-medium rounded-lg hover:bg-brand-hover transition-colors"
+        >
+          {copied ? 'Copiado!' : 'Copiar'}
+        </button>
+      </div>
+    </div>
   )
 }
 
@@ -590,9 +613,9 @@ export function SiteDetailClient({ site }: { site: Site }) {
             </dd>
           </div>
           <div className="flex gap-3">
-            <dt className="w-28 text-gray-500 shrink-0">Analytics ID</dt>
-            <dd className="font-mono text-xs text-gray-700 break-all">
-              {site.analyticsSiteId ?? <span className="text-gray-300">—</span>}
+            <dt className="w-28 text-gray-500 shrink-0">ID do Site</dt>
+            <dd className="font-mono text-xs text-gray-700 break-all select-all">
+              {site.id}
             </dd>
           </div>
           {site.notes && (
@@ -627,6 +650,9 @@ export function SiteDetailClient({ site }: { site: Site }) {
         </div>
         <AddDomainForm siteId={site.id} clientId={site.clientId} />
       </div>
+
+      {/* Tracking code */}
+      <CopyTrackingCode siteId={site.id} appUrl={site.appUrl} />
     </div>
   )
 }

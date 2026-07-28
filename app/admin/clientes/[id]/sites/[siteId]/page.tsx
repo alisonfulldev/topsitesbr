@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { SiteDetailClient } from './_components/SiteDetailClient'
+import { APP_URL } from '@/lib/config'
 
 export default async function SiteDetailPage({
   params,
@@ -72,6 +73,7 @@ export default async function SiteDetailPage({
           status: site.status,
           filesZipUrl: site.filesZipUrl,
           notes: site.notes,
+          appUrl: APP_URL,
           domains: site.domains.map((d) => ({
             id: d.id,
             domain: d.domain,
