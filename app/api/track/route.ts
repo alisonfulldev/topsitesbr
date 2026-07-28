@@ -35,6 +35,12 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    // Probabilistic cleanup: ~1% of requests delete data older than 30 days (no cron needed)
+    if (Math.random() < 0.01) {
+      const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      prisma.pageView.deleteMany({ where: { timestamp: { lt: cutoff } } }).catch(() => {})
+    }
+
     return NextResponse.json({ ok: true }, { headers: CORS })
   } catch {
     return NextResponse.json({ error: 'Server error' }, { status: 500, headers: CORS })
