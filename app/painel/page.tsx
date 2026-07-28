@@ -168,8 +168,8 @@ export default async function PainelPage({
     }
   }
 
-  // ── Analytics (para qualquer assinante com analyticsSiteId configurado) ─────
-  const analyticsSiteId = client.sites[0]?.analyticsSiteId ?? null
+  // ── Analytics — usa o UUID do próprio site como chave de rastreamento ────────
+  const analyticsSiteId = client.sites[0]?.id ?? null
   let analyticsResult: AnalyticsResult | null = null
 
   if (analyticsSiteId) {
