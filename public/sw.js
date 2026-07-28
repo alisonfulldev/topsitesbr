@@ -1,11 +1,11 @@
-const CACHE_NAME = 'topsite-painel-v1'
+const CACHE_NAME = 'topsite-painel-v2'
 const OFFLINE_URL = '/painel'
 
 // Install: cache offline fallback
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) =>
-      cache.addAll([OFFLINE_URL, '/logo.png', '/icon-192.png'])
+      cache.addAll([OFFLINE_URL, '/logo.png', '/android-chrome-192x192.png'])
     )
   )
   self.skipWaiting()
@@ -38,8 +38,8 @@ self.addEventListener('push', (event) => {
   const title = data.title ?? 'TOP SITE'
   const options = {
     body: data.body ?? '',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    icon: '/android-chrome-192x192.png',
+    badge: '/android-chrome-192x192.png',
     data: { url: data.url ?? '/painel' },
     vibrate: [100, 50, 100],
   }
