@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { generateProposalMagicLink, resendProposalEmail, updateProposalAdmin, transitionProposalStatus } from '../proposal-actions'
+import { generateProposalMagicLink, resendProposalEmail, updateProposalAdmin, transitionProposalStatus, resetProposalCharge } from '../proposal-actions'
 
 const STATUS_LABEL: Record<string, string> = {
   rascunho: 'Rascunho',
@@ -53,6 +53,9 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle')
   const [transitionStatus, setTransitionStatus] = useState<'idle' | 'pending' | 'done' | 'error'>('idle')
   const [transitionError, setTransitionError] = useState('')
+  const [resetStatus, setResetStatus] = useState<'idle' | 'pending' | 'done' | 'error'>('idle')
+  const [resetError, setResetError] = useState('')
+  const [showResetConfirm, setShowResetConfirm] = useState(false)
 
   async function handleCopyLink() {
     setLinkStatus('copying')
@@ -117,6 +120,23 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
     })
   }
 
+  function handleReset() {
+    setResetStatus('pending')
+    setResetError('')
+    startTransition(async () => {
+      const result = await resetProposalCharge(proposal.id)
+      if (result.error) {
+        setResetStatus('error')
+        setResetError(result.error)
+        setTimeout(() => setResetStatus('idle'), 4000)
+      } else {
+        setResetStatus('done')
+        setShowResetConfirm(false)
+        setTimeout(() => setResetStatus('idle'), 2000)
+      }
+    })
+  }
+
   const linkedSite = sites.find((s) => s.id === (siteId || proposal.siteId))
 
   return (
@@ -168,6 +188,53 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
             : 'Reenviar e-mail'}
         </button>
       </div>
+
+      {/* Recriar cobrança — visível apenas quando aprovada (cobrança criada mas não paga) */}
+      {proposal.status === 'aprovada' && (
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <p className="text-xs text-amber-800 mb-2">
+            Cobrança já criada no Asaas com o valor anterior. Para aplicar um novo valor, recrie a cobrança.
+          </p>
+          {!showResetConfirm ? (
+            <button
+              type="button"
+              onClick={() => setShowResetConfirm(true)}
+              className="text-xs px-3 py-1.5 border border-amber-400 text-amber-800 rounded-lg hover:bg-amber-100"
+            >
+              Recriar cobrança
+            </button>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-amber-900">
+                Isso vai cancelar a cobrança atual no Asaas e voltar a proposta para "enviada". O cliente precisará aprovar novamente. Confirma?
+              </p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  disabled={resetStatus === 'pending'}
+                  className="text-xs px-3 py-1.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50"
+                >
+                  {resetStatus === 'pending' ? 'Cancelando…' : 'Sim, recriar'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowResetConfirm(false)}
+                  className="text-xs px-3 py-1.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+              </div>
+              {resetStatus === 'error' && (
+                <p className="text-xs text-red-600">{resetError}</p>
+              )}
+              {resetStatus === 'done' && (
+                <p className="text-xs text-green-700">Cobrança cancelada. Proposta voltou para "enviada".</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Info atual (fora do modo edit) */}
       {!editMode && (

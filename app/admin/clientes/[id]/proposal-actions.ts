@@ -6,6 +6,7 @@ import { sendProposalEmail, sendProposalStatusEmail } from '@/lib/emails/proposa
 import { APP_URL } from '@/lib/config'
 import { revalidatePath } from 'next/cache'
 import { sendNotification } from '@/lib/notifications'
+import { asaasFetch } from '@/lib/integrations/asaas'
 
 export async function generateProposalMagicLink(
   proposalId: string,
@@ -84,6 +85,42 @@ export async function updateProposalAdmin(
       ...(data.previewUrl !== undefined && { previewUrl: data.previewUrl || null }),
       ...(data.siteId !== undefined && { siteId: data.siteId || null }),
       ...(data.creationPrice !== undefined && { creationPrice: data.creationPrice }),
+    },
+  })
+
+  revalidatePath(`/admin/clientes/${proposal.clientId}`)
+  return { success: true }
+}
+
+export async function resetProposalCharge(
+  proposalId: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const proposal = await prisma.proposal.findUnique({
+    where: { id: proposalId },
+    select: { id: true, clientId: true, status: true, asaasChargeId: true },
+  })
+  if (!proposal) return { error: 'Proposta não encontrada.' }
+  if (proposal.status !== 'aprovada') {
+    return { error: 'Só é possível recriar a cobrança quando a proposta está com status "aprovada".' }
+  }
+
+  // Cancela a cobrança no Asaas (ignora erros — pode já ter sido cancelada)
+  if (proposal.asaasChargeId && process.env.PAYMENT_DRIVER === 'asaas') {
+    try {
+      await asaasFetch(`/payments/${proposal.asaasChargeId}`, { method: 'DELETE' })
+    } catch {
+      // Ignorado: cobrança pode não existir mais no Asaas
+    }
+  }
+
+  // Limpa a cobrança e volta para "enviada" para o cliente poder aprovar novamente
+  await prisma.proposal.update({
+    where: { id: proposalId },
+    data: {
+      status: 'enviada',
+      asaasChargeId: null,
+      paymentUrl: null,
+      approvedAt: null,
     },
   })
 
