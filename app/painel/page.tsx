@@ -102,6 +102,7 @@ export default async function PainelPage({
         pendingPayment={hasPendingSubscription}
         clientName={client.name}
         clientEmail={client.email}
+        activationFlow={(client.activationFlow as 'quente' | 'frio') ?? 'frio'}
       />
     )
   }

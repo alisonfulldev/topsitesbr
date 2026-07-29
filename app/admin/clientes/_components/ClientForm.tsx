@@ -18,6 +18,7 @@ type InitialData = {
   phone: string
   document: string
   siteEntryFee?: number | null
+  activationFlow?: 'quente' | 'frio'
 }
 
 interface Props {
@@ -64,6 +65,9 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
   const [document, setDocument] = useState(initialData?.document ?? '')
   const [siteEntryFee, setSiteEntryFee] = useState(
     initialData?.siteEntryFee != null ? String(initialData.siteEntryFee) : ''
+  )
+  const [activationFlow, setActivationFlow] = useState<'quente' | 'frio'>(
+    initialData?.activationFlow ?? 'frio'
   )
 
   // Referral code (create only)
@@ -116,6 +120,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           referralCode: referralCode.trim() || undefined,
           createUserPassword: createLogin ? loginPassword : undefined,
           siteEntryFee: siteEntryFee ? parseFloat(siteEntryFee) : undefined,
+          activationFlow,
         })
         if (result?.error) {
           setError(result.error)
@@ -131,6 +136,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           phone: phone || undefined,
           document: document || undefined,
           siteEntryFee: siteEntryFee ? parseFloat(siteEntryFee) : undefined,
+          activationFlow,
         })
         if (result?.error) {
           setError(result.error)
@@ -216,6 +222,39 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
             />
           </div>
         </Field>
+
+        {/* Activation flow */}
+        <div className="pt-2 border-t border-gray-100">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            Tipo de cliente na ativação
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { value: 'frio', label: 'Frio', desc: 'Ainda não sabe da mensalidade' },
+              { value: 'quente', label: 'Quente', desc: 'Já foi informado do R$29/mês' },
+            ] as const).map((opt) => (
+              <label
+                key={opt.value}
+                className={`flex flex-col gap-0.5 p-3 rounded-lg border cursor-pointer transition-colors ${
+                  activationFlow === opt.value
+                    ? 'border-brand bg-brand/5'
+                    : 'border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="activationFlow"
+                  value={opt.value}
+                  checked={activationFlow === opt.value}
+                  onChange={() => setActivationFlow(opt.value)}
+                  className="sr-only"
+                />
+                <span className="text-sm font-semibold text-gray-800">{opt.label}</span>
+                <span className="text-xs text-gray-500">{opt.desc}</span>
+              </label>
+            ))}
+          </div>
+        </div>
 
         {/* Referral code — only on create */}
         {mode === 'create' && (

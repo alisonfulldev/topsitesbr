@@ -17,6 +17,7 @@ export default async function EditarClientePage({
       phone: true,
       document: true,
       siteEntryFee: true,
+      activationFlow: true,
     },
   })
 
@@ -56,6 +57,7 @@ export default async function EditarClientePage({
           phone: client.phone ?? '',
           document: client.document ?? '',
           siteEntryFee: client.siteEntryFee != null ? Number(client.siteEntryFee) : null,
+          activationFlow: (client.activationFlow as 'quente' | 'frio') ?? 'frio',
         }}
       />
     </div>

@@ -15,6 +15,7 @@ type Props = {
   pendingPayment?: boolean
   clientName: string
   clientEmail: string
+  activationFlow: 'quente' | 'frio'
 }
 
 type RetentionStep = 'retention' | 'reason' | 'counterargument'
@@ -28,6 +29,13 @@ const PLAN_BENEFITS = [
   'Suporte especializado direto pelo WhatsApp',
   'Relatório de visitas: quantas pessoas acessam, de onde vêm e páginas mais vistas',
   '10% de desconto em serviços e upgrades',
+]
+
+const WARM_BENEFITS = [
+  'Site publicado e no ar com hospedagem e SSL',
+  'Correções ilimitadas e gratuitas',
+  'Suporte direto pelo WhatsApp',
+  'Relatório de visitas mensais',
 ]
 
 const REASONS = [
@@ -51,7 +59,122 @@ const COUNTER_ARGUMENTS: Record<string, string> = {
     'Entendemos! Lembrando que o primeiro mês é totalmente grátis, sem contrato e sem compromisso. Não há nada a perder por ativar agora — você pode cancelar quando quiser.',
 }
 
-export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, clientName, clientEmail }: Props) {
+// ─── Warm flow (quente) ──────────────────────────────────────────────────────
+
+function WarmActivationScreen({ pendingPayment }: { pendingPayment?: boolean }) {
+  const [error, setError] = useState<string | null>(null)
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [isPending, startTransition] = useTransition()
+
+  function handleActivate() {
+    if (!termsAccepted) {
+      setError('Você precisa aceitar os Termos de Uso para continuar.')
+      return
+    }
+    setError(null)
+    startTransition(async () => {
+      const result = await activatePlan({ termsAccepted: true })
+      if (result.error) {
+        setError(result.error)
+      } else if (result.paymentUrl) {
+        window.location.href = result.paymentUrl
+      }
+    })
+  }
+
+  return (
+    <div className="bg-brand-dark rounded-2xl overflow-hidden">
+      <div className="text-center px-6 pt-10 pb-6">
+        <div className="flex justify-center mb-4">
+          <div className="w-16 h-16 rounded-2xl bg-brand/15 flex items-center justify-center">
+            <SparklesIcon className="w-8 h-8 text-brand" />
+          </div>
+        </div>
+        <h1 className="text-2xl font-bold text-white mb-3 leading-tight">
+          Seu site está pronto! 🎉
+        </h1>
+        <p className="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">
+          Agora é só ativar para publicar. Como combinado, o primeiro mês é por nossa conta.
+        </p>
+      </div>
+
+      <div className="mx-4 mb-6 bg-white rounded-xl p-5">
+        <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-3 py-1 mb-4">
+          <span className="text-green-700 text-xs font-bold">1 mês grátis de cortesia</span>
+        </div>
+
+        <ul className="space-y-2.5 mb-5">
+          {WARM_BENEFITS.map((b) => (
+            <li key={b} className="flex items-start gap-2 text-sm text-gray-700">
+              <svg className="w-4 h-4 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+              {b}
+            </li>
+          ))}
+        </ul>
+
+        <p className="text-xs text-gray-400 mb-4">
+          Após o período gratuito: R$29/mês, sem contrato. Cancele quando quiser.
+        </p>
+
+        <label className="flex items-start gap-3 mb-4 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={termsAccepted}
+            onChange={(e) => {
+              setTermsAccepted(e.target.checked)
+              if (e.target.checked) setError(null)
+            }}
+            className="mt-0.5 accent-brand shrink-0"
+          />
+          <span className="text-xs text-gray-500 leading-relaxed">
+            Li e concordo com os{' '}
+            <Link href="/termos" target="_blank" className="text-brand-text hover:underline">
+              Termos de Uso
+            </Link>{' '}
+            e a{' '}
+            <Link href="/privacidade" target="_blank" className="text-brand-text hover:underline">
+              Política de Privacidade
+            </Link>
+            , incluindo a renovação automática mensal de R$29 após o primeiro mês gratuito.
+          </span>
+        </label>
+
+        {pendingPayment && (
+          <p className="text-yellow-700 text-xs bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2 mb-3">
+            Pagamento gerado! Verifique seu e-mail ou clique abaixo para acessar o boleto/PIX novamente.
+          </p>
+        )}
+
+        {error && (
+          <p className="text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
+            {error}
+          </p>
+        )}
+
+        <Button
+          variant="conversion"
+          size="md"
+          fullWidth
+          onClick={handleActivate}
+          loading={isPending}
+          loadingText="Ativando..."
+          disabled={!termsAccepted}
+        >
+          {pendingPayment ? 'Ver boleto / PIX' : 'Ativar com 1 mês grátis'}
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+// ─── Cold flow (frio) ────────────────────────────────────────────────────────
+
+export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, clientName, clientEmail, activationFlow }: Props) {
+  if (activationFlow === 'quente') {
+    return <WarmActivationScreen pendingPayment={pendingPayment} />
+  }
   const [showRetention, setShowRetention] = useState(false)
   const [retentionStep, setRetentionStep] = useState<RetentionStep>('retention')
   const [selectedReason, setSelectedReason] = useState('')

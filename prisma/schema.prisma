@@ -129,6 +129,7 @@ model Client {
   downloadRetentionShownAt DateTime?
   termsAcceptedAt          DateTime? @map("terms_accepted_at")
   termsVersion             String?   @map("terms_version")
+  activationFlow           String    @default("frio") @map("activation_flow")
   lastReferralPromptAt     DateTime? @map("last_referral_prompt_at")
   createdAt                DateTime  @default(now()) @map("created_at")
   updatedAt                DateTime  @updatedAt @map("updated_at")
