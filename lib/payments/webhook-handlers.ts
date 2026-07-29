@@ -336,6 +336,27 @@ export async function handleProposalPayment(
   }
 }
 
+// Consulta o Asaas para confirmar o pagamento de uma proposta.
+// Chamado quando o cliente acessa /painel/projeto com status "aprovada".
+export async function syncProposalPayment(clientId: string): Promise<boolean> {
+  if (process.env.PAYMENT_DRIVER !== 'asaas') return false
+
+  const proposal = await prisma.proposal.findFirst({
+    where: { clientId, status: 'aprovada', asaasChargeId: { not: null } },
+    select: { id: true, asaasChargeId: true },
+  })
+  if (!proposal?.asaasChargeId) return false
+
+  try {
+    const payment = await asaasFetch<AsaasPaymentStatus>(`/payments/${proposal.asaasChargeId}`)
+    if (!['RECEIVED', 'CONFIRMED', 'RECEIVED_IN_CASH'].includes(payment.status)) return false
+    const result = await handleProposalPayment(proposal.id, payment.id)
+    return result.ok
+  } catch {
+    return false
+  }
+}
+
 // Consulta o Asaas para confirmar o pagamento de uma Order (upsell/avulso).
 export async function syncOrderPayment(clientId: string): Promise<boolean> {
   if (process.env.PAYMENT_DRIVER !== 'asaas') return false

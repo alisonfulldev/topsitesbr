@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { syncProposalPayment } from '@/lib/payments/webhook-handlers'
 import { ProjetoPageView } from './_components/ProjetoPageView'
 
 export default async function ProjetoPage() {
@@ -13,6 +14,9 @@ export default async function ProjetoPage() {
     select: { clientId: true },
   })
   if (!user?.clientId) redirect('/painel')
+
+  // Tenta confirmar pagamento direto no Asaas se webhook não chegou
+  await syncProposalPayment(user.clientId)
 
   const proposal = await prisma.proposal.findFirst({
     where: {
