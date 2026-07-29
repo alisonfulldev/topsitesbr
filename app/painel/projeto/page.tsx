@@ -17,7 +17,7 @@ export default async function ProjetoPage() {
   const proposal = await prisma.proposal.findFirst({
     where: {
       clientId: user.clientId,
-      status: { in: ['paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado'] },
+      status: { in: ['aprovada', 'paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado'] },
     },
     select: {
       id: true,
@@ -37,7 +37,7 @@ export default async function ProjetoPage() {
     <ProjetoPageView
       proposal={{
         ...proposal,
-        status: proposal.status as 'paga' | 'em_desenvolvimento' | 'pronto_revisao' | 'publicado',
+        status: proposal.status as 'aprovada' | 'paga' | 'em_desenvolvimento' | 'pronto_revisao' | 'publicado',
       }}
     />
   )

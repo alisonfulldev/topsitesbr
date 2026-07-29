@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { approveSiteAction, requestRevisionAction } from '../actions'
 
 type ProposalStatus =
+  | 'aprovada'
   | 'paga'
   | 'em_desenvolvimento'
   | 'pronto_revisao'
@@ -43,6 +44,7 @@ const STEPS = [
 ]
 
 const STATUS_ORDER: Record<ProposalStatus, number> = {
+  aprovada: -1,
   paga: 0,
   em_desenvolvimento: 1,
   pronto_revisao: 2,
@@ -59,6 +61,23 @@ export function ProjetoPageView({ proposal }: Props) {
   const [showRevisionModal, setShowRevisionModal] = useState(false)
   const [revisionNotes, setRevisionNotes] = useState('')
   const [result, setResult] = useState<{ error?: string; success?: boolean } | null>(null)
+
+  // Pagamento ainda não confirmado — aguarda webhook do Asaas
+  if (proposal.status === 'aprovada') {
+    return (
+      <div className="max-w-xl">
+        <h1 className="text-xl font-semibold text-gray-900 mb-1">Meu Projeto</h1>
+        <p className="text-sm text-gray-500 mb-6">{proposal.title}</p>
+        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-5 text-center">
+          <div className="text-3xl mb-3">⏳</div>
+          <p className="text-sm font-semibold text-yellow-800 mb-1">Aguardando confirmação do pagamento</p>
+          <p className="text-xs text-yellow-700">
+            Assim que o pagamento for confirmado, o projeto entra em desenvolvimento automaticamente e você será notificado aqui.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   const currentStepIdx = STATUS_ORDER[proposal.status]
 

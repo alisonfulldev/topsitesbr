@@ -86,7 +86,7 @@ export default async function PainelPage({
     const activeProposal = await prisma.proposal.findFirst({
       where: {
         clientId,
-        status: { in: ['paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado'] },
+        status: { in: ['aprovada', 'paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado'] },
       },
       select: { id: true },
     })
