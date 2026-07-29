@@ -159,6 +159,7 @@ export class AsaasPaymentProvider implements PaymentProvider {
           value: input.price,
           dueDate: daysFromNow(3),
           description: input.description,
+          ...(input.externalReference && { externalReference: input.externalReference }),
           ...(input.successUrl && {
             callback: { successUrl: input.successUrl, autoRedirect: true },
           }),

@@ -115,6 +115,16 @@ enum ReferralStatus {
   recompensado
 }
 
+enum ProposalStatus {
+  rascunho
+  enviada
+  aprovada
+  paga
+  em_desenvolvimento
+  pronto_revisao
+  publicado
+}
+
 // ─── Models ───────────────────────────────────────────────────────────────────
 
 model Client {
@@ -130,6 +140,7 @@ model Client {
   termsAcceptedAt          DateTime? @map("terms_accepted_at")
   termsVersion             String?   @map("terms_version")
   activationFlow           String    @default("frio") @map("activation_flow")
+  entryFlow                String    @default("whatsapp") @map("entry_flow")
   lastReferralPromptAt     DateTime? @map("last_referral_prompt_at")
   createdAt                DateTime  @default(now()) @map("created_at")
   updatedAt                DateTime  @updatedAt @map("updated_at")
@@ -145,6 +156,7 @@ model Client {
   planChangeHistory PlanChangeHistory[]
   siteReports       SiteReport[]
   pushSubscriptions PushSubscription[]
+  proposals         Proposal[]
 
   @@map("clients")
 }
@@ -201,6 +213,7 @@ model Site {
   tickets   Ticket[]
   reports   SiteReport[]
   pageViews PageView[]
+  proposal  Proposal?
 
   @@map("sites")
 }
@@ -334,8 +347,9 @@ model Order {
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")
 
-  client  Client  @relation(fields: [clientId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
+  client   Client   @relation(fields: [clientId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
+  proposal Proposal?
 
   @@map("orders")
 }
@@ -492,4 +506,46 @@ model PushSubscription {
   client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   @@map("push_subscriptions")
+}
+
+model Proposal {
+  id             String         @id @default(uuid())
+  clientId       String         @map("client_id")
+  siteId         String?        @unique @map("site_id")
+  title          String
+  description    String?
+  includedItems  String?        @map("included_items")
+  creationPrice  Decimal        @db.Decimal(10, 2) @map("creation_price")
+  status         ProposalStatus @default(rascunho)
+  asaasChargeId  String?        @map("asaas_charge_id")
+  orderId        String?        @unique @map("order_id")
+  previewUrl     String?        @map("preview_url")
+  revisionUsed   Boolean        @default(false) @map("revision_used")
+  approvedAt     DateTime?      @map("approved_at")
+  siteApprovedAt DateTime?      @map("site_approved_at")
+  paidAt         DateTime?      @map("paid_at")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  client       Client               @relation(fields: [clientId], references: [id])
+  site         Site?                @relation(fields: [siteId], references: [id])
+  order        Order?               @relation(fields: [orderId], references: [id])
+  accessTokens ProposalAccessToken[]
+
+  @@map("proposals")
+}
+
+model ProposalAccessToken {
+  id         String    @id @default(uuid())
+  proposalId String    @map("proposal_id")
+  clientId   String    @map("client_id")
+  tokenHash  String    @unique @map("token_hash")
+  purpose    String    @default("view")
+  expiresAt  DateTime  @map("expires_at")
+  usedAt     DateTime? @map("used_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  proposal Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  @@map("proposal_access_tokens")
 }

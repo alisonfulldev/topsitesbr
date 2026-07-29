@@ -29,6 +29,7 @@ export interface CreateSingleChargeInput {
   description: string
   price: number
   successUrl?: string
+  externalReference?: string
 }
 
 export interface CreateSingleChargeResult {
