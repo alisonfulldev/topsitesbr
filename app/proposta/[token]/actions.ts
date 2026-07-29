@@ -82,13 +82,22 @@ export async function approveProposalAction(
   }
 
   // Cria cobrança avulsa (UNDEFINED = cliente escolhe pix/cartão/boleto)
-  const { chargeId, paymentUrl } = await provider.createSingleCharge({
-    customerId: asaasCustomerId,
-    description: proposal.title,
-    price: Number(proposal.creationPrice),
-    externalReference: `proposal:${proposal.id}`,
-    successUrl: `${APP_URL}/proposta/${token}/confirmado`,
-  })
+  let chargeId: string
+  let paymentUrl: string
+  try {
+    const result = await provider.createSingleCharge({
+      customerId: asaasCustomerId,
+      description: proposal.title,
+      price: Number(proposal.creationPrice),
+      externalReference: `proposal:${proposal.id}`,
+      successUrl: `${APP_URL}/proposta/${token}/confirmado`,
+    })
+    chargeId = result.chargeId
+    paymentUrl = result.paymentUrl
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return { error: `Não foi possível gerar a cobrança: ${msg}` }
+  }
 
   // Salva chargeId, paymentUrl e marca token como usado
   await prisma.$transaction([
