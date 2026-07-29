@@ -49,6 +49,7 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
   const [editMode, setEditMode] = useState(false)
   const [previewUrl, setPreviewUrl] = useState(proposal.previewUrl ?? '')
   const [siteId, setSiteId] = useState(proposal.siteId ?? '')
+  const [creationPrice, setCreationPrice] = useState(String(proposal.creationPrice))
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle')
   const [transitionStatus, setTransitionStatus] = useState<'idle' | 'pending' | 'done' | 'error'>('idle')
   const [transitionError, setTransitionError] = useState('')
@@ -87,6 +88,7 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
       const result = await updateProposalAdmin(proposal.id, {
         previewUrl: previewUrl || undefined,
         siteId: siteId || null,
+        creationPrice: parseFloat(creationPrice.replace(',', '.')),
       })
       if (result.error) {
         setSaveStatus('error')
@@ -212,6 +214,19 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
         <div className="border-t border-gray-100 pt-3 space-y-3">
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">
+              Valor da proposta (R$)
+            </label>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={creationPrice}
+              onChange={(e) => setCreationPrice(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">
               URL de preview do site
             </label>
             <input
@@ -254,6 +269,7 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
                 setEditMode(false)
                 setPreviewUrl(proposal.previewUrl ?? '')
                 setSiteId(proposal.siteId ?? '')
+                setCreationPrice(String(proposal.creationPrice))
               }}
               className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50"
             >

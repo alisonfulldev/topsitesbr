@@ -66,7 +66,7 @@ export async function resendProposalEmail(
 
 export async function updateProposalAdmin(
   proposalId: string,
-  data: { previewUrl?: string; siteId?: string | null },
+  data: { previewUrl?: string; siteId?: string | null; creationPrice?: number },
 ): Promise<{ error?: string; success?: boolean }> {
   const proposal = await prisma.proposal.findUnique({
     where: { id: proposalId },
@@ -74,11 +74,16 @@ export async function updateProposalAdmin(
   })
   if (!proposal) return { error: 'Proposta não encontrada.' }
 
+  if (data.creationPrice !== undefined && (isNaN(data.creationPrice) || data.creationPrice <= 0)) {
+    return { error: 'Valor inválido.' }
+  }
+
   await prisma.proposal.update({
     where: { id: proposalId },
     data: {
       ...(data.previewUrl !== undefined && { previewUrl: data.previewUrl || null }),
       ...(data.siteId !== undefined && { siteId: data.siteId || null }),
+      ...(data.creationPrice !== undefined && { creationPrice: data.creationPrice }),
     },
   })
 
