@@ -39,14 +39,15 @@ export default async function PainelLayout({ children }: { children: React.React
     }))
   }
 
-  // Referral popup data
+  // Referral popup data + project link
   let showReferralPopup = false
   let referralLink = ''
+  let showProjectLink = false
 
   if (clientId) {
     const client = await prisma.client.findUnique({
       where: { id: clientId },
-      select: { lastReferralPromptAt: true, referralCode: true },
+      select: { lastReferralPromptAt: true, referralCode: true, entryFlow: true },
     })
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     referralLink = `${appUrl}/i/${client?.referralCode ?? ''}`
@@ -57,12 +58,23 @@ export default async function PainelLayout({ children }: { children: React.React
       const hoursSince = (Date.now() - client.lastReferralPromptAt.getTime()) / (1000 * 60 * 60)
       showReferralPopup = hoursSince >= 24
     }
+
+    if (client?.entryFlow === 'proposta') {
+      const activeProposal = await prisma.proposal.findFirst({
+        where: {
+          clientId,
+          status: { in: ['paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado'] },
+        },
+        select: { id: true },
+      })
+      showProjectLink = activeProposal !== null
+    }
   }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Desktop sidebar — hidden on mobile */}
-      <PainelDesktopSidebar userName={session.user.name ?? session.user.email ?? ''} />
+      <PainelDesktopSidebar userName={session.user.name ?? session.user.email ?? ''} showProjectLink={showProjectLink} />
 
       {/* Right column: header + content */}
       <div className="flex-1 flex flex-col min-h-screen min-w-0">
@@ -110,7 +122,7 @@ export default async function PainelLayout({ children }: { children: React.React
       </div>
 
       {/* Mobile bottom navigation — hidden on desktop */}
-      <PainelBottomNav />
+      <PainelBottomNav showProjectLink={showProjectLink} />
 
       {/* PWA install banner */}
       <InstallBanner />

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { generateProposalMagicLink, resendProposalEmail, updateProposalAdmin } from '../proposal-actions'
+import { generateProposalMagicLink, resendProposalEmail, updateProposalAdmin, transitionProposalStatus } from '../proposal-actions'
 
 const STATUS_LABEL: Record<string, string> = {
   rascunho: 'Rascunho',
@@ -32,6 +32,7 @@ type ProposalData = {
   status: string
   previewUrl: string | null
   siteId: string | null
+  siteApprovedAt: Date | null
   createdAt: Date
 }
 
@@ -49,6 +50,8 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
   const [previewUrl, setPreviewUrl] = useState(proposal.previewUrl ?? '')
   const [siteId, setSiteId] = useState(proposal.siteId ?? '')
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle')
+  const [transitionStatus, setTransitionStatus] = useState<'idle' | 'pending' | 'done' | 'error'>('idle')
+  const [transitionError, setTransitionError] = useState('')
 
   async function handleCopyLink() {
     setLinkStatus('copying')
@@ -92,6 +95,22 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
         setSaveStatus('saved')
         setEditMode(false)
         setTimeout(() => setSaveStatus('idle'), 2000)
+      }
+    })
+  }
+
+  function handleTransition(newStatus: 'em_desenvolvimento' | 'pronto_revisao' | 'publicado') {
+    setTransitionStatus('pending')
+    setTransitionError('')
+    startTransition(async () => {
+      const result = await transitionProposalStatus(proposal.id, newStatus)
+      if (result.error) {
+        setTransitionStatus('error')
+        setTransitionError(result.error)
+        setTimeout(() => setTransitionStatus('idle'), 4000)
+      } else {
+        setTransitionStatus('done')
+        setTimeout(() => setTransitionStatus('idle'), 2000)
       }
     })
   }
@@ -243,6 +262,62 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
           </div>
           {saveStatus === 'error' && (
             <p className="text-xs text-red-600">Erro ao salvar.</p>
+          )}
+        </div>
+      )}
+
+      {/* Status transitions */}
+      {(proposal.status === 'paga' ||
+        proposal.status === 'em_desenvolvimento' ||
+        proposal.status === 'pronto_revisao') && (
+        <div className="border-t border-gray-100 mt-4 pt-4">
+          <p className="text-xs font-medium text-gray-500 mb-2">Avançar status</p>
+
+          {proposal.status === 'paga' && (
+            <button
+              type="button"
+              onClick={() => handleTransition('em_desenvolvimento')}
+              disabled={isPending || transitionStatus === 'pending'}
+              className="px-3 py-1.5 text-sm bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50"
+            >
+              {transitionStatus === 'pending' ? 'Salvando…' : '→ Iniciar desenvolvimento'}
+            </button>
+          )}
+
+          {proposal.status === 'em_desenvolvimento' && (
+            <button
+              type="button"
+              onClick={() => handleTransition('pronto_revisao')}
+              disabled={isPending || transitionStatus === 'pending'}
+              className="px-3 py-1.5 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
+            >
+              {transitionStatus === 'pending' ? 'Salvando…' : '→ Marcar como pronto para revisão'}
+            </button>
+          )}
+
+          {proposal.status === 'pronto_revisao' && (
+            <div className="space-y-2">
+              {proposal.siteApprovedAt && (
+                <p className="text-xs text-green-700 font-medium">
+                  Cliente aprovou em {proposal.siteApprovedAt.toLocaleDateString('pt-BR')}
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={() => handleTransition('publicado')}
+                disabled={isPending || transitionStatus === 'pending'}
+                className="px-3 py-1.5 text-sm bg-brand text-brand-dark font-semibold rounded-lg hover:bg-brand-hover disabled:opacity-50"
+              >
+                {transitionStatus === 'pending' ? 'Salvando…' : '→ Publicar site'}
+              </button>
+            </div>
+          )}
+
+          {transitionStatus === 'done' && (
+            <p className="text-xs text-green-700 mt-1">Status atualizado.</p>
+          )}
+          {transitionStatus === 'error' && (
+            <p className="text-xs text-red-600 mt-1">{transitionError}</p>
           )}
         </div>
       )}

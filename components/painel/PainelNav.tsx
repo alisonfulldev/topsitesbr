@@ -7,6 +7,18 @@ import { signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { PushNotificationButton } from './PushNotificationButton'
 
+const projectNavItem = {
+  href: '/painel/projeto',
+  label: 'Meu Projeto',
+  exact: false,
+  isConversion: false as boolean | undefined,
+  icon: (active: boolean) => (
+    <svg className={cn('w-6 h-6', active ? 'text-white' : 'text-gray-400')} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={active ? 2.5 : 2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+    </svg>
+  ),
+}
+
 const navItems = [
   {
     href: '/painel',
@@ -86,8 +98,11 @@ function isActive(pathname: string, href: string, exact: boolean) {
 }
 
 // ─── Mobile Bottom Navigation Bar ──────────────────────────────────────────────
-export function PainelBottomNav() {
+export function PainelBottomNav({ showProjectLink }: { showProjectLink?: boolean }) {
   const pathname = usePathname()
+  const items = showProjectLink
+    ? [navItems[0], projectNavItem, ...navItems.slice(1)]
+    : navItems
 
   return (
     <nav
@@ -95,7 +110,7 @@ export function PainelBottomNav() {
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="bg-brand-dark border-t border-brand-dark-border flex items-stretch">
-        {navItems.map((item) => {
+        {items.map((item) => {
           const active = isActive(pathname, item.href, item.exact)
           return (
             <Link
@@ -154,8 +169,11 @@ export function PainelBottomNav() {
 }
 
 // ─── Desktop Sidebar Navigation ────────────────────────────────────────────────
-export function PainelDesktopSidebar({ userName }: { userName: string }) {
+export function PainelDesktopSidebar({ userName, showProjectLink }: { userName: string; showProjectLink?: boolean }) {
   const pathname = usePathname()
+  const items = showProjectLink
+    ? [navItems[0], projectNavItem, ...navItems.slice(1)]
+    : navItems
 
   return (
     <aside className="hidden md:flex w-56 shrink-0 bg-brand-dark flex-col sticky top-0 h-screen">
@@ -165,7 +183,7 @@ export function PainelDesktopSidebar({ userName }: { userName: string }) {
       </div>
 
       <nav className="flex-1 p-3 space-y-0.5 text-sm overflow-y-auto">
-        {navItems.map((item) => {
+        {items.map((item) => {
           const active = isActive(pathname, item.href, item.exact)
           return (
             <Link
