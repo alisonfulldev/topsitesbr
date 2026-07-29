@@ -81,6 +81,18 @@ export default async function PainelPage({
 
   if (!client) redirect('/login')
 
+  // ── Fluxo proposta — redireciona para /painel/projeto se tiver proposta ativa ─
+  if (client.entryFlow === 'proposta') {
+    const activeProposal = await prisma.proposal.findFirst({
+      where: {
+        clientId,
+        status: { in: ['paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado'] },
+      },
+      select: { id: true },
+    })
+    if (activeProposal) redirect('/painel/projeto')
+  }
+
   // ── Tela de ativação ─────────────────────────────────────────────────────────
   const pendingSite = client.sites.find((s) => s.status === 'pendente_ativacao')
   const hasActiveSubscription = subscription?.status === 'active'
