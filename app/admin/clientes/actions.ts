@@ -4,6 +4,9 @@ import { prisma } from '@/lib/prisma'
 import { hashPassword } from '@/lib/password'
 import { generateReferralCode } from '@/lib/referral'
 import { sendEmail } from '@/lib/integrations/resend'
+import { generateRawToken, hashToken } from '@/lib/proposal-token'
+import { sendProposalEmail } from '@/lib/emails/proposal'
+import { APP_URL } from '@/lib/config'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -47,6 +50,11 @@ export async function createClient(data: {
   createUserPassword?: string
   siteEntryFee?: number
   activationFlow?: 'quente' | 'frio'
+  entryFlow?: 'whatsapp' | 'proposta'
+  proposalTitle?: string
+  proposalDescription?: string
+  proposalIncludedItems?: string
+  proposalCreationPrice?: number
 }): Promise<{ error?: string; success?: boolean; clientId?: string }> {
   const parsed = clientSchema.safeParse(data)
   if (!parsed.success) {
@@ -82,6 +90,7 @@ export async function createClient(data: {
       referralCode: newReferralCode,
       siteEntryFee: data.siteEntryFee != null ? data.siteEntryFee : null,
       activationFlow: data.activationFlow ?? 'frio',
+      entryFlow: data.entryFlow ?? 'whatsapp',
     },
   })
 
@@ -93,6 +102,44 @@ export async function createClient(data: {
         status: 'confirmado',
       },
     })
+  }
+
+  // Proposta flow: cria Proposal + token de acesso, envia e-mail, sem criar User
+  if (data.entryFlow === 'proposta' && data.proposalTitle && data.proposalCreationPrice != null) {
+    const proposal = await prisma.proposal.create({
+      data: {
+        clientId: client.id,
+        title: data.proposalTitle.trim(),
+        description: data.proposalDescription?.trim() || null,
+        includedItems: data.proposalIncludedItems?.trim() || null,
+        creationPrice: data.proposalCreationPrice,
+        status: 'enviada',
+      },
+    })
+
+    const rawToken = generateRawToken()
+    const expiresAt = new Date()
+    expiresAt.setDate(expiresAt.getDate() + 30)
+    await prisma.proposalAccessToken.create({
+      data: {
+        proposalId: proposal.id,
+        clientId: client.id,
+        tokenHash: hashToken(rawToken),
+        expiresAt,
+        purpose: 'view',
+      },
+    })
+
+    const magicLink = `${APP_URL}/proposta/${rawToken}`
+    await sendProposalEmail({
+      to: client.email,
+      clientName: client.name,
+      proposalTitle: proposal.title,
+      magicLink,
+    }).catch(() => {})
+
+    revalidatePath('/admin/clientes')
+    return { success: true, clientId: client.id }
   }
 
   if (data.createUserPassword) {
@@ -148,7 +195,7 @@ export async function createClient(data: {
 
 export async function updateClient(
   id: string,
-  data: { name: string; email: string; phone?: string; document?: string; siteEntryFee?: number; activationFlow?: 'quente' | 'frio' }
+  data: { name: string; email: string; phone?: string; document?: string; siteEntryFee?: number; activationFlow?: 'quente' | 'frio'; entryFlow?: 'whatsapp' | 'proposta' }
 ): Promise<{ error?: string; success?: boolean }> {
   const parsed = clientSchema.safeParse(data)
   if (!parsed.success) {
@@ -172,6 +219,7 @@ export async function updateClient(
       document: data.document?.trim() || null,
       ...(data.siteEntryFee !== undefined && { siteEntryFee: data.siteEntryFee }),
       ...(data.activationFlow !== undefined && { activationFlow: data.activationFlow }),
+      ...(data.entryFlow !== undefined && { entryFlow: data.entryFlow }),
     },
   })
 

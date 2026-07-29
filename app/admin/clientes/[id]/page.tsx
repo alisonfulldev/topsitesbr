@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { ProposalCard } from './_components/ProposalCard'
 
 const STATUS_LABEL: Record<string, string> = {
   pendente_ativacao: 'Pendente',
@@ -52,6 +53,19 @@ export default async function ClientePage({
       },
       referralReceived: {
         include: { referrerClient: { select: { id: true, name: true } } },
+      },
+      proposals: {
+        select: {
+          id: true,
+          title: true,
+          creationPrice: true,
+          status: true,
+          previewUrl: true,
+          siteId: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
       },
     },
   })
@@ -241,6 +255,22 @@ export default async function ClientePage({
           </div>
         )}
       </div>
+
+      {/* Proposta */}
+      {client.proposals[0] && (
+        <ProposalCard
+          proposal={{
+            ...client.proposals[0],
+            creationPrice: Number(client.proposals[0].creationPrice),
+          }}
+          sites={client.sites.map((s) => ({
+            id: s.id,
+            siteUrl: s.siteUrl,
+            siteType: s.siteType,
+          }))}
+          clientId={client.id}
+        />
+      )}
 
       {/* Indicações */}
       {(client.referralReceived || client.referralsGiven.length > 0) && (

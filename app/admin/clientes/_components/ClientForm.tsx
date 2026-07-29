@@ -19,6 +19,7 @@ type InitialData = {
   document: string
   siteEntryFee?: number | null
   activationFlow?: 'quente' | 'frio'
+  entryFlow?: 'whatsapp' | 'proposta'
 }
 
 interface Props {
@@ -69,6 +70,15 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
   const [activationFlow, setActivationFlow] = useState<'quente' | 'frio'>(
     initialData?.activationFlow ?? 'frio'
   )
+  const [entryFlow, setEntryFlow] = useState<'whatsapp' | 'proposta'>(
+    initialData?.entryFlow ?? 'whatsapp'
+  )
+
+  // Proposal fields (create + entryFlow=proposta only)
+  const [proposalTitle, setProposalTitle] = useState('')
+  const [proposalDescription, setProposalDescription] = useState('')
+  const [proposalIncludedItems, setProposalIncludedItems] = useState('')
+  const [proposalCreationPrice, setProposalCreationPrice] = useState('')
 
   // Referral code (create only)
   const [referralCode, setReferralCode] = useState('')
@@ -111,6 +121,20 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
         setError('Informe a senha para o login.')
         return
       }
+      if (entryFlow === 'proposta') {
+        if (!proposalTitle.trim()) {
+          setError('Título da proposta é obrigatório.')
+          return
+        }
+        if (!proposalIncludedItems.trim()) {
+          setError('Itens incluídos são obrigatórios.')
+          return
+        }
+        if (!proposalCreationPrice || parseFloat(proposalCreationPrice) <= 0) {
+          setError('Valor de criação é obrigatório.')
+          return
+        }
+      }
       startTransition(async () => {
         const result = await createClient({
           name,
@@ -118,9 +142,16 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           phone: phone || undefined,
           document: document || undefined,
           referralCode: referralCode.trim() || undefined,
-          createUserPassword: createLogin ? loginPassword : undefined,
-          siteEntryFee: siteEntryFee ? parseFloat(siteEntryFee) : undefined,
+          createUserPassword: entryFlow === 'proposta' ? undefined : (createLogin ? loginPassword : undefined),
+          siteEntryFee: entryFlow === 'proposta' ? undefined : (siteEntryFee ? parseFloat(siteEntryFee) : undefined),
           activationFlow,
+          entryFlow,
+          ...(entryFlow === 'proposta' && {
+            proposalTitle: proposalTitle.trim(),
+            proposalDescription: proposalDescription.trim() || undefined,
+            proposalIncludedItems: proposalIncludedItems.trim(),
+            proposalCreationPrice: parseFloat(proposalCreationPrice),
+          }),
         })
         if (result?.error) {
           setError(result.error)
@@ -137,6 +168,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           document: document || undefined,
           siteEntryFee: siteEntryFee ? parseFloat(siteEntryFee) : undefined,
           activationFlow,
+          entryFlow,
         })
         if (result?.error) {
           setError(result.error)
@@ -203,25 +235,119 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           />
         </Field>
 
-        <Field
-          label="Valor pago pelo site (entrada)"
-          hint="Quanto o cliente pagou fora do sistema para ter o site criado (ex: R$97, R$500…)"
-        >
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
-              R$
-            </span>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={siteEntryFee}
-              onChange={(e) => setSiteEntryFee(e.target.value)}
-              placeholder="97,00"
-              className={`${INPUT} pl-9`}
-            />
+        {/* Entry flow */}
+        <div className="pt-2 border-t border-gray-100">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            Forma de entrada
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { value: 'whatsapp', label: 'WhatsApp', desc: 'Chegou pelo WhatsApp / tráfego pago' },
+              { value: 'proposta', label: 'Proposta', desc: 'Recebe link de proposta por e-mail' },
+            ] as const).map((opt) => (
+              <label
+                key={opt.value}
+                className={`flex flex-col gap-0.5 p-3 rounded-lg border cursor-pointer transition-colors ${
+                  entryFlow === opt.value
+                    ? 'border-brand bg-brand/5'
+                    : 'border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="entryFlow"
+                  value={opt.value}
+                  checked={entryFlow === opt.value}
+                  onChange={() => setEntryFlow(opt.value)}
+                  className="sr-only"
+                />
+                <span className="text-sm font-semibold text-gray-800">{opt.label}</span>
+                <span className="text-xs text-gray-500">{opt.desc}</span>
+              </label>
+            ))}
           </div>
-        </Field>
+        </div>
+
+        {/* Site entry fee — WhatsApp only */}
+        {entryFlow === 'whatsapp' && (
+          <Field
+            label="Valor pago pelo site (entrada)"
+            hint="Quanto o cliente pagou fora do sistema para ter o site criado (ex: R$97, R$500…)"
+          >
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
+                R$
+              </span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={siteEntryFee}
+                onChange={(e) => setSiteEntryFee(e.target.value)}
+                placeholder="97,00"
+                className={`${INPUT} pl-9`}
+              />
+            </div>
+          </Field>
+        )}
+
+        {/* Proposal details — create + proposta only */}
+        {mode === 'create' && entryFlow === 'proposta' && (
+          <div className="pt-2 border-t border-gray-100">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              Detalhes da Proposta
+            </p>
+            <div className="space-y-3">
+              <Field label="Título" required hint="Ex: Landing Page para Clínica Odontológica">
+                <input
+                  type="text"
+                  value={proposalTitle}
+                  onChange={(e) => setProposalTitle(e.target.value)}
+                  placeholder="Título da proposta"
+                  className={INPUT}
+                />
+              </Field>
+              <Field label="Descrição" hint="Contexto geral do projeto (opcional)">
+                <textarea
+                  value={proposalDescription}
+                  onChange={(e) => setProposalDescription(e.target.value)}
+                  placeholder="Descrição opcional da proposta…"
+                  rows={3}
+                  className={`${INPUT} resize-none`}
+                />
+              </Field>
+              <Field
+                label="Itens incluídos"
+                required
+                hint="Um item por linha — será exibido como lista para o cliente"
+              >
+                <textarea
+                  value={proposalIncludedItems}
+                  onChange={(e) => setProposalIncludedItems(e.target.value)}
+                  placeholder={"Landing Page responsiva\nSSL + hospedagem 1 mês grátis\nDomínio personalizado"}
+                  rows={5}
+                  className={`${INPUT} resize-none font-mono text-xs`}
+                />
+              </Field>
+              <Field label="Valor de criação (R$)" required hint="Preço do projeto para o cliente">
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
+                    R$
+                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={proposalCreationPrice}
+                    onChange={(e) => setProposalCreationPrice(e.target.value)}
+                    placeholder="197,00"
+                    className={`${INPUT} pl-9`}
+                  />
+                </div>
+              </Field>
+            </div>
+          </div>
+        )}
 
         {/* Activation flow */}
         <div className="pt-2 border-t border-gray-100">
@@ -339,8 +465,8 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           </div>
         )}
 
-        {/* Create login — only on create */}
-        {mode === 'create' && (
+        {/* Create login — only on create + whatsapp flow */}
+        {mode === 'create' && entryFlow === 'whatsapp' && (
           <div className="pt-2 border-t border-gray-100">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
               Acesso ao painel
