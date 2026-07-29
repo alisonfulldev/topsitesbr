@@ -213,7 +213,6 @@ const INCLUDES = [
   { Icon: IconPhone, title: 'Site 100% responsivo (celular e desktop)', desc: 'Funciona perfeitamente em qualquer dispositivo. Mais de 70% dos seus futuros clientes vão acessar pelo celular.' },
   { Icon: WAIcon, title: 'Botão do WhatsApp integrado', desc: 'Qualquer visitante entra em contato direto com você em um clique. A forma mais rápida de converter visita em cliente.' },
   { Icon: IconSearch, title: 'SEO on-page para o Google', desc: 'Title, meta description, headings e estrutura otimizados. Seu site aparece quando alguém busca pelo seu serviço na sua cidade.' },
-  { Icon: IconShield, title: 'Você aprova antes de pagar', desc: 'Vê o site pronto, pede ajustes se quiser e só paga os R$197 quando estiver 100% satisfeito. Risco zero.' },
   { Icon: IconDownload, title: 'Arquivos do site entregues para você', desc: 'Todos os arquivos HTML, CSS e imagens são seus. Pode hospedar em qualquer lugar agora ou no futuro.' },
 ]
 
@@ -266,7 +265,6 @@ const COMPARISON = [
   { label: 'Design',          us: 'Personalizado',     freelancer: 'Personalizado',       agency: 'Personalizado',       wix: 'Template' },
   { label: 'Mobile-ready',    us: 'Sim',               freelancer: 'Depende',             agency: 'Sim',                 wix: 'Sim' },
   { label: 'SEO básico',      us: 'Incluído',          freelancer: 'Cobrado à parte',     agency: 'Cobrado à parte',     wix: 'Limitado' },
-  { label: 'Você aprova antes de pagar', us: 'Sim',   freelancer: 'Raro',                agency: 'Raro',                wix: '—' },
   { label: 'Suporte',         us: 'Via WhatsApp',      freelancer: 'Eventual',            agency: 'Pago',                wix: 'Ticket / fórum' },
 ]
 
@@ -420,7 +418,6 @@ export default function LandingPage() {
               aria-label="Diferenciais"
             >
               {[
-                'Só paga se aprovar',
                 '100% no celular',
                 'Sem saber tecnologia',
                 'Pagamento único',
