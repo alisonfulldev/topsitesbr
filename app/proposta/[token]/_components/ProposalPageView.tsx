@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import Image from 'next/image'
 import { approveProposalAction } from '../actions'
 
 type ProposalData = {
@@ -68,7 +69,7 @@ function EnviadaView({ token, proposal }: { token: string; proposal: ProposalDat
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-black py-4 px-6">
-        <span className="text-brand font-bold text-lg tracking-tight">TOP SITE</span>
+        <Image src="/logo.png" alt="TOP SITE" width={140} height={42} className="h-9 w-auto" priority />
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-8">
@@ -217,7 +218,7 @@ function ApprovedView({
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-black py-4 px-6">
-        <span className="text-brand font-bold text-lg tracking-tight">TOP SITE</span>
+        <Image src="/logo.png" alt="TOP SITE" width={140} height={42} className="h-9 w-auto" priority />
       </div>
       <div className="max-w-lg mx-auto px-4 py-12 text-center">
         <div className="text-5xl mb-4">✅</div>
@@ -248,7 +249,7 @@ function PaidView({ clientName }: { clientName: string }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-black py-4 px-6">
-        <span className="text-brand font-bold text-lg tracking-tight">TOP SITE</span>
+        <Image src="/logo.png" alt="TOP SITE" width={140} height={42} className="h-9 w-auto" priority />
       </div>
       <div className="max-w-lg mx-auto px-4 py-12 text-center">
         <div className="text-5xl mb-4">🎉</div>
