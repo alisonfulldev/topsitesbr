@@ -136,6 +136,8 @@ export async function createClient(data: {
       clientName: client.name,
       proposalTitle: proposal.title,
       magicLink,
+      includedItems: proposal.includedItems,
+      creationPrice: Number(proposal.creationPrice),
     }).catch(() => {})
 
     revalidatePath('/admin/clientes')

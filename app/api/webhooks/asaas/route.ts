@@ -3,12 +3,13 @@ import { validateAsaasWebhook } from '@/lib/integrations/asaas'
 import {
   handlePaymentReceived,
   handlePaymentOverdue,
+  handleProposalPayment,
 } from '@/lib/payments/webhook-handlers'
 
 // Payload enviado pelo Asaas em cada evento
 interface AsaasWebhookPayload {
   event: string
-  payment?: { id: string }
+  payment?: { id: string; externalReference?: string }
 }
 
 export async function GET() {
@@ -41,6 +42,12 @@ export async function POST(req: NextRequest) {
 
   // PAYMENT_CONFIRMED = boleto confirmado (D+1/D+2); PAYMENT_RECEIVED = Pix/cartão em tempo real
   if (event === 'PAYMENT_RECEIVED' || event === 'PAYMENT_CONFIRMED') {
+    const externalRef = payment.externalReference ?? ''
+    if (externalRef.startsWith('proposal:')) {
+      const proposalId = externalRef.slice('proposal:'.length)
+      const result = await handleProposalPayment(proposalId, chargeId)
+      return NextResponse.json(result, { status: result.ok ? 200 : 404 })
+    }
     const result = await handlePaymentReceived(chargeId)
     return NextResponse.json(result, { status: result.ok ? 200 : 404 })
   }

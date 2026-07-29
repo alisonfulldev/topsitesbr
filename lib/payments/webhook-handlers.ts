@@ -6,6 +6,9 @@ import {
   sendOverdueDay10,
   sendPaymentRegularized,
 } from '@/lib/notifications'
+import {
+  sendProposalPaymentConfirmedEmail,
+} from '@/lib/emails/proposal'
 import { asaasFetch } from '@/lib/integrations/asaas'
 
 interface AsaasPaymentStatus {
@@ -246,6 +249,90 @@ export async function checkOverdueSubscriptions(): Promise<void> {
         data: { overdueDay10SentAt: now },
       })
     }
+  }
+}
+
+// ── Pagamento de proposta de criação ──────────────────────────────────────────
+
+export async function handleProposalPayment(
+  proposalId: string,
+  chargeId: string,
+): Promise<{ ok: boolean; message: string }> {
+  const proposal = await prisma.proposal.findUnique({
+    where: { id: proposalId },
+    include: { client: { select: { id: true, name: true, email: true } } },
+  })
+
+  if (!proposal) {
+    return { ok: false, message: `Proposta não encontrada: ${proposalId}` }
+  }
+
+  // Idempotência: já processado
+  const TERMINAL = ['paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado']
+  if (TERMINAL.includes(proposal.status)) {
+    return { ok: true, message: `Proposta ${proposalId} já processada (${proposal.status}).` }
+  }
+
+  const client = proposal.client
+
+  // Encontra ou cria produto sistema para criação via proposta
+  let product = await prisma.product.findFirst({
+    where: { name: 'Criação de Site (Proposta)' },
+  })
+  if (!product) {
+    product = await prisma.product.create({
+      data: {
+        name: 'Criação de Site (Proposta)',
+        price: 0,
+        type: 'service',
+      },
+    })
+  }
+
+  // Cria Order com status paid
+  const order = await prisma.order.create({
+    data: {
+      clientId: client.id,
+      productId: product.id,
+      amount: proposal.creationPrice,
+      status: 'paid',
+      asaasChargeId: chargeId,
+    },
+  })
+
+  // Atualiza Proposal: paga, paidAt, asaasChargeId, orderId
+  await prisma.proposal.update({
+    where: { id: proposalId },
+    data: {
+      status: 'paga',
+      paidAt: new Date(),
+      asaasChargeId: chargeId,
+      orderId: order.id,
+    },
+  })
+
+  // Notificação interna para o admin
+  await sendNotification(
+    null,
+    `Proposta paga — iniciar desenvolvimento de ${client.name}`,
+    `O cliente ${client.name} pagou a criação do site "${proposal.title}" (R$ ${Number(proposal.creationPrice).toFixed(2).replace('.', ',')}). Inicie o desenvolvimento e atualize o status da proposta no painel.`,
+  )
+
+  // E-mail de confirmação ao cliente
+  await sendProposalPaymentConfirmedEmail({
+    to: client.email,
+    clientName: client.name,
+  })
+
+  // Atualiza status para em_desenvolvimento
+  await prisma.proposal.update({
+    where: { id: proposalId },
+    data: { status: 'em_desenvolvimento' },
+  })
+
+  return {
+    ok: true,
+    message: `Proposta de ${client.name} paga. Status: em_desenvolvimento.`,
   }
 }
 

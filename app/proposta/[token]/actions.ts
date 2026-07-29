@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { hashToken } from '@/lib/proposal-token'
 import { hashPassword } from '@/lib/password'
 import { getPaymentProvider } from '@/lib/payments/provider'
+import { sendNotification } from '@/lib/notifications'
 import { APP_URL } from '@/lib/config'
 
 export async function approveProposalAction(
@@ -100,6 +101,13 @@ export async function approveProposalAction(
       data: { usedAt: new Date() },
     }),
   ])
+
+  // Notificação interna para o admin
+  await sendNotification(
+    null,
+    `Proposta aprovada — aguardando pagamento de ${client.name}`,
+    `O cliente ${client.name} aprovou a proposta "${proposal.title}" (R$ ${Number(proposal.creationPrice).toFixed(2).replace('.', ',')}). Aguardando confirmação do pagamento.`,
+  ).catch(() => {})
 
   return { paymentUrl }
 }

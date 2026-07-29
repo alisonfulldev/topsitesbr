@@ -20,6 +20,9 @@ export type EmailType =
   | 'referral-reward'
   | 'weekly-report'
   | 'password-reset-request'
+  | 'proposal-sent'
+  | 'proposal-approved'
+  | 'proposal-status-update'
   | 'generic'
 
 const EMAIL_CONFIG: Record<EmailType, { color: string; icon: string; label: string }> = {
@@ -37,6 +40,9 @@ const EMAIL_CONFIG: Record<EmailType, { color: string; icon: string; label: stri
   'referral-reward':          { color: '#eab308', icon: '⭐', label: 'Recompensa de indicação' },
   'weekly-report':            { color: '#0ea5e9', icon: '📊', label: 'Relatório semanal' },
   'password-reset-request':   { color: '#6366f1', icon: '🔐', label: 'Redefinição de senha' },
+  'proposal-sent':            { color: '#0f172a', icon: '📋', label: 'Proposta de projeto' },
+  'proposal-approved':        { color: '#22c55e', icon: '✅', label: 'Proposta aprovada' },
+  'proposal-status-update':   { color: '#7c3aed', icon: '🚀', label: 'Atualização do projeto' },
   'generic':                  { color: '#6b7280', icon: '🔔', label: 'Notificação' },
 }
 
@@ -65,9 +71,17 @@ function esc(s: string): string {
     .replace(/\n/g, '<br>')
 }
 
-function buildHtml(title: string, message: string, type: EmailType, extraHtml?: string): string {
+export function buildHtml(
+  title: string,
+  message: string,
+  type: EmailType,
+  extraHtml?: string,
+  ctaUrl?: string,
+  ctaLabel?: string,
+): string {
   const { color, icon, label } = EMAIL_CONFIG[type]
-  const panelUrl = APP_URL + '/painel'
+  const panelUrl = ctaUrl ?? (APP_URL + '/painel')
+  const buttonText = ctaLabel ?? 'Acessar o painel'
   const termosUrl = APP_URL + '/termos'
   const privacidadeUrl = APP_URL + '/privacidade'
 
@@ -118,7 +132,7 @@ function buildHtml(title: string, message: string, type: EmailType, extraHtml?: 
                        style="display:inline-block;background:${color};color:#ffffff;
                               text-decoration:none;font-size:14px;font-weight:600;
                               padding:13px 30px;border-radius:7px;letter-spacing:0.3px;">
-                      Acessar o painel
+                      ${buttonText}
                     </a>
                   </td>
                 </tr>
