@@ -75,8 +75,8 @@ export async function updateProposalAdmin(
   })
   if (!proposal) return { error: 'Proposta não encontrada.' }
 
-  if (data.creationPrice !== undefined && (isNaN(data.creationPrice) || data.creationPrice <= 0)) {
-    return { error: 'Valor inválido.' }
+  if (data.creationPrice !== undefined && (isNaN(data.creationPrice) || data.creationPrice < 5)) {
+    return { error: 'O valor mínimo para cobrança é R$ 5,00.' }
   }
 
   await prisma.proposal.update({

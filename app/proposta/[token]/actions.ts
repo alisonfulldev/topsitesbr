@@ -81,6 +81,11 @@ export async function approveProposalAction(
     })
   }
 
+  // Asaas exige mínimo de R$ 5,00 para billingType UNDEFINED
+  if (Number(proposal.creationPrice) < 5) {
+    return { error: 'O valor da proposta é menor que o mínimo aceito pelo sistema de pagamento (R$ 5,00). Peça ao admin para corrigir o valor.' }
+  }
+
   // Cria cobrança avulsa (UNDEFINED = cliente escolhe pix/cartão/boleto)
   let chargeId: string
   let paymentUrl: string
