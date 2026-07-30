@@ -18,6 +18,8 @@ type ProposalData = {
   revisionUsed: boolean
   siteApprovedAt: Date | null
   paidAt: Date | null
+  contractAcceptedAt: Date | null
+  contractVersion: string | null
 }
 
 const STEPS = [
@@ -272,6 +274,24 @@ export function ProjetoPageView({ proposal }: Props) {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Contrato assinado */}
+      {proposal.contractAcceptedAt && (
+        <div className="mt-2 border border-gray-100 rounded-xl p-4">
+          <p className="text-xs font-semibold text-gray-500 mb-0.5">Contrato assinado</p>
+          <p className="text-xs text-gray-400">
+            Aceito em{' '}
+            {proposal.contractAcceptedAt.toLocaleString('pt-BR', {
+              day: '2-digit', month: '2-digit', year: 'numeric',
+              hour: '2-digit', minute: '2-digit',
+            })}
+            {proposal.contractVersion ? ` — versão ${proposal.contractVersion}` : ''}
+          </p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            A cópia foi enviada para o seu e-mail no momento do aceite.
+          </p>
         </div>
       )}
 

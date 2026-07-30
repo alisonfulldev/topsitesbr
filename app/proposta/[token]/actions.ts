@@ -1,16 +1,22 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import { hashToken } from '@/lib/proposal-token'
 import { hashPassword } from '@/lib/password'
 import { getPaymentProvider } from '@/lib/payments/provider'
 import { sendNotification } from '@/lib/notifications'
+import { sendContractCopyToClient, sendContractSignedToAdmin, CONTRACT_VERSION } from '@/lib/emails/proposal'
 import { APP_URL } from '@/lib/config'
 
 export async function approveProposalAction(
   token: string,
   password: string,
+  contractAccepted: boolean,
 ): Promise<{ error?: string; paymentUrl?: string }> {
+  if (!contractAccepted) {
+    return { error: 'Você precisa ler e aceitar o contrato antes de prosseguir.' }
+  }
   if (password.length < 8) {
     return { error: 'A senha deve ter no mínimo 8 caracteres.' }
   }
@@ -58,10 +64,23 @@ export async function approveProposalAction(
     })
   }
 
-  // Atualiza status da proposta
+  // Captura IP do cliente
+  const hdrs = headers()
+  const rawIp = hdrs.get('x-forwarded-for') ?? hdrs.get('x-real-ip') ?? null
+  const clientIp = rawIp ? rawIp.split(',')[0].trim() : null
+
+  const acceptedAt = new Date()
+
+  // Atualiza status e registra aceite do contrato
   await prisma.proposal.update({
     where: { id: proposal.id },
-    data: { status: 'aprovada', approvedAt: new Date() },
+    data: {
+      status: 'aprovada',
+      approvedAt: acceptedAt,
+      contractAcceptedAt: acceptedAt,
+      contractVersion: CONTRACT_VERSION,
+      contractAcceptedIp: clientIp,
+    },
   })
 
   // Cria ou reutiliza customer no Asaas
@@ -116,11 +135,32 @@ export async function approveProposalAction(
     }),
   ])
 
+  // E-mail ao cliente: cópia do contrato
+  sendContractCopyToClient({
+    to: client.email,
+    clientName: client.name,
+    proposalTitle: proposal.title,
+    creationPrice: Number(proposal.creationPrice),
+    acceptedAt,
+  }).catch(() => {})
+
+  // E-mail ao admin: contrato assinado
+  sendContractSignedToAdmin({
+    clientName: client.name,
+    clientEmail: client.email,
+    clientPhone: client.phone,
+    clientDocument: client.document,
+    proposalTitle: proposal.title,
+    creationPrice: Number(proposal.creationPrice),
+    acceptedAt,
+    ip: clientIp,
+  }).catch(() => {})
+
   // Notificação interna para o admin
   await sendNotification(
     null,
     `Proposta aprovada — aguardando pagamento de ${client.name}`,
-    `O cliente ${client.name} aprovou a proposta "${proposal.title}" (R$ ${Number(proposal.creationPrice).toFixed(2).replace('.', ',')}). Aguardando confirmação do pagamento.`,
+    `O cliente ${client.name} aprovou a proposta "${proposal.title}" (R$ ${Number(proposal.creationPrice).toFixed(2).replace('.', ',')}) e assinou o contrato. Aguardando confirmação do pagamento.`,
   ).catch(() => {})
 
   return { paymentUrl }

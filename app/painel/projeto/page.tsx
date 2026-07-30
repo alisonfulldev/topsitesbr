@@ -31,6 +31,8 @@ export default async function ProjetoPage() {
       revisionUsed: true,
       siteApprovedAt: true,
       paidAt: true,
+      contractAcceptedAt: true,
+      contractVersion: true,
     },
     orderBy: { createdAt: 'desc' },
   })
@@ -42,6 +44,8 @@ export default async function ProjetoPage() {
       proposal={{
         ...proposal,
         status: proposal.status as 'aprovada' | 'paga' | 'em_desenvolvimento' | 'pronto_revisao' | 'publicado',
+        contractAcceptedAt: proposal.contractAcceptedAt,
+        contractVersion: proposal.contractVersion,
       }}
     />
   )
