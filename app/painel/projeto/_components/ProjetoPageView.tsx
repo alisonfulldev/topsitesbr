@@ -223,13 +223,21 @@ export function ProjetoPageView({ proposal }: Props) {
 
                 {/* Success message when published */}
                 {step.key === 'publicado' && active && (
-                  <div className="mt-3 bg-brand-50 border border-brand-200 rounded-lg p-3">
-                    <p className="text-sm font-semibold text-brand-text">
-                      Seu site está no ar!
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      Acesse o painel principal para ver o status e os relatórios do seu site.
-                    </p>
+                  <div className="mt-3 space-y-3">
+                    <div className="bg-brand-50 border border-brand-200 rounded-lg p-3">
+                      <p className="text-sm font-semibold text-brand-text">
+                        Seu site está no ar!
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        Ative o plano mensal para manter seu site publicado com hospedagem, SSL e suporte.
+                      </p>
+                    </div>
+                    <a
+                      href="/painel"
+                      className="block w-full text-center py-3 bg-brand text-brand-dark font-semibold rounded-xl hover:bg-brand-hover transition-colors text-sm"
+                    >
+                      Ativar plano e manter site no ar →
+                    </a>
                   </div>
                 )}
               </div>

@@ -73,7 +73,7 @@ export async function requestRevisionAction(
 
   await prisma.proposal.update({
     where: { id: proposalId },
-    data: { revisionUsed: true },
+    data: { revisionUsed: true, revisionNotes: notes.trim() || null },
   })
 
   await sendNotification(

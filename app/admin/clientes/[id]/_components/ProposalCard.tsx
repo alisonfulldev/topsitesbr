@@ -33,6 +33,8 @@ type ProposalData = {
   previewUrl: string | null
   siteId: string | null
   siteApprovedAt: Date | null
+  revisionUsed: boolean
+  revisionNotes: string | null
   createdAt: Date
 }
 
@@ -156,6 +158,18 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
         <span className="mx-2 text-gray-300">·</span>
         Enviada em {proposal.createdAt.toLocaleDateString('pt-BR')}
       </p>
+
+      {/* Badge de revisão solicitada */}
+      {proposal.revisionUsed && !proposal.siteApprovedAt && (
+        <div className="mb-4 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+          <p className="text-xs font-semibold text-purple-800 mb-1">Cliente solicitou revisão</p>
+          {proposal.revisionNotes ? (
+            <p className="text-sm text-purple-900 whitespace-pre-wrap">{proposal.revisionNotes}</p>
+          ) : (
+            <p className="text-xs text-purple-500 italic">Sem observações adicionais.</p>
+          )}
+        </div>
+      )}
 
       {/* Magic link + reenviar */}
       <div className="flex gap-2 mb-4">

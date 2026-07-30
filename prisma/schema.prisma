@@ -523,6 +523,7 @@ model Proposal {
   orderId        String?        @unique @map("order_id")
   previewUrl     String?        @map("preview_url")
   revisionUsed   Boolean        @default(false) @map("revision_used")
+  revisionNotes  String?        @map("revision_notes")
   approvedAt     DateTime?      @map("approved_at")
   siteApprovedAt DateTime?      @map("site_approved_at")
   paidAt         DateTime?      @map("paid_at")

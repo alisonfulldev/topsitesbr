@@ -63,6 +63,8 @@ export default async function ClientePage({
           previewUrl: true,
           siteId: true,
           siteApprovedAt: true,
+          revisionUsed: true,
+          revisionNotes: true,
           createdAt: true,
         },
         orderBy: { createdAt: 'desc' },
@@ -264,6 +266,8 @@ export default async function ClientePage({
             ...client.proposals[0],
             creationPrice: Number(client.proposals[0].creationPrice),
             siteApprovedAt: client.proposals[0].siteApprovedAt,
+            revisionUsed: client.proposals[0].revisionUsed,
+            revisionNotes: client.proposals[0].revisionNotes,
           }}
           sites={client.sites.map((s) => ({
             id: s.id,

@@ -81,22 +81,57 @@ export default async function PainelPage({
 
   if (!client) redirect('/login')
 
-  // ── Fluxo proposta — redireciona para /painel/projeto se tiver proposta ativa ─
-  if (client.entryFlow === 'proposta') {
-    const activeProposal = await prisma.proposal.findFirst({
-      where: {
-        clientId,
-        status: { in: ['aprovada', 'paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado'] },
-      },
-      select: { id: true },
-    })
-    if (activeProposal) redirect('/painel/projeto')
-  }
-
-  // ── Tela de ativação ─────────────────────────────────────────────────────────
-  const pendingSite = client.sites.find((s) => s.status === 'pendente_ativacao')
   const hasActiveSubscription = subscription?.status === 'active'
   const hasPendingSubscription = subscription?.status === 'pending'
+
+  // ── Fluxo proposta ────────────────────────────────────────────────────────────
+  if (client.entryFlow === 'proposta' && !hasActiveSubscription) {
+    const proposal = await prisma.proposal.findFirst({
+      where: { clientId },
+      select: { id: true, status: true, siteApprovedAt: true, siteId: true },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    const IN_FLIGHT = ['aprovada', 'paga', 'em_desenvolvimento', 'pronto_revisao']
+    const clientApprovedSite = !!proposal?.siteApprovedAt
+    const siteOnline = client.sites.some((s) => s.status === 'online')
+
+    // Em desenvolvimento e cliente ainda não aprovou → Meu Projeto
+    if (proposal && IN_FLIGHT.includes(proposal.status) && !clientApprovedSite) {
+      redirect('/painel/projeto')
+    }
+
+    // Site aprovado pelo cliente OU publicado, sem assinatura → ActivationScreen existente
+    if (clientApprovedSite || siteOnline) {
+      const activationSite =
+        (proposal?.siteId ? client.sites.find((s) => s.id === proposal.siteId) : null) ??
+        client.sites[0] ??
+        null
+
+      if (!client.monthlyFeeAcknowledgedAt) {
+        await prisma.client.update({
+          where: { id: clientId },
+          data: { monthlyFeeAcknowledgedAt: now },
+        })
+      }
+
+      if (activationSite) {
+        return (
+          <ActivationScreen
+            siteId={activationSite.id}
+            filesZipUrl={activationSite.filesZipUrl}
+            pendingPayment={hasPendingSubscription}
+            clientName={client.name}
+            clientEmail={client.email}
+            activationFlow={(client.activationFlow as 'quente' | 'frio') ?? 'frio'}
+          />
+        )
+      }
+    }
+  }
+
+  // ── Tela de ativação (fluxo normal) ──────────────────────────────────────────
+  const pendingSite = client.sites.find((s) => s.status === 'pendente_ativacao')
   const showActivation = !!pendingSite && !hasActiveSubscription
 
   if (showActivation && !client.monthlyFeeAcknowledgedAt) {
