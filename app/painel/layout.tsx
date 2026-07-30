@@ -45,18 +45,27 @@ export default async function PainelLayout({ children }: { children: React.React
   let showProjectLink = false
 
   if (clientId) {
-    const client = await prisma.client.findUnique({
-      where: { id: clientId },
-      select: { lastReferralPromptAt: true, referralCode: true, entryFlow: true },
-    })
+    const [client, activeSubscription] = await Promise.all([
+      prisma.client.findUnique({
+        where: { id: clientId },
+        select: { lastReferralPromptAt: true, referralCode: true, entryFlow: true },
+      }),
+      prisma.subscription.findFirst({
+        where: { clientId, status: 'active' },
+        select: { id: true },
+      }),
+    ])
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
     referralLink = `${appUrl}/i/${client?.referralCode ?? ''}`
 
-    if (!client?.lastReferralPromptAt) {
-      showReferralPopup = true
-    } else {
-      const hoursSince = (Date.now() - client.lastReferralPromptAt.getTime()) / (1000 * 60 * 60)
-      showReferralPopup = hoursSince >= 24
+    // Popup só aparece para clientes com assinatura ativa
+    if (activeSubscription) {
+      if (!client?.lastReferralPromptAt) {
+        showReferralPopup = true
+      } else {
+        const hoursSince = (Date.now() - client.lastReferralPromptAt.getTime()) / (1000 * 60 * 60)
+        showReferralPopup = hoursSince >= 24
+      }
     }
 
     if (client?.entryFlow === 'proposta') {
