@@ -32,12 +32,18 @@ export function ProposalPageView({ token, proposal }: Props) {
   return <EnviadaView token={token} proposal={proposal} />
 }
 
-// ── Proposta enviada (estado principal) ────────────────────────────────────────
+// ── Modal com o texto completo do contrato ─────────────────────────────────────
 
-function ContractText({ clientName, proposalTitle, creationPrice }: {
+function ContractModal({
+  clientName,
+  proposalTitle,
+  creationPrice,
+  onClose,
+}: {
   clientName: string
   proposalTitle: string
   creationPrice: number
+  onClose: () => void
 }) {
   const priceFormatted = Number(creationPrice).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
   const clauses = [
@@ -55,19 +61,46 @@ function ContractText({ clientName, proposalTitle, creationPrice }: {
   ]
 
   return (
-    <div className="max-h-52 overflow-y-auto text-xs text-gray-700 leading-relaxed space-y-2.5 pr-1">
-      <p className="font-bold text-gray-900 text-center text-xs">
-        CONTRATO DE PRESTAÇÃO DE SERVIÇO DE DESENVOLVIMENTO DE SITE
-      </p>
-      {clauses.map((clause, i) => (
-        <p key={i}>{clause}</p>
-      ))}
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 px-4 pb-4 sm:pb-0">
+      <div className="bg-white rounded-xl w-full max-w-lg shadow-xl flex flex-col max-h-[85vh]">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
+          <h2 className="text-sm font-semibold text-gray-900">Contrato de Desenvolvimento de Site</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+            aria-label="Fechar"
+          >
+            ×
+          </button>
+        </div>
+        <div className="overflow-y-auto px-5 py-4 space-y-3 text-xs text-gray-700 leading-relaxed">
+          <p className="font-bold text-gray-900 text-center text-xs">
+            CONTRATO DE PRESTAÇÃO DE SERVIÇO DE DESENVOLVIMENTO DE SITE
+          </p>
+          {clauses.map((clause, i) => (
+            <p key={i}>{clause}</p>
+          ))}
+        </div>
+        <div className="px-5 py-4 border-t border-gray-100 shrink-0">
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
 
+// ── Proposta enviada (estado principal) ────────────────────────────────────────
+
 function EnviadaView({ token, proposal }: { token: string; proposal: ProposalData }) {
   const [showForm, setShowForm] = useState(false)
+  const [showContractModal, setShowContractModal] = useState(false)
   const [contractAccepted, setContractAccepted] = useState(false)
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -81,7 +114,7 @@ function EnviadaView({ token, proposal }: { token: string; proposal: ProposalDat
   function handleApprove() {
     setError('')
     if (!contractAccepted) {
-      setError('Você precisa ler e aceitar o contrato antes de prosseguir.')
+      setError('Você precisa aceitar o Contrato de Desenvolvimento de Site antes de prosseguir.')
       return
     }
     if (password.length < 8) {
@@ -117,14 +150,10 @@ function EnviadaView({ token, proposal }: { token: string; proposal: ProposalDat
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-1">{proposal.title}</h1>
-        <p className="text-gray-500 text-sm mb-6">
-          Para {proposal.client.name}
-        </p>
+        <p className="text-gray-500 text-sm mb-6">Para {proposal.client.name}</p>
 
         {proposal.description && (
-          <p className="text-gray-600 text-sm leading-relaxed mb-6">
-            {proposal.description}
-          </p>
+          <p className="text-gray-600 text-sm leading-relaxed mb-6">{proposal.description}</p>
         )}
 
         {/* Itens incluídos */}
@@ -155,9 +184,7 @@ function EnviadaView({ token, proposal }: { token: string; proposal: ProposalDat
           </p>
           <p className="text-4xl font-extrabold text-brand-dark">
             R${' '}
-            {Number(proposal.creationPrice).toLocaleString('pt-BR', {
-              minimumFractionDigits: 2,
-            })}
+            {Number(proposal.creationPrice).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
           </p>
         </div>
 
@@ -171,76 +198,72 @@ function EnviadaView({ token, proposal }: { token: string; proposal: ProposalDat
             Aprovar proposta →
           </button>
         ) : (
-          <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-5">
-
-            {/* Contrato */}
-            <div>
-              <h2 className="text-sm font-semibold text-gray-900 mb-3">Contrato de Prestação de Serviço</h2>
-              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                <ContractText
-                  clientName={proposal.client.name}
-                  proposalTitle={proposal.title}
-                  creationPrice={proposal.creationPrice}
-                />
-              </div>
-              <label className="flex items-start gap-3 mt-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={contractAccepted}
-                  onChange={(e) => setContractAccepted(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 rounded border-gray-300 text-brand accent-gray-900 shrink-0"
-                />
-                <span className="text-xs text-gray-700 leading-relaxed">
-                  Li, entendi e aceito os termos do contrato acima. Estou ciente de que este aceite tem validade jurídica nos termos da legislação brasileira.
-                </span>
-              </label>
-            </div>
-
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
             {/* Criar conta */}
-            <div>
-              <h2 className="text-sm font-semibold text-gray-900 mb-1">Criar sua conta</h2>
-              <p className="text-xs text-gray-500 mb-3">
-                Você usará este e-mail e senha para acompanhar o projeto no painel.
-              </p>
+            <h2 className="text-sm font-semibold text-gray-900 mb-1">Criar sua conta</h2>
+            <p className="text-xs text-gray-500 mb-4">
+              Você usará este e-mail e senha para acompanhar o projeto no painel.
+            </p>
 
-              <div className="mb-1 text-xs text-gray-500">
-                E-mail:{' '}
-                <span className="font-medium text-gray-800">{proposal.client.email}</span>
+            <div className="mb-1 text-xs text-gray-500">
+              E-mail:{' '}
+              <span className="font-medium text-gray-800">{proposal.client.email}</span>
+            </div>
+
+            <div className="space-y-3 mt-3 mb-5">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                  Senha <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Mínimo 8 caracteres"
+                  autoComplete="new-password"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+                />
               </div>
-
-              <div className="space-y-3 mt-3">
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
-                    Senha <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Mínimo 8 caracteres"
-                    autoComplete="new-password"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
-                    Confirmar senha <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="password"
-                    value={confirm}
-                    onChange={(e) => setConfirm(e.target.value)}
-                    placeholder="Repita a senha"
-                    autoComplete="new-password"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                  Confirmar senha <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="password"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  placeholder="Repita a senha"
+                  autoComplete="new-password"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+                />
               </div>
             </div>
 
-            {error && (
-              <p className="text-xs text-red-600">{error}</p>
-            )}
+            {/* Checkbox de aceite — mesmo padrão do ActivationScreen */}
+            <label className="flex items-start gap-3 mb-4 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={contractAccepted}
+                onChange={(e) => {
+                  setContractAccepted(e.target.checked)
+                  if (e.target.checked) setError('')
+                }}
+                className="mt-0.5 accent-brand shrink-0"
+              />
+              <span className="text-xs text-gray-500 leading-relaxed">
+                Li e concordo com o{' '}
+                <button
+                  type="button"
+                  onClick={() => setShowContractModal(true)}
+                  className="text-brand-text hover:underline font-medium"
+                >
+                  Contrato de Desenvolvimento de Site
+                </button>
+                .
+              </span>
+            </label>
+
+            {error && <p className="text-xs text-red-600 mb-3">{error}</p>}
 
             <div className="flex gap-2">
               <button
@@ -253,19 +276,33 @@ function EnviadaView({ token, proposal }: { token: string; proposal: ProposalDat
               </button>
               <button
                 type="button"
-                onClick={() => { setShowForm(false); setError(''); setContractAccepted(false) }}
+                onClick={() => {
+                  setShowForm(false)
+                  setError('')
+                  setContractAccepted(false)
+                }}
                 className="px-3 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
               >
                 Voltar
               </button>
             </div>
 
-            <p className="text-xs text-gray-400 text-center">
-              Ao confirmar, você será redirecionado para o pagamento seguro. Uma cópia do contrato será enviada para o seu e-mail.
+            <p className="text-xs text-gray-400 mt-3 text-center">
+              Ao confirmar, você será redirecionado para o pagamento seguro.
             </p>
           </div>
         )}
       </div>
+
+      {/* Modal do contrato */}
+      {showContractModal && (
+        <ContractModal
+          clientName={proposal.client.name}
+          proposalTitle={proposal.title}
+          creationPrice={proposal.creationPrice}
+          onClose={() => setShowContractModal(false)}
+        />
+      )}
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { hashToken } from '@/lib/proposal-token'
 import { hashPassword } from '@/lib/password'
 import { getPaymentProvider } from '@/lib/payments/provider'
 import { sendNotification } from '@/lib/notifications'
-import { sendContractCopyToClient, sendContractSignedToAdmin, CONTRACT_VERSION } from '@/lib/emails/proposal'
+import { CONTRACT_VERSION } from '@/lib/emails/proposal'
 import { APP_URL } from '@/lib/config'
 
 export async function approveProposalAction(
@@ -134,27 +134,6 @@ export async function approveProposalAction(
       data: { usedAt: new Date() },
     }),
   ])
-
-  // E-mail ao cliente: cópia do contrato
-  sendContractCopyToClient({
-    to: client.email,
-    clientName: client.name,
-    proposalTitle: proposal.title,
-    creationPrice: Number(proposal.creationPrice),
-    acceptedAt,
-  }).catch(() => {})
-
-  // E-mail ao admin: contrato assinado
-  sendContractSignedToAdmin({
-    clientName: client.name,
-    clientEmail: client.email,
-    clientPhone: client.phone,
-    clientDocument: client.document,
-    proposalTitle: proposal.title,
-    creationPrice: Number(proposal.creationPrice),
-    acceptedAt,
-    ip: clientIp,
-  }).catch(() => {})
 
   // Notificação interna para o admin
   await sendNotification(

@@ -8,6 +8,8 @@ import {
 } from '@/lib/notifications'
 import {
   sendProposalPaymentConfirmedEmail,
+  sendContractCopyToClient,
+  sendContractSignedToAdmin,
 } from '@/lib/emails/proposal'
 import { asaasFetch } from '@/lib/integrations/asaas'
 
@@ -260,7 +262,9 @@ export async function handleProposalPayment(
 ): Promise<{ ok: boolean; message: string }> {
   const proposal = await prisma.proposal.findUnique({
     where: { id: proposalId },
-    include: { client: { select: { id: true, name: true, email: true } } },
+    include: {
+      client: { select: { id: true, name: true, email: true, phone: true, document: true } },
+    },
   })
 
   if (!proposal) {
@@ -323,6 +327,28 @@ export async function handleProposalPayment(
     to: client.email,
     clientName: client.name,
   })
+
+  // E-mails do contrato — somente para clientes que de fato pagaram
+  if (proposal.contractAcceptedAt) {
+    sendContractCopyToClient({
+      to: client.email,
+      clientName: client.name,
+      proposalTitle: proposal.title,
+      creationPrice: Number(proposal.creationPrice),
+      acceptedAt: proposal.contractAcceptedAt,
+    }).catch(() => {})
+
+    sendContractSignedToAdmin({
+      clientName: client.name,
+      clientEmail: client.email,
+      clientPhone: client.phone,
+      clientDocument: client.document,
+      proposalTitle: proposal.title,
+      creationPrice: Number(proposal.creationPrice),
+      acceptedAt: proposal.contractAcceptedAt,
+      ip: proposal.contractAcceptedIp,
+    }).catch(() => {})
+  }
 
   // Atualiza status para em_desenvolvimento
   await prisma.proposal.update({
