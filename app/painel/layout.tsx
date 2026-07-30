@@ -39,10 +39,11 @@ export default async function PainelLayout({ children }: { children: React.React
     }))
   }
 
-  // Referral popup data + project link
+  // Referral popup data + project link + install banner
   let showReferralPopup = false
   let referralLink = ''
   let showProjectLink = false
+  let showInstallBanner = true
 
   if (clientId) {
     const [client, activeSubscription] = await Promise.all([
@@ -77,6 +78,15 @@ export default async function PainelLayout({ children }: { children: React.React
         select: { id: true },
       })
       showProjectLink = activeProposal !== null
+
+      // Banner de install/notificação oculto enquanto aguarda pagamento da proposta
+      if (!activeSubscription) {
+        const pendingPayment = await prisma.proposal.findFirst({
+          where: { clientId, status: { in: ['enviada', 'aprovada'] } },
+          select: { id: true },
+        })
+        if (pendingPayment) showInstallBanner = false
+      }
     }
   }
 
@@ -134,7 +144,7 @@ export default async function PainelLayout({ children }: { children: React.React
       <PainelBottomNav showProjectLink={showProjectLink} />
 
       {/* PWA install banner */}
-      <InstallBanner />
+      <InstallBanner show={showInstallBanner} />
 
       {/* Referral popup */}
       {showReferralPopup && clientId && (
