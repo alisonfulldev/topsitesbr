@@ -63,7 +63,7 @@ export default async function PainelLayout({ children }: { children: React.React
       const activeProposal = await prisma.proposal.findFirst({
         where: {
           clientId,
-          status: { in: ['paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado'] },
+          status: { in: ['paga', 'em_desenvolvimento', 'pronto_revisao'] },
         },
         select: { id: true },
       })
