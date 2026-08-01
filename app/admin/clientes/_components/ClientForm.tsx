@@ -187,7 +187,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
       : 'border-gray-300 focus:ring-brand'
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-lg">
+    <div className="bg-white rounded-xl border border-gray-200 p-6">
       {error && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
           {error}
@@ -195,45 +195,47 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
       )}
 
       <div className="space-y-4">
-        <Field label="Nome" required>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Nome completo"
-            className={INPUT}
-          />
-        </Field>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Field label="Nome" required>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nome completo"
+              className={INPUT}
+            />
+          </Field>
 
-        <Field label="E-mail" required>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="email@exemplo.com"
-            className={INPUT}
-          />
-        </Field>
+          <Field label="E-mail" required>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="email@exemplo.com"
+              className={INPUT}
+            />
+          </Field>
 
-        <Field label="Telefone / WhatsApp">
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="(00) 90000-0000"
-            className={INPUT}
-          />
-        </Field>
+          <Field label="Telefone / WhatsApp">
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="(00) 90000-0000"
+              className={INPUT}
+            />
+          </Field>
 
-        <Field label="CPF / CNPJ">
-          <input
-            type="text"
-            value={document}
-            onChange={(e) => setDocument(e.target.value)}
-            placeholder="000.000.000-00"
-            className={INPUT}
-          />
-        </Field>
+          <Field label="CPF / CNPJ">
+            <input
+              type="text"
+              value={document}
+              onChange={(e) => setDocument(e.target.value)}
+              placeholder="000.000.000-00"
+              className={INPUT}
+            />
+          </Field>
+        </div>
 
         {/* Entry flow */}
         <div className="pt-2 border-t border-gray-100">
