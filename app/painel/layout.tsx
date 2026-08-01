@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { NotificationBell } from '@/components/notification-bell'
 import { PainelDesktopSidebar, PainelBottomNav } from '@/components/painel/PainelNav'
 import { PwaSetup } from '@/components/painel/PwaSetup'
-import { InstallBanner } from '@/components/painel/InstallBanner'
+import { PwaInstallModal } from '@/components/painel/PwaInstallModal'
 import { ReferralPopupWrapper } from '@/components/painel/ReferralPopupWrapper'
 import Image from 'next/image'
 import { markNotificationRead, markAllNotificationsRead } from './actions'
@@ -143,8 +143,8 @@ export default async function PainelLayout({ children }: { children: React.React
       {/* Mobile bottom navigation — hidden on desktop */}
       <PainelBottomNav showProjectLink={showProjectLink} />
 
-      {/* PWA install banner */}
-      <InstallBanner show={showInstallBanner} />
+      {/* PWA install modal */}
+      <PwaInstallModal show={showInstallBanner} />
 
       {/* Referral popup */}
       {showReferralPopup && clientId && (
