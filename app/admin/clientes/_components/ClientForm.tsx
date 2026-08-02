@@ -90,6 +90,8 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
   // Create login (create only)
   const [createLogin, setCreateLogin] = useState(false)
   const [loginPassword, setLoginPassword] = useState('')
+  const [paidExternally, setPaidExternally] = useState(false)
+  const [externalCreationPrice, setExternalCreationPrice] = useState('')
 
   async function handleValidateReferral() {
     const code = referralCode.trim()
@@ -119,6 +121,10 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
       }
       if (createLogin && !loginPassword.trim()) {
         setError('Informe a senha para o login.')
+        return
+      }
+      if (entryFlow === 'whatsapp' && paidExternally && !loginPassword.trim()) {
+        setError('Informe a senha temporária para o cliente pago por fora.')
         return
       }
       if (entryFlow === 'proposta') {
@@ -152,6 +158,8 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
             proposalIncludedItems: proposalIncludedItems.trim(),
             proposalCreationPrice: parseFloat(proposalCreationPrice),
           }),
+          paidExternally: entryFlow === 'whatsapp' ? paidExternally : undefined,
+          externalCreationPrice: paidExternally && externalCreationPrice ? parseFloat(externalCreationPrice) : undefined,
         })
         if (result?.error) {
           setError(result.error)
@@ -291,6 +299,48 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
               />
             </div>
           </Field>
+        )}
+
+        {/* Pago por fora — WhatsApp only */}
+        {mode === 'create' && entryFlow === 'whatsapp' && (
+          <div className="pt-2 border-t border-gray-100">
+            <label className="flex items-start gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={paidExternally}
+                onChange={(e) => {
+                  setPaidExternally(e.target.checked)
+                  if (e.target.checked) setCreateLogin(true)
+                }}
+                className="mt-0.5 rounded border-gray-300 text-brand-text focus:ring-brand"
+              />
+              <div>
+                <span className="text-sm font-medium text-gray-700">Site já pago por fora da plataforma</span>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Cria uma proposta de acompanhamento para o cliente, sem cobrança no Asaas.
+                </p>
+              </div>
+            </label>
+
+            {paidExternally && (
+              <div className="mt-3">
+                <Field label="Valor pago pela criação (R$)" hint="Apenas para registro financeiro — não gera cobrança">
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">R$</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={externalCreationPrice}
+                      onChange={(e) => setExternalCreationPrice(e.target.value)}
+                      placeholder="97,00"
+                      className={`${INPUT} pl-9`}
+                    />
+                  </div>
+                </Field>
+              </div>
+            )}
+          </div>
         )}
 
         {/* Proposal details — create + proposta only */}

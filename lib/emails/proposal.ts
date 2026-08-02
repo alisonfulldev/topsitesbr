@@ -357,6 +357,85 @@ export async function sendBriefingToAdmin(params: {
   })
 }
 
+// ── Site em desenvolvimento (cliente pago por fora) ───────────────────────────
+
+export async function sendSiteInDevelopmentEmail(params: {
+  to: string
+  clientName: string
+  loginEmail: string
+  loginPassword: string
+}): Promise<void> {
+  const { to, clientName, loginEmail, loginPassword } = params
+  const loginUrl = APP_URL + '/login'
+
+  const extraHtml = `
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 18px;margin-bottom:20px;">
+      <p style="margin:0 0 10px;font-size:12px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:0.6px;">Seus dados de acesso</p>
+      <table style="width:100%;border-collapse:collapse;font-size:14px;color:#374151;">
+        <tr><td style="padding:4px 0;width:100px;color:#6b7280;">E-mail</td><td style="padding:4px 0;font-weight:600;">${esc(loginEmail)}</td></tr>
+        <tr><td style="padding:4px 0;color:#6b7280;">Senha</td><td style="padding:4px 0;font-weight:600;font-family:monospace;">${esc(loginPassword)}</td></tr>
+      </table>
+    </div>
+    <div style="background:#fefce8;border:1px solid #fef08a;border-radius:8px;padding:14px 18px;margin-bottom:20px;">
+      <p style="margin:0;font-size:13px;color:#713f12;line-height:1.6;">
+        Ao acessar pela primeira vez, você será solicitado a criar uma nova senha. Após o login, preencha as informações do seu site para iniciarmos o desenvolvimento.
+      </p>
+    </div>
+  `
+
+  const html = buildHtml(
+    'Seu site está em desenvolvimento 🚀',
+    `Olá, ${clientName}! Recebemos o pagamento e já iniciamos o processo de criação do seu site. Acesse o painel para acompanhar cada etapa.`,
+    'proposal-approved',
+    extraHtml,
+    loginUrl,
+    'Acessar o painel →',
+  )
+
+  await sendEmail({
+    to,
+    subject: 'Seu site está em desenvolvimento 🚀',
+    html,
+  }).catch(() => {})
+}
+
+// ── Confirmação de briefing ao cliente ────────────────────────────────────────
+
+export async function sendBriefingConfirmationToClient(params: {
+  to: string
+  clientName: string
+  proposalTitle: string
+}): Promise<void> {
+  const { to, clientName, proposalTitle } = params
+  const panelUrl = APP_URL + '/painel/projeto'
+
+  const extraHtml = `
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 18px;margin-bottom:20px;">
+      <p style="margin:0 0 8px;font-size:12px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:0.6px;">O que acontece agora</p>
+      <ol style="margin:0;padding-left:18px;font-size:14px;color:#374151;line-height:1.8;">
+        <li>Nossa equipe recebeu todas as suas informações</li>
+        <li>Vamos começar o desenvolvimento do seu site</li>
+        <li>Você receberá um aviso quando o site estiver pronto para revisão</li>
+      </ol>
+    </div>
+  `
+
+  const html = buildHtml(
+    'Recebemos as informações do seu site!',
+    `Ótimo, ${clientName}! As informações do projeto "${proposalTitle}" foram recebidas com sucesso. Seu site entrou em produção.`,
+    'proposal-status-update',
+    extraHtml,
+    panelUrl,
+    'Acompanhar progresso →',
+  )
+
+  await sendEmail({
+    to,
+    subject: '✅ Recebemos as informações do seu site — projeto em produção',
+    html,
+  }).catch(() => {})
+}
+
 // ── Atualização de status da proposta (cliente) ────────────────────────────────
 
 export async function sendProposalStatusEmail(params: {

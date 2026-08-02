@@ -5,7 +5,7 @@ import { hashPassword } from '@/lib/password'
 import { generateReferralCode } from '@/lib/referral'
 import { sendEmail } from '@/lib/integrations/resend'
 import { generateRawToken, hashToken } from '@/lib/proposal-token'
-import { sendProposalEmail } from '@/lib/emails/proposal'
+import { sendProposalEmail, sendSiteInDevelopmentEmail } from '@/lib/emails/proposal'
 import { APP_URL } from '@/lib/config'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -55,6 +55,8 @@ export async function createClient(data: {
   proposalDescription?: string
   proposalIncludedItems?: string
   proposalCreationPrice?: number
+  paidExternally?: boolean
+  externalCreationPrice?: number
 }): Promise<{ error?: string; success?: boolean; clientId?: string }> {
   const parsed = clientSchema.safeParse(data)
   if (!parsed.success) {
@@ -102,6 +104,66 @@ export async function createClient(data: {
         status: 'confirmado',
       },
     })
+  }
+
+  // Pago por fora: cria User, Proposal já em aguardando_info, Order como receita
+  if (data.entryFlow === 'whatsapp' && data.paidExternally && data.createUserPassword) {
+    const passwordHash = await hashPassword(data.createUserPassword)
+    await prisma.user.create({
+      data: {
+        name: client.name,
+        email,
+        passwordHash,
+        role: 'client',
+        clientId: client.id,
+        mustChangePassword: true,
+      },
+    })
+
+    const creationPrice = data.externalCreationPrice ?? 0
+
+    // Find or create internal product for external payment
+    let product = await prisma.product.findFirst({
+      where: { name: 'Criação de Site (Pago por Fora)' },
+    })
+    if (!product) {
+      product = await prisma.product.create({
+        data: { name: 'Criação de Site (Pago por Fora)', price: 0, type: 'service' },
+      })
+    }
+
+    // Create paid Order (shows in financeiro)
+    const order = await prisma.order.create({
+      data: {
+        clientId: client.id,
+        productId: product.id,
+        amount: creationPrice,
+        status: 'paid',
+      },
+    })
+
+    // Create Proposal already in aguardando_info, linked to the order
+    await prisma.proposal.create({
+      data: {
+        clientId: client.id,
+        title: `Site de ${client.name}`,
+        creationPrice,
+        status: 'aguardando_info',
+        paidAt: new Date(),
+        paidExternally: true,
+        orderId: order.id,
+      },
+    })
+
+    await sendSiteInDevelopmentEmail({
+      to: email,
+      clientName: client.name,
+      loginEmail: email,
+      loginPassword: data.createUserPassword,
+    }).catch(() => {})
+
+    revalidatePath('/admin/clientes')
+    return { success: true, clientId: client.id }
   }
 
   // Proposta flow: cria Proposal + token de acesso, envia e-mail, sem criar User

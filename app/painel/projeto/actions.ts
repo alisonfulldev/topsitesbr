@@ -89,13 +89,20 @@ export async function submitBriefingAction(
     `O cliente ${proposal.client.name} enviou as informações do site para o projeto "${proposal.title}". Acesse a ficha do cliente para ver os detalhes e iniciar o desenvolvimento.`,
   )
 
-  // Email to admin (fire and forget)
-  const { sendBriefingToAdmin } = await import('@/lib/emails/proposal')
+  // Emails (fire and forget)
+  const { sendBriefingToAdmin, sendBriefingConfirmationToClient } = await import('@/lib/emails/proposal')
   sendBriefingToAdmin({
     clientName: proposal.client.name,
     proposalTitle: proposal.title,
     briefingData: data as Record<string, unknown>,
   }).catch(() => {})
+  if (proposal.client.email) {
+    sendBriefingConfirmationToClient({
+      to: proposal.client.email,
+      clientName: proposal.client.name,
+      proposalTitle: proposal.title,
+    }).catch(() => {})
+  }
 
   revalidatePath('/painel/projeto')
   return { success: true }
