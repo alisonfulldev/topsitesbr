@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter, usePathname } from 'next/navigation'
+import { useState, useTransition, useMemo } from 'react'
 import {
   BarChart,
   Bar,
@@ -16,6 +17,7 @@ import {
   Pie,
   Cell,
 } from 'recharts'
+import { deleteFinanceiroEntry } from '../actions'
 
 export type MonthlyRow = {
   month: string
@@ -50,6 +52,18 @@ export type CostBreakdown = {
   outro: number
 }
 
+export type TransactionItem = {
+  id: string
+  type: 'receita' | 'despesa'
+  date: string
+  amount: number
+  clientName?: string
+  origin: string
+  paymentMethod?: 'asaas' | 'externo'
+  description?: string
+  canDelete: boolean
+}
+
 type Period = '1m' | '3m' | '6m' | '12m' | 'custom'
 
 const PERIOD_OPTIONS: { value: Period | string; label: string }[] = [
@@ -69,22 +83,8 @@ function fmtPct(n: number) {
 }
 
 const PIE_COLORS = ['#0D0B1F', '#FFD100', '#2D2850', '#6b7280']
-const COST_LABELS: Record<string, string> = {
-  ia: 'IA',
-  trafego_pago: 'Tráfego Pago',
-  hospedagem_ferramentas: 'Hospedagem/Ferramentas',
-  outro: 'Outro',
-}
 
-function PeriodSelector({
-  period,
-  from,
-  to,
-}: {
-  period: string
-  from?: string
-  to?: string
-}) {
+function PeriodSelector({ period, from, to }: { period: string; from?: string; to?: string }) {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -147,53 +147,23 @@ function PeriodSelector({
   )
 }
 
-function KpiCard({
-  label,
-  value,
-  sub,
-  highlight,
-}: {
-  label: string
-  value: string
-  sub?: string
-  highlight?: boolean
-}) {
+function KpiCard({ label, value, sub, highlight }: { label: string; value: string; sub?: string; highlight?: boolean }) {
   return (
-    <div
-      className={`rounded-lg border p-4 ${highlight ? 'bg-brand-dark border-brand-dark' : 'bg-white border-gray-200'}`}
-    >
-      <p
-        className={`text-xs font-medium uppercase tracking-wide ${highlight ? 'text-gray-400' : 'text-gray-500'}`}
-      >
+    <div className={`rounded-lg border p-4 ${highlight ? 'bg-brand-dark border-brand-dark' : 'bg-white border-gray-200'}`}>
+      <p className={`text-xs font-medium uppercase tracking-wide ${highlight ? 'text-gray-400' : 'text-gray-500'}`}>
         {label}
       </p>
-      <p className={`text-2xl font-bold mt-1 ${highlight ? 'text-white' : 'text-gray-900'}`}>
-        {value}
-      </p>
-      {sub && (
-        <p className={`text-xs mt-0.5 ${highlight ? 'text-gray-300' : 'text-gray-400'}`}>{sub}</p>
-      )}
+      <p className={`text-2xl font-bold mt-1 ${highlight ? 'text-white' : 'text-gray-900'}`}>{value}</p>
+      {sub && <p className={`text-xs mt-0.5 ${highlight ? 'text-gray-300' : 'text-gray-400'}`}>{sub}</p>}
     </div>
   )
 }
 
 function downloadCSV(rows: MonthlyRow[]) {
   const headers = [
-    'Mês',
-    'Faturamento Total',
-    'Venda de Site',
-    'Receitas Avulsas',
-    'Assinaturas',
-    'Upsells',
-    'Manutenção',
-    'Custos Totais',
-    'IA',
-    'Tráfego Pago',
-    'Hospedagem/Ferramentas',
-    'Outros Custos',
-    'Lucro Líquido',
-    'Margem %',
-    'Novos Clientes',
+    'Mês', 'Faturamento Total', 'Venda de Site', 'Receitas Avulsas',
+    'Assinaturas', 'Upsells', 'Manutenção', 'Custos Totais', 'IA',
+    'Tráfego Pago', 'Hospedagem/Ferramentas', 'Outros Custos', 'Lucro Líquido', 'Margem %', 'Novos Clientes',
   ]
   const csvRows = [
     headers.join(';'),
@@ -229,22 +199,244 @@ function downloadCSV(rows: MonthlyRow[]) {
   URL.revokeObjectURL(url)
 }
 
+// ─── Transaction list sub-component ─────────────────────────────────────────
+
+function TransactionList({ transactions }: { transactions: TransactionItem[] }) {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+  const [search, setSearch] = useState('')
+  const [typeFilter, setTypeFilter] = useState<'todos' | 'receita' | 'despesa'>('todos')
+  const [monthFilter, setMonthFilter] = useState('todos')
+  const [deleteTarget, setDeleteTarget] = useState<TransactionItem | null>(null)
+  const [deleteError, setDeleteError] = useState('')
+
+  // Derive available months from transactions
+  const availableMonths = useMemo(() => {
+    const keys = new Set<string>()
+    for (const t of transactions) {
+      const d = new Date(t.date)
+      keys.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+    }
+    return Array.from(keys).sort().reverse()
+  }, [transactions])
+
+  function monthKeyLabel(key: string) {
+    const [year, month] = key.split('-')
+    const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+    return `${MONTHS[parseInt(month) - 1]}/${year.slice(2)}`
+  }
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim()
+    return transactions.filter((t) => {
+      if (typeFilter !== 'todos' && t.type !== typeFilter) return false
+      if (monthFilter !== 'todos') {
+        const d = new Date(t.date)
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+        if (key !== monthFilter) return false
+      }
+      if (q) {
+        const haystack = [t.clientName, t.origin, t.description].filter(Boolean).join(' ').toLowerCase()
+        if (!haystack.includes(q)) return false
+      }
+      return true
+    })
+  }, [transactions, typeFilter, monthFilter, search])
+
+  function handleDelete() {
+    if (!deleteTarget) return
+    setDeleteError('')
+    startTransition(async () => {
+      const entityType = deleteTarget.type === 'receita' ? 'order' : 'cost'
+      const result = await deleteFinanceiroEntry(entityType, deleteTarget.id)
+      if (result.error) {
+        setDeleteError(result.error)
+      } else {
+        setDeleteTarget(null)
+        router.refresh()
+      }
+    })
+  }
+
+  const totalFiltered = filtered.reduce((sum, t) => {
+    return t.type === 'receita' ? sum + t.amount : sum - t.amount
+  }, 0)
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 mt-6">
+      <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between flex-wrap gap-2">
+        <h3 className="text-sm font-semibold text-gray-700">
+          Lançamentos Detalhados
+          <span className="ml-2 text-xs font-normal text-gray-400">({filtered.length} registros)</span>
+        </h3>
+        {filtered.length > 0 && (
+          <span className={`text-sm font-semibold ${totalFiltered >= 0 ? 'text-green-700' : 'text-red-600'}`}>
+            Saldo filtrado: {fmtBRL(totalFiltered)}
+          </span>
+        )}
+      </div>
+
+      {/* Filters */}
+      <div className="px-4 py-3 border-b border-gray-100 flex flex-wrap gap-2 items-center">
+        <input
+          type="text"
+          placeholder="Buscar por cliente ou descrição…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand w-56"
+        />
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value as typeof typeFilter)}
+          className="rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+        >
+          <option value="todos">Todos os tipos</option>
+          <option value="receita">Receitas</option>
+          <option value="despesa">Despesas</option>
+        </select>
+        <select
+          value={monthFilter}
+          onChange={(e) => setMonthFilter(e.target.value)}
+          className="rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+        >
+          <option value="todos">Todos os meses</option>
+          {availableMonths.map((m) => (
+            <option key={m} value={m}>{monthKeyLabel(m)}</option>
+          ))}
+        </select>
+        {(search || typeFilter !== 'todos' || monthFilter !== 'todos') && (
+          <button
+            onClick={() => { setSearch(''); setTypeFilter('todos'); setMonthFilter('todos') }}
+            className="text-xs text-gray-400 hover:text-gray-600 underline"
+          >
+            Limpar filtros
+          </button>
+        )}
+      </div>
+
+      {/* Table */}
+      {filtered.length === 0 ? (
+        <p className="text-sm text-gray-400 text-center py-10">Nenhum lançamento encontrado.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50 border-b border-gray-200 text-left">
+                <th className="px-4 py-2.5 font-medium text-xs text-gray-500 uppercase tracking-wide whitespace-nowrap">Data</th>
+                <th className="px-4 py-2.5 font-medium text-xs text-gray-500 uppercase tracking-wide">Cliente / Descrição</th>
+                <th className="px-4 py-2.5 font-medium text-xs text-gray-500 uppercase tracking-wide">Tipo / Origem</th>
+                <th className="px-4 py-2.5 font-medium text-xs text-gray-500 uppercase tracking-wide whitespace-nowrap">Método</th>
+                <th className="px-4 py-2.5 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Valor</th>
+                <th className="px-4 py-2.5 w-10" />
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {filtered.map((t) => (
+                <tr key={`${t.type}-${t.id}`} className="hover:bg-gray-50 group">
+                  <td className="px-4 py-2.5 text-gray-500 whitespace-nowrap text-xs">
+                    {new Date(t.date).toLocaleDateString('pt-BR')}
+                  </td>
+                  <td className="px-4 py-2.5 text-gray-800 max-w-[200px]">
+                    {t.type === 'receita' ? (
+                      <span className="font-medium">{t.clientName ?? '—'}</span>
+                    ) : (
+                      <span className="text-gray-600">{t.description ?? '—'}</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-2.5 max-w-[180px]">
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        className={`inline-flex shrink-0 w-1.5 h-1.5 rounded-full ${
+                          t.type === 'receita' ? 'bg-green-500' : 'bg-red-400'
+                        }`}
+                      />
+                      <span className="text-gray-600 text-xs truncate">{t.origin}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-2.5 whitespace-nowrap">
+                    {t.paymentMethod === 'asaas' ? (
+                      <span className="text-xs px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">Asaas</span>
+                    ) : t.paymentMethod === 'externo' ? (
+                      <span className="text-xs px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">Externo</span>
+                    ) : (
+                      <span className="text-gray-300 text-xs">—</span>
+                    )}
+                  </td>
+                  <td className={`px-4 py-2.5 text-right font-medium whitespace-nowrap ${t.type === 'receita' ? 'text-green-700' : 'text-red-600'}`}>
+                    {t.type === 'despesa' && '−'}{fmtBRL(t.amount)}
+                  </td>
+                  <td className="px-4 py-2.5 text-right">
+                    {t.canDelete ? (
+                      <button
+                        type="button"
+                        onClick={() => { setDeleteTarget(t); setDeleteError('') }}
+                        className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-600 transition-opacity rounded"
+                        title="Excluir lançamento"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    ) : (
+                      <span className="w-6 inline-block" />
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Delete confirmation modal */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
+            <h3 className="font-semibold text-gray-900 mb-1">Excluir lançamento?</h3>
+            <p className="text-sm text-gray-600 mb-1">
+              <span className="font-medium">
+                {deleteTarget.type === 'receita' ? deleteTarget.clientName : deleteTarget.description}
+              </span>
+              {' — '}{fmtBRL(deleteTarget.amount)}
+            </p>
+            <p className="text-xs text-gray-400 mb-5">
+              Esta ação afeta os totais do financeiro e não pode ser desfeita. O cliente e demais dados não são apagados.
+            </p>
+            {deleteError && (
+              <p className="text-xs text-red-600 mb-3">{deleteError}</p>
+            )}
+            <div className="flex gap-3 justify-end">
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                disabled={isPending}
+                className="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={isPending}
+                className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+              >
+                {isPending ? 'Excluindo…' : 'Excluir'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── Main export ─────────────────────────────────────────────────────────────
+
 export function FinanceiroClient({
-  period,
-  from,
-  to,
-  monthlyData,
-  totalRevenue,
-  totalCosts,
-  totalProfit,
-  totalMargin,
-  currentMRR,
-  arpu,
-  overdueList,
-  totalOverdue,
-  costBreakdown,
-  mrrByMonth,
-  clientGrowthByMonth,
+  period, from, to,
+  monthlyData, totalRevenue, totalCosts, totalProfit, totalMargin,
+  currentMRR, arpu, overdueList, totalOverdue, costBreakdown,
+  mrrByMonth, clientGrowthByMonth, transactions,
 }: {
   period: string
   from?: string
@@ -261,6 +453,7 @@ export function FinanceiroClient({
   costBreakdown: CostBreakdown
   mrrByMonth: { label: string; mrr: number }[]
   clientGrowthByMonth: { label: string; new: number }[]
+  transactions: TransactionItem[]
 }) {
   const pieData = [
     { name: 'IA', value: costBreakdown.ia },
@@ -279,23 +472,14 @@ export function FinanceiroClient({
           <h2 className="text-xl font-semibold text-gray-900">Gestão Financeira</h2>
           <p className="text-sm text-gray-500 mt-0.5">Visão financeira do período selecionado</p>
         </div>
-        <div className="flex items-center gap-2">
-          <a
-            href="/admin/financeiro/distribuicao"
-            className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors"
-          >
+        <div className="flex items-center gap-2 flex-wrap">
+          <a href="/admin/financeiro/distribuicao" className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors">
             Distribuição
           </a>
-          <a
-            href="/admin/financeiro/receitas"
-            className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors"
-          >
+          <a href="/admin/financeiro/receitas" className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors">
             Receitas Avulsas
           </a>
-          <a
-            href="/admin/financeiro/custos"
-            className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors"
-          >
+          <a href="/admin/financeiro/custos" className="text-sm text-brand-text hover:underline border border-brand-200 px-3 py-1.5 rounded-md hover:bg-brand-50 transition-colors">
             Gerenciar Custos
           </a>
           <button
@@ -315,21 +499,16 @@ export function FinanceiroClient({
         <PeriodSelector period={period} from={from} to={to} />
       </div>
 
-      {/* KPIs — Lucro em destaque */}
+      {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-        <KpiCard
-          label="Lucro Líquido"
-          value={fmtBRL(totalProfit)}
-          sub={`Margem ${fmtPct(totalMargin)}`}
-          highlight
-        />
+        <KpiCard label="Lucro Líquido" value={fmtBRL(totalProfit)} sub={`Margem ${fmtPct(totalMargin)}`} highlight />
         <KpiCard label="Faturamento" value={fmtBRL(totalRevenue)} sub="no período" />
         <KpiCard label="Custos Totais" value={fmtBRL(totalCosts)} sub="no período" />
         <KpiCard label="MRR Atual" value={fmtBRL(currentMRR)} sub="receita recorrente" />
         <KpiCard label="ARPU" value={fmtBRL(arpu)} sub="ticket médio mensal" />
       </div>
 
-      {/* Charts row 1: Revenue stacked + Costs pie */}
+      {/* Charts row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <h3 className="text-sm font-semibold text-gray-700 mb-4">Faturamento por Origem</h3>
@@ -340,27 +519,14 @@ export function FinanceiroClient({
               <BarChart data={monthlyData} margin={{ top: 4, right: 8, bottom: 0, left: -8 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#6b7280' }} />
-                <YAxis
-                  tick={{ fontSize: 11, fill: '#6b7280' }}
-                  tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`}
-                />
-                <Tooltip
-                  contentStyle={{ fontSize: 12, borderRadius: 6, borderColor: '#e5e7eb' }}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  formatter={(v: any, name: any) => [fmtBRL(v), name]}
-                />
+                <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} />
+                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 6, borderColor: '#e5e7eb' }} formatter={(v: unknown, name: unknown) => [fmtBRL(v as number), name as string]} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Bar dataKey="extraRevenue" name="Receitas Avulsas" stackId="a" fill="#f59e0b" />
                 <Bar dataKey="siteRevenue" name="Venda de Site" stackId="a" fill="#10b981" />
                 <Bar dataKey="subscriptions" name="Assinaturas" stackId="a" fill="#0D0B1F" />
                 <Bar dataKey="upsells" name="Upsells" stackId="a" fill="#2D2850" />
-                <Bar
-                  dataKey="maintenance"
-                  name="Manutenção"
-                  stackId="a"
-                  fill="#FFD100"
-                  radius={[4, 4, 0, 0]}
-                />
+                <Bar dataKey="maintenance" name="Manutenção" stackId="a" fill="#FFD100" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -374,33 +540,19 @@ export function FinanceiroClient({
             <div className="flex items-center justify-between">
               <ResponsiveContainer width="60%" height={200}>
                 <PieChart>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
-                    dataKey="value"
-                  >
+                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value">
                     {pieData.map((_, index) => (
                       <Cell key={index} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    contentStyle={{ fontSize: 12, borderRadius: 6 }}
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    formatter={(v: any) => [fmtBRL(v), '']}
-                  />
+                  <Tooltip contentStyle={{ fontSize: 12, borderRadius: 6 }} formatter={(v: unknown) => [fmtBRL(v as number), '']} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="flex-1 space-y-2">
                 {pieData.map((d, i) => (
                   <div key={d.name} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1.5">
-                      <span
-                        className="w-2.5 h-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }}
-                      />
+                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
                       <span className="text-gray-600">{d.name}</span>
                     </div>
                     <span className="font-medium text-gray-800 ml-2">{fmtBRL(d.value)}</span>
@@ -412,7 +564,7 @@ export function FinanceiroClient({
         </div>
       </div>
 
-      {/* Charts row 2: MRR evolution + Client growth */}
+      {/* Charts row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <h3 className="text-sm font-semibold text-gray-700 mb-4">Evolução do MRR</h3>
@@ -420,24 +572,9 @@ export function FinanceiroClient({
             <LineChart data={mrrByMonth} margin={{ top: 4, right: 8, bottom: 0, left: -8 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#6b7280' }} />
-              <YAxis
-                tick={{ fontSize: 11, fill: '#6b7280' }}
-                tickFormatter={(v) => `R$${v}`}
-              />
-              <Tooltip
-                contentStyle={{ fontSize: 12, borderRadius: 6, borderColor: '#e5e7eb' }}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                formatter={(v: any) => [fmtBRL(v), 'MRR']}
-              />
-              <Line
-                type="monotone"
-                dataKey="mrr"
-                name="MRR"
-                stroke="#FFD100"
-                strokeWidth={2}
-                dot={{ r: 3 }}
-                activeDot={{ r: 5 }}
-              />
+              <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} tickFormatter={(v) => `R$${v}`} />
+              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 6, borderColor: '#e5e7eb' }} formatter={(v: unknown) => [fmtBRL(v as number), 'MRR']} />
+              <Line type="monotone" dataKey="mrr" name="MRR" stroke="#FFD100" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 5 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -445,18 +582,11 @@ export function FinanceiroClient({
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <h3 className="text-sm font-semibold text-gray-700 mb-4">Novos Clientes por Mês</h3>
           <ResponsiveContainer width="100%" height={200}>
-            <BarChart
-              data={clientGrowthByMonth}
-              margin={{ top: 4, right: 8, bottom: 0, left: -16 }}
-            >
+            <BarChart data={clientGrowthByMonth} margin={{ top: 4, right: 8, bottom: 0, left: -16 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#6b7280' }} />
               <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#6b7280' }} />
-              <Tooltip
-                contentStyle={{ fontSize: 12, borderRadius: 6, borderColor: '#e5e7eb' }}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                formatter={(v: any) => [`${v} cliente${v !== 1 ? 's' : ''}`, 'Novos']}
-              />
+              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 6, borderColor: '#e5e7eb' }} formatter={(v: unknown) => [`${v} cliente${(v as number) !== 1 ? 's' : ''}`, 'Novos']} />
               <Bar dataKey="new" name="Novos clientes" fill="#10b981" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -471,41 +601,26 @@ export function FinanceiroClient({
               Inadimplência — {fmtBRL(totalOverdue)} em aberto
             </h3>
             <span className="text-xs text-red-500">
-              {overdueList.length} cobrança{overdueList.length !== 1 ? 's' : ''} vencida
-              {overdueList.length !== 1 ? 's' : ''}
+              {overdueList.length} cobrança{overdueList.length !== 1 ? 's' : ''} vencida{overdueList.length !== 1 ? 's' : ''}
             </span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left border-b border-red-100">
-                  <th className="pb-2 font-medium text-xs text-gray-500 uppercase tracking-wide">
-                    Cliente
-                  </th>
-                  <th className="pb-2 font-medium text-xs text-gray-500 uppercase tracking-wide text-right">
-                    Valor
-                  </th>
-                  <th className="pb-2 font-medium text-xs text-gray-500 uppercase tracking-wide">
-                    Vencimento
-                  </th>
-                  <th className="pb-2 font-medium text-xs text-gray-500 uppercase tracking-wide text-right">
-                    Dias em atraso
-                  </th>
+                  <th className="pb-2 font-medium text-xs text-gray-500 uppercase tracking-wide">Cliente</th>
+                  <th className="pb-2 font-medium text-xs text-gray-500 uppercase tracking-wide text-right">Valor</th>
+                  <th className="pb-2 font-medium text-xs text-gray-500 uppercase tracking-wide">Vencimento</th>
+                  <th className="pb-2 font-medium text-xs text-gray-500 uppercase tracking-wide text-right">Dias em atraso</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-red-50">
                 {overdueList.map((item, i) => (
                   <tr key={i}>
                     <td className="py-2 text-gray-800">{item.clientName}</td>
-                    <td className="py-2 text-right font-medium text-red-700">
-                      {fmtBRL(item.amount)}
-                    </td>
-                    <td className="py-2 text-gray-500">
-                      {new Date(item.dueDate).toLocaleDateString('pt-BR')}
-                    </td>
-                    <td className="py-2 text-right">
-                      <span className="text-red-600 font-medium">{item.daysOverdue}d</span>
-                    </td>
+                    <td className="py-2 text-right font-medium text-red-700">{fmtBRL(item.amount)}</td>
+                    <td className="py-2 text-gray-500">{new Date(item.dueDate).toLocaleDateString('pt-BR')}</td>
+                    <td className="py-2 text-right"><span className="text-red-600 font-medium">{item.daysOverdue}d</span></td>
                   </tr>
                 ))}
               </tbody>
@@ -523,30 +638,14 @@ export function FinanceiroClient({
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200 text-left">
-                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide whitespace-nowrap">
-                  Mês
-                </th>
-                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">
-                  Faturamento
-                </th>
-                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">
-                  Custos
-                </th>
-                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">
-                  Lucro
-                </th>
-                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">
-                  Margem
-                </th>
-                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">
-                  MRR
-                </th>
-                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">
-                  Novos clientes
-                </th>
-                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">
-                  Cresc. %
-                </th>
+                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide whitespace-nowrap">Mês</th>
+                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Faturamento</th>
+                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Custos</th>
+                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Lucro</th>
+                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Margem</th>
+                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">MRR</th>
+                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Novos clientes</th>
+                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Cresc. %</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -556,41 +655,23 @@ export function FinanceiroClient({
                   prev && prev.totalRevenue > 0
                     ? ((row.totalRevenue - prev.totalRevenue) / prev.totalRevenue) * 100
                     : null
-
                 return (
                   <tr key={row.month} className="hover:bg-gray-50">
                     <td className="px-4 py-3 font-medium text-gray-800">{row.label}</td>
-                    <td className="px-4 py-3 text-right text-gray-800">
-                      {fmtBRL(row.totalRevenue)}
-                    </td>
-                    <td className="px-4 py-3 text-right text-gray-600">
-                      {fmtBRL(row.totalCosts)}
-                    </td>
-                    <td
-                      className={`px-4 py-3 text-right font-medium ${
-                        row.profit >= 0 ? 'text-green-700' : 'text-red-600'
-                      }`}
-                    >
+                    <td className="px-4 py-3 text-right text-gray-800">{fmtBRL(row.totalRevenue)}</td>
+                    <td className="px-4 py-3 text-right text-gray-600">{fmtBRL(row.totalCosts)}</td>
+                    <td className={`px-4 py-3 text-right font-medium ${row.profit >= 0 ? 'text-green-700' : 'text-red-600'}`}>
                       {fmtBRL(row.profit)}
                     </td>
-                    <td className="px-4 py-3 text-right text-gray-600">
-                      {row.totalRevenue > 0 ? fmtPct(row.margin) : '—'}
-                    </td>
-                    <td className="px-4 py-3 text-right text-gray-600">
-                      {fmtBRL(row.subscriptions)}
-                    </td>
+                    <td className="px-4 py-3 text-right text-gray-600">{row.totalRevenue > 0 ? fmtPct(row.margin) : '—'}</td>
+                    <td className="px-4 py-3 text-right text-gray-600">{fmtBRL(row.subscriptions)}</td>
                     <td className="px-4 py-3 text-right text-gray-600">{row.newClients}</td>
                     <td className="px-4 py-3 text-right">
                       {growth === null ? (
                         <span className="text-gray-400">—</span>
                       ) : (
-                        <span
-                          className={`font-medium ${
-                            growth >= 0 ? 'text-green-600' : 'text-red-500'
-                          }`}
-                        >
-                          {growth >= 0 ? '+' : ''}
-                          {fmtPct(growth)}
+                        <span className={`font-medium ${growth >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                          {growth >= 0 ? '+' : ''}{fmtPct(growth)}
                         </span>
                       )}
                     </td>
@@ -604,20 +685,12 @@ export function FinanceiroClient({
                   <td className="px-4 py-3 text-gray-700">Total</td>
                   <td className="px-4 py-3 text-right text-gray-800">{fmtBRL(totalRevenue)}</td>
                   <td className="px-4 py-3 text-right text-gray-600">{fmtBRL(totalCosts)}</td>
-                  <td
-                    className={`px-4 py-3 text-right ${
-                      totalProfit >= 0 ? 'text-green-700' : 'text-red-600'
-                    }`}
-                  >
+                  <td className={`px-4 py-3 text-right ${totalProfit >= 0 ? 'text-green-700' : 'text-red-600'}`}>
                     {fmtBRL(totalProfit)}
                   </td>
-                  <td className="px-4 py-3 text-right text-gray-600">
-                    {fmtPct(totalMargin)}
-                  </td>
+                  <td className="px-4 py-3 text-right text-gray-600">{fmtPct(totalMargin)}</td>
                   <td className="px-4 py-3" />
-                  <td className="px-4 py-3 text-right text-gray-600">
-                    {monthlyData.reduce((a, r) => a + r.newClients, 0)}
-                  </td>
+                  <td className="px-4 py-3 text-right text-gray-600">{monthlyData.reduce((a, r) => a + r.newClients, 0)}</td>
                   <td className="px-4 py-3" />
                 </tr>
               </tfoot>
@@ -625,6 +698,9 @@ export function FinanceiroClient({
           </table>
         </div>
       </div>
+
+      {/* Transaction list */}
+      <TransactionList transactions={transactions} />
     </div>
   )
 }

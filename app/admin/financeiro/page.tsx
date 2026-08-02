@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { FinanceiroClient, type MonthlyRow, type OverdueItem, type CostBreakdown } from './_components/FinanceiroClient'
+import { FinanceiroClient, type MonthlyRow, type OverdueItem, type CostBreakdown, type TransactionItem } from './_components/FinanceiroClient'
 
 const MAINTENANCE_PRODUCTS = new Set([
   'Nova Seção',
@@ -11,6 +11,12 @@ const MAINTENANCE_PRODUCTS = new Set([
   'Alteração de Imagem (avulsa)',
   'Alteração de Texto e Imagem (avulsa)',
 ])
+
+function orderOriginLabel(productName: string): string {
+  if (productName === 'Criação de Site (Pago por Fora)') return 'Criação — pago por fora'
+  if (MAINTENANCE_PRODUCTS.has(productName)) return `Manutenção — ${productName.replace(' (avulsa)', '')}`
+  return `Upsell — ${productName}`
+}
 
 type Period = '1m' | '3m' | '6m' | '12m' | 'custom'
 
@@ -64,15 +70,25 @@ export default async function AdminFinanceiroPage({
     await Promise.all([
       prisma.invoice.findMany({
         where: { status: 'paid', paidAt: { gte: start, lte: end } },
-        select: { amount: true, paidAt: true },
+        include: {
+          subscription: {
+            include: {
+              client: { select: { name: true } },
+              plan: { select: { name: true } },
+            },
+          },
+        },
       }),
       prisma.order.findMany({
         where: { status: 'paid', createdAt: { gte: start, lte: end } },
-        include: { product: { select: { name: true } } },
+        include: {
+          product: { select: { name: true } },
+          client: { select: { name: true } },
+        },
       }),
       prisma.cost.findMany({
         where: { costDate: { gte: start, lte: end } },
-        select: { amount: true, category: true, costDate: true },
+        select: { id: true, amount: true, category: true, costDate: true, description: true },
       }),
       prisma.invoice.findMany({
         where: { status: 'overdue' },
@@ -215,6 +231,46 @@ export default async function AdminFinanceiroPage({
     new: clientMap[m] ?? 0,
   }))
 
+  // Build unified transaction list (sorted by date desc)
+  const COST_CATEGORY_LABELS: Record<string, string> = {
+    ia: 'IA',
+    trafego_pago: 'Tráfego Pago',
+    hospedagem_ferramentas: 'Hospedagem/Ferramentas',
+    outro: 'Outro',
+  }
+
+  const transactions: TransactionItem[] = [
+    ...paidInvoices.map((inv) => ({
+      id: inv.id,
+      type: 'receita' as const,
+      date: (inv.paidAt ?? inv.createdAt).toISOString(),
+      amount: Number(inv.amount),
+      clientName: inv.subscription.client.name,
+      origin: `Mensalidade — ${inv.subscription.plan.name}`,
+      paymentMethod: 'asaas' as const,
+      canDelete: false,
+    })),
+    ...paidOrders.map((ord) => ({
+      id: ord.id,
+      type: 'receita' as const,
+      date: ord.createdAt.toISOString(),
+      amount: Number(ord.amount),
+      clientName: ord.client.name,
+      origin: orderOriginLabel(ord.product.name),
+      paymentMethod: (ord.asaasChargeId ? 'asaas' : 'externo') as 'asaas' | 'externo',
+      canDelete: true,
+    })),
+    ...allCosts.map((c) => ({
+      id: c.id,
+      type: 'despesa' as const,
+      date: c.costDate.toISOString(),
+      amount: Number(c.amount),
+      origin: COST_CATEGORY_LABELS[c.category] ?? c.category,
+      description: c.description,
+      canDelete: true,
+    })),
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
   return (
     <FinanceiroClient
       period={period}
@@ -232,6 +288,7 @@ export default async function AdminFinanceiroPage({
       costBreakdown={costBreakdown}
       mrrByMonth={mrrByMonth}
       clientGrowthByMonth={clientGrowthByMonth}
+      transactions={transactions}
     />
   )
 }
