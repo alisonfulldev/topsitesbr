@@ -53,7 +53,7 @@ const STEPS = [
   },
   {
     key: 'publicado',
-    label: 'Publicado',
+    label: 'Finalizado',
     description: 'Seu site está no ar!',
   },
 ]
