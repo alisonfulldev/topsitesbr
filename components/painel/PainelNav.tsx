@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { cn } from '@/lib/utils'
 import { PushNotificationButton } from './PushNotificationButton'
+import { useState } from 'react'
 
 const projectNavItem = {
   href: '/painel/projeto',
@@ -98,20 +99,43 @@ function isActive(pathname: string, href: string, exact: boolean) {
 }
 
 // ─── Mobile Bottom Navigation Bar ──────────────────────────────────────────────
-export function PainelBottomNav({ showProjectLink }: { showProjectLink?: boolean }) {
+export function PainelBottomNav({ showProjectLink, inProduction }: { showProjectLink?: boolean; inProduction?: boolean }) {
   const pathname = usePathname()
   const items = showProjectLink
     ? [navItems[0], projectNavItem, ...navItems.slice(1)]
     : navItems
 
+  const [toast, setToast] = useState(false)
+
+  function showToast() {
+    setToast(true)
+    setTimeout(() => setToast(false), 2500)
+  }
+
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-50 md:hidden"
+      className="fixed bottom-0 inset-x-0 z-50 md:hidden relative"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="bg-brand-dark border-t border-brand-dark-border flex items-stretch">
         {items.map((item) => {
-          const active = isActive(pathname, item.href, item.exact)
+          const active = isActive(pathname, item.href, item.exact ?? false)
+          const locked = !!inProduction && item.href !== '/painel/projeto'
+
+          if (locked) {
+            return (
+              <button
+                key={item.href}
+                type="button"
+                onClick={showToast}
+                className="flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] opacity-35 cursor-not-allowed"
+              >
+                {item.icon(false)}
+                <span className="text-[10px] font-medium text-gray-500">{item.label}</span>
+              </button>
+            )
+          }
+
           return (
             <Link
               key={item.href}
@@ -146,7 +170,7 @@ export function PainelBottomNav({ showProjectLink }: { showProjectLink?: boolean
           )
         })}
 
-        {/* Botão Conta/Perfil */}
+        {/* Botão Conta/Perfil — always accessible */}
         <Link
           href="/painel/conta"
           className={cn(
@@ -164,19 +188,32 @@ export function PainelBottomNav({ showProjectLink }: { showProjectLink?: boolean
           </span>
         </Link>
       </div>
+
+      {toast && (
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap shadow-lg pointer-events-none z-50">
+          Disponível quando seu site estiver no ar
+        </div>
+      )}
     </nav>
   )
 }
 
 // ─── Desktop Sidebar Navigation ────────────────────────────────────────────────
-export function PainelDesktopSidebar({ userName, showProjectLink }: { userName: string; showProjectLink?: boolean }) {
+export function PainelDesktopSidebar({ userName, showProjectLink, inProduction }: { userName: string; showProjectLink?: boolean; inProduction?: boolean }) {
   const pathname = usePathname()
   const items = showProjectLink
     ? [navItems[0], projectNavItem, ...navItems.slice(1)]
     : navItems
 
+  const [toast, setToast] = useState(false)
+
+  function showToast() {
+    setToast(true)
+    setTimeout(() => setToast(false), 2500)
+  }
+
   return (
-    <aside className="hidden md:flex w-56 shrink-0 bg-brand-dark flex-col sticky top-0 h-screen">
+    <aside className="hidden md:flex w-56 shrink-0 bg-brand-dark flex-col sticky top-0 h-screen relative">
       <div className="px-5 py-4 border-b border-brand-dark-border">
         <Image src="/logo.png" alt="TOP SITE" width={140} height={42} className="h-9 w-auto mb-1" priority />
         <p className="text-[10px] text-gray-400 uppercase tracking-wider">Painel do Cliente</p>
@@ -184,7 +221,23 @@ export function PainelDesktopSidebar({ userName, showProjectLink }: { userName: 
 
       <nav className="flex-1 p-3 space-y-0.5 text-sm overflow-y-auto">
         {items.map((item) => {
-          const active = isActive(pathname, item.href, item.exact)
+          const active = isActive(pathname, item.href, item.exact ?? false)
+          const locked = !!inProduction && item.href !== '/painel/projeto'
+
+          if (locked) {
+            return (
+              <button
+                key={item.href}
+                type="button"
+                onClick={showToast}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-md opacity-35 cursor-not-allowed text-gray-400"
+              >
+                <span className="w-6 shrink-0 flex items-center justify-center">{item.icon(false)}</span>
+                <span>{item.label}</span>
+              </button>
+            )
+          }
+
           return (
             <Link
               key={item.href}
@@ -211,6 +264,21 @@ export function PainelDesktopSidebar({ userName, showProjectLink }: { userName: 
         <div className="pt-2 mt-2 border-t border-brand-dark-border space-y-0.5">
           {desktopSecondaryItems.map((item) => {
             const active = pathname.startsWith(item.href)
+            const locked = !!inProduction && item.href === '/painel/notificacoes'
+
+            if (locked) {
+              return (
+                <button
+                  key={item.href}
+                  type="button"
+                  onClick={showToast}
+                  className="w-full block px-3 py-2 rounded-md text-sm opacity-35 cursor-not-allowed text-left text-gray-500"
+                >
+                  {item.label}
+                </button>
+              )
+            }
+
             return (
               <Link
                 key={item.href}
@@ -241,6 +309,12 @@ export function PainelDesktopSidebar({ userName, showProjectLink }: { userName: 
           Sair
         </button>
       </div>
+
+      {toast && (
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap shadow-lg pointer-events-none z-50 text-center w-max max-w-[200px]">
+          Disponível quando seu site estiver no ar
+        </div>
+      )}
     </aside>
   )
 }

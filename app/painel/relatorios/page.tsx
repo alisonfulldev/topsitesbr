@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { isClientInProduction } from '@/lib/painel-guard'
 import { maybeGenerateReportsForClient } from '@/lib/reports'
 import { ReportListClient } from './_components/ReportListClient'
 
@@ -14,6 +15,10 @@ export default async function RelatoriosPage() {
     select: { clientId: true },
   })
   if (!user?.clientId) redirect('/painel')
+
+  if (await isClientInProduction(user.clientId)) {
+    redirect('/painel/projeto')
+  }
 
   // Generate new reports if 7 days have passed (non-blocking on first load)
   try {

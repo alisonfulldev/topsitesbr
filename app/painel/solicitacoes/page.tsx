@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { isClientInProduction } from '@/lib/painel-guard'
 import { SolicitacaoForm } from './_components/SolicitacaoForm'
 import { ChangeType } from '@prisma/client'
 
@@ -17,6 +18,10 @@ export default async function SolicitacoesPage() {
   })
   if (!user?.clientId) redirect('/painel')
   const clientId = user.clientId
+
+  if (await isClientInProduction(clientId)) {
+    redirect('/painel/projeto')
+  }
 
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)

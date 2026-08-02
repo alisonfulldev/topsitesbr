@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { isClientInProduction } from '@/lib/painel-guard'
 import { IndicacoesClientPage } from './_components/IndicacoesClientPage'
 
 export default async function PainelIndicacoesPage() {
@@ -14,6 +15,10 @@ export default async function PainelIndicacoesPage() {
   })
 
   if (!user?.clientId) redirect('/painel')
+
+  if (await isClientInProduction(user.clientId)) {
+    redirect('/painel/projeto')
+  }
 
   const client = await prisma.client.findUnique({
     where: { id: user.clientId },

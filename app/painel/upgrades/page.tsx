@@ -2,6 +2,7 @@
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { isClientInProduction } from '@/lib/painel-guard'
 import { syncOrderPayment } from '@/lib/payments/webhook-handlers'
 import { UpgradesClient, type ProductRow, type PromoBanner } from './_components/UpgradesClient'
 
@@ -37,6 +38,10 @@ export default async function UpgradesPage({
   })
   const clientId = user?.clientId
   if (!clientId) redirect('/painel')
+
+  if (await isClientInProduction(clientId)) {
+    redirect('/painel/projeto')
+  }
 
   await syncOrderPayment(clientId)
 

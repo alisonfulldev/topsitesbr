@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { isClientInProduction } from '@/lib/painel-guard'
 import { AssinaturaPageClient } from './_components/AssinaturaPageClient'
 
 export default async function PainelAssinaturaPage() {
@@ -14,6 +15,10 @@ export default async function PainelAssinaturaPage() {
   })
 
   if (!user?.clientId) redirect('/painel')
+
+  if (await isClientInProduction(user.clientId)) {
+    redirect('/painel/projeto')
+  }
 
   const subscriptionRaw = await prisma.subscription.findFirst({
     where: { clientId: user.clientId, status: { not: 'canceled' } },

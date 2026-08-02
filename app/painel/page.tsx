@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { getSiteAnalytics } from '@/lib/integrations/analytics'
 import type { AnalyticsResult } from '@/lib/integrations/analytics'
 import { syncSubscriptionPayment } from '@/lib/payments/webhook-handlers'
+import { isClientInProduction } from '@/lib/painel-guard'
 import { ActivationScreen } from './_components/ActivationScreen'
 import { Dashboard } from './_components/Dashboard'
 import type { ContextualOffer } from './_components/Dashboard'
@@ -24,6 +25,10 @@ export default async function PainelPage({
   if (!user?.clientId) redirect('/login')
 
   const clientId = user.clientId
+
+  if (await isClientInProduction(clientId)) {
+    redirect('/painel/projeto')
+  }
 
   // Confirma o pagamento direto na API do Asaas sempre que a assinatura estiver
   // pendente — resolve webhooks atrasados, localhost e retornos sem ?ativado=1.

@@ -90,35 +90,58 @@ export default async function PainelLayout({ children }: { children: React.React
     }
   }
 
+  let inProduction = false
+  if (clientId) {
+    const [inDevProposal, activeSub] = await Promise.all([
+      prisma.proposal.findFirst({
+        where: {
+          clientId,
+          status: { in: ['aguardando_info', 'em_desenvolvimento', 'pronto_revisao'] },
+          siteApprovedAt: null,
+        },
+        select: { id: true },
+      }),
+      prisma.subscription.findFirst({
+        where: { clientId, status: 'active' },
+        select: { id: true },
+      }),
+    ])
+    inProduction = !!inDevProposal && !activeSub
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Desktop sidebar — hidden on mobile */}
-      <PainelDesktopSidebar userName={session.user.name ?? session.user.email ?? ''} showProjectLink={showProjectLink} />
+      <PainelDesktopSidebar userName={session.user.name ?? session.user.email ?? ''} showProjectLink={showProjectLink} inProduction={inProduction} />
 
       {/* Right column: header + content */}
       <div className="flex-1 flex flex-col min-h-screen min-w-0">
         {/* Mobile header — compact, only visible on small screens */}
         <header className="sticky top-0 z-30 flex items-center justify-between bg-brand-dark px-4 py-3 md:hidden shadow-sm">
           <Image src="/logo.png" alt="TOP SITE" width={120} height={36} className="h-7 w-auto" priority />
-          <NotificationBell
-            unreadCount={unreadCount}
-            notifications={notifications}
-            onMarkRead={markNotificationRead}
-            onMarkAll={markAllNotificationsRead}
-            allHref="/painel/notificacoes"
-          />
+          {!inProduction && (
+            <NotificationBell
+              unreadCount={unreadCount}
+              notifications={notifications}
+              onMarkRead={markNotificationRead}
+              onMarkAll={markAllNotificationsRead}
+              allHref="/painel/notificacoes"
+            />
+          )}
         </header>
 
         {/* Desktop header — notification bell + user name, hidden on mobile */}
         <header className="sticky top-0 z-30 hidden md:flex items-center justify-end gap-3 bg-white border-b border-gray-200 px-6 py-3 shadow-sm">
-          <NotificationBell
-            unreadCount={unreadCount}
-            notifications={notifications}
-            onMarkRead={markNotificationRead}
-            onMarkAll={markAllNotificationsRead}
-            allHref="/painel/notificacoes"
-            theme="light"
-          />
+          {!inProduction && (
+            <NotificationBell
+              unreadCount={unreadCount}
+              notifications={notifications}
+              onMarkRead={markNotificationRead}
+              onMarkAll={markAllNotificationsRead}
+              allHref="/painel/notificacoes"
+              theme="light"
+            />
+          )}
           <span className="text-sm text-gray-600">{session.user.name}</span>
         </header>
 
@@ -141,7 +164,7 @@ export default async function PainelLayout({ children }: { children: React.React
       </div>
 
       {/* Mobile bottom navigation — hidden on desktop */}
-      <PainelBottomNav showProjectLink={showProjectLink} />
+      <PainelBottomNav showProjectLink={showProjectLink} inProduction={inProduction} />
 
       {/* PWA install modal */}
       <PwaInstallModal show={showInstallBanner} />

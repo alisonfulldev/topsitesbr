@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { isClientInProduction } from '@/lib/painel-guard'
 import { NotificationsPageClient } from './_components/NotificationsPageClient'
 
 export default async function NotificacoesPage() {
@@ -13,6 +14,10 @@ export default async function NotificacoesPage() {
     select: { clientId: true },
   })
   if (!user?.clientId) redirect('/painel')
+
+  if (await isClientInProduction(user.clientId)) {
+    redirect('/painel/projeto')
+  }
 
   const notifications = await prisma.notification.findMany({
     where: { clientId: user.clientId },
