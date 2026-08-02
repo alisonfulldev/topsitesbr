@@ -8,6 +8,7 @@ const STATUS_LABEL: Record<string, string> = {
   enviada: 'Enviada',
   aprovada: 'Aprovada',
   paga: 'Paga',
+  aguardando_info: 'Aguardando informações',
   em_desenvolvimento: 'Em desenvolvimento',
   pronto_revisao: 'Pronto para revisão',
   publicado: 'Publicado',
@@ -18,6 +19,7 @@ const STATUS_COLOR: Record<string, string> = {
   enviada: 'bg-blue-100 text-blue-700',
   aprovada: 'bg-green-100 text-green-700',
   paga: 'bg-emerald-100 text-emerald-700',
+  aguardando_info: 'bg-orange-100 text-orange-700',
   em_desenvolvimento: 'bg-yellow-100 text-yellow-700',
   pronto_revisao: 'bg-purple-100 text-purple-700',
   publicado: 'bg-brand-100 text-brand-text',
@@ -36,6 +38,10 @@ type ProposalData = {
   revisionUsed: boolean
   revisionNotes: string | null
   createdAt: Date
+  briefing: {
+    data: Record<string, unknown>
+    submittedAt: Date
+  } | null
 }
 
 interface Props {
@@ -106,7 +112,7 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
     })
   }
 
-  function handleTransition(newStatus: 'em_desenvolvimento' | 'pronto_revisao' | 'publicado') {
+  function handleTransition(newStatus: 'aguardando_info' | 'em_desenvolvimento' | 'pronto_revisao' | 'publicado') {
     setTransitionStatus('pending')
     setTransitionError('')
     startTransition(async () => {
@@ -365,12 +371,13 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
 
       {/* Status transitions */}
       {(proposal.status === 'paga' ||
+        proposal.status === 'aguardando_info' ||
         proposal.status === 'em_desenvolvimento' ||
         proposal.status === 'pronto_revisao') && (
         <div className="border-t border-gray-100 mt-4 pt-4">
           <p className="text-xs font-medium text-gray-500 mb-2">Avançar status</p>
 
-          {proposal.status === 'paga' && (
+          {(proposal.status === 'paga' || proposal.status === 'aguardando_info') && (
             <button
               type="button"
               onClick={() => handleTransition('em_desenvolvimento')}
@@ -418,6 +425,63 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
           )}
         </div>
       )}
+
+      {/* Informações do Site */}
+      <div className="border-t border-gray-100 mt-4 pt-4">
+        <p className="text-xs font-medium text-gray-500 mb-2">Informações do Site</p>
+        {proposal.briefing ? (
+          <BriefingDisplay data={proposal.briefing.data} submittedAt={proposal.briefing.submittedAt} />
+        ) : (
+          <p className="text-xs text-gray-400">Aguardando o cliente preencher.</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function BriefingDisplay({ data, submittedAt }: { data: Record<string, unknown>; submittedAt: Date }) {
+  const d = data as Record<string, string | string[]>
+  const rows: [string, string | undefined][] = [
+    ['Nome da empresa', d.companyName as string],
+    ['Ramo de atuação', d.industry as string],
+    ['Sobre a empresa', d.companyDescription as string],
+    ['Missão / objetivo', d.mission as string],
+    ['Objetivos do site', Array.isArray(d.goals) ? (d.goals as string[]).join(', ') : undefined],
+    ['Outro objetivo', d.goalsOther as string],
+    ['Público-alvo', d.targetAudience as string],
+    ['Regiões que atende', d.regions as string],
+    ['Serviços / produtos', d.services as string],
+    ['Serviço em destaque', d.highlightedService as string],
+    ['Possui textos prontos?', d.hasTexts === 'sim' ? 'Sim' : 'Não'],
+    ['Textos prontos', d.texts as string],
+    ['Possui logotipo?', d.hasLogo === 'sim' ? 'Sim' : 'Não'],
+    ['Cores da marca', d.brandColors as string],
+    ['WhatsApp', d.contactWhatsapp as string],
+    ['Telefone', d.contactPhone as string],
+    ['E-mail', d.contactEmail as string],
+    ['Endereço', d.contactAddress as string],
+    ['Horário de atendimento', d.contactHours as string],
+    ['Redes sociais', d.contactSocial as string],
+    ['Funcionalidades', Array.isArray(d.features) ? (d.features as string[]).join(', ') : undefined],
+    ['Outra funcionalidade', d.featuresOther as string],
+    ['Sites que gosta', d.sitesLike as string],
+    ['Sites que não gosta', d.sitesDislike as string],
+    ['Observações finais', d.finalNotes as string],
+  ]
+
+  return (
+    <div>
+      <p className="text-xs text-green-700 mb-2">
+        Enviado em {submittedAt.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+      </p>
+      <div className="space-y-1">
+        {rows.filter(([, v]) => v).map(([label, value]) => (
+          <div key={label} className="flex gap-2">
+            <span className="text-xs text-gray-500 shrink-0 w-36">{label}:</span>
+            <span className="text-xs text-gray-800 whitespace-pre-wrap">{value}</span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

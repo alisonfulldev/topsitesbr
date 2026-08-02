@@ -66,6 +66,12 @@ export default async function ClientePage({
           revisionUsed: true,
           revisionNotes: true,
           createdAt: true,
+          briefing: {
+            select: {
+              data: true,
+              submittedAt: true,
+            },
+          },
         },
         orderBy: { createdAt: 'desc' },
         take: 1,
@@ -268,6 +274,12 @@ export default async function ClientePage({
             siteApprovedAt: client.proposals[0].siteApprovedAt,
             revisionUsed: client.proposals[0].revisionUsed,
             revisionNotes: client.proposals[0].revisionNotes,
+            briefing: client.proposals[0].briefing
+              ? {
+                  data: client.proposals[0].briefing.data as Record<string, unknown>,
+                  submittedAt: client.proposals[0].briefing.submittedAt,
+                }
+              : null,
           }}
           sites={client.sites.map((s) => ({
             id: s.id,

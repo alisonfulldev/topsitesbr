@@ -272,7 +272,7 @@ export async function handleProposalPayment(
   }
 
   // Idempotência: já processado
-  const TERMINAL = ['paga', 'em_desenvolvimento', 'pronto_revisao', 'publicado']
+  const TERMINAL = ['paga', 'aguardando_info', 'em_desenvolvimento', 'pronto_revisao', 'publicado']
   if (TERMINAL.includes(proposal.status)) {
     return { ok: true, message: `Proposta ${proposalId} já processada (${proposal.status}).` }
   }
@@ -350,15 +350,15 @@ export async function handleProposalPayment(
     }).catch(() => {})
   }
 
-  // Atualiza status para em_desenvolvimento
+  // Aguarda cliente preencher as informações do site
   await prisma.proposal.update({
     where: { id: proposalId },
-    data: { status: 'em_desenvolvimento' },
+    data: { status: 'aguardando_info' },
   })
 
   return {
     ok: true,
-    message: `Proposta de ${client.name} paga. Status: em_desenvolvimento.`,
+    message: `Proposta de ${client.name} paga. Status: aguardando_info.`,
   }
 }
 

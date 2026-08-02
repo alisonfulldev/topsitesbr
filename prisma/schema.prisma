@@ -120,6 +120,7 @@ enum ProposalStatus {
   enviada
   aprovada
   paga
+  aguardando_info
   em_desenvolvimento
   pronto_revisao
   publicado
@@ -537,6 +538,7 @@ model Proposal {
   site         Site?                @relation(fields: [siteId], references: [id])
   order        Order?               @relation(fields: [orderId], references: [id])
   accessTokens ProposalAccessToken[]
+  briefing     Briefing?
 
   @@map("proposals")
 }
@@ -554,4 +556,16 @@ model ProposalAccessToken {
   proposal Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
 
   @@map("proposal_access_tokens")
+}
+
+model Briefing {
+  id          String   @id @default(uuid())
+  proposalId  String   @unique @map("proposal_id")
+  data        Json
+  submittedAt DateTime @map("submitted_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  proposal Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  @@map("briefings")
 }

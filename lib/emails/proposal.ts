@@ -259,6 +259,104 @@ export async function sendProposalPaymentConfirmedEmail(params: {
   }).catch(() => {})
 }
 
+// ── Informações do Site (briefing) enviadas ao admin ──────────────────────────
+
+export async function sendBriefingToAdmin(params: {
+  clientName: string
+  proposalTitle: string
+  briefingData: Record<string, unknown>
+}): Promise<void> {
+  const { clientName, proposalTitle, briefingData } = params
+
+  const d = briefingData as Record<string, string | string[] | boolean | undefined>
+
+  const sections = [
+    { title: '1. Sobre a Empresa', fields: [
+      ['Nome da empresa', d.companyName],
+      ['Ramo de atuação', d.industry],
+      ['Sobre a empresa', d.companyDescription],
+      ['Missão / objetivo principal', d.mission],
+    ]},
+    { title: '2. Objetivo do Site', fields: [
+      ['Objetivos selecionados', Array.isArray(d.goals) ? d.goals.join(', ') : d.goals],
+      ['Outro objetivo', d.goalsOther],
+    ]},
+    { title: '3. Público-alvo', fields: [
+      ['Quem é o público-alvo', d.targetAudience],
+      ['Cidades / regiões que atende', d.regions],
+    ]},
+    { title: '4. Conteúdo', fields: [
+      ['Serviços / produtos a apresentar', d.services],
+      ['Serviço em destaque', d.highlightedService],
+      ['Possui textos prontos?', d.hasTexts === 'sim' ? 'Sim' : 'Não'],
+      ['Textos prontos', d.texts],
+    ]},
+    { title: '5. Identidade Visual', fields: [
+      ['Possui logotipo?', d.hasLogo === 'sim' ? 'Sim' : 'Não'],
+      ['Cores da marca', d.brandColors],
+    ]},
+    { title: '6. Informações de Contato', fields: [
+      ['WhatsApp', d.contactWhatsapp],
+      ['Telefone', d.contactPhone],
+      ['E-mail', d.contactEmail],
+      ['Endereço', d.contactAddress],
+      ['Horário de atendimento', d.contactHours],
+      ['Redes sociais', d.contactSocial],
+    ]},
+    { title: '7. Funcionalidades', fields: [
+      ['Funcionalidades selecionadas', Array.isArray(d.features) ? d.features.join(', ') : d.features],
+      ['Outra funcionalidade', d.featuresOther],
+    ]},
+    { title: '8. Referências', fields: [
+      ['Sites que gosta', d.sitesLike],
+      ['Sites que não gosta', d.sitesDislike],
+    ]},
+    { title: '9. Observações Finais', fields: [
+      ['Observações', d.finalNotes],
+    ]},
+  ]
+
+  const textBody = sections.map(s => {
+    const lines = s.fields
+      .filter(([, v]) => v != null && v !== '')
+      .map(([k, v]) => `  ${k}: ${v}`)
+    if (!lines.length) return ''
+    return `${s.title}\n${lines.join('\n')}`
+  }).filter(Boolean).join('\n\n')
+
+  const htmlSections = sections.map(s => {
+    const rows = s.fields
+      .filter(([, v]) => v != null && v !== '')
+      .map(([k, v]) => `<tr><td style="padding:4px 8px 4px 0;color:#6b7280;font-size:13px;vertical-align:top;white-space:nowrap;">${esc(String(k))}</td><td style="padding:4px 0;font-size:13px;color:#111827;white-space:pre-wrap;">${esc(String(v))}</td></tr>`)
+    if (!rows.length) return ''
+    return `<h3 style="margin:16px 0 8px;font-size:13px;color:#374151;">${esc(s.title)}</h3><table style="width:100%;border-collapse:collapse;">${rows.join('')}</table>`
+  }).filter(Boolean).join('')
+
+  const extraHtml = `
+    <p style="margin:0 0 16px;font-size:14px;color:#374151;">
+      O cliente <strong>${esc(clientName)}</strong> enviou as informações para o projeto <strong>${esc(proposalTitle)}</strong>.
+    </p>
+    ${htmlSections}
+  `
+
+  const html = buildHtml(
+    `Informações do site — ${clientName}`,
+    `Informações do site recebidas — ${clientName} / ${proposalTitle}`,
+    'proposal-approved',
+    extraHtml,
+    APP_URL + '/admin/clientes',
+    'Ver no painel admin →',
+  )
+
+  // textBody is used for logging/debugging only — sendEmail only supports html
+  void textBody
+  await sendEmail({
+    to: 'alisonfulldev@gmail.com',
+    subject: `Informações do site recebidas — ${clientName}`,
+    html,
+  })
+}
+
 // ── Atualização de status da proposta (cliente) ────────────────────────────────
 
 export async function sendProposalStatusEmail(params: {

@@ -128,7 +128,7 @@ export async function resetProposalCharge(
   return { success: true }
 }
 
-type TransitionTarget = 'em_desenvolvimento' | 'pronto_revisao' | 'publicado'
+type TransitionTarget = 'aguardando_info' | 'em_desenvolvimento' | 'pronto_revisao' | 'publicado'
 
 export async function transitionProposalStatus(
   proposalId: string,
@@ -146,8 +146,8 @@ export async function transitionProposalStatus(
   const { status, previewUrl, siteId, client } = proposal
 
   // Validate transitions
-  if (newStatus === 'em_desenvolvimento' && status !== 'paga') {
-    return { error: 'Só é possível iniciar desenvolvimento quando a proposta está paga.' }
+  if (newStatus === 'em_desenvolvimento' && status !== 'paga' && status !== 'aguardando_info') {
+    return { error: 'Só é possível iniciar desenvolvimento quando a proposta está paga ou aguardando informações.' }
   }
   if (newStatus === 'pronto_revisao' && status !== 'em_desenvolvimento') {
     return { error: 'Só é possível marcar como pronto para revisão quando está em desenvolvimento.' }
