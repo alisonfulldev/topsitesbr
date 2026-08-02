@@ -114,7 +114,7 @@ export function PainelBottomNav({ showProjectLink, inProduction }: { showProject
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-50 md:hidden relative"
+      className="fixed bottom-0 inset-x-0 z-50 md:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="bg-brand-dark border-t border-brand-dark-border flex items-stretch">
