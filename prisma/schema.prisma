@@ -532,6 +532,7 @@ model Proposal {
   contractVersion      String?        @map("contract_version")
   contractAcceptedIp   String?        @map("contract_accepted_ip")
   paidExternally       Boolean        @default(false) @map("paid_externally")
+  briefingSkipped      Boolean        @default(false) @map("briefing_skipped")
   createdAt      DateTime       @default(now()) @map("created_at")
   updatedAt      DateTime       @updatedAt @map("updated_at")
 

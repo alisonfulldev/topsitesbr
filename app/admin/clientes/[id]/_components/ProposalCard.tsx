@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { generateProposalMagicLink, resendProposalEmail, updateProposalAdmin, transitionProposalStatus, resetProposalCharge } from '../proposal-actions'
+import { generateProposalMagicLink, resendProposalEmail, updateProposalAdmin, transitionProposalStatus, resetProposalCharge, skipProposalBriefing } from '../proposal-actions'
 
 const STATUS_LABEL: Record<string, string> = {
   rascunho: 'Rascunho',
@@ -38,6 +38,7 @@ type ProposalData = {
   revisionUsed: boolean
   revisionNotes: string | null
   createdAt: Date
+  briefingSkipped: boolean
   briefing: {
     data: Record<string, unknown>
     submittedAt: Date
@@ -64,6 +65,8 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
   const [resetStatus, setResetStatus] = useState<'idle' | 'pending' | 'done' | 'error'>('idle')
   const [resetError, setResetError] = useState('')
   const [showResetConfirm, setShowResetConfirm] = useState(false)
+  const [skipStatus, setSkipStatus] = useState<'idle' | 'pending' | 'done' | 'error'>('idle')
+  const [skipError, setSkipError] = useState('')
 
   async function handleCopyLink() {
     setLinkStatus('copying')
@@ -124,6 +127,22 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
       } else {
         setTransitionStatus('done')
         setTimeout(() => setTransitionStatus('idle'), 2000)
+      }
+    })
+  }
+
+  function handleSkipBriefing() {
+    setSkipStatus('pending')
+    setSkipError('')
+    startTransition(async () => {
+      const result = await skipProposalBriefing(proposal.id)
+      if (result.error) {
+        setSkipStatus('error')
+        setSkipError(result.error)
+        setTimeout(() => setSkipStatus('idle'), 4000)
+      } else {
+        setSkipStatus('done')
+        setTimeout(() => setSkipStatus('idle'), 2000)
       }
     })
   }
@@ -378,14 +397,34 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
           <p className="text-xs font-medium text-gray-500 mb-2">Avançar status</p>
 
           {(proposal.status === 'paga' || proposal.status === 'aguardando_info') && (
-            <button
-              type="button"
-              onClick={() => handleTransition('em_desenvolvimento')}
-              disabled={isPending || transitionStatus === 'pending'}
-              className="px-3 py-1.5 text-sm bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50"
-            >
-              {transitionStatus === 'pending' ? 'Salvando…' : '→ Iniciar desenvolvimento'}
-            </button>
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => handleTransition('em_desenvolvimento')}
+                disabled={isPending || transitionStatus === 'pending'}
+                className="px-3 py-1.5 text-sm bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 disabled:opacity-50"
+              >
+                {transitionStatus === 'pending' ? 'Salvando…' : '→ Iniciar desenvolvimento'}
+              </button>
+              {proposal.status === 'aguardando_info' && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={handleSkipBriefing}
+                    disabled={isPending || skipStatus === 'pending'}
+                    className="px-3 py-1.5 text-sm border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    {skipStatus === 'pending' ? 'Salvando…' : 'Pular informações (já coletadas por fora)'}
+                  </button>
+                  {skipStatus === 'done' && (
+                    <p className="text-xs text-green-700 mt-1">Avançado para em desenvolvimento.</p>
+                  )}
+                  {skipStatus === 'error' && (
+                    <p className="text-xs text-red-600 mt-1">{skipError}</p>
+                  )}
+                </div>
+              )}
+            </div>
           )}
 
           {proposal.status === 'em_desenvolvimento' && (
@@ -429,7 +468,9 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
       {/* Informações do Site */}
       <div className="border-t border-gray-100 mt-4 pt-4">
         <p className="text-xs font-medium text-gray-500 mb-2">Informações do Site</p>
-        {proposal.briefing ? (
+        {proposal.briefingSkipped ? (
+          <p className="text-xs text-gray-400 italic">Coletadas por fora da plataforma.</p>
+        ) : proposal.briefing ? (
           <BriefingDisplay data={proposal.briefing.data} submittedAt={proposal.briefing.submittedAt} />
         ) : (
           <p className="text-xs text-gray-400">Aguardando o cliente preencher.</p>

@@ -66,6 +66,7 @@ export default async function ClientePage({
           revisionUsed: true,
           revisionNotes: true,
           createdAt: true,
+          briefingSkipped: true,
           briefing: {
             select: {
               data: true,
@@ -274,6 +275,7 @@ export default async function ClientePage({
             siteApprovedAt: client.proposals[0].siteApprovedAt,
             revisionUsed: client.proposals[0].revisionUsed,
             revisionNotes: client.proposals[0].revisionNotes,
+            briefingSkipped: client.proposals[0].briefingSkipped,
             briefing: client.proposals[0].briefing
               ? {
                   data: client.proposals[0].briefing.data as Record<string, unknown>,

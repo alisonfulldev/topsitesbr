@@ -57,6 +57,7 @@ export async function createClient(data: {
   proposalCreationPrice?: number
   paidExternally?: boolean
   externalCreationPrice?: number
+  skipBriefing?: boolean
 }): Promise<{ error?: string; success?: boolean; clientId?: string }> {
   const parsed = clientSchema.safeParse(data)
   if (!parsed.success) {
@@ -142,15 +143,16 @@ export async function createClient(data: {
       },
     })
 
-    // Create Proposal already in aguardando_info, linked to the order
+    // Create Proposal — skip briefing if info already collected externally
     await prisma.proposal.create({
       data: {
         clientId: client.id,
         title: `Site de ${client.name}`,
         creationPrice,
-        status: 'aguardando_info',
+        status: data.skipBriefing ? 'em_desenvolvimento' : 'aguardando_info',
         paidAt: new Date(),
         paidExternally: true,
+        briefingSkipped: data.skipBriefing ?? false,
         orderId: order.id,
       },
     })

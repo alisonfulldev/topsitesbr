@@ -92,6 +92,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
   const [loginPassword, setLoginPassword] = useState('')
   const [paidExternally, setPaidExternally] = useState(false)
   const [externalCreationPrice, setExternalCreationPrice] = useState('')
+  const [skipBriefing, setSkipBriefing] = useState(false)
 
   async function handleValidateReferral() {
     const code = referralCode.trim()
@@ -160,6 +161,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           }),
           paidExternally: entryFlow === 'whatsapp' ? paidExternally : undefined,
           externalCreationPrice: paidExternally && externalCreationPrice ? parseFloat(externalCreationPrice) : undefined,
+          skipBriefing: paidExternally ? skipBriefing : undefined,
         })
         if (result?.error) {
           setError(result.error)
@@ -311,6 +313,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
                 onChange={(e) => {
                   setPaidExternally(e.target.checked)
                   if (e.target.checked) setCreateLogin(true)
+                  if (!e.target.checked) setSkipBriefing(false)
                 }}
                 className="mt-0.5 rounded border-gray-300 text-brand-text focus:ring-brand"
               />
@@ -323,7 +326,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
             </label>
 
             {paidExternally && (
-              <div className="mt-3">
+              <div className="mt-3 space-y-3">
                 <Field label="Valor pago pela criação (R$)" hint="Apenas para registro financeiro — não gera cobrança">
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">R$</span>
@@ -338,6 +341,20 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
                     />
                   </div>
                 </Field>
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={skipBriefing}
+                    onChange={(e) => setSkipBriefing(e.target.checked)}
+                    className="mt-0.5 rounded border-gray-300 text-brand-text focus:ring-brand"
+                  />
+                  <div>
+                    <span className="text-sm font-medium text-gray-700">Informações já coletadas (pular o formulário)</span>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      A proposta nasce direto em "Em desenvolvimento" — o cliente não verá a etapa de preencher informações.
+                    </p>
+                  </div>
+                </label>
               </div>
             )}
           </div>

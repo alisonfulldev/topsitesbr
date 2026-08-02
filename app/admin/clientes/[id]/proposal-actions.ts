@@ -128,6 +128,27 @@ export async function resetProposalCharge(
   return { success: true }
 }
 
+export async function skipProposalBriefing(
+  proposalId: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const proposal = await prisma.proposal.findUnique({
+    where: { id: proposalId },
+    select: { id: true, clientId: true, status: true },
+  })
+  if (!proposal) return { error: 'Proposta não encontrada.' }
+  if (proposal.status !== 'aguardando_info') {
+    return { error: 'Só é possível pular informações quando a proposta está aguardando informações.' }
+  }
+
+  await prisma.proposal.update({
+    where: { id: proposalId },
+    data: { status: 'em_desenvolvimento', briefingSkipped: true },
+  })
+
+  revalidatePath(`/admin/clientes/${proposal.clientId}`)
+  return { success: true }
+}
+
 type TransitionTarget = 'aguardando_info' | 'em_desenvolvimento' | 'pronto_revisao' | 'publicado'
 
 export async function transitionProposalStatus(
