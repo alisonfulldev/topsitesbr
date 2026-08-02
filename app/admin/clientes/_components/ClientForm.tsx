@@ -91,7 +91,6 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
   const [createLogin, setCreateLogin] = useState(false)
   const [loginPassword, setLoginPassword] = useState('')
   const [paidExternally, setPaidExternally] = useState(false)
-  const [externalCreationPrice, setExternalCreationPrice] = useState('')
   const [skipBriefing, setSkipBriefing] = useState(false)
 
   async function handleValidateReferral() {
@@ -160,7 +159,6 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
             proposalCreationPrice: parseFloat(proposalCreationPrice),
           }),
           paidExternally: entryFlow === 'whatsapp' ? paidExternally : undefined,
-          externalCreationPrice: paidExternally && externalCreationPrice ? parseFloat(externalCreationPrice) : undefined,
           skipBriefing: paidExternally ? skipBriefing : undefined,
         })
         if (result?.error) {
@@ -280,11 +278,15 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           </div>
         </div>
 
-        {/* Site entry fee — WhatsApp only */}
+        {/* Site entry fee / creation price — WhatsApp only */}
         {entryFlow === 'whatsapp' && (
           <Field
-            label="Valor pago pelo site (entrada)"
-            hint="Quanto o cliente pagou fora do sistema para ter o site criado (ex: R$97, R$500…)"
+            label={paidExternally ? 'Valor pago pela criação (R$)' : 'Valor pago pelo site (entrada)'}
+            hint={
+              paidExternally
+                ? 'Registrado como receita e vinculado à proposta — não gera nova cobrança'
+                : 'Quanto o cliente pagou fora do sistema para ter o site criado (ex: R$97, R$500…)'
+            }
           >
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
@@ -326,21 +328,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
             </label>
 
             {paidExternally && (
-              <div className="mt-3 space-y-3">
-                <Field label="Valor pago pela criação (R$)" hint="Apenas para registro financeiro — não gera cobrança">
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">R$</span>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={externalCreationPrice}
-                      onChange={(e) => setExternalCreationPrice(e.target.value)}
-                      placeholder="97,00"
-                      className={`${INPUT} pl-9`}
-                    />
-                  </div>
-                </Field>
+              <div className="mt-3">
                 <label className="flex items-start gap-2 cursor-pointer">
                   <input
                     type="checkbox"

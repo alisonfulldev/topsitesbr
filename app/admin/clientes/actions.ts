@@ -56,7 +56,6 @@ export async function createClient(data: {
   proposalIncludedItems?: string
   proposalCreationPrice?: number
   paidExternally?: boolean
-  externalCreationPrice?: number
   skipBriefing?: boolean
 }): Promise<{ error?: string; success?: boolean; clientId?: string }> {
   const parsed = clientSchema.safeParse(data)
@@ -121,7 +120,7 @@ export async function createClient(data: {
       },
     })
 
-    const creationPrice = data.externalCreationPrice ?? 0
+    const creationPrice = data.siteEntryFee ?? 0
 
     // Find or create internal product for external payment
     let product = await prisma.product.findFirst({
