@@ -8,11 +8,16 @@ import { UpgradesClient, type ProductRow, type PromoBanner } from './_components
 
 // Products that should NOT appear in the store
 const HIDDEN_PRODUCT_NAMES = new Set([
+  // Internal records — used to register order revenue, not for sale
+  'Criação de Site (Proposta)',
+  'Criação de Site (Pago por Fora)',
+  // Maintenance/avulsa — sold via ticket flow, not the upgrades store
   'Nova Seção',
   'Nova Página',
   'Alteração de Texto (avulsa)',
   'Alteração de Imagem (avulsa)',
   'Alteração de Texto e Imagem (avulsa)',
+  // Future upsells managed via WhatsApp (not yet active in-app)
   'Domínio Personalizado',
   'E-mail Profissional',
   'SEO (Otimização para Buscadores)',
