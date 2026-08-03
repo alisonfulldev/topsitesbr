@@ -15,6 +15,7 @@ const SESSION_INSTALL_KEY = 'pwa_install_dismissed_session'
 const SESSION_PUSH_KEY = 'pwa_push_dismissed_session'
 const IOS_COOLDOWN_KEY = 'pwa_ios_last_shown'
 const IOS_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000
+const INSTALLED_KEY = 'pwa_installed'
 
 function urlBase64ToUint8Array(base64String: string): ArrayBuffer {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -49,25 +50,30 @@ async function subscribeToPush(): Promise<void> {
   }
 }
 
+type Mode = 'install' | 'ios' | 'android-manual' | 'push'
+
 interface Props {
   show: boolean
 }
 
 export function PwaInstallModal({ show }: Props) {
-  const [mode, setMode] = useState<'install' | 'ios' | 'push' | null>(null)
+  const [mode, setMode] = useState<Mode | null>(null)
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
 
   useEffect(() => {
     if (!show) return
 
-    // Só no mobile
+    // Já instalado via appinstalled event anterior — nunca mais mostrar
+    if (localStorage.getItem(INSTALLED_KEY)) return
+
     const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent)
     if (!isMobile) return
 
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent)
+    const isAndroid = /android/i.test(navigator.userAgent)
 
-    // App já instalado → apenas pede notificação se ainda não concedida
+    // App já instalado como PWA → só pede notificação push se ainda não concedida
     if (isStandalone) {
       if (
         'Notification' in window &&
@@ -79,25 +85,33 @@ export function PwaInstallModal({ show }: Props) {
       return
     }
 
-    // iOS: instrução manual, cooldown de 7 dias
+    // Listener global de instalação concluída
+    function onInstalled() {
+      localStorage.setItem(INSTALLED_KEY, '1')
+      ;(window as unknown as WindowWithPrompt).__deferredInstallPrompt = undefined
+      setDeferredPrompt(null)
+      setMode(null)
+    }
+    window.addEventListener('appinstalled', onInstalled)
+
+    // iOS: sempre instruções manuais (Safari não suporta beforeinstallprompt)
     if (isIos) {
       const last = localStorage.getItem(IOS_COOLDOWN_KEY)
-      if (last && Date.now() - parseInt(last) < IOS_COOLDOWN_MS) return
-      if (sessionStorage.getItem(SESSION_INSTALL_KEY)) return
-      setMode('ios')
-      localStorage.setItem(IOS_COOLDOWN_KEY, String(Date.now()))
+      const dismissed = sessionStorage.getItem(SESSION_INSTALL_KEY)
+      if (!dismissed && (!last || Date.now() - parseInt(last) > IOS_COOLDOWN_MS)) {
+        setMode('ios')
+        localStorage.setItem(IOS_COOLDOWN_KEY, String(Date.now()))
+      }
+      return () => window.removeEventListener('appinstalled', onInstalled)
+    }
+
+    // Android / outros: já dispensou nesta sessão?
+    if (sessionStorage.getItem(SESSION_INSTALL_KEY)) {
+      window.removeEventListener('appinstalled', onInstalled)
       return
     }
 
-    // Android: usa o prompt nativo capturado no script inline do layout raiz
-    if (sessionStorage.getItem(SESSION_INSTALL_KEY)) return
-
-    const existing = (window as unknown as WindowWithPrompt).__deferredInstallPrompt
-    if (existing) {
-      setDeferredPrompt(existing)
-      setMode('install')
-      return
-    }
+    // Listener para o evento nativo disponibilizar depois da montagem
     function onReady() {
       const prompt = (window as unknown as WindowWithPrompt).__deferredInstallPrompt
       if (prompt) {
@@ -106,19 +120,47 @@ export function PwaInstallModal({ show }: Props) {
       }
     }
     document.addEventListener('pwainstallready', onReady)
-    return () => document.removeEventListener('pwainstallready', onReady)
+
+    const existing = (window as unknown as WindowWithPrompt).__deferredInstallPrompt
+    if (existing) {
+      // Evento já capturado pelo script inline — usar prompt nativo
+      setDeferredPrompt(existing)
+      setMode('install')
+    } else if (isAndroid) {
+      // Evento ainda não disponível (critérios PWA não atendidos ou late-fire)
+      // Mostra instruções manuais; se o evento aparecer depois, onReady faz upgrade
+      setMode('android-manual')
+    }
+
+    return () => {
+      document.removeEventListener('pwainstallready', onReady)
+      window.removeEventListener('appinstalled', onInstalled)
+    }
   }, [show])
 
   async function handleInstall() {
     if (!deferredPrompt) return
-    await deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
-    setDeferredPrompt(null)
-    setMode(null)
-    // Após 'accepted' o Chrome recarrega em standalone —
-    // subscribeToPush() é chamado quando a página voltar no modo 'push'
-    if (outcome === 'dismissed') {
-      sessionStorage.setItem(SESSION_INSTALL_KEY, '1')
+    try {
+      await deferredPrompt.prompt()
+      const { outcome } = await deferredPrompt.userChoice
+      // Limpa a referência — só pode ser usado uma vez
+      ;(window as unknown as WindowWithPrompt).__deferredInstallPrompt = undefined
+      setDeferredPrompt(null)
+      setMode(null)
+      if (outcome === 'dismissed') {
+        sessionStorage.setItem(SESSION_INSTALL_KEY, '1')
+      }
+    } catch {
+      // prompt() falhou (contexto inválido, já consumido, etc.)
+      // Limpa e cai para instruções manuais em vez de travar o modal
+      ;(window as unknown as WindowWithPrompt).__deferredInstallPrompt = undefined
+      setDeferredPrompt(null)
+      if (/android/i.test(navigator.userAgent)) {
+        setMode('android-manual')
+      } else {
+        setMode(null)
+        sessionStorage.setItem(SESSION_INSTALL_KEY, '1')
+      }
     }
   }
 
@@ -148,7 +190,7 @@ export function PwaInstallModal({ show }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div className="bg-white rounded-2xl p-6 mx-4 max-w-sm w-full shadow-2xl">
 
-        {/* ── Modo Android ─────────────────────────────────────────────────── */}
+        {/* ── Modo Android com prompt nativo ───────────────────────────────── */}
         {mode === 'install' && (
           <>
             <div className="text-center mb-4">
@@ -167,11 +209,39 @@ export function PwaInstallModal({ show }: Props) {
               Instalar agora
             </button>
             <div className="text-center">
-              <button
-                onClick={dismissInstall}
-                className="text-xs text-gray-400 underline"
-              >
+              <button onClick={dismissInstall} className="text-xs text-gray-400 underline">
                 Agora não
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* ── Modo Android sem prompt (instruções manuais) ─────────────────── */}
+        {mode === 'android-manual' && (
+          <>
+            <div className="text-center mb-4">
+              <span className="text-5xl">📲</span>
+            </div>
+            <h2 className="text-lg font-bold text-gray-900 text-center mb-4">
+              Adicione o app à tela inicial
+            </h2>
+            <ol className="space-y-3 mb-5">
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-900 text-white text-xs font-bold flex items-center justify-center mt-0.5">1</span>
+                <span className="text-sm text-gray-700">
+                  Toque no menu do navegador <strong>⋮</strong> (canto superior direito)
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-900 text-white text-xs font-bold flex items-center justify-center mt-0.5">2</span>
+                <span className="text-sm text-gray-700">
+                  Toque em <strong>"Instalar aplicativo"</strong> ou <strong>"Adicionar à tela inicial"</strong>
+                </span>
+              </li>
+            </ol>
+            <div className="text-center">
+              <button onClick={dismissInstall} className="text-xs text-gray-400 underline">
+                Já entendi, fechar
               </button>
             </div>
           </>
@@ -190,7 +260,13 @@ export function PwaInstallModal({ show }: Props) {
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-900 text-white text-xs font-bold flex items-center justify-center mt-0.5">1</span>
                 <span className="text-sm text-gray-700">
-                  Toque no ícone de Compartilhar <span className="inline-block">⬆️</span> na barra do Safari
+                  Toque no ícone de Compartilhar{' '}
+                  <span className="inline-block">
+                    <svg className="inline w-4 h-4 text-blue-500 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                  </span>{' '}
+                  na barra do Safari
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -210,10 +286,7 @@ export function PwaInstallModal({ show }: Props) {
               Assim você recebe notificações do projeto em tempo real.
             </p>
             <div className="text-center">
-              <button
-                onClick={dismissIos}
-                className="text-xs text-gray-400 underline"
-              >
+              <button onClick={dismissIos} className="text-xs text-gray-400 underline">
                 Já entendi, fechar
               </button>
             </div>
@@ -239,10 +312,7 @@ export function PwaInstallModal({ show }: Props) {
               Ativar notificações
             </button>
             <div className="text-center">
-              <button
-                onClick={dismissPush}
-                className="text-xs text-gray-400 underline"
-              >
+              <button onClick={dismissPush} className="text-xs text-gray-400 underline">
                 Agora não
               </button>
             </div>
