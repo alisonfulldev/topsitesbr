@@ -264,6 +264,77 @@ function TrafficReserveCard({ totalRevenue, percent }: { totalRevenue: number; p
   )
 }
 
+function generateRecentQuinzenas(count: number) {
+  const now = new Date()
+  let year = now.getFullYear()
+  let month = now.getMonth() + 1
+  let half = now.getDate() <= 15 ? 1 : 2
+  const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+  const result: { key: string; label: string; monthFrom: string; monthTo: string }[] = []
+  for (let i = 0; i < count; i++) {
+    const y = String(year)
+    const m = String(month).padStart(2, '0')
+    const key = `${y}-${m}-${half}`
+    const lastDay = new Date(year, month, 0).getDate()
+    const rangeStr = half === 1 ? '01–15' : `16–${lastDay}`
+    const ordinal = half === 1 ? '1ª' : '2ª'
+    result.push({
+      key,
+      label: `${ordinal} quinzena ${MONTHS[month - 1]}/${y.slice(2)} (${rangeStr})`,
+      monthFrom: `${y}-${m}-01`,
+      monthTo: `${y}-${m}-${String(lastDay).padStart(2, '0')}`,
+    })
+    if (half === 2) { half = 1 } else { half = 2; month--; if (month === 0) { month = 12; year-- } }
+  }
+  return result
+}
+
+function quinzenaDisplayName(key: string): string {
+  const parts = key.split('-')
+  const year = parts[0], month = parts[1], half = parts[2]
+  const MONTHS_FULL = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                       'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+  const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate()
+  const range = half === '1' ? '01–15' : `16–${lastDay}`
+  const ordinal = half === '1' ? '1ª' : '2ª'
+  return `${ordinal} quinzena de ${MONTHS_FULL[parseInt(month) - 1]} de ${year} (${range})`
+}
+
+function QuinzenaSelector({ selectedQuinzena }: { selectedQuinzena?: string }) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const options = useMemo(() => generateRecentQuinzenas(8), [])
+
+  function select(opt: typeof options[0]) {
+    const params = new URLSearchParams()
+    params.set('period', 'custom')
+    params.set('from', opt.monthFrom)
+    params.set('to', opt.monthTo)
+    params.set('granularity', 'quinzena')
+    params.set('selectedQuinzena', opt.key)
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
+  return (
+    <div className="flex items-center gap-2 flex-wrap">
+      <span className="text-xs text-gray-500 font-medium">Ver quinzena:</span>
+      <select
+        value={selectedQuinzena ?? ''}
+        onChange={(e) => {
+          const opt = options.find((o) => o.key === e.target.value)
+          if (opt) select(opt)
+        }}
+        className="rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+      >
+        <option value="" disabled>Selecione…</option>
+        {options.map((o) => (
+          <option key={o.key} value={o.key}>{o.label}</option>
+        ))}
+      </select>
+    </div>
+  )
+}
+
 function downloadCSV(rows: MonthlyRow[]) {
   const headers = [
     'Mês', 'Faturamento Total', 'Venda de Site', 'Receitas Avulsas',
@@ -537,7 +608,7 @@ function TransactionList({ transactions }: { transactions: TransactionItem[] }) 
 // ─── Main export ─────────────────────────────────────────────────────────────
 
 export function FinanceiroClient({
-  period, granularity, from, to,
+  period, granularity, from, to, selectedQuinzena,
   monthlyData, quinzenaData, totalRevenue, totalCosts, totalProfit, totalMargin,
   currentMRR, arpu, overdueList, totalOverdue, costBreakdown,
   mrrByMonth, clientGrowthByMonth, transactions, trafficReservePercent,
@@ -546,6 +617,7 @@ export function FinanceiroClient({
   granularity: string
   from?: string
   to?: string
+  selectedQuinzena?: string
   monthlyData: MonthlyRow[]
   quinzenaData: MonthlyRow[]
   totalRevenue: number
@@ -562,7 +634,11 @@ export function FinanceiroClient({
   transactions: TransactionItem[]
   trafficReservePercent: number
 }) {
-  const displayData = granularity === 'quinzena' ? quinzenaData : monthlyData
+  const displayData = selectedQuinzena
+    ? quinzenaData.filter((r) => r.month === selectedQuinzena)
+    : granularity === 'quinzena'
+      ? quinzenaData
+      : monthlyData
   const pieData = [
     { name: 'IA', value: costBreakdown.ia },
     { name: 'Tráfego Pago', value: costBreakdown.trafego_pago },
@@ -603,16 +679,41 @@ export function FinanceiroClient({
       </div>
 
       {/* Period selector + granularity toggle */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6 flex flex-wrap items-center gap-4 justify-between">
+      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4 flex flex-wrap items-center gap-4 justify-between">
         <PeriodSelector period={period} from={from} to={to} granularity={granularity} />
         <GranularityToggle granularity={granularity} period={period} from={from} to={to} />
       </div>
 
+      {/* Quinzena selector — visible only in quinzena mode */}
+      {granularity === 'quinzena' && (
+        <div className="bg-white rounded-lg border border-gray-200 p-3 mb-4 flex flex-wrap items-center gap-3">
+          <QuinzenaSelector selectedQuinzena={selectedQuinzena} />
+          {selectedQuinzena && (
+            <span className="text-sm font-medium text-gray-700">
+              Fechamento: <span className="text-brand-text">{quinzenaDisplayName(selectedQuinzena)}</span>
+            </span>
+          )}
+        </div>
+      )}
+
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
-        <KpiCard label="Lucro Líquido" value={fmtBRL(totalProfit)} sub={`Margem ${fmtPct(totalMargin)}`} highlight />
-        <KpiCard label="Faturamento" value={fmtBRL(totalRevenue)} sub="no período" />
-        <KpiCard label="Custos Totais" value={fmtBRL(totalCosts)} sub="no período" />
+        <KpiCard
+          label="Lucro Líquido"
+          value={fmtBRL(totalProfit)}
+          sub={`Margem ${fmtPct(totalMargin)}`}
+          highlight
+        />
+        <KpiCard
+          label="Faturamento"
+          value={fmtBRL(totalRevenue)}
+          sub={selectedQuinzena ? 'da quinzena' : 'no período'}
+        />
+        <KpiCard
+          label="Custos Totais"
+          value={fmtBRL(totalCosts)}
+          sub={selectedQuinzena ? 'da quinzena' : 'no período'}
+        />
         <KpiCard label="MRR Atual" value={fmtBRL(currentMRR)} sub="receita recorrente" />
         <KpiCard label="ARPU" value={fmtBRL(arpu)} sub="ticket médio mensal" />
         <TrafficReserveCard totalRevenue={totalRevenue} percent={trafficReservePercent} />

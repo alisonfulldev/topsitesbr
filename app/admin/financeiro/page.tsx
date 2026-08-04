@@ -92,7 +92,7 @@ function quinzenaLabel(key: string): string {
 export default async function AdminFinanceiroPage({
   searchParams,
 }: {
-  searchParams: { period?: string; from?: string; to?: string; granularity?: string }
+  searchParams: { period?: string; from?: string; to?: string; granularity?: string; selectedQuinzena?: string }
 }) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'admin') redirect('/login')
@@ -299,6 +299,16 @@ export default async function AdminFinanceiroPage({
   const totalCosts = monthlyData.reduce((a, r) => a + r.totalCosts, 0)
   const totalProfit = totalRevenue - totalCosts
   const totalMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0
+
+  // When viewing a specific quinzena, override KPI cards with that quinzena's values
+  const selectedQuinzenaKey = granularity === 'quinzena' ? (searchParams.selectedQuinzena ?? undefined) : undefined
+  const selectedQuinzenaRow = selectedQuinzenaKey
+    ? (quinzenaData.find((r) => r.month === selectedQuinzenaKey) ?? null)
+    : null
+  const kpiRevenue = selectedQuinzenaRow ? selectedQuinzenaRow.totalRevenue : totalRevenue
+  const kpiCosts = selectedQuinzenaRow ? selectedQuinzenaRow.totalCosts : totalCosts
+  const kpiProfit = selectedQuinzenaRow ? selectedQuinzenaRow.profit : totalProfit
+  const kpiMargin = selectedQuinzenaRow ? selectedQuinzenaRow.margin : totalMargin
   const currentMRR = activeSubscriptions.reduce((a, s) => a + Number(s.plan.price), 0)
 
   const avgActiveClients = activeSubscriptions.length || 1
@@ -405,10 +415,11 @@ export default async function AdminFinanceiroPage({
       to={searchParams.to}
       monthlyData={monthlyData}
       quinzenaData={quinzenaData}
-      totalRevenue={totalRevenue}
-      totalCosts={totalCosts}
-      totalProfit={totalProfit}
-      totalMargin={totalMargin}
+      selectedQuinzena={selectedQuinzenaKey}
+      totalRevenue={kpiRevenue}
+      totalCosts={kpiCosts}
+      totalProfit={kpiProfit}
+      totalMargin={kpiMargin}
       currentMRR={currentMRR}
       arpu={arpu}
       overdueList={overdueList}
