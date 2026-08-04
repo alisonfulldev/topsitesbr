@@ -35,3 +35,20 @@ export async function deleteFinanceiroEntry(
   revalidatePath('/admin/financeiro')
   return { success: true }
 }
+
+export async function updateSystemSetting(
+  key: string,
+  value: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== 'admin') {
+    return { error: 'Acesso não autorizado.' }
+  }
+  await prisma.systemSetting.upsert({
+    where: { key },
+    update: { value },
+    create: { key, value },
+  })
+  revalidatePath('/admin/financeiro')
+  return { success: true }
+}

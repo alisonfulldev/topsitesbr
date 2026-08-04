@@ -571,3 +571,11 @@ model Briefing {
 
   @@map("briefings")
 }
+
+model SystemSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_settings")
+}

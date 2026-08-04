@@ -17,7 +17,7 @@ import {
   Pie,
   Cell,
 } from 'recharts'
-import { deleteFinanceiroEntry } from '../actions'
+import { deleteFinanceiroEntry, updateSystemSetting } from '../actions'
 
 export type MonthlyRow = {
   month: string
@@ -85,13 +85,14 @@ function fmtPct(n: number) {
 
 const PIE_COLORS = ['#0D0B1F', '#FFD100', '#2D2850', '#6b7280']
 
-function PeriodSelector({ period, from, to }: { period: string; from?: string; to?: string }) {
+function PeriodSelector({ period, from, to, granularity }: { period: string; from?: string; to?: string; granularity: string }) {
   const router = useRouter()
   const pathname = usePathname()
 
   function navigate(p: string, f?: string, t?: string) {
     const params = new URLSearchParams()
     params.set('period', p)
+    params.set('granularity', granularity)
     if (p === 'custom' && f && t) {
       params.set('from', f)
       params.set('to', t)
@@ -156,6 +157,109 @@ function KpiCard({ label, value, sub, highlight }: { label: string; value: strin
       </p>
       <p className={`text-2xl font-bold mt-1 ${highlight ? 'text-white' : 'text-gray-900'}`}>{value}</p>
       {sub && <p className={`text-xs mt-0.5 ${highlight ? 'text-gray-300' : 'text-gray-400'}`}>{sub}</p>}
+    </div>
+  )
+}
+
+function GranularityToggle({ granularity, period, from, to }: { granularity: string; period: string; from?: string; to?: string }) {
+  const router = useRouter()
+  const pathname = usePathname()
+
+  function toggle(g: string) {
+    const params = new URLSearchParams()
+    params.set('period', period)
+    params.set('granularity', g)
+    if (period === 'custom' && from && to) {
+      params.set('from', from)
+      params.set('to', to)
+    }
+    router.push(`${pathname}?${params.toString()}`)
+  }
+
+  return (
+    <div className="flex items-center gap-1 rounded-md border border-gray-300 p-0.5 bg-gray-50">
+      {(['mes', 'quinzena'] as const).map((g) => (
+        <button
+          key={g}
+          onClick={() => toggle(g)}
+          className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+            granularity === g ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          {g === 'mes' ? 'Mês' : 'Quinzena'}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function TrafficReserveCard({ totalRevenue, percent }: { totalRevenue: number; percent: number }) {
+  const router = useRouter()
+  const [editing, setEditing] = useState(false)
+  const [inputValue, setInputValue] = useState(String(percent))
+  const [isPending, startTransition] = useTransition()
+  const [saveError, setSaveError] = useState('')
+
+  const displayPercent = editing ? (parseFloat(inputValue) || 0) : percent
+  const reserveAmount = totalRevenue * (displayPercent / 100)
+
+  function handleSave() {
+    const val = parseFloat(inputValue)
+    if (isNaN(val) || val < 0 || val > 100) {
+      setSaveError('Percentual inválido (0–100)')
+      return
+    }
+    setSaveError('')
+    startTransition(async () => {
+      const result = await updateSystemSetting('traffic_reserve_percent', String(val))
+      if (result.error) {
+        setSaveError(result.error)
+      } else {
+        setEditing(false)
+        router.refresh()
+      }
+    })
+  }
+
+  return (
+    <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 col-span-2 lg:col-span-1">
+      <p className="text-xs font-medium uppercase tracking-wide text-amber-600 mb-1">Reserva p/ Tráfego Pago</p>
+      {editing ? (
+        <div className="flex items-center gap-2 flex-wrap mt-1">
+          <input
+            type="number"
+            min="0"
+            max="100"
+            step="1"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="w-16 border border-amber-300 rounded px-2 py-1 text-sm text-center bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
+            autoFocus
+          />
+          <span className="text-sm text-amber-700">% = {fmtBRL(reserveAmount)}</span>
+          <button
+            onClick={handleSave}
+            disabled={isPending}
+            className="text-xs px-2.5 py-1 bg-amber-600 text-white rounded hover:bg-amber-700 disabled:opacity-50"
+          >
+            {isPending ? '…' : 'Salvar'}
+          </button>
+          <button onClick={() => { setEditing(false); setInputValue(String(percent)) }} className="text-xs text-amber-500 hover:text-amber-700">
+            Cancelar
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-end gap-2 mt-1">
+          <p className="text-2xl font-bold text-amber-700">{fmtBRL(reserveAmount)}</p>
+          <button onClick={() => setEditing(true)} className="text-xs text-amber-500 hover:text-amber-700 underline mb-0.5">
+            {percent}%
+          </button>
+        </div>
+      )}
+      {saveError && <p className="text-xs text-red-600 mt-1">{saveError}</p>}
+      <p className="text-xs text-amber-500 mt-1.5 leading-relaxed">
+        Orientativo — quanto separar para reinvestir. Não é custo e não deduz do lucro.
+      </p>
     </div>
   )
 }
@@ -433,15 +537,17 @@ function TransactionList({ transactions }: { transactions: TransactionItem[] }) 
 // ─── Main export ─────────────────────────────────────────────────────────────
 
 export function FinanceiroClient({
-  period, from, to,
-  monthlyData, totalRevenue, totalCosts, totalProfit, totalMargin,
+  period, granularity, from, to,
+  monthlyData, quinzenaData, totalRevenue, totalCosts, totalProfit, totalMargin,
   currentMRR, arpu, overdueList, totalOverdue, costBreakdown,
-  mrrByMonth, clientGrowthByMonth, transactions,
+  mrrByMonth, clientGrowthByMonth, transactions, trafficReservePercent,
 }: {
   period: string
+  granularity: string
   from?: string
   to?: string
   monthlyData: MonthlyRow[]
+  quinzenaData: MonthlyRow[]
   totalRevenue: number
   totalCosts: number
   totalProfit: number
@@ -454,7 +560,9 @@ export function FinanceiroClient({
   mrrByMonth: { label: string; mrr: number }[]
   clientGrowthByMonth: { label: string; new: number }[]
   transactions: TransactionItem[]
+  trafficReservePercent: number
 }) {
+  const displayData = granularity === 'quinzena' ? quinzenaData : monthlyData
   const pieData = [
     { name: 'IA', value: costBreakdown.ia },
     { name: 'Tráfego Pago', value: costBreakdown.trafego_pago },
@@ -483,7 +591,7 @@ export function FinanceiroClient({
             Gerenciar Custos
           </a>
           <button
-            onClick={() => downloadCSV(monthlyData)}
+            onClick={() => downloadCSV(displayData)}
             className="flex items-center gap-1.5 bg-white border border-gray-300 text-sm text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-50 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -494,18 +602,20 @@ export function FinanceiroClient({
         </div>
       </div>
 
-      {/* Period selector */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-        <PeriodSelector period={period} from={from} to={to} />
+      {/* Period selector + granularity toggle */}
+      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6 flex flex-wrap items-center gap-4 justify-between">
+        <PeriodSelector period={period} from={from} to={to} granularity={granularity} />
+        <GranularityToggle granularity={granularity} period={period} from={from} to={to} />
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
         <KpiCard label="Lucro Líquido" value={fmtBRL(totalProfit)} sub={`Margem ${fmtPct(totalMargin)}`} highlight />
         <KpiCard label="Faturamento" value={fmtBRL(totalRevenue)} sub="no período" />
         <KpiCard label="Custos Totais" value={fmtBRL(totalCosts)} sub="no período" />
         <KpiCard label="MRR Atual" value={fmtBRL(currentMRR)} sub="receita recorrente" />
         <KpiCard label="ARPU" value={fmtBRL(arpu)} sub="ticket médio mensal" />
+        <TrafficReserveCard totalRevenue={totalRevenue} percent={trafficReservePercent} />
       </div>
 
       {/* Charts row 1 */}
@@ -516,7 +626,7 @@ export function FinanceiroClient({
             <p className="text-sm text-gray-400 text-center py-12">Sem dados no período</p>
           ) : (
             <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={monthlyData} margin={{ top: 4, right: 8, bottom: 0, left: -8 }}>
+              <BarChart data={displayData} margin={{ top: 4, right: 8, bottom: 0, left: -8 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#6b7280' }} />
                 <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} />
@@ -629,16 +739,20 @@ export function FinanceiroClient({
         </div>
       )}
 
-      {/* Monthly comparison table */}
+      {/* Comparison table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="px-4 py-3 border-b border-gray-200">
-          <h3 className="text-sm font-semibold text-gray-700">Comparativo Mês a Mês</h3>
+          <h3 className="text-sm font-semibold text-gray-700">
+            {granularity === 'quinzena' ? 'Comparativo por Quinzena' : 'Comparativo Mês a Mês'}
+          </h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200 text-left">
-                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide whitespace-nowrap">Mês</th>
+                <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide whitespace-nowrap">
+                  {granularity === 'quinzena' ? 'Quinzena' : 'Mês'}
+                </th>
                 <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Faturamento</th>
                 <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Custos</th>
                 <th className="px-4 py-3 font-medium text-xs text-gray-500 uppercase tracking-wide text-right whitespace-nowrap">Lucro</th>
@@ -649,8 +763,8 @@ export function FinanceiroClient({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {monthlyData.map((row, i) => {
-                const prev = monthlyData[i - 1]
+              {displayData.map((row, i) => {
+                const prev = displayData[i - 1]
                 const growth =
                   prev && prev.totalRevenue > 0
                     ? ((row.totalRevenue - prev.totalRevenue) / prev.totalRevenue) * 100
@@ -679,7 +793,7 @@ export function FinanceiroClient({
                 )
               })}
             </tbody>
-            {monthlyData.length > 1 && (
+            {displayData.length > 1 && (
               <tfoot>
                 <tr className="bg-gray-50 border-t-2 border-gray-200 font-semibold">
                   <td className="px-4 py-3 text-gray-700">Total</td>
@@ -690,7 +804,7 @@ export function FinanceiroClient({
                   </td>
                   <td className="px-4 py-3 text-right text-gray-600">{fmtPct(totalMargin)}</td>
                   <td className="px-4 py-3" />
-                  <td className="px-4 py-3 text-right text-gray-600">{monthlyData.reduce((a, r) => a + r.newClients, 0)}</td>
+                  <td className="px-4 py-3 text-right text-gray-600">{displayData.reduce((a, r) => a + r.newClients, 0)}</td>
                   <td className="px-4 py-3" />
                 </tr>
               </tfoot>
