@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
 export async function deleteFinanceiroEntry(
-  type: 'order' | 'cost',
+  type: 'order' | 'cost' | 'extra_revenue' | 'site_revenue',
   id: string,
 ): Promise<{ error?: string; success?: boolean }> {
   const session = await getServerSession(authOptions)
@@ -23,6 +23,11 @@ export async function deleteFinanceiroEntry(
     await prisma.order.delete({ where: { id } })
   } else if (type === 'cost') {
     await prisma.cost.delete({ where: { id } })
+  } else if (type === 'extra_revenue') {
+    await prisma.extraRevenue.delete({ where: { id } })
+  } else if (type === 'site_revenue') {
+    // Nullify the entry fee on the client record (client itself is preserved)
+    await prisma.client.update({ where: { id }, data: { siteEntryFee: null } })
   } else {
     return { error: 'Tipo inválido.' }
   }

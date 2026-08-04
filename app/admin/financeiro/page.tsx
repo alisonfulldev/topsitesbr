@@ -104,11 +104,11 @@ export default async function AdminFinanceiroPage({
       }),
       prisma.client.findMany({
         where: { createdAt: { gte: start, lte: end } },
-        select: { createdAt: true, siteEntryFee: true },
+        select: { id: true, name: true, createdAt: true, siteEntryFee: true },
       }),
       prisma.extraRevenue.findMany({
         where: { revenueDate: { gte: start, lte: end } },
-        select: { amount: true, revenueDate: true },
+        select: { id: true, category: true, description: true, amount: true, revenueDate: true },
       }),
     ])
 
@@ -239,10 +239,18 @@ export default async function AdminFinanceiroPage({
     outro: 'Outro',
   }
 
+  const EXTRA_REVENUE_CATEGORY_LABELS: Record<string, string> = {
+    servico_avulso: 'Serviço Avulso',
+    consultoria: 'Consultoria',
+    venda_site: 'Venda de Site',
+    outro: 'Outro',
+  }
+
   const transactions: TransactionItem[] = [
     ...paidInvoices.map((inv) => ({
       id: inv.id,
       type: 'receita' as const,
+      deleteType: 'order' as const,
       date: (inv.paidAt ?? inv.createdAt).toISOString(),
       amount: Number(inv.amount),
       clientName: inv.subscription.client.name,
@@ -253,6 +261,7 @@ export default async function AdminFinanceiroPage({
     ...paidOrders.map((ord) => ({
       id: ord.id,
       type: 'receita' as const,
+      deleteType: 'order' as const,
       date: ord.createdAt.toISOString(),
       amount: Number(ord.amount),
       clientName: ord.client.name,
@@ -260,9 +269,36 @@ export default async function AdminFinanceiroPage({
       paymentMethod: (ord.asaasChargeId ? 'asaas' : 'externo') as 'asaas' | 'externo',
       canDelete: true,
     })),
+    // Site entry fees from clients created in this period
+    ...newClients
+      .filter((c) => c.siteEntryFee != null)
+      .map((c) => ({
+        id: c.id,
+        type: 'receita' as const,
+        deleteType: 'site_revenue' as const,
+        date: c.createdAt.toISOString(),
+        amount: Number(c.siteEntryFee),
+        clientName: c.name,
+        origin: 'Criação — entrada (pago por fora)',
+        paymentMethod: 'externo' as const,
+        canDelete: true,
+      })),
+    // Manual extra revenue entries
+    ...extraRevenues.map((er) => ({
+      id: er.id,
+      type: 'receita' as const,
+      deleteType: 'extra_revenue' as const,
+      date: er.revenueDate.toISOString(),
+      amount: Number(er.amount),
+      origin: `Extra — ${EXTRA_REVENUE_CATEGORY_LABELS[er.category] ?? er.category}`,
+      description: er.description,
+      paymentMethod: 'externo' as const,
+      canDelete: true,
+    })),
     ...allCosts.map((c) => ({
       id: c.id,
       type: 'despesa' as const,
+      deleteType: 'cost' as const,
       date: c.costDate.toISOString(),
       amount: Number(c.amount),
       origin: COST_CATEGORY_LABELS[c.category] ?? c.category,

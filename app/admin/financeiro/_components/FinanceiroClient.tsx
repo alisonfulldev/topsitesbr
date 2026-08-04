@@ -55,6 +55,7 @@ export type CostBreakdown = {
 export type TransactionItem = {
   id: string
   type: 'receita' | 'despesa'
+  deleteType: 'order' | 'cost' | 'extra_revenue' | 'site_revenue'
   date: string
   amount: number
   clientName?: string
@@ -247,8 +248,7 @@ function TransactionList({ transactions }: { transactions: TransactionItem[] }) 
     if (!deleteTarget) return
     setDeleteError('')
     startTransition(async () => {
-      const entityType = deleteTarget.type === 'receita' ? 'order' : 'cost'
-      const result = await deleteFinanceiroEntry(entityType, deleteTarget.id)
+      const result = await deleteFinanceiroEntry(deleteTarget.deleteType, deleteTarget.id)
       if (result.error) {
         setDeleteError(result.error)
       } else {
