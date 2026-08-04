@@ -348,64 +348,160 @@ export default async function AdminFinanceiroPage({
     outro: 'Outro',
   }
 
-  const transactions: TransactionItem[] = [
-    ...paidInvoices.map((inv) => ({
-      id: inv.id,
-      type: 'receita' as const,
-      deleteType: 'order' as const,
-      date: (inv.paidAt ?? inv.createdAt).toISOString(),
-      amount: Number(inv.amount),
-      clientName: inv.subscription.client.name,
-      origin: `Mensalidade — ${inv.subscription.plan.name}`,
-      paymentMethod: 'asaas' as const,
-      canDelete: false,
-    })),
-    ...paidOrders.map((ord) => ({
-      id: ord.id,
-      type: 'receita' as const,
-      deleteType: 'order' as const,
-      date: ord.createdAt.toISOString(),
-      amount: Number(ord.amount),
-      clientName: ord.client.name,
-      origin: orderOriginLabel(ord.product.name),
-      paymentMethod: (ord.asaasChargeId ? 'asaas' : 'externo') as 'asaas' | 'externo',
-      canDelete: true,
-    })),
-    ...newClients
-      .filter((c) => c.siteEntryFee != null)
-      .map((c) => ({
-        id: c.id,
+  // When a specific quinzena is selected, the list must follow the SAME logic as the
+  // comparativo table: revenues and non-recurring costs filtered to the quinzena's
+  // date range; recurring costs split to 50 % and bucketed by their month (not date).
+  // This guarantees: sum(list) == profit shown in the comparativo row.
+  let transactions: TransactionItem[]
+
+  if (selectedQuinzenaKey) {
+    const qParts = selectedQuinzenaKey.split('-')
+    const qYear = parseInt(qParts[0])
+    const qMonth = parseInt(qParts[1])
+    const qHalf = parseInt(qParts[2])
+    const qStartDay = qHalf === 1 ? 1 : 16
+    const qEndDay = qHalf === 1 ? 15 : new Date(qYear, qMonth, 0).getDate()
+
+    // Date falls within the selected quinzena (same year/month + day range)
+    const inQuinzena = (d: Date) =>
+      d.getFullYear() === qYear &&
+      d.getMonth() + 1 === qMonth &&
+      d.getDate() >= qStartDay &&
+      d.getDate() <= qEndDay
+
+    // Date is in the same calendar month as the selected quinzena (for recurring costs)
+    const inQuinzenaMonth = (d: Date) =>
+      d.getFullYear() === qYear && d.getMonth() + 1 === qMonth
+
+    transactions = [
+      ...paidInvoices
+        .filter((inv) => inQuinzena(inv.paidAt!))
+        .map((inv) => ({
+          id: inv.id,
+          type: 'receita' as const,
+          deleteType: 'order' as const,
+          date: (inv.paidAt ?? inv.createdAt).toISOString(),
+          amount: Number(inv.amount),
+          clientName: inv.subscription.client.name,
+          origin: `Mensalidade — ${inv.subscription.plan.name}`,
+          paymentMethod: 'asaas' as const,
+          canDelete: false,
+        })),
+      ...paidOrders
+        .filter((ord) => inQuinzena(ord.createdAt))
+        .map((ord) => ({
+          id: ord.id,
+          type: 'receita' as const,
+          deleteType: 'order' as const,
+          date: ord.createdAt.toISOString(),
+          amount: Number(ord.amount),
+          clientName: ord.client.name,
+          origin: orderOriginLabel(ord.product.name),
+          paymentMethod: (ord.asaasChargeId ? 'asaas' : 'externo') as 'asaas' | 'externo',
+          canDelete: true,
+        })),
+      ...newClients
+        .filter((c) => c.siteEntryFee != null && inQuinzena(c.createdAt))
+        .map((c) => ({
+          id: c.id,
+          type: 'receita' as const,
+          deleteType: 'site_revenue' as const,
+          date: c.createdAt.toISOString(),
+          amount: Number(c.siteEntryFee),
+          clientName: c.name,
+          origin: 'Criação — entrada (pago por fora)',
+          paymentMethod: 'externo' as const,
+          canDelete: true,
+        })),
+      ...extraRevenues
+        .filter((er) => inQuinzena(er.revenueDate))
+        .map((er) => ({
+          id: er.id,
+          type: 'receita' as const,
+          deleteType: 'extra_revenue' as const,
+          date: er.revenueDate.toISOString(),
+          amount: Number(er.amount),
+          origin: `Extra — ${EXTRA_REVENUE_CATEGORY_LABELS[er.category] ?? er.category}`,
+          description: er.description,
+          paymentMethod: 'externo' as const,
+          canDelete: true,
+        })),
+      // Recurring costs: show at 50 % for the quinzena's month (same split used in the table)
+      // Non-recurring costs: show at full amount, filtered to the quinzena's date range
+      ...allCosts
+        .filter((c) => c.isRecurring ? inQuinzenaMonth(c.costDate) : inQuinzena(c.costDate))
+        .map((c) => ({
+          id: c.id,
+          type: 'despesa' as const,
+          deleteType: 'cost' as const,
+          date: c.costDate.toISOString(),
+          amount: c.isRecurring ? Number(c.amount) / 2 : Number(c.amount),
+          origin: COST_CATEGORY_LABELS[c.category] ?? c.category,
+          description: c.isRecurring ? `${c.description} (50% — quinzena)` : c.description,
+          canDelete: true,
+        })),
+    ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  } else {
+    // Normal (full-period) transaction list — raw amounts, no quinzena splitting
+    transactions = [
+      ...paidInvoices.map((inv) => ({
+        id: inv.id,
         type: 'receita' as const,
-        deleteType: 'site_revenue' as const,
-        date: c.createdAt.toISOString(),
-        amount: Number(c.siteEntryFee),
-        clientName: c.name,
-        origin: 'Criação — entrada (pago por fora)',
+        deleteType: 'order' as const,
+        date: (inv.paidAt ?? inv.createdAt).toISOString(),
+        amount: Number(inv.amount),
+        clientName: inv.subscription.client.name,
+        origin: `Mensalidade — ${inv.subscription.plan.name}`,
+        paymentMethod: 'asaas' as const,
+        canDelete: false,
+      })),
+      ...paidOrders.map((ord) => ({
+        id: ord.id,
+        type: 'receita' as const,
+        deleteType: 'order' as const,
+        date: ord.createdAt.toISOString(),
+        amount: Number(ord.amount),
+        clientName: ord.client.name,
+        origin: orderOriginLabel(ord.product.name),
+        paymentMethod: (ord.asaasChargeId ? 'asaas' : 'externo') as 'asaas' | 'externo',
+        canDelete: true,
+      })),
+      ...newClients
+        .filter((c) => c.siteEntryFee != null)
+        .map((c) => ({
+          id: c.id,
+          type: 'receita' as const,
+          deleteType: 'site_revenue' as const,
+          date: c.createdAt.toISOString(),
+          amount: Number(c.siteEntryFee),
+          clientName: c.name,
+          origin: 'Criação — entrada (pago por fora)',
+          paymentMethod: 'externo' as const,
+          canDelete: true,
+        })),
+      ...extraRevenues.map((er) => ({
+        id: er.id,
+        type: 'receita' as const,
+        deleteType: 'extra_revenue' as const,
+        date: er.revenueDate.toISOString(),
+        amount: Number(er.amount),
+        origin: `Extra — ${EXTRA_REVENUE_CATEGORY_LABELS[er.category] ?? er.category}`,
+        description: er.description,
         paymentMethod: 'externo' as const,
         canDelete: true,
       })),
-    ...extraRevenues.map((er) => ({
-      id: er.id,
-      type: 'receita' as const,
-      deleteType: 'extra_revenue' as const,
-      date: er.revenueDate.toISOString(),
-      amount: Number(er.amount),
-      origin: `Extra — ${EXTRA_REVENUE_CATEGORY_LABELS[er.category] ?? er.category}`,
-      description: er.description,
-      paymentMethod: 'externo' as const,
-      canDelete: true,
-    })),
-    ...allCosts.map((c) => ({
-      id: c.id,
-      type: 'despesa' as const,
-      deleteType: 'cost' as const,
-      date: c.costDate.toISOString(),
-      amount: Number(c.amount),
-      origin: COST_CATEGORY_LABELS[c.category] ?? c.category,
-      description: c.description,
-      canDelete: true,
-    })),
-  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      ...allCosts.map((c) => ({
+        id: c.id,
+        type: 'despesa' as const,
+        deleteType: 'cost' as const,
+        date: c.costDate.toISOString(),
+        amount: Number(c.amount),
+        origin: COST_CATEGORY_LABELS[c.category] ?? c.category,
+        description: c.description,
+        canDelete: true,
+      })),
+    ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  }
 
   return (
     <FinanceiroClient
