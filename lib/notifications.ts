@@ -23,6 +23,7 @@ export type EmailType =
   | 'proposal-sent'
   | 'proposal-approved'
   | 'proposal-status-update'
+  | 'terms-accepted'
   | 'generic'
 
 const EMAIL_CONFIG: Record<EmailType, { color: string; icon: string; label: string }> = {
@@ -43,6 +44,7 @@ const EMAIL_CONFIG: Record<EmailType, { color: string; icon: string; label: stri
   'proposal-sent':            { color: '#0f172a', icon: '📋', label: 'Proposta de projeto' },
   'proposal-approved':        { color: '#22c55e', icon: '✅', label: 'Proposta aprovada' },
   'proposal-status-update':   { color: '#7c3aed', icon: '🚀', label: 'Atualização do projeto' },
+  'terms-accepted':           { color: '#1d4ed8', icon: '📋', label: 'Comprovante de aceite' },
   'generic':                  { color: '#6b7280', icon: '🔔', label: 'Notificação' },
 }
 
@@ -434,6 +436,91 @@ export async function sendWeeklyReportEmail(
 }
 
 // ── E-mail de redefinição de senha ────────────────────────────────────────────
+
+export async function sendTermsAcceptanceEmail(
+  email: string,
+  clientName: string,
+  acceptedAt: Date,
+  termsVersion: string,
+): Promise<void> {
+  const termosUrl = APP_URL + '/termos'
+  const panelUrl  = APP_URL + '/painel'
+
+  const dateStr = acceptedAt.toLocaleDateString('pt-BR', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    timeZone: 'America/Sao_Paulo',
+  })
+  const timeStr = acceptedAt.toLocaleTimeString('pt-BR', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    timeZone: 'America/Sao_Paulo',
+  })
+
+  const subject = 'Comprovante de aceite dos Termos de Uso — TOP SITE'
+  const message = `Olá, ${clientName}! Este e-mail confirma que você ativou o plano Site no Ar e aceitou os Termos de Uso da TOP SITE. Guarde este e-mail — ele é o seu comprovante de contratação.`
+
+  const extraHtml = `
+    <!-- Dados do aceite -->
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:18px 20px;margin-bottom:24px;">
+      <p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#1e40af;text-transform:uppercase;letter-spacing:0.8px;">Dados do aceite</p>
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+        <tr><td style="padding:3px 0;font-size:13px;color:#6b7280;width:130px;">Cliente</td><td style="padding:3px 0;font-size:13px;color:#111827;font-weight:600;">${esc(clientName)}</td></tr>
+        <tr><td style="padding:3px 0;font-size:13px;color:#6b7280;">E-mail</td><td style="padding:3px 0;font-size:13px;color:#111827;font-weight:600;">${esc(email)}</td></tr>
+        <tr><td style="padding:3px 0;font-size:13px;color:#6b7280;">Data</td><td style="padding:3px 0;font-size:13px;color:#111827;font-weight:600;">${dateStr} às ${timeStr} (Brasília)</td></tr>
+        <tr><td style="padding:3px 0;font-size:13px;color:#6b7280;">Versão dos termos</td><td style="padding:3px 0;font-size:13px;color:#111827;font-weight:600;">v${esc(termsVersion)}</td></tr>
+      </table>
+    </div>
+
+    <!-- Resumo dos termos principais -->
+    <p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#111827;">Resumo do que você aceitou:</p>
+    <ul style="margin:0 0 20px;padding-left:0;list-style:none;">
+      ${[
+        'Plano Site no Ar — R$ 29,00/mês (primeiro mês grátis para novos clientes)',
+        'Hospedagem, SSL, monitoramento 24h e suporte via WhatsApp incluídos',
+        '1 alteração de conteúdo por mês inclusa (texto ou imagem)',
+        'Correções ilimitadas e gratuitas (links quebrados, erros de digitação)',
+        'Renovação mensal automática — sem contrato de fidelidade',
+        'Cancelamento a qualquer momento, sem multa',
+      ].map((item) => `<li style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:13px;color:#374151;"><span style="color:#22c55e;font-weight:700;flex-shrink:0;">✓</span>${item}</li>`).join('')}
+    </ul>
+
+    <!-- DESTAQUE: suspensão por inadimplência -->
+    <div style="background:#fef2f2;border-left:4px solid #dc2626;border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:24px;">
+      <p style="margin:0 0 6px;font-size:13px;font-weight:800;color:#b91c1c;text-transform:uppercase;letter-spacing:0.5px;">⚠️ Importante: inadimplência</p>
+      <p style="margin:0;font-size:13px;color:#7f1d1d;line-height:1.6;">
+        Sites com mensalidade em aberto por mais de <strong>10 dias</strong> são
+        <strong>temporariamente despublicados</strong> até a regularização do pagamento —
+        sem cobrança de taxa de reativação. Você será avisado por e-mail no dia 0 e no dia 5
+        antes de qualquer ação.
+      </p>
+    </div>
+
+    <!-- Link para termos completos -->
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px;">
+      <tr>
+        <td align="center">
+          <a href="${termosUrl}"
+             style="display:inline-block;background:#ffffff;color:#1d4ed8;
+                    text-decoration:none;font-size:13px;font-weight:600;
+                    padding:10px 24px;border-radius:7px;border:2px solid #1d4ed8;">
+            Ver Termos de Uso completos (v${esc(termsVersion)})
+          </a>
+        </td>
+      </tr>
+    </table>
+
+    <p style="margin:0 0 4px;font-size:12px;color:#9ca3af;text-align:center;">
+      Guarde este e-mail como comprovante da sua contratação.
+    </p>
+  `
+
+  const html = buildHtml(subject, message, 'terms-accepted', extraHtml, panelUrl, 'Acessar o painel')
+
+  try {
+    await sendEmail({ to: email, subject, html })
+  } catch (err) {
+    console.error('[sendTermsAcceptanceEmail] Falha:', err instanceof Error ? err.message : err)
+  }
+}
 
 export async function sendPasswordResetEmail(
   email: string,

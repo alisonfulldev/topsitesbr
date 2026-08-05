@@ -6,8 +6,9 @@ import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
 import { getAsaasInvoiceUrl } from '@/lib/integrations/asaas'
 import { sendNotification } from '@/lib/notifications'
-import { sendSubscriptionWelcome } from '@/lib/notifications'
+import { sendSubscriptionWelcome, sendTermsAcceptanceEmail } from '@/lib/notifications'
 import { TERMS_VERSION } from '@/lib/config'
+import { ensureTermsVersionSeeded } from '@/lib/terms-content'
 import { revalidatePath } from 'next/cache'
 import { getSiteAnalytics } from '@/lib/integrations/analytics'
 import { sendPushToClient } from '@/lib/integrations/webpush'
@@ -103,6 +104,12 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
       termsVersion: TERMS_VERSION,
     },
   })
+
+  // Ensure the accepted version is archived in the DB (idempotent)
+  await ensureTermsVersionSeeded()
+
+  // Send terms acceptance proof email
+  await sendTermsAcceptanceEmail(client.email, client.name, now, TERMS_VERSION)
 
   if (freeMonth) {
     // Mês grátis: ativa direto sem cobrança imediata
