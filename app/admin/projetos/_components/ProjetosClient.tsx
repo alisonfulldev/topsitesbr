@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Project, ProjectLabel, ProjectStatus } from '@prisma/client'
 import { createProject, updateProject, moveProject, deleteProject } from '../actions'
@@ -325,6 +325,10 @@ export function ProjetosClient({ projects: initialProjects }: ProjetosClientProp
   const router = useRouter()
   const [projects, setProjects] = useState<Project[]>(initialProjects)
   const [showForm, setShowForm] = useState(false)
+
+  useEffect(() => {
+    setProjects(initialProjects)
+  }, [initialProjects])
   const [editTarget, setEditTarget] = useState<Project | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Project | null>(null)
   const [movingId, setMovingId] = useState<string | null>(null)
