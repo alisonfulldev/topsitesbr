@@ -7,7 +7,7 @@ import { getPaymentProvider } from '@/lib/payments/provider'
 import { getAsaasInvoiceUrl } from '@/lib/integrations/asaas'
 import { sendNotification } from '@/lib/notifications'
 import { sendSubscriptionWelcome, sendTermsAcceptanceEmail } from '@/lib/notifications'
-import { TERMS_VERSION, COMPANY_EMAIL } from '@/lib/config'
+import { TERMS_VERSION, ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
 import { ensureTermsVersionSeeded } from '@/lib/terms-content'
 import { revalidatePath } from 'next/cache'
 import { getSiteAnalytics } from '@/lib/integrations/analytics'
@@ -110,7 +110,7 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
 
   // Send terms acceptance proof email — to client and to admin
   await sendTermsAcceptanceEmail(client.email, client.name, now, TERMS_VERSION)
-  await sendTermsAcceptanceEmail(COMPANY_EMAIL, client.name, now, TERMS_VERSION)
+  await sendTermsAcceptanceEmail(ADMIN_NOTIFICATION_EMAIL, client.name, now, TERMS_VERSION)
 
   if (freeMonth) {
     // Mês grátis: ativa direto sem cobrança imediata
