@@ -579,3 +579,28 @@ model SystemSetting {
 
   @@map("system_settings")
 }
+
+enum ProjectLabel {
+  urgente
+  normal
+}
+
+enum ProjectStatus {
+  a_fazer
+  em_desenvolvimento
+  em_revisao
+  concluido
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  title       String
+  description String?
+  label       ProjectLabel  @default(normal)
+  status      ProjectStatus @default(a_fazer)
+  dueDate     DateTime      @map("due_date") @db.Date
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@map("projects")
+}

@@ -7,18 +7,18 @@ const WA_NUMBER = '5518996742364'
 function wa(msg: string) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 }
-const MSG_MAIN  = 'Olá! Quero criar meu site profissional por R$197. Pode me dar mais informações?'
+const MSG_MAIN  = 'Olá! Quero criar meu site profissional. Pode me dar mais informações?'
 const MSG_START = 'Olá! Quero começar meu site agora! Como funciona?'
-const MSG_FAQ   = 'Olá! Tenho dúvidas sobre o site de R$197. Pode me ajudar?'
+const MSG_FAQ   = 'Olá! Tenho dúvidas sobre o site profissional. Pode me ajudar?'
 
 /* ─── SEO Metadata ───────────────────────────────────────────────────────── */
 
 export const metadata: Metadata = {
-  title: 'Site Profissional por R$197 — Pronto em 3 Dias | TOP SITE',
+  title: 'Site Profissional — Pronto em 3 Dias | TOP SITE',
   description:
-    'Site profissional para sua empresa por apenas R$197. Design personalizado, entrega em até 3 dias úteis e você só paga se aprovar. Ideal para MEI, restaurante, salão de beleza, clínica e pequenas empresas.',
+    'Site profissional para sua empresa com design personalizado. Entrega em até 3 dias úteis e você só paga se aprovar. Ideal para MEI, restaurante, salão de beleza, clínica e pequenas empresas.',
   keywords:
-    'site profissional, criar site empresa, site barato, site para MEI, site pequena empresa, site R$197, criação de site profissional, site para negócio, site para restaurante, site para salão de beleza, site para clínica, presença online, site profissional preço',
+    'site profissional, criar site empresa, site barato, site para MEI, site pequena empresa, criação de site profissional, site para negócio, site para restaurante, site para salão de beleza, site para clínica, presença online, site profissional preço',
   authors: [{ name: 'TOP SITE' }],
   creator: 'TOP SITE',
   publisher: 'TOP SITE',
@@ -29,16 +29,16 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    title: 'Site Profissional por R$197 — Pronto em 3 Dias | TOP SITE',
+    title: 'Site Profissional — Pronto em 3 Dias | TOP SITE',
     description:
-      'Site profissional para sua empresa por R$197. Design personalizado, 3 dias de prazo, você só paga se aprovar.',
+      'Site profissional para sua empresa. Design personalizado, 3 dias de prazo, você só paga se aprovar.',
     siteName: 'TOP SITE',
     locale: 'pt_BR',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Site Profissional por R$197 | TOP SITE',
-    description: 'Site profissional para sua empresa por R$197. Design personalizado, pronto em 3 dias.',
+    title: 'Site Profissional | TOP SITE',
+    description: 'Site profissional para sua empresa. Design personalizado, pronto em 3 dias.',
   },
 }
 
@@ -51,7 +51,7 @@ const jsonLd = {
       '@type': 'Organization',
       '@id': '#organization',
       name: 'TOP SITE',
-      description: 'Criação de sites profissionais para pequenas empresas e MEIs por R$197',
+      description: 'Criação de sites profissionais para pequenas empresas e MEIs',
       contactPoint: {
         '@type': 'ContactPoint',
         contactType: 'sales',
@@ -63,13 +63,13 @@ const jsonLd = {
       '@type': 'WebSite',
       '@id': '#website',
       name: 'TOP SITE',
-      description: 'Site profissional por R$197 — Pronto em 3 Dias',
+      description: 'Site profissional — Pronto em 3 Dias',
       publisher: { '@id': '#organization' },
       inLanguage: 'pt-BR',
     },
     {
       '@type': 'Service',
-      name: 'Criação de Site Profissional por R$197',
+      name: 'Criação de Site Profissional',
       description:
         'Site profissional com design personalizado para o seu negócio. Desenvolvido com IA, 100% responsivo, com integração WhatsApp e SEO básico. Entregamos em até 3 dias e você só paga após aprovação.',
       provider: { '@id': '#organization' },
@@ -77,10 +77,7 @@ const jsonLd = {
       areaServed: { '@type': 'Country', name: 'Brazil' },
       offers: {
         '@type': 'Offer',
-        price: '197.00',
-        priceCurrency: 'BRL',
         availability: 'https://schema.org/InStock',
-        priceValidUntil: '2026-12-31',
       },
     },
     {
@@ -88,7 +85,7 @@ const jsonLd = {
       mainEntity: [
         {
           '@type': 'Question',
-          name: 'O que está incluído no site de R$197?',
+          name: 'O que está incluído no site?',
           acceptedAnswer: {
             '@type': 'Answer',
             text: 'Inclui: design personalizado para o seu segmento, site 100% responsivo (celular e computador), integração com botão do WhatsApp, SEO on-page básico para aparecer no Google, 1 página completa com todas as seções do seu negócio e os arquivos do site entregues para você.',
@@ -107,7 +104,7 @@ const jsonLd = {
           name: 'E se eu não gostar do resultado?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Você vê o site antes de pagar qualquer coisa. Se não gostar, fazemos ajustes sem custo extra. Só cobramos os R$197 quando você estiver satisfeito.',
+            text: 'Você vê o site antes de pagar qualquer coisa. Se não gostar, fazemos ajustes sem custo extra. Você só paga quando estiver satisfeito.',
           },
         },
         {
@@ -131,7 +128,7 @@ const jsonLd = {
           name: 'Como funciona o pagamento?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Você só paga R$197 após aprovar o site. O pagamento é feito via Pix, cartão de crédito ou boleto. Não há cobrança antecipada.',
+            text: 'Você só paga após aprovar o site. O pagamento é feito via Pix, cartão de crédito ou boleto. Não há cobrança antecipada.',
           },
         },
         {
@@ -226,7 +223,7 @@ const STEPS = [
     desc: 'Enviamos o link do site para você avaliar. Não gostou de algo? Pedimos ajustes até você aprovar — sem custo extra.',
   },
   {
-    title: 'Aprove, pague R$197 e publique',
+    title: 'Aprove, pague e publique',
     desc: 'Com o site aprovado, o pagamento é feito via Pix, cartão ou boleto. Publicamos em até 3 dias úteis — ou entregamos os arquivos para você hospedar onde quiser.',
   },
 ]
@@ -240,7 +237,7 @@ const SEGMENTS = [
 
 const TESTIMONIALS = [
   {
-    text: 'Em 2 dias tinha meu site no ar. Minha confeitaria apareceu no Google na primeira semana e já vieram clientes novos. Valeu demais os R$197.',
+    text: 'Em 2 dias tinha meu site no ar. Minha confeitaria apareceu no Google na primeira semana e já vieram clientes novos. Recomendo demais!',
     name: 'Patrícia M.',
     role: 'Confeitaria Doce Sabor · SP',
     color: '#7c3aed',
@@ -260,7 +257,6 @@ const TESTIMONIALS = [
 ]
 
 const COMPARISON = [
-  { label: 'Investimento',     us: 'R$197',             freelancer: 'R$800–R$3.000',      agency: 'R$2.500–R$10.000',   wix: 'R$60–150/mês*' },
   { label: 'Prazo',           us: 'Até 3 dias',        freelancer: '2–8 semanas',         agency: '4–12 semanas',        wix: 'Você mesmo configura' },
   { label: 'Design',          us: 'Personalizado',     freelancer: 'Personalizado',       agency: 'Personalizado',       wix: 'Template' },
   { label: 'Mobile-ready',    us: 'Sim',               freelancer: 'Depende',             agency: 'Sim',                 wix: 'Sim' },
@@ -270,16 +266,16 @@ const COMPARISON = [
 
 const FAQ = [
   {
-    q: 'O que está incluído nos R$197?',
-    a: 'Design personalizado para o seu segmento, site 100% responsivo, integração com WhatsApp, SEO on-page básico para aparecer no Google, página completa com todas as seções do seu negócio e os arquivos do site entregues para você. Tudo isso por um pagamento único.',
+    q: 'O que está incluído no site?',
+    a: 'Design personalizado para o seu segmento, site 100% responsivo, integração com WhatsApp, SEO on-page básico para aparecer no Google, página completa com todas as seções do seu negócio e os arquivos do site entregues para você.',
   },
   {
     q: 'Quanto tempo leva para o site ficar pronto?',
-    a: 'O protótipo (primeiro rascunho do site) é entregue em até 24 horas após você nos contar sobre o negócio. Com ajustes e aprovação, o site final fica pronto em até 3 dias úteis.',
+    a: 'O primeiro rascunho do site é entregue em até 24 horas após você nos contar sobre o negócio. Com ajustes e aprovação, o site final fica pronto em até 3 dias úteis.',
   },
   {
     q: 'E se eu não gostar do resultado?',
-    a: 'Você vê o site antes de pagar qualquer coisa. Pedimos ajustes até você aprovar sem custo adicional. Só cobramos os R$197 quando você estiver 100% satisfeito. Se não quiser seguir em frente, não há nenhuma cobrança.',
+    a: 'Você vê o site antes de pagar qualquer coisa. Pedimos ajustes até você aprovar sem custo adicional. Você só paga quando estiver 100% satisfeito. Se não quiser seguir em frente, não há nenhuma cobrança.',
   },
   {
     q: 'Posso usar meu próprio domínio (.com.br)?',
@@ -295,7 +291,7 @@ const FAQ = [
   },
   {
     q: 'Como funciona o pagamento?',
-    a: 'Você só paga após aprovar o site. O pagamento de R$197 é feito via Pix, cartão de crédito ou boleto bancário. Não há cobrança antecipada.',
+    a: 'Você só paga após aprovar o site. O pagamento é feito via Pix, cartão de crédito ou boleto bancário. Não há cobrança antecipada.',
   },
   {
     q: 'Vocês fazem sites para qualquer tipo de negócio?',
@@ -395,14 +391,7 @@ export default function LandingPage() {
               </span>{' '}
               com um{' '}
               <span className="text-[#FFD100]">site profissional</span>{' '}
-              por apenas{' '}
-              <span className="relative whitespace-nowrap">
-                <span className="relative z-10">R$197</span>
-                <span
-                  className="absolute inset-x-0 -bottom-1 h-3 rounded-sm -rotate-1 opacity-20 bg-[#FFD100]"
-                  aria-hidden="true"
-                />
-              </span>
+              pronto em até 3 dias
             </h1>
 
             {/* Sub */}
@@ -433,7 +422,7 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <CTAButton href={wa(MSG_START)} size="lg">
                 <WAIcon className="w-5 h-5" />
-                Criar meu site por R$197
+                Criar meu site agora
               </CTAButton>
               <a
                 href="#como-funciona"
@@ -474,7 +463,7 @@ export default function LandingPage() {
                 para ter presença online real
               </h2>
               <p className="text-gray-500 mt-4 max-w-xl mx-auto text-sm sm:text-base">
-                Por R$197 você recebe um site completo e profissional — nada genérico,
+                Você recebe um site completo e profissional — nada genérico,
                 nada escondido.
               </p>
             </div>
@@ -537,7 +526,7 @@ export default function LandingPage() {
             <div className="mt-12 text-center">
               <CTAButton href={wa(MSG_START)} size="lg">
                 <WAIcon className="w-5 h-5" />
-                Começar agora — ver o protótipo é grátis
+                Começar agora
               </CTAButton>
             </div>
           </div>
@@ -667,10 +656,10 @@ export default function LandingPage() {
                 id="comparison-heading"
                 className="text-3xl sm:text-4xl font-black text-white leading-tight"
               >
-                Por que R$197 faz<br />todo o sentido
+                Por que a TOP SITE<br />faz todo o sentido
               </h2>
               <p className="text-zinc-500 mt-4 text-sm max-w-md mx-auto">
-                Compare com as alternativas e veja o que você recebe pelo investimento.
+                Compare com as alternativas e veja o que você recebe.
               </p>
             </div>
 
@@ -790,18 +779,16 @@ export default function LandingPage() {
               <span className="text-[#FFD100]">estar na internet</span>
             </h2>
             <p className="text-zinc-400 text-base mb-3 max-w-md mx-auto leading-relaxed">
-              Fale no WhatsApp, conte sobre seu negócio e receba o protótipo do seu
-              site — sem pagar nada antes de aprovar.
+              Fale no WhatsApp, conte sobre seu negócio e veja o resultado
+              antes de pagar qualquer coisa.
             </p>
             <p className="text-zinc-600 text-sm mb-10">
-              Site profissional por{' '}
-              <strong className="text-white">R$197</strong>
-              {' '}· Pagamento só após aprovação
+              Pagamento só após aprovação · Sem risco
             </p>
 
             <CTAButton href={wa(MSG_MAIN)} size="lg">
               <WAIcon className="w-6 h-6" />
-              Quero meu site por R$197
+              Quero meu site profissional
             </CTAButton>
 
             <p className="text-zinc-600 text-xs mt-6">

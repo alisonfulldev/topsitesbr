@@ -17,6 +17,7 @@ const navItems = [
   { href: '/admin/indicacoes', label: 'Indicações' },
   { href: '/admin/financeiro', label: 'Financeiro' },
   { href: '/admin/financeiro/custos', label: 'Custos', indent: true },
+  { href: '/admin/projetos', label: 'Projetos' },
   { href: '/admin/notificacoes', label: 'Notificações' },
 ]
 
