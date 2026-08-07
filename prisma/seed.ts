@@ -60,7 +60,7 @@ async function main() {
       type: 'upgrade_site' as const,
       eligibleSiteTypes: 'mini_site,landing_page',
     },
-    { name: 'Logo Profissional', price: 97.0, type: 'service' as const },
+    { name: 'Logo Profissional', price: 220.0, type: 'service' as const },
     { name: 'Configuração de Tráfego Pago', price: 197.0, type: 'service' as const },
   ]
 
