@@ -58,13 +58,9 @@ export default function RootLayout({
         {/* Must be first — captures beforeinstallprompt before React hydrates */}
         <script dangerouslySetInnerHTML={{ __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__deferredInstallPrompt=e;document.dispatchEvent(new CustomEvent('pwainstallready'));});` }} />
         <Providers>{children}</Providers>
-        {/* Own analytics tracker — set NEXT_PUBLIC_TRACK_SITE_ID to the site UUID for this domain */}
-        {process.env.NEXT_PUBLIC_TRACK_SITE_ID && (
-          <>
-            <script dangerouslySetInnerHTML={{ __html: `window.__ts_id="${process.env.NEXT_PUBLIC_TRACK_SITE_ID}";` }} />
-            <script defer src="/tracker.js" />
-          </>
-        )}
+        {/* Analytics tracker */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" defer />
       </body>
     </html>
   )
