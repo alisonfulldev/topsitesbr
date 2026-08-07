@@ -58,9 +58,6 @@ export default function RootLayout({
         {/* Must be first — captures beforeinstallprompt before React hydrates */}
         <script dangerouslySetInnerHTML={{ __html: `window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__deferredInstallPrompt=e;document.dispatchEvent(new CustomEvent('pwainstallready'));});` }} />
         <Providers>{children}</Providers>
-        {/* Analytics tracker */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" defer />
       </body>
     </html>
   )
