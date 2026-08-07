@@ -332,7 +332,7 @@ export function ProjetosClient({ projects: initialProjects }: ProjetosClientProp
   const [editTarget, setEditTarget] = useState<Project | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Project | null>(null)
   const [movingId, setMovingId] = useState<string | null>(null)
-  const [isDeleting, startDeleteTransition] = useTransition()
+  const [isDeleting, setIsDeleting] = useState(false)
 
   function refresh() {
     router.refresh()
@@ -350,13 +350,16 @@ export function ProjetosClient({ projects: initialProjects }: ProjetosClientProp
     })
   }
 
-  function handleDeleteConfirm() {
-    if (!deleteTarget) return
-    startDeleteTransition(async () => {
+  async function handleDeleteConfirm() {
+    if (!deleteTarget || isDeleting) return
+    setIsDeleting(true)
+    try {
       await deleteProject(deleteTarget.id)
       setDeleteTarget(null)
       router.refresh()
-    })
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   const byStatus = (status: ProjectStatus) => projects.filter((p) => p.status === status)
