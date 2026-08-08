@@ -59,6 +59,121 @@ const COUNTER_ARGUMENTS: Record<string, string> = {
     'Entendemos! Lembrando que o primeiro mês é totalmente grátis, sem contrato e sem compromisso. Não há nada a perder por ativar agora — você pode cancelar quando quiser.',
 }
 
+// ─── Regularization screen (inadimplente / vencido) ─────────────────────────
+
+export function RegularizationScreen({
+  siteStatus,
+  pendingPayment,
+}: {
+  siteStatus: string
+  pendingPayment?: boolean
+}) {
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
+
+  const isSuspended = siteStatus === 'suspenso' || siteStatus === 'offline'
+
+  function handleRegularize() {
+    setError(null)
+    startTransition(async () => {
+      const result = await activatePlan()
+      if (result.error) {
+        setError(result.error)
+        return
+      }
+      if (result.paymentUrl) window.location.href = result.paymentUrl
+    })
+  }
+
+  const waNumber = COMPANY_WHATSAPP.replace(/\D/g, '')
+  const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent('Olá! Preciso de ajuda para regularizar meu plano.')}`
+
+  return (
+    <div className="bg-brand-dark rounded-2xl overflow-hidden">
+      {/* Hero */}
+      <div className="text-center px-6 pt-10 pb-6">
+        <div className="flex justify-center mb-4">
+          <div className="w-16 h-16 rounded-2xl bg-red-500/15 flex items-center justify-center">
+            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            </svg>
+          </div>
+        </div>
+        <h1 className="text-2xl font-bold text-white mb-2 leading-tight">
+          Sua mensalidade está em aberto
+        </h1>
+        <p className="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">
+          {isSuspended
+            ? 'Seu site foi temporariamente despublicado. Regularize o pagamento e ele volta ao ar assim que a confirmação for processada.'
+            : 'Há um pagamento pendente no seu plano. Regularize para manter seu site no ar sem interrupções.'}
+        </p>
+      </div>
+
+      {/* Card */}
+      <div className="mx-4 mb-6 bg-white rounded-xl p-5">
+        {isSuspended && (
+          <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-5">
+            <svg className="w-4 h-4 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+            </svg>
+            <p className="text-sm text-red-700 leading-snug">
+              Site fora do ar — volta automaticamente após confirmação do pagamento.
+            </p>
+          </div>
+        )}
+
+        <ul className="space-y-2.5 mb-5">
+          {[
+            'Pagamento via Pix, boleto ou cartão',
+            'Site volta ao ar em minutos após confirmação',
+            'Sem taxa de reativação',
+            'Sem perda de configurações ou conteúdo',
+          ].map((item) => (
+            <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+              <svg className="w-4 h-4 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+              {item}
+            </li>
+          ))}
+        </ul>
+
+        {pendingPayment && (
+          <p className="text-yellow-700 text-xs bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-2 mb-3">
+            Já existe uma cobrança gerada. Clique abaixo para acessar o boleto ou PIX novamente.
+          </p>
+        )}
+
+        {error && (
+          <p className="text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
+            {error}
+          </p>
+        )}
+
+        <Button
+          variant="conversion"
+          size="md"
+          fullWidth
+          onClick={handleRegularize}
+          loading={isPending}
+          loadingText="Processando..."
+        >
+          {pendingPayment ? 'Ver boleto / PIX' : 'Regularizar pagamento'}
+        </Button>
+      </div>
+
+      {/* Footer */}
+      <p className="text-center text-xs text-gray-500 pb-6 px-4">
+        Dúvidas?{' '}
+        <a href={waUrl} target="_blank" rel="noreferrer" className="text-gray-400 underline underline-offset-2">
+          Fale conosco no WhatsApp
+        </a>
+      </p>
+    </div>
+  )
+}
+
 // ─── Warm flow (quente) ──────────────────────────────────────────────────────
 
 function WarmActivationScreen({ pendingPayment }: { pendingPayment?: boolean }) {

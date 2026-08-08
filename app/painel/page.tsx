@@ -6,7 +6,7 @@ import { getSiteAnalytics } from '@/lib/integrations/analytics'
 import type { AnalyticsResult } from '@/lib/integrations/analytics'
 import { syncSubscriptionPayment } from '@/lib/payments/webhook-handlers'
 import { isClientInProduction } from '@/lib/painel-guard'
-import { ActivationScreen } from './_components/ActivationScreen'
+import { ActivationScreen, RegularizationScreen } from './_components/ActivationScreen'
 import { Dashboard } from './_components/Dashboard'
 import type { ContextualOffer } from './_components/Dashboard'
 
@@ -38,7 +38,7 @@ export default async function PainelPage({
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
 
-  const [client, subscription, ticketsUsedThisMonth, recentEvents, extraPaidLastMonth, paidOrders] =
+  const [client, subscription, priorSubRow, ticketsUsedThisMonth, recentEvents, extraPaidLastMonth, paidOrders] =
     await Promise.all([
       prisma.client.findUnique({
         where: { id: clientId },
@@ -55,6 +55,11 @@ export default async function PainelPage({
         where: { clientId, status: { not: 'canceled' } },
         include: { plan: true },
         orderBy: { createdAt: 'desc' },
+      }),
+      // Detecta se o cliente JÁ teve assinatura (inclui canceladas) — distingue novo de inadimplente
+      prisma.subscription.findFirst({
+        where: { clientId },
+        select: { id: true },
       }),
       // Conta apenas tipos de alteração que consomem o limite mensal (correções não contam)
       prisma.ticket.count({
@@ -88,6 +93,7 @@ export default async function PainelPage({
 
   const hasActiveSubscription = subscription?.status === 'active'
   const hasPendingSubscription = subscription?.status === 'pending'
+  const hasPriorSubscription = !!priorSubRow
 
   // ── Fluxo proposta ────────────────────────────────────────────────────────────
   if (client.entryFlow === 'proposta' && !hasActiveSubscription) {
@@ -106,7 +112,7 @@ export default async function PainelPage({
       redirect('/painel/projeto')
     }
 
-    // Site aprovado pelo cliente OU publicado, sem assinatura → ActivationScreen existente
+    // Site aprovado pelo cliente OU publicado, sem assinatura
     if (clientApprovedSite || siteOnline) {
       const activationSite =
         (proposal?.siteId ? client.sites.find((s) => s.id === proposal.siteId) : null) ??
@@ -121,6 +127,15 @@ export default async function PainelPage({
       }
 
       if (activationSite) {
+        // Já foi assinante → tela de regularização (sem "mês grátis")
+        if (hasPriorSubscription) {
+          return (
+            <RegularizationScreen
+              siteStatus={activationSite.status}
+              pendingPayment={hasPendingSubscription}
+            />
+          )
+        }
         return (
           <ActivationScreen
             siteId={activationSite.id}
@@ -147,6 +162,15 @@ export default async function PainelPage({
   }
 
   if (showActivation && pendingSite) {
+    // Já foi assinante → tela de regularização (sem "mês grátis")
+    if (hasPriorSubscription) {
+      return (
+        <RegularizationScreen
+          siteStatus={pendingSite.status}
+          pendingPayment={hasPendingSubscription}
+        />
+      )
+    }
     return (
       <ActivationScreen
         siteId={pendingSite.id}
