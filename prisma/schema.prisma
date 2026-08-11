@@ -612,3 +612,13 @@ model Project {
 
   @@map("projects")
 }
+
+model Lead {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  source    String   @default("landing")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("leads")
+}
