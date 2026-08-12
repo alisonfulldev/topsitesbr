@@ -4,23 +4,10 @@ import { useState, useTransition, useEffect, useRef } from 'react'
 import { captureLeadAction } from '../actions'
 
 // ── Ajuste estes valores sem tocar no resto ───────────────────────────────────
-const SITES_DELIVERED = 50
 const VAGAS_SEMANA = 5
 const VAGAS_OCUPADAS = 3
 
 const WHATSAPP_URL = `https://wa.me/${(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5511999999999').replace(/\D/g, '')}?text=${encodeURIComponent('Oi! Vi a oferta do site por R$97 e quero garantir minha vaga!')}`
-
-// ── Galeria ───────────────────────────────────────────────────────────────────
-// Para usar imagens reais: adicione src: '/gallery/nome.jpg' em cada item e
-// substitua o <GalleryPlaceholder> pelo <img> correspondente no JSX da galeria.
-const GALLERY = [
-  { label: 'Crédito & Financeiro', accent: '#3b82f6' },
-  { label: 'Estética & Beleza',    accent: '#ec4899' },
-  { label: 'Viagem & Turismo',     accent: '#14b8a6' },
-  { label: 'Engenharia',           accent: '#f97316' },
-  { label: 'E-commerce',           accent: '#8b5cf6' },
-  { label: 'Serviço Público',      accent: '#22c55e' },
-]
 
 // ── Hook: revela elemento quando entra na viewport ────────────────────────────
 function useReveal(threshold = 0.12) {
@@ -108,31 +95,6 @@ function CTAButton({
       {children}
       <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
     </button>
-  )
-}
-
-// ── Placeholder da galeria (substitua por <img> quando tiver as screenshots) ──
-function GalleryPlaceholder({ label, accent }: { label: string; accent: string }) {
-  return (
-    <div className="absolute inset-0 flex flex-col" style={{ background: '#0a0a0a' }}>
-      {/* Barra do "navegador" */}
-      <div className="flex items-center gap-1.5 px-3 py-2 bg-zinc-900 border-b border-white/5">
-        <span className="w-2 h-2 rounded-full bg-red-500/70" />
-        <span className="w-2 h-2 rounded-full bg-yellow-500/70" />
-        <span className="w-2 h-2 rounded-full bg-green-500/70" />
-        <div className="flex-1 mx-2 h-3 bg-zinc-800 rounded-sm" />
-      </div>
-      {/* Conteúdo simulado */}
-      <div className="flex-1 p-3 space-y-2">
-        <div className="h-8 rounded" style={{ background: accent + '33' }} />
-        <div className="h-2 bg-zinc-800 rounded w-3/4" />
-        <div className="h-2 bg-zinc-800 rounded w-1/2" />
-        <div className="grid grid-cols-3 gap-1 mt-2">
-          {[1, 2, 3].map((i) => <div key={i} className="h-6 bg-zinc-800 rounded" />)}
-        </div>
-        <div className="h-5 rounded mt-1" style={{ background: accent + '40', width: '60%' }} />
-      </div>
-    </div>
   )
 }
 
@@ -304,13 +266,6 @@ export function LandingPage() {
         {/* CTA */}
         <CTAButton onClick={open} size="xl">QUERO MEU SITE AGORA</CTAButton>
 
-        {/* Micro prova social */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-zinc-500 text-sm">
-          <span className="flex items-center gap-1.5"><Check size="sm" /><span className="text-zinc-400">+{SITES_DELIVERED} sites entregues</span></span>
-          <span className="flex items-center gap-1.5"><Check size="sm" /><span className="text-zinc-400">Sem contrato</span></span>
-          <span className="flex items-center gap-1.5"><Check size="sm" /><span className="text-zinc-400">Cancele quando quiser</span></span>
-        </div>
-
         {/* Seta para baixo */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
           <svg className="w-5 h-5 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -398,58 +353,7 @@ export function LandingPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          4. PROVA SOCIAL — galeria
-      ════════════════════════════════════════════════════════ */}
-      <section className="py-20 px-5" style={{ background: '#070707' }}>
-        <div className="max-w-3xl mx-auto">
-          <Reveal>
-            <p className="text-yellow-400 text-xs font-black uppercase tracking-[0.2em] mb-3 text-center">Prova social</p>
-            <h2 className="text-3xl sm:text-4xl font-black text-center mb-2 leading-tight">
-              Sites que já entregamos —{' '}
-              <span className="text-yellow-400">para negócios como o seu</span>
-            </h2>
-            <p className="text-zinc-500 text-base text-center mb-10">
-              De clínicas a financeiras, de lojas a prestadores de serviço.
-            </p>
-          </Reveal>
-
-          {/* Grade de sites */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-10">
-            {GALLERY.map((item, i) => (
-              <Reveal key={item.label} delay={i * 60}>
-                <div className="group relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/5 cursor-pointer
-                                transition-all duration-300 hover:scale-[1.03] hover:border-yellow-400/40
-                                hover:shadow-[0_0_25px_rgba(250,204,21,0.15)]">
-                  <GalleryPlaceholder label={item.label} accent={item.accent} />
-                  {/* Label no hover */}
-                  <div className="absolute inset-0 flex items-end p-3
-                                  bg-gradient-to-t from-black/80 via-transparent to-transparent
-                                  opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p className="text-white text-xs font-bold">{item.label}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Contador */}
-          <Reveal>
-            <div className="flex justify-center">
-              <div className="inline-flex items-center gap-4 border border-yellow-400/30 rounded-2xl px-6 py-4"
-                   style={{ background: 'rgba(250,204,21,0.07)' }}>
-                <span className="text-yellow-400 text-4xl font-black">+{SITES_DELIVERED}</span>
-                <div>
-                  <p className="text-white font-bold text-sm">sites entregues</p>
-                  <p className="text-zinc-500 text-xs">e clientes satisfeitos</p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════
-          5. OFERTA PRINCIPAL — R$97 em destaque máximo
+          4. OFERTA PRINCIPAL — R$97 em destaque máximo
       ════════════════════════════════════════════════════════ */}
       <section className="py-20 px-5 bg-black relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
