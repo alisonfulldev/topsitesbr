@@ -6,7 +6,7 @@ import { COMPANY_WHATSAPP, APP_URL } from '@/lib/config'
 
 const WA_NUMBER = COMPANY_WHATSAPP.replace(/\D/g, '')
 const WA_TEXT = encodeURIComponent('Oi! Vi a oferta do site por R$97 e quero garantir minha vaga!')
-export const WHATSAPP_URL = `https://wa.me/${WA_NUMBER}?text=${WA_TEXT}`
+const WHATSAPP_URL = `https://wa.me/${WA_NUMBER}?text=${WA_TEXT}`
 
 export async function captureLeadAction(
   name: string,

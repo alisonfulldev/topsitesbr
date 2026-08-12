@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { captureLeadAction, WHATSAPP_URL } from '../actions'
+import { captureLeadAction } from '../actions'
+
+const WHATSAPP_URL = `https://wa.me/${(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5511999999999').replace(/\D/g, '')}?text=${encodeURIComponent('Oi! Vi a oferta do site por R$97 e quero garantir minha vaga!')}`
 
 // ── Ajuste estes valores conforme necessário ──────────────────────────────────
 const SITES_DELIVERED = 50
