@@ -622,3 +622,32 @@ model Lead {
 
   @@map("leads")
 }
+
+model PresentationProposal {
+  id         String    @id @default(uuid())
+  token      String    @unique
+  clientName String    @map("client_name")
+  value      Decimal   @db.Decimal(10, 2)
+  scope      String    @db.Text
+  details    String?   @db.Text
+  openedAt   DateTime? @map("opened_at")
+  expiresAt  DateTime? @map("expires_at")
+  approvedAt DateTime? @map("approved_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  leads PresentationProposalLead[]
+
+  @@map("presentation_proposals")
+}
+
+model PresentationProposalLead {
+  id         String   @id @default(uuid())
+  proposalId String   @map("proposal_id")
+  email      String
+  capturedAt DateTime @default(now()) @map("captured_at")
+
+  proposal PresentationProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  @@map("presentation_proposal_leads")
+}
