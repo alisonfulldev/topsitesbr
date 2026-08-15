@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 import { unlockProposalAction, approveProposalAction } from '../actions'
 import { SPECIALIST_1, SPECIALIST_2, PORTFOLIO } from '../../_constants'
 
@@ -333,9 +334,9 @@ function ProposalView({
         />
 
         <div className="relative w-full max-w-lg mx-auto">
-          <p className="text-yellow-400 text-[10px] font-black tracking-[0.3em] uppercase mb-10">
-            TOP SITE
-          </p>
+          <div className="flex justify-center mb-10">
+            <Image src="/logo.png" alt="TOP SITE" width={160} height={48} className="h-11 w-auto" priority />
+          </div>
 
           {/* Badge */}
           <div
