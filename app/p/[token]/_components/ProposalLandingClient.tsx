@@ -503,7 +503,7 @@ function ProposalView({
 
           {PORTFOLIO.length === 0 ? (
             <Reveal delay={80}>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div
                     key={i}
@@ -522,7 +522,7 @@ function ProposalView({
               </div>
             </Reveal>
           ) : (
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {PORTFOLIO.map((img, i) => (
                 <Reveal key={img.src} delay={i * 60}>
                   <div className="aspect-square rounded-2xl overflow-hidden border border-white/[0.05]">
