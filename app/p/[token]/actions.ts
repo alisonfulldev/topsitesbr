@@ -27,29 +27,12 @@ export async function unlockProposalAction(
 
     const now = new Date()
 
-    // ── Idempotência: proposta já foi aberta antes ─────────────────────────────
-    if (proposal.openedAt) {
-      if (proposal.expiresAt && proposal.expiresAt < now) {
-        return { error: 'expired' }
-      }
-      // Dentro da validade — devolve os dados sem salvar lead nem reenviar e-mail
-      return {
-        value: Number(proposal.value),
-        scope: proposal.scope,
-        details: proposal.details,
-        expiresAt: proposal.expiresAt!.toISOString(),
-      }
+    // ── Verifica expiração ────────────────────────────────────────────────────
+    if (proposal.openedAt && proposal.expiresAt && proposal.expiresAt < now) {
+      return { error: 'expired' }
     }
 
-    // ── Primeira abertura ──────────────────────────────────────────────────────
-    const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000)
-
-    await prisma.presentationProposal.update({
-      where: { token },
-      data: { openedAt: now, expiresAt },
-    })
-
-    // Salva lead — falha silenciosa, não bloqueia o unlock
+    // ── Salva lead — sempre, para qualquer e-mail digitado ────────────────────
     try {
       await prisma.presentationProposalLead.create({
         data: { proposalId: proposal.id, email },
@@ -58,22 +41,39 @@ export async function unlockProposalAction(
       console.error('[proposal-lp] lead save failed', err)
     }
 
-    // Envia e-mail — falha silenciosa, não bloqueia o unlock
-    try {
-      await sendEmail({
-        to: email,
-        subject: 'Sua proposta está liberada ⏳',
-        html: buildUnlockEmail(proposal.clientName),
+    // ── Primeira abertura: inicia o timer e envia e-mail ──────────────────────
+    if (!proposal.openedAt) {
+      const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+
+      await prisma.presentationProposal.update({
+        where: { token },
+        data: { openedAt: now, expiresAt },
       })
-    } catch (err) {
-      console.error('[proposal-lp] email failed', err)
+
+      try {
+        await sendEmail({
+          to: email,
+          subject: 'Sua proposta está liberada ⏳',
+          html: buildUnlockEmail(proposal.clientName),
+        })
+      } catch (err) {
+        console.error('[proposal-lp] email failed', err)
+      }
+
+      return {
+        value: Number(proposal.value),
+        scope: proposal.scope,
+        details: proposal.details,
+        expiresAt: expiresAt.toISOString(),
+      }
     }
 
+    // Proposta já aberta e dentro da validade — devolve dados
     return {
       value: Number(proposal.value),
       scope: proposal.scope,
       details: proposal.details,
-      expiresAt: expiresAt.toISOString(),
+      expiresAt: proposal.expiresAt!.toISOString(),
     }
   } catch (err) {
     console.error('[proposal-lp] unlock error', err)
