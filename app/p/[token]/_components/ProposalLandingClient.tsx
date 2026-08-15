@@ -490,7 +490,7 @@ function ProposalView({
 
       {/* ── PORTFÓLIO ── */}
       <section className="py-16 px-6" style={{ background: '#0d0d0d' }}>
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <Reveal>
             <p className="text-yellow-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">
               Portfólio
@@ -503,36 +503,34 @@ function ProposalView({
 
           {PORTFOLIO.length === 0 ? (
             <Reveal delay={80}>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {Array.from({ length: 6 }).map((_, i) => (
+              <div className="grid grid-cols-4 gap-3">
+                {Array.from({ length: 4 }).map((_, i) => (
                   <div
                     key={i}
-                    className="aspect-[4/3] rounded-2xl border border-white/[0.04] flex flex-col items-center justify-center gap-2"
+                    className="aspect-square rounded-2xl border border-white/[0.04] flex flex-col items-center justify-center gap-2"
                     style={{ background: '#111111' }}
                   >
-                    {/* Browser chrome */}
                     <div className="flex gap-1 mb-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-zinc-800" />
                       <span className="w-1.5 h-1.5 rounded-full bg-zinc-800" />
                       <span className="w-1.5 h-1.5 rounded-full bg-zinc-800" />
                     </div>
-                    <div className="w-10 h-1.5 bg-zinc-800 rounded" />
-                    <div className="w-7 h-1.5 bg-zinc-800 rounded" />
+                    <div className="w-8 h-1.5 bg-zinc-800 rounded" />
+                    <div className="w-5 h-1.5 bg-zinc-800 rounded" />
                   </div>
                 ))}
               </div>
-              <p className="text-zinc-700 text-xs text-center mt-4">Portfólio em atualização</p>
             </Reveal>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-4 gap-3">
               {PORTFOLIO.map((img, i) => (
                 <Reveal key={img.src} delay={i * 60}>
-                  <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-white/[0.05]">
+                  <div className="aspect-square rounded-2xl overflow-hidden border border-white/[0.05]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={img.src}
                       alt={img.alt}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 </Reveal>
