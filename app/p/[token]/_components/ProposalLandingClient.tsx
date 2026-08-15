@@ -495,7 +495,7 @@ function ProposalView({
             <p className="text-yellow-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">
               Portfólio
             </p>
-            <h2 className="text-2xl sm:text-3xl font-black mb-2">Sites que já entregamos</h2>
+            <h2 className="text-2xl sm:text-3xl font-black mb-2">Últimos sites entregues</h2>
             <p className="text-zinc-500 text-sm mb-10">
               Sites entregues recentemente.
             </p>
