@@ -322,77 +322,64 @@ function ProposalView({
     <div className="bg-[#0a0a0a] text-white">
 
       {/* ── HERO ── */}
-      <section className="relative min-h-[92vh] flex flex-col items-center justify-center px-5 py-24 text-center overflow-hidden">
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 py-24 text-center overflow-hidden">
         <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+          className="absolute inset-0 opacity-[0.035]"
+          style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '22px 22px' }}
         />
         <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[450px] pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse, rgba(250,204,21,0.13) 0%, transparent 70%)' }}
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse, rgba(250,204,21,0.14) 0%, transparent 70%)' }}
         />
 
-        <div className="relative max-w-xl mx-auto">
-          <p className="text-yellow-400 text-[10px] font-black tracking-[0.3em] uppercase mb-8">
+        <div className="relative w-full max-w-lg mx-auto">
+          <p className="text-yellow-400 text-[10px] font-black tracking-[0.3em] uppercase mb-10">
             TOP SITE
           </p>
 
           {/* Badge */}
           <div
-            className="inline-flex items-center gap-2 border border-yellow-400/30 rounded-full px-4 py-1.5 mb-8"
-            style={{ background: 'rgba(250,204,21,0.06)' }}
+            className="inline-flex items-center gap-2 border border-yellow-400/30 rounded-full px-4 py-2 mb-8"
+            style={{ background: 'rgba(250,204,21,0.07)' }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
-            <span className="text-yellow-400 text-[10px] font-black uppercase tracking-widest">
-              Proposta exclusiva · Válida por 24h
+            <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse shrink-0" />
+            <span className="text-yellow-400 text-xs font-bold">
+              Proposta exclusiva — válida por 24 horas
             </span>
           </div>
 
           {/* Greeting */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight mb-6">
+          <h1 className="text-[2.2rem] sm:text-5xl font-black leading-[1.1] tracking-tight mb-5">
             Olá, {clientName}!
-            <br />
-            <span className="text-zinc-400 text-2xl sm:text-3xl font-extrabold mt-2 block">
-              Preparamos algo especial para o seu negócio.
-            </span>
           </h1>
-
-          {/* Value card */}
-          <div className="my-8 inline-block">
-            <div className="rounded-2xl border-2 border-yellow-400 px-8 py-5 shadow-[0_0_50px_rgba(250,204,21,0.18)]">
-              <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-2">
-                Investimento
-              </p>
-              <p className="text-yellow-400 text-5xl sm:text-6xl font-black leading-none">
-                {formatCurrency(content.value)}
-              </p>
-            </div>
-          </div>
-
-          {/* Validity */}
-          <div className="flex items-center justify-center gap-1.5 text-zinc-600 text-xs mb-10">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Válida até {formatExpiry(content.expiresAt)}</span>
-          </div>
-
-          <ApproveButton token={token} size="xl" />
-          <p className="text-zinc-700 text-xs mt-3">
-            Você será direcionado ao WhatsApp para alinharmos os detalhes
+          <p className="text-zinc-300 text-lg sm:text-2xl font-semibold leading-snug mb-4">
+            Preparamos uma proposta exclusiva
+            <br className="hidden sm:block" />
+            {' '}para o seu negócio.
           </p>
+          <p className="text-zinc-500 text-base leading-relaxed max-w-sm mx-auto">
+            Role a página para conferir tudo com calma — o escopo do projeto,
+            nossa apresentação e o investimento no final.
+          </p>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 animate-bounce">
+          <span className="text-zinc-700 text-[10px] font-semibold uppercase tracking-widest">Ver proposta</span>
+          <svg className="w-4 h-4 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
       </section>
 
       {/* ── ESCOPO ── */}
-      <section className="py-20 px-5" style={{ background: '#0d0d0d' }}>
+      <section className="py-16 px-6" style={{ background: '#0d0d0d' }}>
         <div className="max-w-2xl mx-auto">
           <Reveal>
             <p className="text-yellow-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">
               O Projeto
             </p>
-            <h2 className="text-2xl sm:text-3xl font-black mb-8">Escopo do Trabalho</h2>
+            <h2 className="text-2xl sm:text-3xl font-black mb-6">Escopo do Trabalho</h2>
           </Reveal>
 
           <Reveal delay={80}>
@@ -400,7 +387,7 @@ function ProposalView({
               className="rounded-2xl border border-white/[0.06] p-6 sm:p-8"
               style={{ background: '#111111' }}
             >
-              <p className="text-zinc-300 text-base leading-[1.9] whitespace-pre-wrap">
+              <p className="text-zinc-200 text-[1.05rem] leading-[1.95] whitespace-pre-wrap">
                 {content.scope}
               </p>
             </div>
@@ -419,7 +406,7 @@ function ProposalView({
                   className="rounded-2xl border border-white/[0.06] p-6 sm:p-8"
                   style={{ background: '#111111' }}
                 >
-                  <p className="text-zinc-300 text-base leading-[1.9] whitespace-pre-wrap">
+                  <p className="text-zinc-200 text-[1.05rem] leading-[1.95] whitespace-pre-wrap">
                     {content.details}
                   </p>
                 </div>
@@ -430,7 +417,7 @@ function ProposalView({
       </section>
 
       {/* ── QUEM SOMOS ── */}
-      <section className="py-20 px-5 bg-[#0a0a0a]">
+      <section className="py-16 px-6 bg-[#0a0a0a]">
         <div className="max-w-2xl mx-auto">
           <Reveal>
             <p className="text-yellow-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">
@@ -439,7 +426,7 @@ function ProposalView({
             <h2 className="text-2xl sm:text-3xl font-black mb-2">
               Os especialistas por trás do projeto
             </h2>
-            <p className="text-zinc-500 text-base mb-10">
+            <p className="text-zinc-400 text-base leading-relaxed mb-10">
               Dois profissionais que unem desenvolvimento de qualidade e visão de
               marketing digital para criar sites que realmente vendem.
             </p>
@@ -497,7 +484,7 @@ function ProposalView({
       </section>
 
       {/* ── PORTFÓLIO ── */}
-      <section className="py-20 px-5" style={{ background: '#0d0d0d' }}>
+      <section className="py-16 px-6" style={{ background: '#0d0d0d' }}>
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <p className="text-yellow-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">
@@ -551,37 +538,55 @@ function ProposalView({
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="py-24 px-5 text-center bg-[#0a0a0a] relative overflow-hidden">
+      <section className="py-24 px-6 text-center bg-[#0a0a0a] relative overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at center bottom, rgba(250,204,21,0.09) 0%, transparent 65%)' }}
+          style={{ background: 'radial-gradient(ellipse at center, rgba(250,204,21,0.1) 0%, transparent 65%)' }}
         />
         <div
-          className="absolute inset-0 opacity-[0.025]"
-          style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+          className="absolute inset-0 opacity-[0.03]"
+          style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '22px 22px' }}
         />
 
-        <div className="relative max-w-xl mx-auto">
+        <div className="relative max-w-lg mx-auto">
           <Reveal>
             <p className="text-yellow-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
               Próximo passo
             </p>
-            <h2 className="text-3xl sm:text-5xl font-black leading-tight mb-4">
-              Pronto para transformar
-              <br />
-              <span className="text-yellow-400">seu negócio digital?</span>
+            <h2 className="text-3xl sm:text-4xl font-black leading-tight mb-10">
+              Pronto para começar?
             </h2>
-            <p className="text-zinc-400 text-base mb-2">
-              Investimento:{' '}
-              <strong className="text-yellow-400 text-xl">{formatCurrency(content.value)}</strong>
-            </p>
-            <p className="text-zinc-700 text-xs mb-10">
-              Válida até {formatExpiry(content.expiresAt)}
+
+            {/* Value — destaque máximo aqui */}
+            <div className="mb-8">
+              <div
+                className="inline-block rounded-3xl border-2 border-yellow-400 px-8 py-6 shadow-[0_0_60px_rgba(250,204,21,0.2)]"
+                style={{ background: 'rgba(250,204,21,0.04)' }}
+              >
+                <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-3">
+                  Investimento total
+                </p>
+                <p className="text-yellow-400 text-5xl sm:text-6xl font-black leading-none mb-3">
+                  {formatCurrency(content.value)}
+                </p>
+                <div className="flex items-center justify-center gap-1.5 text-zinc-600 text-xs">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Válida até {formatExpiry(content.expiresAt)}</span>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-zinc-400 text-base leading-relaxed mb-8 max-w-sm mx-auto">
+              Clique abaixo para aprovar e falarmos pelo WhatsApp — alinhamos
+              os próximos passos juntos.
             </p>
 
-            <ApproveButton token={token} size="xl" />
-            <p className="text-zinc-700 text-xs mt-3">
-              Ao clicar você será direcionado ao WhatsApp para finalizarmos juntos.
+            <ApproveButton token={token} size="xl" full />
+            <p className="text-zinc-600 text-xs mt-4">
+              Você será direcionado ao WhatsApp para alinharmos os detalhes.
             </p>
           </Reveal>
 
