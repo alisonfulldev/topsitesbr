@@ -440,11 +440,15 @@ function ProposalView({
                   className="rounded-2xl border border-white/[0.06] p-6 h-full"
                   style={{ background: '#111111' }}
                 >
-                  {/* Avatar */}
-                  <div className="w-12 h-12 rounded-2xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center mb-4">
-                    <span className="text-yellow-400 text-xl font-black">
-                      {sp.name.charAt(0)}
-                    </span>
+                  {/* Foto */}
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden border border-yellow-400/20 mb-4">
+                    <Image
+                      src={sp.photo}
+                      alt={sp.name}
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover object-top"
+                    />
                   </div>
                   <p className="text-white font-black text-lg mb-0.5">{sp.name}</p>
                   <p className="text-yellow-400 text-[10px] font-bold uppercase tracking-widest mb-3">
