@@ -497,7 +497,7 @@ function ProposalView({
             </p>
             <h2 className="text-2xl sm:text-3xl font-black mb-2">Sites que já entregamos</h2>
             <p className="text-zinc-500 text-sm mb-10">
-              Cada site é desenvolvido sob medida, com atenção aos detalhes.
+              Sites entregues recentemente.
             </p>
           </Reveal>
 
