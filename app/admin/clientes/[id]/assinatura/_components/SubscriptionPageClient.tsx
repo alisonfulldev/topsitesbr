@@ -50,20 +50,22 @@ export function SubscriptionPageClient({
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
+  const [selectedPlanId, setSelectedPlanId] = useState<string>(plans?.[0]?.id ?? '')
+  const [freeFirstMonth, setFreeFirstMonth] = useState(true)
 
   function handleActivate() {
     setError(null)
     startTransition(async () => {
-      const planId = plans?.[0]?.id
-      if (!planId) {
-        setError('Plano "Site no Ar" não encontrado no banco de dados.')
+      if (!selectedPlanId) {
+        setError('Selecione um plano antes de ativar.')
         return
       }
-      const result = await activateSubscription(clientId, planId)
+      const selectedPlan = plans?.find((p) => p.id === selectedPlanId)
+      const result = await activateSubscription(clientId, selectedPlanId, freeFirstMonth)
       if (result.error) {
         setError(result.error)
       } else {
-        setSuccessMsg('Assinatura "Site no Ar" ativada com sucesso.')
+        setSuccessMsg(`Assinatura "${selectedPlan?.name ?? 'Site no Ar'}" ativada com sucesso.`)
       }
     })
   }
@@ -128,14 +130,51 @@ export function SubscriptionPageClient({
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-700 mb-3">Sem assinatura ativa</h3>
           <p className="text-sm text-gray-500 mb-4">
-            {clientName} ainda não possui uma assinatura. Ative o plano Site no Ar manualmente.
+            {clientName} ainda não possui uma assinatura. Escolha o plano e ative manualmente.
           </p>
+
+          {plans && plans.length > 0 && (
+            <div className="mb-4 space-y-2">
+              {plans.map((plan) => (
+                <label
+                  key={plan.id}
+                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                    selectedPlanId === plan.id
+                      ? 'border-brand bg-yellow-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="plan"
+                    value={plan.id}
+                    checked={selectedPlanId === plan.id}
+                    onChange={() => setSelectedPlanId(plan.id)}
+                    className="accent-brand"
+                  />
+                  <span className="text-sm font-medium text-gray-900">{plan.name}</span>
+                  <span className="text-sm text-gray-500">— {formatPrice(plan.price)}/mês</span>
+                </label>
+              ))}
+            </div>
+          )}
+
+          <label className="flex items-center gap-2 mb-4 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={freeFirstMonth}
+              onChange={(e) => setFreeFirstMonth(e.target.checked)}
+              className="accent-brand w-4 h-4"
+            />
+            <span className="text-sm text-gray-700">1º mês grátis <span className="text-gray-400">(primeira cobrança em 30 dias)</span></span>
+          </label>
+
           <button
             onClick={handleActivate}
-            disabled={isPending}
+            disabled={isPending || !selectedPlanId}
             className="px-4 py-2 rounded-lg bg-brand text-brand-dark text-sm font-medium hover:bg-brand-hover disabled:opacity-50 transition-colors"
           >
-            {isPending ? 'Ativando…' : 'Ativar Plano Site no Ar'}
+            {isPending ? 'Ativando…' : 'Ativar Assinatura'}
           </button>
         </div>
       )}

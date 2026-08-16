@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache'
 export async function activateSubscription(
   clientId: string,
   planId: string,
+  freeFirstMonth = true,
 ): Promise<{ error?: string; success?: boolean }> {
   const [client, plan] = await Promise.all([
     prisma.client.findUnique({ where: { id: clientId } }),
@@ -40,6 +41,7 @@ export async function activateSubscription(
     planName: plan.name,
     price: Number(plan.price),
     successUrl: `${appUrl}/painel?ativado=1`,
+    freeMonth: freeFirstMonth,
   })
 
   const subscription = await prisma.subscription.create({
