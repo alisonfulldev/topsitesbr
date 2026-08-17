@@ -19,9 +19,12 @@ export default withAuth(
       return NextResponse.redirect(new URL('/painel', req.url))
     }
 
-    // Rotas /painel/* → somente role client
+    // Rotas /painel/* → somente role client (ou admin em modo impersonação)
     if (pathname.startsWith('/painel') && token.role !== 'client') {
-      return NextResponse.redirect(new URL('/admin', req.url))
+      const hasImpCookie = !!req.cookies.get('imp_id')?.value
+      if (token.role !== 'admin' || !hasImpCookie) {
+        return NextResponse.redirect(new URL('/admin', req.url))
+      }
     }
 
     // Usuário com senha temporária — força troca antes de continuar
