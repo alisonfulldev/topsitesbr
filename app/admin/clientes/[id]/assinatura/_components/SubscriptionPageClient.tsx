@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { activateSubscription } from '../actions'
+import { activateSubscription, changePlan } from '../actions'
 
 type SubscriptionInfo = {
   id: string
@@ -52,6 +52,32 @@ export function SubscriptionPageClient({
   const [isPending, startTransition] = useTransition()
   const [selectedPlanId, setSelectedPlanId] = useState<string>(plans?.[0]?.id ?? '')
   const [freeFirstMonth, setFreeFirstMonth] = useState(true)
+
+  const [changePlanId, setChangePlanId] = useState<string>('')
+  const [changeError, setChangeError] = useState<string | null>(null)
+  const [changeSuccess, setChangeSuccess] = useState<string | null>(null)
+  const [changeBlockedUntil, setChangeBlockedUntil] = useState<string | null>(null)
+  const [isChangePending, startChangeTransition] = useTransition()
+
+  function handleChangePlan(adminOverride = false) {
+    setChangeError(null)
+    setChangeBlockedUntil(null)
+    startChangeTransition(async () => {
+      if (!changePlanId) {
+        setChangeError('Selecione o novo plano.')
+        return
+      }
+      const result = await changePlan(clientId, changePlanId, adminOverride)
+      if (result.blockedUntil) {
+        setChangeBlockedUntil(result.blockedUntil)
+      } else if (result.error) {
+        setChangeError(result.error)
+      } else {
+        const newPlan = plans?.find((p) => p.id === changePlanId)
+        setChangeSuccess(`Plano alterado para ${newPlan?.name ?? ''} com sucesso.`)
+      }
+    })
+  }
 
   function handleActivate() {
     setError(null)
@@ -126,7 +152,73 @@ export function SubscriptionPageClient({
             )}
           </div>
         </div>
-      ) : (
+      ) : null}
+
+      {/* Trocar de Plano — só aparece quando já existe assinatura */}
+      {subscription && plans && plans.length > 1 && (
+        <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-3">
+          <h3 className="text-sm font-semibold text-gray-700">Trocar de Plano</h3>
+
+          {changeSuccess && (
+            <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-800">
+              {changeSuccess}
+            </div>
+          )}
+          {changeError && (
+            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-800">
+              {changeError}
+            </div>
+          )}
+          {changeBlockedUntil && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800 space-y-2">
+              <p>Downgrade bloqueado até {new Date(changeBlockedUntil).toLocaleDateString('pt-BR')} (carência de 3 meses).</p>
+              <button
+                onClick={() => handleChangePlan(true)}
+                disabled={isChangePending}
+                className="text-xs font-medium underline"
+              >
+                Forçar troca mesmo assim (override admin)
+              </button>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            {plans
+              .filter((p) => p.id !== subscription.planId)
+              .map((plan) => (
+                <label
+                  key={plan.id}
+                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                    changePlanId === plan.id
+                      ? 'border-brand bg-yellow-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="change-plan"
+                    value={plan.id}
+                    checked={changePlanId === plan.id}
+                    onChange={() => setChangePlanId(plan.id)}
+                    className="accent-brand"
+                  />
+                  <span className="text-sm font-medium text-gray-900">{plan.name}</span>
+                  <span className="text-sm text-gray-500">— {formatPrice(plan.price)}/mês</span>
+                </label>
+              ))}
+          </div>
+
+          <button
+            onClick={() => handleChangePlan(false)}
+            disabled={isChangePending || !changePlanId}
+            className="px-4 py-2 rounded-lg bg-brand text-brand-dark text-sm font-medium hover:bg-brand-hover disabled:opacity-50 transition-colors"
+          >
+            {isChangePending ? 'Alterando…' : 'Confirmar Troca de Plano'}
+          </button>
+        </div>
+      )}
+
+      {!subscription && (
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <h3 className="text-sm font-semibold text-gray-700 mb-3">Sem assinatura ativa</h3>
           <p className="text-sm text-gray-500 mb-4">
