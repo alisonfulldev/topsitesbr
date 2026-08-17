@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { APP_URL } from '@/lib/config'
 import { CopyLinkButton } from '../_components/ProposalLpCard'
+import { ReminderButton, ReactivationButton } from '../_components/EmailActionButtons'
 
 export default async function PropostaDetailPage({ params }: { params: { id: string } }) {
   const proposal = await prisma.presentationProposal.findUnique({
@@ -22,6 +23,8 @@ export default async function PropostaDetailPage({ params }: { params: { id: str
 
   const isExpired =
     !!proposal.openedAt && !!proposal.expiresAt && proposal.expiresAt < now
+  const isActive = !!proposal.openedAt && !proposal.approvedAt && !isExpired
+
   const statusLabel = proposal.approvedAt
     ? 'Aprovada'
     : !proposal.openedAt
@@ -40,11 +43,8 @@ export default async function PropostaDetailPage({ params }: { params: { id: str
   function fmt(d: Date | null) {
     if (!d) return '—'
     return new Date(d).toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
     })
   }
 
@@ -61,9 +61,23 @@ export default async function PropostaDetailPage({ params }: { params: { id: str
             Criada em {fmt(proposal.createdAt)}
           </p>
         </div>
-        <span className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full ${statusClass}`}>
-          {statusLabel}
-        </span>
+        <div className="flex items-center gap-3">
+          {isActive && (
+            <ReminderButton
+              proposalId={proposal.id}
+              reminderSentAt={proposal.reminderSentAt}
+            />
+          )}
+          {isExpired && (
+            <ReactivationButton
+              proposalId={proposal.id}
+              reactivationSentAt={proposal.reactivationSentAt}
+            />
+          )}
+          <span className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full ${statusClass}`}>
+            {statusLabel}
+          </span>
+        </div>
       </div>
 
       {/* Main data */}
@@ -84,6 +98,18 @@ export default async function PropostaDetailPage({ params }: { params: { id: str
           <span className="text-sm text-gray-500">Aprovada em</span>
           <span className="text-sm text-gray-700">{fmt(proposal.approvedAt)}</span>
         </div>
+        {proposal.reminderSentAt && (
+          <div className="px-5 py-4 flex items-center justify-between">
+            <span className="text-sm text-gray-500">Lembrete enviado em</span>
+            <span className="text-sm text-green-700 font-medium">{fmt(proposal.reminderSentAt)}</span>
+          </div>
+        )}
+        {proposal.reactivationSentAt && (
+          <div className="px-5 py-4 flex items-center justify-between">
+            <span className="text-sm text-gray-500">Reativação enviada em</span>
+            <span className="text-sm text-orange-700 font-medium">{fmt(proposal.reactivationSentAt)}</span>
+          </div>
+        )}
         <div className="px-5 py-4 flex items-center justify-between gap-3">
           <span className="text-sm text-gray-500 shrink-0">Link</span>
           <div className="flex items-center gap-2 min-w-0">

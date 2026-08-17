@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { APP_URL } from '@/lib/config'
 import { CopyLinkButton } from './_components/ProposalLpCard'
+import { ReminderButton, ReactivationButton } from './_components/EmailActionButtons'
 
 type Status = 'aprovada' | 'ativa' | 'expirada' | 'nao_aberta'
 
@@ -65,13 +66,14 @@ export default async function PropostasLpPage() {
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Leads</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Criada em</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Link</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">E-mail</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {proposals.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="text-center py-12 text-gray-400 text-sm">
+                  <td colSpan={8} className="text-center py-12 text-gray-400 text-sm">
                     Nenhuma proposta criada ainda.{' '}
                     <Link href="/admin/propostas-lp/nova" className="text-brand-text underline">
                       Criar primeira proposta
@@ -101,6 +103,20 @@ export default async function PropostasLpPage() {
                     <td className="px-4 py-3 text-gray-400">{date}</td>
                     <td className="px-4 py-3">
                       <CopyLinkButton link={link} />
+                    </td>
+                    <td className="px-4 py-3">
+                      {status === 'ativa' && (
+                        <ReminderButton
+                          proposalId={p.id}
+                          reminderSentAt={p.reminderSentAt}
+                        />
+                      )}
+                      {status === 'expirada' && (
+                        <ReactivationButton
+                          proposalId={p.id}
+                          reactivationSentAt={p.reactivationSentAt}
+                        />
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <Link

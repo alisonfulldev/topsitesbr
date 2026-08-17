@@ -630,11 +630,13 @@ model PresentationProposal {
   value      Decimal   @db.Decimal(10, 2)
   scope      String    @db.Text
   details    String?   @db.Text
-  openedAt   DateTime? @map("opened_at")
-  expiresAt  DateTime? @map("expires_at")
-  approvedAt DateTime? @map("approved_at")
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime  @updatedAt @map("updated_at")
+  openedAt            DateTime? @map("opened_at")
+  expiresAt           DateTime? @map("expires_at")
+  approvedAt          DateTime? @map("approved_at")
+  reminderSentAt      DateTime? @map("reminder_sent_at")
+  reactivationSentAt  DateTime? @map("reactivation_sent_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
 
   leads PresentationProposalLead[]
 
@@ -650,6 +652,14 @@ model PresentationProposalLead {
   proposal PresentationProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
 
   @@map("presentation_proposal_leads")
+}
+
+model EmailOptOut {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("email_opt_outs")
 }
 
 model ImpersonationLog {
