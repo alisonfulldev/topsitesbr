@@ -62,7 +62,7 @@ async function main() {
       eligibleSiteTypes: 'mini_site,landing_page',
     },
     { name: 'Logo Profissional', price: 220.0, type: 'service' as const },
-    { name: 'Configuração de Tráfego Pago', price: 197.0, type: 'service' as const },
+    { name: 'Configuração de Tráfego Pago', price: 299.0, type: 'whatsapp_lead' as const },
   ]
 
   for (const product of upsellProducts) {

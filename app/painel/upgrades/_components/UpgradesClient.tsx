@@ -259,7 +259,7 @@ function ProductModal({
 
   function handleBuy() {
     if (isWhatsappLead) {
-      const msg = encodeURIComponent(`Olá! Tenho interesse na Loja Virtual para o meu site. Pode me dar mais informações?`)
+      const msg = encodeURIComponent(`Olá! Tenho interesse em ${product.name} para o meu site. Pode me dar mais informações?`)
       window.open(`https://wa.me/${whatsappNumber}?text=${msg}`, '_blank')
       onClose()
       return
