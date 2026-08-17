@@ -7,19 +7,33 @@ import { PainelDesktopSidebar, PainelBottomNav } from '@/components/painel/Paine
 import { PwaSetup } from '@/components/painel/PwaSetup'
 import { PwaInstallModal } from '@/components/painel/PwaInstallModal'
 import { ReferralPopupWrapper } from '@/components/painel/ReferralPopupWrapper'
+import { ImpersonationBanner } from '@/components/painel/ImpersonationBanner'
 import Image from 'next/image'
 import { markNotificationRead, markAllNotificationsRead } from './actions'
+import { getImpersonationContext } from '@/lib/impersonation'
 
 export default async function PainelLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'client') redirect('/login')
+  if (!session) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { clientId: true },
-  })
+  // Allow admin access only when impersonating
+  const imp = session.user.role === 'admin'
+    ? await getImpersonationContext(session)
+    : null
+  if (session.user.role === 'admin' && !imp) redirect('/login')
+  if (session.user.role !== 'admin' && session.user.role !== 'client') redirect('/login')
 
-  const clientId = user?.clientId ?? null
+  // Resolve effective clientId
+  let clientId: string | null = null
+  if (imp) {
+    clientId = imp.clientId
+  } else {
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email! },
+      select: { clientId: true },
+    })
+    clientId = user?.clientId ?? null
+  }
   let unreadCount = 0
   let notifications: { id: string; title: string; message: string; read: boolean; createdAt: string }[] = []
 
@@ -110,7 +124,10 @@ export default async function PainelLayout({ children }: { children: React.React
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className={`flex min-h-screen bg-gray-50${imp ? ' pt-10' : ''}`}>
+      {/* Impersonation banner — fixed top bar visible only during admin impersonation */}
+      {imp && <ImpersonationBanner clientName={imp.clientName} />}
+
       {/* Desktop sidebar — hidden on mobile */}
       <PainelDesktopSidebar userName={session.user.name ?? session.user.email ?? ''} showProjectLink={showProjectLink} inProduction={inProduction} />
 

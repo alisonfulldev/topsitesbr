@@ -16,15 +16,12 @@ export default async function PainelPage({
   searchParams: { ativado?: string }
 }) {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'client') redirect('/login')
+  if (!session) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { clientId: true },
-  })
-  if (!user?.clientId) redirect('/login')
-
-  const clientId = user.clientId
+  const { resolveClientId } = await import('@/lib/impersonation')
+  const ctx = await resolveClientId(session)
+  if (!ctx) redirect('/login')
+  const clientId = ctx.clientId
 
   if (await isClientInProduction(clientId)) {
     redirect('/painel/projeto')

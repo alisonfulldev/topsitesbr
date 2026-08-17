@@ -6,16 +6,15 @@ import { ReportDetailClient } from '../_components/ReportDetailClient'
 
 export default async function ReportDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'client') redirect('/login')
+  if (!session) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { clientId: true },
-  })
-  if (!user?.clientId) redirect('/painel')
+  const { resolveClientId } = await import('@/lib/impersonation')
+  const ctx = await resolveClientId(session)
+  if (!ctx) redirect('/painel')
+  const clientId = ctx.clientId
 
   const report = await prisma.siteReport.findFirst({
-    where: { id: params.id, clientId: user.clientId },
+    where: { id: params.id, clientId },
     include: { site: { select: { siteUrl: true, siteType: true } } },
   })
   if (!report) notFound()

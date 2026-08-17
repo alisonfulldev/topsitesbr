@@ -24,6 +24,11 @@ async function getClientId(): Promise<string | null> {
 export async function purchaseProduct(
   productId: string,
 ): Promise<{ error?: string; paymentUrl?: string }> {
+  const { assertNotImpersonating } = await import('@/lib/impersonation')
+  try { await assertNotImpersonating() } catch (e) {
+    return { error: (e as Error).message }
+  }
+
   const clientId = await getClientId()
   if (!clientId) return { error: 'Não autorizado.' }
 

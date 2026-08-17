@@ -30,6 +30,11 @@ export async function activateBasicPlan(opts?: { termsAccepted?: boolean }): Pro
 
 export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<{ error?: string; paymentUrl?: string }> {
   try {
+  const { assertNotImpersonating } = await import('@/lib/impersonation')
+  try { await assertNotImpersonating() } catch (e) {
+    return { error: (e as Error).message }
+  }
+
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'client') return { error: 'Não autorizado.' }
 
@@ -214,6 +219,9 @@ export async function markRetentionShown(): Promise<void> {
 }
 
 export async function requestZipUploadNotification(siteId: string): Promise<void> {
+  const { assertNotImpersonating } = await import('@/lib/impersonation')
+  try { await assertNotImpersonating() } catch { return }
+
   const clientId = await getClientId()
   if (!clientId) return
 
@@ -246,6 +254,9 @@ export async function submitDownloadReason(
   reason: string,
   detail: string,
 ): Promise<void> {
+  const { assertNotImpersonating } = await import('@/lib/impersonation')
+  try { await assertNotImpersonating() } catch { return }
+
   const clientId = await getClientId()
   if (!clientId) return
 

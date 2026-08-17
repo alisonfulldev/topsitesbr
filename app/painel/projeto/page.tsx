@@ -7,21 +7,20 @@ import { ProjetoPageView } from './_components/ProjetoPageView'
 
 export default async function ProjetoPage() {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'client') redirect('/login')
+  if (!session) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { clientId: true },
-  })
-  if (!user?.clientId) redirect('/painel')
+  const { resolveClientId } = await import('@/lib/impersonation')
+  const ctx = await resolveClientId(session)
+  if (!ctx) redirect('/painel')
+  const clientId = ctx.clientId
 
   // Tenta confirmar pagamento direto no Asaas se webhook não chegou
-  await syncProposalPayment(user.clientId)
+  await syncProposalPayment(clientId)
 
   const [proposal, client] = await Promise.all([
     prisma.proposal.findFirst({
       where: {
-        clientId: user.clientId,
+        clientId,
         status: { in: ['aprovada', 'paga', 'aguardando_info', 'em_desenvolvimento', 'pronto_revisao', 'publicado'] },
       },
       select: {
@@ -44,7 +43,7 @@ export default async function ProjetoPage() {
       orderBy: { createdAt: 'desc' },
     }),
     prisma.client.findUnique({
-      where: { id: user.clientId },
+      where: { id: clientId },
       select: { name: true },
     }),
   ])

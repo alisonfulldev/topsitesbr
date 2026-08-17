@@ -35,14 +35,12 @@ export default async function UpgradesPage({
   searchParams: { pago?: string }
 }) {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'client') redirect('/login')
+  if (!session) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { clientId: true },
-  })
-  const clientId = user?.clientId
-  if (!clientId) redirect('/painel')
+  const { resolveClientId } = await import('@/lib/impersonation')
+  const ctx = await resolveClientId(session)
+  if (!ctx) redirect('/painel')
+  const clientId = ctx.clientId
 
   if (await isClientInProduction(clientId)) {
     redirect('/painel/projeto')

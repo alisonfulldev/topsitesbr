@@ -8,21 +8,20 @@ import { ReportListClient } from './_components/ReportListClient'
 
 export default async function RelatoriosPage() {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'client') redirect('/login')
+  if (!session) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { clientId: true },
-  })
-  if (!user?.clientId) redirect('/painel')
+  const { resolveClientId } = await import('@/lib/impersonation')
+  const ctx = await resolveClientId(session)
+  if (!ctx) redirect('/painel')
+  const clientId = ctx.clientId
 
-  if (await isClientInProduction(user.clientId)) {
+  if (await isClientInProduction(clientId)) {
     redirect('/painel/projeto')
   }
 
   // Generate new reports if 7 days have passed (non-blocking on first load)
   try {
-    await maybeGenerateReportsForClient(user.clientId)
+    await maybeGenerateReportsForClient(clientId)
   } catch {
     // Don't fail page if generation fails
   }
@@ -33,7 +32,7 @@ export default async function RelatoriosPage() {
   // Auto-archive viewed reports older than 3 days
   await prisma.siteReport.updateMany({
     where: {
-      clientId: user.clientId,
+      clientId,
       viewedAt: { not: null, lt: archiveThreshold },
       archivedAt: null,
     },
@@ -41,7 +40,7 @@ export default async function RelatoriosPage() {
   })
 
   const allReports = await prisma.siteReport.findMany({
-    where: { clientId: user.clientId },
+    where: { clientId },
     orderBy: { generatedAt: 'desc' },
     include: { site: { select: { siteUrl: true, siteType: true } } },
   })

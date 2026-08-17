@@ -10,6 +10,11 @@ export async function changePassword(data: {
   newPassword: string
   confirmPassword: string
 }): Promise<{ error?: string; success?: boolean }> {
+  const { assertNotImpersonating } = await import('@/lib/impersonation')
+  try { await assertNotImpersonating() } catch (e) {
+    return { error: (e as Error).message }
+  }
+
   const session = await getServerSession(authOptions)
   if (!session?.user?.email) {
     return { error: 'Sessão inválida. Faça login novamente.' }

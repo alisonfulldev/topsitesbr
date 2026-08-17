@@ -7,20 +7,19 @@ import { NotificationsPageClient } from './_components/NotificationsPageClient'
 
 export default async function NotificacoesPage() {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'client') redirect('/login')
+  if (!session) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { clientId: true },
-  })
-  if (!user?.clientId) redirect('/painel')
+  const { resolveClientId } = await import('@/lib/impersonation')
+  const ctx = await resolveClientId(session)
+  if (!ctx) redirect('/painel')
+  const clientId = ctx.clientId
 
-  if (await isClientInProduction(user.clientId)) {
+  if (await isClientInProduction(clientId)) {
     redirect('/painel/projeto')
   }
 
   const notifications = await prisma.notification.findMany({
-    where: { clientId: user.clientId },
+    where: { clientId },
     orderBy: { createdAt: 'desc' },
   })
 

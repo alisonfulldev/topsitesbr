@@ -651,3 +651,13 @@ model PresentationProposalLead {
 
   @@map("presentation_proposal_leads")
 }
+
+model ImpersonationLog {
+  id        String    @id @default(uuid())
+  adminId   String    @map("admin_id")
+  clientId  String    @map("client_id")
+  startedAt DateTime  @default(now()) @map("started_at")
+  endedAt   DateTime? @map("ended_at")
+
+  @@map("impersonation_logs")
+}

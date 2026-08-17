@@ -7,21 +7,19 @@ import { AssinaturaPageClient } from './_components/AssinaturaPageClient'
 
 export default async function PainelAssinaturaPage() {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'client') redirect('/login')
+  if (!session) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { clientId: true },
-  })
+  const { resolveClientId } = await import('@/lib/impersonation')
+  const ctx = await resolveClientId(session)
+  if (!ctx) redirect('/painel')
+  const clientId = ctx.clientId
 
-  if (!user?.clientId) redirect('/painel')
-
-  if (await isClientInProduction(user.clientId)) {
+  if (await isClientInProduction(clientId)) {
     redirect('/painel/projeto')
   }
 
   const subscriptionRaw = await prisma.subscription.findFirst({
-    where: { clientId: user.clientId, status: { not: 'canceled' } },
+    where: { clientId, status: { not: 'canceled' } },
     include: { plan: true },
     orderBy: { createdAt: 'desc' },
   })

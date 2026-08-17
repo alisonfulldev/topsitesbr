@@ -10,14 +10,12 @@ const ALTERACAO_TYPES: ChangeType[] = ['texto', 'imagem', 'texto_e_imagem']
 
 export default async function SolicitacoesPage() {
   const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'client') redirect('/login')
+  if (!session) redirect('/login')
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
-    select: { clientId: true },
-  })
-  if (!user?.clientId) redirect('/painel')
-  const clientId = user.clientId
+  const { resolveClientId } = await import('@/lib/impersonation')
+  const ctx = await resolveClientId(session)
+  if (!ctx) redirect('/painel')
+  const clientId = ctx.clientId
 
   if (await isClientInProduction(clientId)) {
     redirect('/painel/projeto')

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { ProposalCard } from './_components/ProposalCard'
+import { ImpersonateButton } from './_components/ImpersonateButton'
 
 const STATUS_LABEL: Record<string, string> = {
   pendente_ativacao: 'Pendente',
@@ -132,6 +133,7 @@ export default async function ClientePage({
           >
             Ver Sites
           </Link>
+          <ImpersonateButton clientId={client.id} clientName={client.name} />
         </div>
       </div>
 
