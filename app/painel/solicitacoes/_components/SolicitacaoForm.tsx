@@ -14,8 +14,8 @@ const AVULSA_PRICE: Record<string, number> = {
   texto: 20,
   imagem: 40,
   texto_e_imagem: 60,
-  nova_secao: 50,
-  nova_pagina: 97,
+  nova_secao: 80,
+  nova_pagina: 150,
 }
 
 type PlanInfo = {

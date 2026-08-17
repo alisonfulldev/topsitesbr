@@ -32,8 +32,8 @@ async function main() {
     { name: 'Alteração de Texto (avulsa)', price: 20.0, type: 'service' as const },
     { name: 'Alteração de Imagem (avulsa)', price: 40.0, type: 'service' as const },
     { name: 'Alteração de Texto e Imagem (avulsa)', price: 60.0, type: 'service' as const },
-    { name: 'Nova Seção', price: 50.0, type: 'service' as const },
-    { name: 'Nova Página', price: 97.0, type: 'service' as const },
+    { name: 'Nova Seção', price: 80.0, type: 'service' as const },
+    { name: 'Nova Página', price: 150.0, type: 'service' as const },
   ]
 
   for (const product of avulsaProducts) {
