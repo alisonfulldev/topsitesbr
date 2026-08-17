@@ -94,7 +94,7 @@ export default async function ClientePage({
   }
 
   return (
-    <div className="max-w-3xl">
+    <div className="max-w-5xl">
       <div className="flex items-center gap-2 mb-6">
         <Link
           href="/admin/clientes"

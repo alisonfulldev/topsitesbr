@@ -22,7 +22,7 @@ export default async function SiteDetailPage({
   if (!site) notFound()
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-5xl">
       <div className="flex items-center gap-2 mb-6 flex-wrap">
         <Link
           href="/admin/clientes"
