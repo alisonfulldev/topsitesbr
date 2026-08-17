@@ -5,8 +5,17 @@ const prisma = new PrismaClient()
 
 async function main() {
   // ── Plans ──────────────────────────────────────────────────────────────────
-  const plans = [
-    {
+  await prisma.plan.upsert({
+    where: { name: 'Site no Ar' },
+    update: {
+      price: 29.0,
+      monthlyChangesIncluded: 1,
+      prioritySupport: false,
+      allowedChangeTypes: 'texto,imagem',
+      changeDeadlineDays: 7,
+      discountPercent: 10,
+    },
+    create: {
       name: 'Site no Ar',
       price: 29.0,
       monthlyChangesIncluded: 1,
@@ -15,16 +24,8 @@ async function main() {
       changeDeadlineDays: 7,
       discountPercent: 10,
     },
-  ]
-
-  for (const plan of plans) {
-    await prisma.plan.upsert({
-      where: { name: plan.name },
-      update: plan,
-      create: plan,
-    })
-    console.log(`✅ Plano "${plan.name}" criado/atualizado`)
-  }
+  })
+  console.log('✅ Plano "Site no Ar" criado/atualizado')
 
   // ── Products (avulsos de manutenção) ───────────────────────────────────────
   const avulsaProducts = [
