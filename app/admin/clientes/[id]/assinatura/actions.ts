@@ -48,7 +48,8 @@ export async function activateSubscription(
     data: {
       clientId,
       planId,
-      status: 'pending',
+      // Sem cobrança imediata (mês grátis) → ativa direto; com cobrança → aguarda pagamento
+      status: chargeId ? 'pending' : 'active',
       asaasSubscriptionId: subscriptionId,
       nextDueDate,
       planActivatedAt: new Date(),
