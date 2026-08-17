@@ -221,7 +221,26 @@ export default async function PainelPage({
       where: {
         id: { notIn: ownedProductIds },
         type: { not: 'upgrade_site' },
-        name: { notIn: ['Nova Seção', 'Nova Página', 'Alteração de Texto (avulsa)', 'Alteração de Imagem (avulsa)', 'Alteração de Texto e Imagem (avulsa)'] },
+        name: {
+          notIn: [
+            // Internal records — not for sale
+            'Criação de Site (Proposta)',
+            'Criação de Site (Pago por Fora)',
+            // Maintenance charges — sold via ticket flow
+            'Nova Seção',
+            'Nova Página',
+            'Alteração de Texto (avulsa)',
+            'Alteração de Imagem (avulsa)',
+            'Alteração de Texto e Imagem (avulsa)',
+            // Not yet active in-app
+            'Domínio Personalizado',
+            'E-mail Profissional',
+            'SEO (Otimização para Buscadores)',
+            'WhatsApp Business',
+            'Blog',
+            'Loja Virtual',
+          ],
+        },
       },
       orderBy: { price: 'asc' },
     })
