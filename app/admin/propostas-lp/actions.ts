@@ -58,16 +58,30 @@ function emailShell(body: string, optOutUrl: string): string {
 </html>`
 }
 
-function buildReminderEmail(clientName: string, wa: string, optOutUrl: string): string {
+function fmtValue(value: number) {
+  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
+
+function buildReminderEmail(clientName: string, value: number, proposalUrl: string, wa: string, optOutUrl: string): string {
   const name = esc(clientName)
   const body = `
     <h1 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#111827;line-height:1.35;">
       Olá, ${name}! Sua proposta ainda está disponível ⏳
     </h1>
     <p style="margin:0 0 16px;font-size:15px;line-height:1.75;color:#374151;">
-      Notamos que você recebeu sua proposta mas ainda não finalizou. Ela continua válida, mas por tempo limitado.
+      Você ainda não finalizou a proposta que preparamos para você. Ela continua válida por tempo limitado — não perca essa oportunidade!
     </p>
-    <p style="margin:0 0 28px;font-size:15px;line-height:1.75;color:#374151;">
+
+    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;margin:0 0 24px;text-align:center;">
+      <p style="margin:0 0 4px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Investimento da proposta</p>
+      <p style="margin:0 0 12px;font-size:30px;font-weight:800;color:#111827;">${fmtValue(value)}</p>
+      <a href="${proposalUrl}"
+         style="display:inline-block;background:#0a0a0a;color:#facc15;text-decoration:none;font-size:13px;font-weight:700;padding:10px 24px;border-radius:6px;letter-spacing:0.3px;">
+        Ver minha proposta →
+      </a>
+    </div>
+
+    <p style="margin:0 0 24px;font-size:15px;line-height:1.75;color:#374151;">
       Ficou alguma dúvida? Estamos no WhatsApp pra te ajudar a tirar seu projeto do papel!
     </p>
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
@@ -83,17 +97,27 @@ function buildReminderEmail(clientName: string, wa: string, optOutUrl: string): 
   return emailShell(body, optOutUrl)
 }
 
-function buildReactivationEmail(clientName: string, wa: string, optOutUrl: string): string {
+function buildReactivationEmail(clientName: string, value: number, wa: string, optOutUrl: string): string {
   const name = esc(clientName)
   const body = `
     <h1 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#111827;line-height:1.35;">
       Olá, ${name}! Que tal darmos mais uma chance ao seu projeto? 🚀
     </h1>
     <p style="margin:0 0 16px;font-size:15px;line-height:1.75;color:#374151;">
-      Sua proposta expirou, mas seu projeto ainda pode sair do papel.
+      Sua proposta de <strong>${fmtValue(value)}</strong> expirou, mas seu projeto ainda pode sair do papel.
     </p>
-    <p style="margin:0 0 28px;font-size:15px;line-height:1.75;color:#374151;">
-      Se tiver interesse, podemos conversar e preparar uma nova condição pra você. Chama a gente no WhatsApp!
+
+    <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:20px 24px;margin:0 0 24px;">
+      <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#c2410c;text-transform:uppercase;letter-spacing:0.5px;">O que podemos fazer por você</p>
+      <ul style="margin:0;padding:0 0 0 18px;font-size:14px;line-height:2;color:#374151;">
+        <li>Preparar uma nova proposta atualizada</li>
+        <li>Conversar sobre condições especiais</li>
+        <li>Tirar qualquer dúvida sobre o projeto</li>
+      </ul>
+    </div>
+
+    <p style="margin:0 0 24px;font-size:15px;line-height:1.75;color:#374151;">
+      É só chamar a gente no WhatsApp — sem compromisso!
     </p>
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <tr>
@@ -148,11 +172,12 @@ export async function sendReminderEmail(
   for (const lead of eligible) {
     try {
       const optOutUrl = `${APP_URL}/descadastrar?email=${encodeURIComponent(lead.email)}`
+      const proposalUrl = `${APP_URL}/p/${proposal.token}`
       const wa = waUrl('Olá! Recebi o lembrete sobre minha proposta e quero saber mais!')
       await sendEmail({
         to: lead.email,
         subject: 'Sua proposta ainda está disponível ⏳',
-        html: buildReminderEmail(proposal.clientName, wa, optOutUrl),
+        html: buildReminderEmail(proposal.clientName, Number(proposal.value), proposalUrl, wa, optOutUrl),
       })
       sent++
     } catch (err) {
@@ -194,7 +219,7 @@ export async function sendReactivationEmail(
       await sendEmail({
         to: lead.email,
         subject: 'Que tal darmos mais uma chance ao seu projeto? 🚀',
-        html: buildReactivationEmail(proposal.clientName, wa, optOutUrl),
+        html: buildReactivationEmail(proposal.clientName, Number(proposal.value), wa, optOutUrl),
       })
       sent++
     } catch (err) {
