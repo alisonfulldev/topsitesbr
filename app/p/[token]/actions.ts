@@ -21,6 +21,8 @@ export async function unlockProposalAction(
   details?: string | null
   expiresAt?: string
   mode?: string
+  originalPrice?: number | null
+  countdownMinutes?: number
 }> {
   try {
     const proposal = await prisma.presentationProposal.findUnique({ where: { token } })
@@ -67,6 +69,8 @@ export async function unlockProposalAction(
         details: proposal.details,
         expiresAt: expiresAt.toISOString(),
         mode: proposal.mode,
+        originalPrice: proposal.originalPrice ? Number(proposal.originalPrice) : null,
+        countdownMinutes: proposal.countdownMinutes,
       }
     }
 
@@ -77,6 +81,8 @@ export async function unlockProposalAction(
       details: proposal.details,
       expiresAt: proposal.expiresAt!.toISOString(),
       mode: proposal.mode,
+      originalPrice: proposal.originalPrice ? Number(proposal.originalPrice) : null,
+      countdownMinutes: proposal.countdownMinutes,
     }
   } catch (err) {
     console.error('[proposal-lp] unlock error', err)

@@ -99,19 +99,35 @@ export function CreateProposalForm() {
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-          Valor da proposta (R$) <span className="text-red-500">*</span>
-        </label>
-        <input
-          name="value"
-          type="text"
-          required
-          placeholder="Ex: 1500,00"
-          inputMode="decimal"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400
-                     focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-colors"
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            Valor da proposta (R$) <span className="text-red-500">*</span>
+          </label>
+          <input
+            name="value"
+            type="text"
+            required
+            placeholder="Ex: 197,00"
+            inputMode="decimal"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400
+                       focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-colors"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            Valor "de" (riscado){' '}
+            <span className="text-gray-400 font-normal">(opcional)</span>
+          </label>
+          <input
+            name="originalPrice"
+            type="text"
+            placeholder="Ex: 500,00"
+            inputMode="decimal"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400
+                       focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-colors"
+          />
+        </div>
       </div>
 
       <div>
@@ -140,6 +156,23 @@ export function CreateProposalForm() {
           className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400
                      focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-colors resize-y"
         />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1.5">
+          Contador de urgência (minutos){' '}
+          <span className="text-gray-400 font-normal">(padrão: 60)</span>
+        </label>
+        <input
+          name="countdownMinutes"
+          type="number"
+          min={5}
+          max={1440}
+          defaultValue={60}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900
+                     focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-colors"
+        />
+        <p className="text-xs text-gray-400 mt-1">Tempo que o contador vai mostrar ao cliente ao abrir a proposta.</p>
       </div>
 
       <div>

@@ -15,9 +15,11 @@ export async function createPresentationProposalAction(formData: FormData): Prom
 
   const clientName = (formData.get('clientName') as string)?.trim()
   const valueRaw = (formData.get('value') as string)?.replace(',', '.')
+  const originalPriceRaw = (formData.get('originalPrice') as string)?.replace(',', '.') || null
   const scope = (formData.get('scope') as string)?.trim()
   const details = (formData.get('details') as string)?.trim() || null
   const mode = (formData.get('mode') as string) === 'completa' ? 'completa' : 'apresentacao'
+  const countdownMinutes = parseInt(formData.get('countdownMinutes') as string) || 60
 
   if (!clientName || !valueRaw || !scope) {
     return { error: 'Preencha os campos obrigatórios: nome do cliente, valor e escopo.' }
@@ -28,10 +30,12 @@ export async function createPresentationProposalAction(formData: FormData): Prom
     return { error: 'Informe um valor válido para a proposta.' }
   }
 
+  const originalPrice = originalPriceRaw ? parseFloat(originalPriceRaw) : null
+
   const token = randomBytes(32).toString('hex')
 
   const proposal = await prisma.presentationProposal.create({
-    data: { token, clientName, value, scope, details, mode },
+    data: { token, clientName, value, scope, details, mode, originalPrice, countdownMinutes },
   })
 
   return { link: `${APP_URL}/p/${proposal.token}` }

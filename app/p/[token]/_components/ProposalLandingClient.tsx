@@ -77,9 +77,78 @@ interface ProposalContent {
   details: string | null
   expiresAt: string
   mode: string
+  originalPrice: number | null
+  countdownMinutes: number
 }
 
 type Stage = 'gate' | 'unlocked' | 'expired'
+
+// ── Countdown Timer ───────────────────────────────────────────────────────────
+
+function useCountdown(token: string, minutes: number) {
+  const [remaining, setRemaining] = useState<number | null>(null)
+
+  useEffect(() => {
+    const key = `pplp_cd_${token}`
+    const stored = localStorage.getItem(key)
+    const totalMs = minutes * 60 * 1000
+    let startedAt: number
+
+    if (stored) {
+      startedAt = parseInt(stored, 10)
+    } else {
+      startedAt = Date.now()
+      localStorage.setItem(key, String(startedAt))
+    }
+
+    function tick() {
+      const elapsed = Date.now() - startedAt
+      const left = Math.max(0, totalMs - elapsed)
+      setRemaining(left)
+    }
+
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [token, minutes])
+
+  if (remaining === null) return null
+
+  const totalSec = Math.floor(remaining / 1000)
+  const h = Math.floor(totalSec / 3600)
+  const m = Math.floor((totalSec % 3600) / 60)
+  const s = totalSec % 60
+  const pad = (n: number) => String(n).padStart(2, '0')
+
+  return { h: pad(h), m: pad(m), s: pad(s), done: remaining === 0 }
+}
+
+function CountdownBanner({ token, minutes }: { token: string; minutes: number }) {
+  const time = useCountdown(token, minutes)
+
+  if (!time) return null
+
+  return (
+    <div
+      className="inline-flex items-center gap-3 border border-red-500/30 rounded-2xl px-5 py-3 mb-6"
+      style={{ background: 'rgba(239,68,68,0.06)' }}
+    >
+      <svg className="w-4 h-4 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      {time.done ? (
+        <span className="text-red-400 text-sm font-bold">Oportunidade encerrada</span>
+      ) : (
+        <span className="text-sm text-red-300 font-semibold">
+          Oferta disponível por{' '}
+          <span className="font-black text-red-400 tabular-nums">
+            {time.h !== '00' && `${time.h}:`}{time.m}:{time.s}
+          </span>
+        </span>
+      )}
+    </div>
+  )
+}
 
 // ── Approve Button ─────────────────────────────────────────────────────────────
 
@@ -171,6 +240,8 @@ function EmailGate({
         details: result.details ?? null,
         expiresAt: result.expiresAt!,
         mode: result.mode ?? 'apresentacao',
+        originalPrice: result.originalPrice ?? null,
+        countdownMinutes: result.countdownMinutes ?? 60,
       }, trimmed)
     }
   }
@@ -560,9 +631,11 @@ function ProposalView({
             <p className="text-yellow-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
               Próximo passo
             </p>
-            <h2 className="text-3xl sm:text-4xl font-black leading-tight mb-10">
+            <h2 className="text-3xl sm:text-4xl font-black leading-tight mb-8">
               Pronto para começar?
             </h2>
+
+            <CountdownBanner token={token} minutes={content.countdownMinutes} />
 
             {/* Value — destaque máximo aqui */}
             <div className="mb-8">
@@ -570,8 +643,13 @@ function ProposalView({
                 className="inline-block rounded-3xl border-2 border-yellow-400 px-8 py-6 shadow-[0_0_60px_rgba(250,204,21,0.2)]"
                 style={{ background: 'rgba(250,204,21,0.04)' }}
               >
-                <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-3">
-                  Investimento total
+                {content.originalPrice && (
+                  <p className="text-zinc-500 text-base line-through mb-1">
+                    de {formatCurrency(content.originalPrice)}
+                  </p>
+                )}
+                <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-2">
+                  {content.originalPrice ? 'por apenas' : 'Investimento total'}
                 </p>
                 <p className="text-yellow-400 text-5xl sm:text-6xl font-black leading-none mb-3">
                   {formatCurrency(content.value)}
