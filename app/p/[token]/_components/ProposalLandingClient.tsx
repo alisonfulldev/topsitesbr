@@ -150,6 +150,68 @@ function CountdownBanner({ token, minutes }: { token: string; minutes: number })
   )
 }
 
+// ── Dúvidas Box ───────────────────────────────────────────────────────────────
+
+function DuvidasBox({ clientName }: { clientName: string }) {
+  const [open, setOpen] = useState(false)
+  const [text, setText] = useState('')
+
+  function handleSend() {
+    if (!text.trim()) return
+    const msg = encodeURIComponent(
+      `Olá! Tenho uma dúvida sobre a proposta de ${clientName}:\n\n"${text.trim()}"`,
+    )
+    window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank')
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="text-zinc-500 text-sm hover:text-zinc-300 transition-colors underline underline-offset-2 mt-8 block mx-auto"
+      >
+        Ainda tenho dúvidas
+      </button>
+    )
+  }
+
+  return (
+    <div
+      className="mt-8 rounded-2xl border border-white/[0.07] p-5 text-left"
+      style={{ background: '#111111' }}
+    >
+      <p className="text-zinc-300 text-sm font-semibold mb-3">Qual é a sua dúvida?</p>
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        autoFocus
+        placeholder="Digite sua dúvida aqui..."
+        rows={3}
+        className="w-full rounded-xl px-4 py-3 text-white placeholder-zinc-600 text-sm resize-none
+                   focus:outline-none focus:ring-1 focus:ring-yellow-400/30 focus:border-yellow-400/40
+                   border border-white/[0.07] transition-colors"
+        style={{ background: '#0a0a0a' }}
+      />
+      <div className="flex items-center gap-3 mt-3">
+        <button
+          onClick={handleSend}
+          disabled={!text.trim()}
+          className="flex-1 bg-yellow-400 hover:bg-yellow-300 text-black font-black py-3 rounded-xl text-sm
+                     transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          Enviar pelo WhatsApp →
+        </button>
+        <button
+          onClick={() => { setOpen(false); setText('') }}
+          className="text-zinc-600 hover:text-zinc-400 text-sm transition-colors"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ── Approve Button ─────────────────────────────────────────────────────────────
 
 function ApproveButton({
@@ -712,6 +774,8 @@ function ProposalView({
                 </p>
               </>
             )}
+
+            <DuvidasBox clientName={clientName} />
           </Reveal>
 
           <div className="mt-16 border-t border-white/[0.04] pt-8">
