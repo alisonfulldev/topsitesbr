@@ -600,13 +600,18 @@ function ProposalView({
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {PORTFOLIO.map((img, i) => (
                 <Reveal key={img.src} delay={i * 60}>
-                  <div className="aspect-square rounded-2xl overflow-hidden border border-white/[0.05]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={img.src}
-                      alt={img.alt}
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="rounded-2xl overflow-hidden border border-white/[0.05] relative group">
+                    <div className="aspect-square">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="px-3 py-2" style={{ background: '#111111' }}>
+                      <p className="text-zinc-400 text-[11px] font-semibold truncate">{img.segment}</p>
+                    </div>
                   </div>
                 </Reveal>
               ))}
