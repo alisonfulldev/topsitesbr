@@ -168,8 +168,14 @@ function DuvidasBox({ clientName }: { clientName: string }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="text-zinc-500 text-sm hover:text-zinc-300 transition-colors underline underline-offset-2 mt-8 block mx-auto"
+        className="mt-8 flex items-center justify-center gap-2 w-full border border-white/10
+                   hover:border-yellow-400/30 text-zinc-300 hover:text-yellow-400
+                   font-semibold text-sm py-3.5 rounded-2xl transition-all duration-200"
       >
+        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
         Ainda tenho dúvidas
       </button>
     )
@@ -751,16 +757,6 @@ function ProposalView({
                 <p className="text-zinc-600 text-xs mt-4">
                   Você será direcionado para assinatura do contrato e pagamento.
                 </p>
-                <div className="mt-6">
-                  <a
-                    href={WA_APPROVE}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-zinc-500 text-sm hover:text-zinc-300 transition-colors underline underline-offset-2"
-                  >
-                    Prefiro falar no WhatsApp antes →
-                  </a>
-                </div>
               </>
             ) : (
               <>
