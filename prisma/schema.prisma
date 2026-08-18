@@ -536,11 +536,12 @@ model Proposal {
   createdAt      DateTime       @default(now()) @map("created_at")
   updatedAt      DateTime       @updatedAt @map("updated_at")
 
-  client       Client               @relation(fields: [clientId], references: [id])
-  site         Site?                @relation(fields: [siteId], references: [id])
-  order        Order?               @relation(fields: [orderId], references: [id])
-  accessTokens ProposalAccessToken[]
-  briefing     Briefing?
+  client               Client               @relation(fields: [clientId], references: [id])
+  site                 Site?                @relation(fields: [siteId], references: [id])
+  order                Order?               @relation(fields: [orderId], references: [id])
+  accessTokens         ProposalAccessToken[]
+  briefing             Briefing?
+  presentationProposal PresentationProposal?
 
   @@map("proposals")
 }
@@ -630,6 +631,8 @@ model PresentationProposal {
   value      Decimal   @db.Decimal(10, 2)
   scope      String    @db.Text
   details    String?   @db.Text
+  mode               String    @default("apresentacao") // "apresentacao" | "completa"
+  linkedProposalId   String?   @unique @map("linked_proposal_id")
   openedAt            DateTime? @map("opened_at")
   expiresAt           DateTime? @map("expires_at")
   approvedAt          DateTime? @map("approved_at")
@@ -638,7 +641,8 @@ model PresentationProposal {
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
 
-  leads PresentationProposalLead[]
+  leads          PresentationProposalLead[]
+  linkedProposal Proposal? @relation(fields: [linkedProposalId], references: [id])
 
   @@map("presentation_proposals")
 }

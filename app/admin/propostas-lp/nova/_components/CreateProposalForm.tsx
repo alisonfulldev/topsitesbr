@@ -142,6 +142,26 @@ export function CreateProposalForm() {
         />
       </div>
 
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Modo da proposta</label>
+        <div className="flex flex-col gap-2">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input type="radio" name="mode" value="apresentacao" defaultChecked className="mt-0.5" />
+            <div>
+              <span className="text-sm font-medium text-gray-900">Apresentação</span>
+              <p className="text-xs text-gray-400">Cliente vê a proposta e vai para o WhatsApp para fechar.</p>
+            </div>
+          </label>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input type="radio" name="mode" value="completa" className="mt-0.5" />
+            <div>
+              <span className="text-sm font-medium text-gray-900">Completa (checkout)</span>
+              <p className="text-xs text-gray-400">Cliente assina contrato, cria senha e paga direto pela plataforma.</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
       {error && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
           {error}

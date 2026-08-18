@@ -83,6 +83,12 @@ export default async function PropostaDetailPage({ params }: { params: { id: str
       {/* Main data */}
       <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
         <div className="px-5 py-4 flex items-center justify-between">
+          <span className="text-sm text-gray-500">Modo</span>
+          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${proposal.mode === 'completa' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
+            {proposal.mode === 'completa' ? 'Completa (checkout)' : 'Apresentação'}
+          </span>
+        </div>
+        <div className="px-5 py-4 flex items-center justify-between">
           <span className="text-sm text-gray-500">Valor</span>
           <span className="font-bold text-gray-900">{value}</span>
         </div>

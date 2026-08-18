@@ -76,6 +76,7 @@ interface ProposalContent {
   scope: string
   details: string | null
   expiresAt: string
+  mode: string
 }
 
 type Stage = 'gate' | 'unlocked' | 'expired'
@@ -141,7 +142,7 @@ function EmailGate({
 }: {
   clientName: string
   token: string
-  onUnlocked: (data: ProposalContent) => void
+  onUnlocked: (data: ProposalContent, email: string) => void
   onExpired: () => void
 }) {
   const [email, setEmail] = useState('')
@@ -169,7 +170,8 @@ function EmailGate({
         scope: result.scope!,
         details: result.details ?? null,
         expiresAt: result.expiresAt!,
-      })
+        mode: result.mode ?? 'apresentacao',
+      }, trimmed)
     }
   }
 
@@ -314,10 +316,12 @@ function ProposalView({
   token,
   clientName,
   content,
+  email,
 }: {
   token: string
   clientName: string
   content: ProposalContent
+  email: string
 }) {
   return (
     <div className="bg-[#0a0a0a] text-white">
@@ -582,15 +586,49 @@ function ProposalView({
               </div>
             </div>
 
-            <p className="text-zinc-400 text-base leading-relaxed mb-8 max-w-sm mx-auto">
-              Clique abaixo para aprovar e falarmos pelo WhatsApp — alinhamos
-              os próximos passos juntos.
-            </p>
-
-            <ApproveButton token={token} size="xl" full />
-            <p className="text-zinc-600 text-xs mt-4">
-              Você será direcionado ao WhatsApp para alinharmos os detalhes.
-            </p>
+            {content.mode === 'completa' ? (
+              <>
+                <p className="text-zinc-400 text-base leading-relaxed mb-8 max-w-sm mx-auto">
+                  Clique abaixo para assinar o contrato e concluir a contratação
+                  direto pela plataforma — rápido e sem complicações.
+                </p>
+                <a
+                  href={`/p/${token}/checkout?email=${encodeURIComponent(email)}`}
+                  className="inline-flex items-center justify-center gap-2 w-full
+                    bg-yellow-400 text-black font-black tracking-tight rounded-2xl
+                    text-xl px-10 py-5 transition-all duration-200
+                    hover:bg-yellow-300 hover:scale-[1.03]
+                    hover:shadow-[0_0_40px_rgba(250,204,21,0.5)]
+                    active:scale-[0.98] shadow-[0_0_20px_rgba(250,204,21,0.2)]"
+                >
+                  CONTRATAR AGORA <span>→</span>
+                </a>
+                <p className="text-zinc-600 text-xs mt-4">
+                  Você será direcionado para assinatura do contrato e pagamento.
+                </p>
+                <div className="mt-6">
+                  <a
+                    href={WA_APPROVE}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-zinc-500 text-sm hover:text-zinc-300 transition-colors underline underline-offset-2"
+                  >
+                    Prefiro falar no WhatsApp antes →
+                  </a>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-zinc-400 text-base leading-relaxed mb-8 max-w-sm mx-auto">
+                  Clique abaixo para aprovar e falarmos pelo WhatsApp — alinhamos
+                  os próximos passos juntos.
+                </p>
+                <ApproveButton token={token} size="xl" full />
+                <p className="text-zinc-600 text-xs mt-4">
+                  Você será direcionado ao WhatsApp para alinharmos os detalhes.
+                </p>
+              </>
+            )}
           </Reveal>
 
           <div className="mt-16 border-t border-white/[0.04] pt-8">
@@ -612,25 +650,29 @@ function ProposalView({
 export function ProposalLandingClient({
   token,
   clientName,
+  mode,
   initialStage,
 }: {
   token: string
   clientName: string
+  mode: string
   initialStage: Stage
 }) {
   const [stage, setStage] = useState<Stage>(initialStage)
   const [content, setContent] = useState<ProposalContent | null>(null)
+  const [email, setEmail] = useState('')
 
   if (stage === 'expired') return <ExpiredScreen clientName={clientName} />
   if (stage === 'unlocked' && content)
-    return <ProposalView token={token} clientName={clientName} content={content} />
+    return <ProposalView token={token} clientName={clientName} content={content} email={email} />
 
   return (
     <EmailGate
       clientName={clientName}
       token={token}
-      onUnlocked={(data) => {
+      onUnlocked={(data, capturedEmail) => {
         setContent(data)
+        setEmail(capturedEmail)
         setStage('unlocked')
       }}
       onExpired={() => setStage('expired')}

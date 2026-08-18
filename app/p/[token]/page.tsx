@@ -28,7 +28,7 @@ export default async function PresentationProposalPage({
 }) {
   const proposal = await prisma.presentationProposal.findUnique({
     where: { token: params.token },
-    select: { token: true, clientName: true, openedAt: true, expiresAt: true },
+    select: { token: true, clientName: true, openedAt: true, expiresAt: true, mode: true },
   })
 
   if (!proposal) notFound()
@@ -44,6 +44,7 @@ export default async function PresentationProposalPage({
     <ProposalLandingClient
       token={proposal.token}
       clientName={proposal.clientName}
+      mode={proposal.mode}
       initialStage={isExpired ? 'expired' : 'gate'}
     />
   )
