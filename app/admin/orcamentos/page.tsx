@@ -11,8 +11,9 @@ function typeLabel(t: string) {
   return 'Institucional'
 }
 
-function fmtBRL(v: number | string) {
-  return Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+function fmtBRL(v: { toNumber(): number } | number | string) {
+  const n = typeof v === 'object' ? v.toNumber() : Number(v)
+  return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
 function fmtDate(d: Date) {
