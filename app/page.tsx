@@ -1,25 +1,24 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import Script from 'next/script'
 
-/* ─── WhatsApp ───────────────────────────────────────────────────────────── */
+/* ─── Config ─────────────────────────────────────────────────────────────── */
 
 const WA_NUMBER = '5518996742364'
 function wa(msg: string) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 }
-const MSG_MAIN  = 'Olá! Quero criar meu site profissional. Pode me dar mais informações?'
-const MSG_START = 'Olá! Quero começar meu site agora! Como funciona?'
-const MSG_FAQ   = 'Olá! Tenho dúvidas sobre o site profissional. Pode me ajudar?'
+const MSG_DOUBT = 'Olá! Tenho uma dúvida sobre os sites da TopSite. Pode me ajudar?'
 
-/* ─── SEO Metadata ───────────────────────────────────────────────────────── */
+/* ─── SEO ────────────────────────────────────────────────────────────────── */
 
 export const metadata: Metadata = {
-  title: 'Site Profissional — Pronto em 3 Dias | TOP SITE',
+  title: 'Site que Vende — Conversão + SEO Avançado | TOP SITE',
   description:
-    'Site profissional para sua empresa com design personalizado. Entrega em até 3 dias úteis e você só paga se aprovar. Ideal para MEI, restaurante, salão de beleza, clínica e pequenas empresas.',
+    'Criamos sites personalizados e avançados, focados em conversão e SEO. Não é template de IA — é site estratégico feito à mão para transformar visitante em cliente e aparecer no Google. A partir de R$497.',
   keywords:
-    'site profissional, criar site empresa, site barato, site para MEI, site pequena empresa, criação de site profissional, site para negócio, site para restaurante, site para salão de beleza, site para clínica, presença online, site profissional preço',
+    'site que vende, site profissional avançado, site com SEO, criação de site para empresa, site focado em conversão, site personalizado, site para pequenas empresas, aparecer no Google, site estratégico',
   authors: [{ name: 'TOP SITE' }],
   creator: 'TOP SITE',
   publisher: 'TOP SITE',
@@ -30,20 +29,20 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    title: 'Site Profissional — Pronto em 3 Dias | TOP SITE',
+    title: 'Site que Vende — Conversão + SEO Avançado | TOP SITE',
     description:
-      'Site profissional para sua empresa. Design personalizado, 3 dias de prazo, você só paga se aprovar.',
+      'Sites personalizados e estratégicos, feitos à mão para converter visitante em cliente e aparecer no Google. A partir de R$497.',
     siteName: 'TOP SITE',
     locale: 'pt_BR',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Site Profissional | TOP SITE',
-    description: 'Site profissional para sua empresa. Design personalizado, pronto em 3 dias.',
+    title: 'Site que Vende | TOP SITE',
+    description: 'Sites estratégicos focados em conversão e SEO. A partir de R$497.',
   },
 }
 
-/* ─── JSON-LD Structured Data ────────────────────────────────────────────── */
+/* ─── JSON-LD ────────────────────────────────────────────────────────────── */
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -52,7 +51,7 @@ const jsonLd = {
       '@type': 'Organization',
       '@id': '#organization',
       name: 'TOP SITE',
-      description: 'Criação de sites profissionais para pequenas empresas e MEIs',
+      description: 'Criação de sites personalizados focados em conversão e SEO para empresas brasileiras',
       contactPoint: {
         '@type': 'ContactPoint',
         contactType: 'sales',
@@ -64,104 +63,29 @@ const jsonLd = {
       '@type': 'WebSite',
       '@id': '#website',
       name: 'TOP SITE',
-      description: 'Site profissional — Pronto em 3 Dias',
+      description: 'Sites que vendem — Conversão + SEO Avançado',
       publisher: { '@id': '#organization' },
       inLanguage: 'pt-BR',
     },
     {
       '@type': 'Service',
-      name: 'Criação de Site Profissional',
+      name: 'Criação de Site Estratégico — Conversão e SEO',
       description:
-        'Site profissional com design personalizado para o seu negócio. Desenvolvido com IA, 100% responsivo, com integração WhatsApp e SEO básico. Entregamos em até 3 dias e você só paga após aprovação.',
+        'Site personalizado e avançado, feito à mão sob medida, focado em conversão (CTA estratégicos, jornada de compra, gatilhos) e SEO avançado para aparecer no Google quando procuram pelo seu serviço.',
       provider: { '@id': '#organization' },
-      serviceType: 'Criação de Sites Profissionais',
+      serviceType: 'Criação de Sites Profissionais e Estratégicos',
       areaServed: { '@type': 'Country', name: 'Brazil' },
       offers: {
         '@type': 'Offer',
+        price: '497',
+        priceCurrency: 'BRL',
         availability: 'https://schema.org/InStock',
       },
-    },
-    {
-      '@type': 'FAQPage',
-      mainEntity: [
-        {
-          '@type': 'Question',
-          name: 'O que está incluído no site?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Inclui: design personalizado para o seu segmento, site 100% responsivo (celular e computador), integração com botão do WhatsApp, SEO on-page básico para aparecer no Google, 1 página completa com todas as seções do seu negócio e os arquivos do site entregues para você.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Quanto tempo leva para o site ficar pronto?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'O protótipo é entregue em até 24 horas após você nos contar sobre o negócio. O site final, após sua aprovação, fica pronto em até 3 dias úteis.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'E se eu não gostar do resultado?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Você vê o site antes de pagar qualquer coisa. Se não gostar, fazemos ajustes sem custo extra. Você só paga quando estiver satisfeito.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Posso usar meu próprio domínio?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Sim! Se você tem um domínio (.com.br, .com etc.), usamos ele. Se não tiver, subimos o site em um endereço alternativo gratuito. Domínio personalizado pode ser contratado à parte quando quiser.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'O site funciona bem no celular?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Sim, todos os sites são 100% responsivos. Funcionam perfeitamente em celulares, tablets e computadores. O design mobile é nossa prioridade, pois mais de 70% das buscas são feitas pelo celular.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Como funciona o pagamento?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Você só paga após aprovar o site. O pagamento é feito via Pix, cartão de crédito ou boleto. Não há cobrança antecipada.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Vocês fazem sites para qualquer tipo de negócio?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Sim! MEI, autônomo, restaurante, lanchonete, salão de beleza, barbearia, clínica, consultório, loja física, academia, personal trainer, fotógrafo e qualquer prestador de serviço.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Preciso saber de tecnologia para ter um site?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Não. Você nos conta sobre seu negócio pelo WhatsApp e cuidamos de todo o resto. Nome da empresa, o que faz, horário de funcionamento e formas de contato — é o suficiente.',
-          },
-        },
-      ],
     },
   ],
 }
 
-/* ─── Inline SVG helpers ─────────────────────────────────────────────────── */
-
-function Check({ className = 'w-4 h-4' }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-    </svg>
-  )
-}
+/* ─── SVG Icons ──────────────────────────────────────────────────────────── */
 
 function WAIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
@@ -171,159 +95,148 @@ function WAIcon({ className = 'w-5 h-5' }: { className?: string }) {
   )
 }
 
-/* icon grid for features */
-function IconPalette() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-}
-function IconPhone() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-}
-function IconSearch() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-}
-function IconShield() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-}
-function IconDownload() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-}
-function IconZap() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-}
-function IconStar() {
-  return <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-[#FFD100]"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-}
 function UserIcon() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5" aria-hidden="true">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+    </svg>
+  )
+}
+
+function IconStar() {
+  return <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-yellow-400" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+}
+
+function IconHand() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+}
+
+function IconTarget() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+}
+
+function IconSearch() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+}
+
+function IconZap() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+}
+
+function IconCheck() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+}
+
+function IconArrow() {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+}
+
+/* ─── CTA Button ─────────────────────────────────────────────────────────── */
+
+function CTAPrimary({ href, children, size = 'md' }: { href: string; children: React.ReactNode; size?: 'md' | 'lg' | 'xl' }) {
+  const sizes = {
+    md:  'px-6 py-3 text-sm',
+    lg:  'px-8 py-4 text-base',
+    xl:  'px-10 py-5 text-lg',
+  }
+  return (
+    <Link
+      href={href}
+      className={`inline-flex items-center justify-center gap-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-black rounded-2xl transition-all duration-200 hover:shadow-[0_0_32px_rgba(250,204,21,0.45)] hover:scale-[1.02] active:scale-[0.98] ${sizes[size]}`}
+    >
+      {children}
+    </Link>
+  )
 }
 
 /* ─── Static data ────────────────────────────────────────────────────────── */
 
-const STATS = [
-  { value: '+50', label: 'Sites entregues' },
-  { value: '< 24h', label: 'Primeiro protótipo' },
-  { value: '100%', label: 'Mobile-first' },
-  { value: 'R$0', label: 'Antes de aprovar' },
+const DIFFERENTIALS = [
+  {
+    Icon: IconHand,
+    title: 'Personalizado e avançado',
+    desc: 'Cada site é feito à mão, sob medida para o seu negócio e segmento. Não é template de IA que todo mundo usa — é um projeto exclusivo.',
+  },
+  {
+    Icon: IconTarget,
+    title: 'Focado em conversão',
+    desc: 'Cada elemento é pensado para transformar visitante em cliente: CTAs estratégicos, jornada de compra clara e gatilhos de decisão no lugar certo.',
+  },
+  {
+    Icon: IconSearch,
+    title: 'SEO avançado',
+    desc: 'Seu site otimizado de forma técnica para aparecer no Google quando alguém procura pelo seu serviço na sua cidade. Não é SEO básico de template.',
+  },
+  {
+    Icon: IconZap,
+    title: 'Performance real',
+    desc: 'Sites rápidos convertem mais e ranqueiam melhor. Desenvolvemos com código limpo, imagens otimizadas e carregamento rápido em qualquer dispositivo.',
+  },
 ]
 
-const INCLUDES = [
-  { Icon: IconPalette, title: 'Design personalizado para o seu negócio', desc: 'Desenvolvido do zero para o seu segmento. Não é template genérico — cada detalhe é pensado para transmitir a identidade da sua empresa.' },
-  { Icon: IconPhone, title: 'Site 100% responsivo (celular e desktop)', desc: 'Funciona perfeitamente em qualquer dispositivo. Mais de 70% dos seus futuros clientes vão acessar pelo celular.' },
-  { Icon: WAIcon, title: 'Botão do WhatsApp integrado', desc: 'Qualquer visitante entra em contato direto com você em um clique. A forma mais rápida de converter visita em cliente.' },
-  { Icon: IconSearch, title: 'SEO on-page para o Google', desc: 'Title, meta description, headings e estrutura otimizados. Seu site aparece quando alguém busca pelo seu serviço na sua cidade.' },
-  { Icon: IconDownload, title: 'Arquivos do site entregues para você', desc: 'Todos os arquivos HTML, CSS e imagens são seus. Pode hospedar em qualquer lugar agora ou no futuro.' },
+const PROBLEMS = [
+  { stat: '90%', text: 'dos sites não aparecem na primeira página do Google — e quem não aparece, não existe para o cliente.' },
+  { stat: '3s', text: 'é o tempo máximo que o visitante espera o site carregar. Sites lentos perdem clientes antes mesmo de mostrar o serviço.' },
+  { stat: '0', text: 'conversões vêm de sites genéricos de IA — todos iguais, sem personalidade, sem estratégia, sem diferencial.' },
 ]
 
 const STEPS = [
   {
-    title: 'Fale no WhatsApp — 2 minutos',
-    desc: 'Conta sobre o seu negócio: nome da empresa, o que faz, como as pessoas te contratam e uma foto ou logo, se tiver. Nada técnico.',
+    num: '01',
+    title: 'Entendemos o seu negócio',
+    desc: 'Analisamos seu mercado, seus concorrentes e o perfil do seu cliente ideal antes de escrever uma linha de código.',
   },
   {
-    title: 'Receba o protótipo em até 24 horas',
-    desc: 'Enviamos o link do site para você avaliar. Não gostou de algo? Pedimos ajustes até você aprovar — sem custo extra.',
+    num: '02',
+    title: 'Planejamos a estratégia',
+    desc: 'Mapeamos a jornada do visitante, definimos os CTAs, a estrutura de SEO e a hierarquia visual que vai converter.',
   },
   {
-    title: 'Aprove, pague e publique',
-    desc: 'Com o site aprovado, o pagamento é feito via Pix, cartão ou boleto. Publicamos em até 3 dias úteis — ou entregamos os arquivos para você hospedar onde quiser.',
+    num: '03',
+    title: 'Desenvolvemos personalizado',
+    desc: 'Desenvolvemos do zero: design exclusivo, código limpo, SEO técnico e performance. Sem templates. Sem atalhos.',
+  },
+  {
+    num: '04',
+    title: 'Seu site vai ao ar vendendo',
+    desc: 'Publicamos com hospedagem, SSL e monitoramento. Você começa a receber visitantes e clientes desde o primeiro dia.',
   },
 ]
 
-const SEGMENTS = [
-  'MEI e autônomo', 'Restaurante e pizzaria', 'Salão de beleza', 'Barbearia',
-  'Clínica e consultório', 'Dentista', 'Psicólogo', 'Personal trainer',
-  'Loja física', 'Academia', 'Confeitaria', 'Pet shop',
-  'Fotógrafo', 'Advogado', 'Arquiteto', 'E muito mais',
+const PORTFOLIO = [
+  { src: '/portfolio/site1.jpg', segment: 'Restaurante' },
+  { src: '/portfolio/site2.jpg', segment: 'Energia Solar' },
+  { src: '/portfolio/site3.jpg', segment: 'Direito' },
+  { src: '/portfolio/site4.jpg', segment: 'Empresa de Crédito' },
 ]
 
 const TESTIMONIALS = [
   {
-    text: 'Em 2 dias tinha meu site no ar. Minha confeitaria apareceu no Google na primeira semana e já vieram clientes novos. Recomendo demais!',
-    name: 'Patrícia M.',
-    role: 'Confeitaria Doce Sabor · SP',
+    text: 'Antes eu tinha um site que ninguém achava. Agora apareço no Google e recebo contatos toda semana de clientes novos. Valeu cada centavo.',
+    name: 'Marcos A.',
+    role: 'Escritório de Advocacia · SP',
+    initial: 'M',
+    color: '#1d4ed8',
+  },
+  {
+    text: 'Minha clínica triplicou os agendamentos online em dois meses. O site deles não é só bonito — ele realmente converte.',
+    name: 'Dra. Renata S.',
+    role: 'Clínica Estética · RJ',
+    initial: 'R',
     color: '#7c3aed',
   },
   {
-    text: 'Não entendia nada de site. Só contei o que faço e eles criaram tudo. Hoje meus clientes encontram meu número direto pelo Google.',
-    name: 'Carlos R.',
-    role: 'Eletricista Autônomo · RJ',
-    color: '#0891b2',
-  },
-  {
-    text: 'Super profissional e muito rápido. Fiz no sábado e na segunda-feira o site já estava pronto para eu ver. Aprovei e publicou no mesmo dia.',
-    name: 'Fernanda L.',
-    role: 'Studio de Beleza · BH',
-    color: '#be185d',
+    text: 'Já tinha tentado fazer sozinho no Wix. Não funcionou. Com a TopSite, em 30 dias meu site estava ranqueando para termos do meu bairro.',
+    name: 'Roberto F.',
+    role: 'Empresa de Energia Solar · MG',
+    initial: 'R',
+    color: '#d97706',
   },
 ]
-
-const COMPARISON = [
-  { label: 'Prazo',           us: 'Até 3 dias',        freelancer: '2–8 semanas',         agency: '4–12 semanas',        wix: 'Você mesmo configura' },
-  { label: 'Design',          us: 'Personalizado',     freelancer: 'Personalizado',       agency: 'Personalizado',       wix: 'Template' },
-  { label: 'Mobile-ready',    us: 'Sim',               freelancer: 'Depende',             agency: 'Sim',                 wix: 'Sim' },
-  { label: 'SEO básico',      us: 'Incluído',          freelancer: 'Cobrado à parte',     agency: 'Cobrado à parte',     wix: 'Limitado' },
-  { label: 'Suporte',         us: 'Via WhatsApp',      freelancer: 'Eventual',            agency: 'Pago',                wix: 'Ticket / fórum' },
-]
-
-const FAQ = [
-  {
-    q: 'O que está incluído no site?',
-    a: 'Design personalizado para o seu segmento, site 100% responsivo, integração com WhatsApp, SEO on-page básico para aparecer no Google, página completa com todas as seções do seu negócio e os arquivos do site entregues para você.',
-  },
-  {
-    q: 'Quanto tempo leva para o site ficar pronto?',
-    a: 'O primeiro rascunho do site é entregue em até 24 horas após você nos contar sobre o negócio. Com ajustes e aprovação, o site final fica pronto em até 3 dias úteis.',
-  },
-  {
-    q: 'E se eu não gostar do resultado?',
-    a: 'Você vê o site antes de pagar qualquer coisa. Pedimos ajustes até você aprovar sem custo adicional. Você só paga quando estiver 100% satisfeito. Se não quiser seguir em frente, não há nenhuma cobrança.',
-  },
-  {
-    q: 'Posso usar meu próprio domínio (.com.br)?',
-    a: 'Sim! Se você já tem um domínio, usamos ele. Se não tiver, subimos o site em um endereço alternativo gratuito. Você pode contratar um domínio personalizado à parte quando quiser.',
-  },
-  {
-    q: 'O site vai aparecer no Google?',
-    a: 'Sim. Todos os sites são entregues com SEO on-page básico: title, meta description, headings e estrutura semântica otimizados. Para aparecer nos primeiros resultados, o tempo depende da concorrência na sua região — mas a base técnica já está correta.',
-  },
-  {
-    q: 'Preciso saber de tecnologia ou programação?',
-    a: 'Não. Você nos conta sobre o seu negócio pelo WhatsApp — nome da empresa, o que faz, horário, fotos e como as pessoas te contratam. Cuidamos de tudo o mais.',
-  },
-  {
-    q: 'Como funciona o pagamento?',
-    a: 'Você só paga após aprovar o site. O pagamento é feito via Pix, cartão de crédito ou boleto bancário. Não há cobrança antecipada.',
-  },
-  {
-    q: 'Vocês fazem sites para qualquer tipo de negócio?',
-    a: 'Sim! MEI, autônomo, restaurante, salão de beleza, barbearia, clínica, consultório, loja física, academia, personal trainer, fotógrafo, advogado e qualquer prestador de serviço. Se você tem um negócio, temos um site para você.',
-  },
-]
-
-/* ─── CTA Button ─────────────────────────────────────────────────────────── */
-
-function CTAButton({
-  href,
-  children,
-  size = 'md',
-}: {
-  href: string
-  children: React.ReactNode
-  size?: 'md' | 'lg'
-}) {
-  const base =
-    'inline-flex items-center justify-center gap-2.5 bg-green-500 hover:bg-green-400 text-white font-bold rounded-2xl transition-all shadow-lg shadow-green-500/20 hover:shadow-green-500/30 hover:scale-[1.02] active:scale-[0.99]'
-  const sizes = { md: 'px-7 py-3.5 text-sm', lg: 'px-10 py-5 text-base' }
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={`${base} ${sizes[size]}`}>
-      {children}
-    </a>
-  )
-}
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
-export default function LandingPage() {
+export default function HomePage() {
   return (
     <>
       <script
@@ -332,89 +245,70 @@ export default function LandingPage() {
       />
       <Script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" strategy="afterInteractive" />
 
-      <div className="bg-black text-white antialiased">
+      <div className="bg-[#0a0a0a] text-white antialiased">
 
-        {/* ── NAV ── */}
-        <header className="sticky top-0 z-50 border-b border-zinc-900 bg-black/95 backdrop-blur-sm">
-          <nav
-            className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between"
-            aria-label="Navegação principal"
-          >
+        {/* ── NAV ─────────────────────────────────────────────────────────── */}
+        <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#0a0a0a]/95 backdrop-blur-sm">
+          <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between" aria-label="Navegação principal">
             <a href="/" aria-label="TOP SITE — página inicial">
               <Image src="/logo.png" alt="TOP SITE" width={120} height={40} className="h-8 w-auto" priority />
             </a>
             <div className="flex items-center gap-3">
               <a
                 href="/login"
-                className="flex items-center gap-1.5 border border-zinc-800 hover:border-zinc-600 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white text-xs font-medium px-3.5 py-2 rounded-xl transition-all"
+                className="flex items-center gap-1.5 border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-xs font-medium px-3.5 py-2 rounded-xl transition-all"
                 aria-label="Acessar painel do cliente"
               >
                 <UserIcon />
                 <span className="hidden sm:inline">Acessar painel</span>
                 <span className="sm:hidden">Entrar</span>
               </a>
-              <CTAButton href={wa(MSG_MAIN)} size="md">
-                <WAIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Quero meu site</span>
-                <span className="sm:hidden">WhatsApp</span>
-              </CTAButton>
+              <CTAPrimary href="/orcamento" size="md">
+                <span className="hidden sm:inline">Montar meu orçamento</span>
+                <span className="sm:hidden">Orçamento</span>
+              </CTAPrimary>
             </div>
           </nav>
         </header>
 
-        {/* ── HERO ── */}
-        <section
-          id="hero"
-          aria-labelledby="hero-heading"
-          className="relative overflow-hidden py-20 sm:py-28 lg:py-36"
-        >
-          {/* radial glow */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255,209,0,0.08) 0%, transparent 70%)' }}
-            aria-hidden="true"
-          />
+        {/* ── HERO ─────────────────────────────────────────────────────────── */}
+        <section id="hero" aria-labelledby="hero-heading" className="relative overflow-hidden py-24 sm:py-32 lg:py-40">
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% -5%, rgba(250,204,21,0.11) 0%, transparent 65%)' }} aria-hidden="true" />
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '28px 28px' }} aria-hidden="true" />
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-full px-4 py-1.5 text-xs font-medium text-zinc-400 mb-8">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shrink-0" aria-hidden="true" />
-              Vagas abertas — atendemos por ordem de chegada
+            <div className="inline-flex items-center gap-2 border border-yellow-400/20 rounded-full px-4 py-1.5 text-xs font-semibold text-yellow-400/80 mb-8" style={{ background: 'rgba(250,204,21,0.05)' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse shrink-0" aria-hidden="true" />
+              +50 negócios confiam na TopSite
             </div>
 
             {/* H1 */}
-            <h1
-              id="hero-heading"
-              className="text-4xl sm:text-5xl lg:text-[3.75rem] font-black leading-[1.08] tracking-tight text-white mb-6"
-            >
-              Seu negócio no{' '}
-              <span aria-label="Google">
-                <span style={{color:'#4285F4'}}>G</span><span style={{color:'#EA4335'}}>o</span><span style={{color:'#FBBC05'}}>o</span><span style={{color:'#4285F4'}}>g</span><span style={{color:'#34A853'}}>l</span><span style={{color:'#EA4335'}}>e</span>
-              </span>{' '}
-              com um{' '}
-              <span className="text-[#FFD100]">site profissional</span>{' '}
-              pronto em até 3 dias
+            <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.06] tracking-tight text-white mb-6">
+              Seu site deveria estar{' '}
+              <span className="text-yellow-400">VENDENDO</span>{' '}
+              por você —<br className="hidden sm:block" />
+              não só existindo.
             </h1>
 
-            {/* Sub */}
             <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-4 leading-relaxed">
-              Design personalizado para o seu negócio, pronto em até{' '}
-              <strong className="text-white font-semibold">3 dias úteis</strong>.
-              {' '}Você aprova antes de pagar — sem nenhum risco.
+              Criamos sites <strong className="text-white font-semibold">personalizados e avançados</strong>, focados em conversão e SEO —
+              para transformar visitante em cliente e aparecer no Google.
             </p>
 
+            {/* Seal */}
+            <div className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-full px-5 py-2 text-sm text-zinc-300 mb-10 font-medium">
+              A partir de
+              <span className="text-yellow-400 font-black text-base">R$497</span>
+              <span className="text-zinc-600">·</span>
+              <span className="text-zinc-400 text-xs">parcele em 2x</span>
+            </div>
+
             {/* Trust pills */}
-            <ul
-              className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-sm text-zinc-500 list-none"
-              aria-label="Diferenciais"
-            >
-              {[
-                '100% no celular',
-                'Sem saber tecnologia',
-                'Pagamento único',
-              ].map((t) => (
+            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-sm text-zinc-500 list-none" aria-label="Diferenciais">
+              {['Feito à mão — não é template', 'SEO técnico avançado', 'Focado em converter'].map((t) => (
                 <li key={t} className="flex items-center gap-1.5">
-                  <Check className="w-4 h-4 text-green-500 shrink-0" />
+                  <span className="text-yellow-400"><IconCheck /></span>
                   {t}
                 </li>
               ))}
@@ -422,215 +316,246 @@ export default function LandingPage() {
 
             {/* CTA group */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <CTAButton href={wa(MSG_START)} size="lg">
-                <WAIcon className="w-5 h-5" />
-                Criar meu site agora
-              </CTAButton>
-              <a
-                href="#como-funciona"
-                className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors px-2 py-4 underline-offset-2"
-              >
-                Como funciona? →
+              <CTAPrimary href="/orcamento" size="lg">
+                MONTAR MEU ORÇAMENTO
+                <IconArrow />
+              </CTAPrimary>
+              <a href="#diferenciais" className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors px-2 py-4">
+                Por que somos diferentes? →
               </a>
             </div>
+          </div>
+        </section>
 
-            {/* Stats bar */}
-            <div className="mt-14 pt-10 border-t border-zinc-900 grid grid-cols-2 sm:grid-cols-4 gap-6">
-              {STATS.map((s) => (
-                <div key={s.label} className="text-center">
-                  <p className="text-2xl sm:text-3xl font-black text-[#FFD100]">{s.value}</p>
-                  <p className="text-xs text-zinc-500 mt-1 leading-snug">{s.label}</p>
+        {/* ── PROBLEM ──────────────────────────────────────────────────────── */}
+        <section id="o-problema" aria-labelledby="problem-heading" className="py-20 sm:py-24 border-t border-white/[0.04]" style={{ background: '#0d0d0d' }}>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">O problema</p>
+              <h2 id="problem-heading" className="text-3xl sm:text-4xl font-black text-white leading-tight">
+                A maioria dos sites são bonitos.<br />
+                <span className="text-zinc-400">Mas bonito não paga boleto.</span>
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {PROBLEMS.map((p) => (
+                <div
+                  key={p.stat}
+                  className="rounded-2xl border border-white/[0.06] p-7 text-center"
+                  style={{ background: '#111111' }}
+                >
+                  <p className="text-5xl font-black text-yellow-400 mb-3">{p.stat}</p>
+                  <p className="text-sm text-zinc-400 leading-relaxed">{p.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 rounded-2xl border border-yellow-400/10 px-6 py-5 text-center" style={{ background: 'rgba(250,204,21,0.03)' }}>
+              <p className="text-zinc-400 text-base leading-relaxed">
+                <strong className="text-white">Sites genéricos de IA são todos iguais</strong> — seu negócio merece algo
+                feito estrategicamente para converter. É exatamente isso que a TopSite faz.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── DIFFERENTIALS ────────────────────────────────────────────────── */}
+        <section id="diferenciais" aria-labelledby="diff-heading" className="py-20 sm:py-24 bg-white text-gray-900">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-yellow-600 mb-3">Nosso diferencial</p>
+              <h2 id="diff-heading" className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight">
+                O que justifica ser premium
+              </h2>
+              <p className="text-gray-500 mt-4 max-w-xl mx-auto text-sm sm:text-base">
+                Não somos mais um serviço de site. Somos uma equipe de estratégia digital que usa
+                desenvolvimento e SEO para gerar resultado real.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {DIFFERENTIALS.map((d) => (
+                <div
+                  key={d.title}
+                  className="flex items-start gap-5 p-6 rounded-2xl border border-gray-100 hover:border-yellow-200 hover:shadow-lg transition-all"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-yellow-50 border border-yellow-100 flex items-center justify-center shrink-0 text-yellow-700">
+                    <d.Icon />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-gray-900 text-base mb-1.5">{d.title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{d.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ── INCLUDES ── */}
-        <section
-          id="o-que-inclui"
-          aria-labelledby="includes-heading"
-          className="bg-white text-gray-900 py-20 sm:py-24"
-        >
+        {/* ── PORTFOLIO ────────────────────────────────────────────────────── */}
+        <section id="portfolio" aria-labelledby="portfolio-heading" className="py-20 sm:py-24 border-t border-white/[0.04]" style={{ background: '#0d0d0d' }}>
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-[#A08900] mb-3">
-                O que está incluído
-              </p>
-              <h2
-                id="includes-heading"
-                className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight"
-              >
-                Tudo que sua empresa precisa<br className="hidden sm:block" />
-                para ter presença online real
+              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Portfólio</p>
+              <h2 id="portfolio-heading" className="text-3xl sm:text-4xl font-black text-white leading-tight">
+                Sites que já colocamos no ar —<br className="hidden sm:block" />
+                feitos para vender
               </h2>
-              <p className="text-gray-500 mt-4 max-w-xl mx-auto text-sm sm:text-base">
-                Você recebe um site completo e profissional — nada genérico,
-                nada escondido.
-              </p>
+              <p className="text-zinc-500 mt-3 text-sm">Cada um desenvolvido à mão, com estratégia e SEO desde o primeiro dia.</p>
             </div>
 
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 list-none">
-              {INCLUDES.map((item) => (
-                <li
-                  key={item.title}
-                  className="flex items-start gap-4 p-5 rounded-2xl border border-gray-100 hover:border-yellow-200 hover:shadow-md transition-all bg-white"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-yellow-50 border border-yellow-100 flex items-center justify-center shrink-0 text-[#A08900]">
-                    <item.Icon />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {PORTFOLIO.map((p) => (
+                <div key={p.src} className="rounded-2xl overflow-hidden border border-white/[0.06]" style={{ background: '#111111' }}>
+                  <div className="aspect-square">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={p.src} alt={`Site TopSite — ${p.segment}`} className="w-full h-full object-cover" loading="lazy" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900 text-sm mb-1 leading-snug">{item.title}</h3>
-                    <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+                  <div className="px-3 py-2.5">
+                    <p className="text-zinc-400 text-[11px] font-semibold">{p.segment}</p>
                   </div>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
+
+            <div className="mt-8 flex items-center justify-center gap-3">
+              <div className="flex -space-x-2">
+                {['#1d4ed8','#7c3aed','#d97706','#15803d'].map((c, i) => (
+                  <div key={i} className="w-8 h-8 rounded-full border-2 border-[#0d0d0d]" style={{ background: c }} />
+                ))}
+              </div>
+              <p className="text-sm text-zinc-400">
+                <strong className="text-white">+50 negócios</strong> confiam na TopSite
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* ── HOW IT WORKS ── */}
-        <section
-          id="como-funciona"
-          aria-labelledby="steps-heading"
-          className="bg-zinc-950 py-20 sm:py-24"
-        >
+        {/* ── FOR WHOM ─────────────────────────────────────────────────────── */}
+        <section id="para-quem" aria-labelledby="forwho-heading" className="py-20 sm:py-24 bg-white text-gray-900">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-yellow-600 mb-3">Para quem é</p>
+            <h2 id="forwho-heading" className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-6">
+              Para quem leva o próprio<br />negócio a sério
+            </h2>
+            <p className="text-gray-500 text-base leading-relaxed mb-10 max-w-xl mx-auto">
+              Um site profissional não é custo — é investimento que se paga.{' '}
+              <strong className="text-gray-900">Se você entende que presença digital gera clientes</strong>{' '}
+              e quer um site estratégico feito para converter, estamos aqui para isso.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left mb-10">
+              {[
+                { emoji: '🏢', title: 'Pequenas empresas', desc: 'Que querem competir com grandes e aparecer no Google da sua região.' },
+                { emoji: '🚀', title: 'Negócios em crescimento', desc: 'Que precisam de um site que acompanhe a expansão e gere demanda.' },
+                { emoji: '💼', title: 'Profissionais liberais', desc: 'Advogados, médicos, arquitetos e consultores que querem mais clientes qualificados.' },
+              ].map((item) => (
+                <div key={item.title} className="p-5 rounded-2xl border border-gray-100 bg-gray-50">
+                  <div className="text-2xl mb-3">{item.emoji}</div>
+                  <h3 className="font-black text-gray-900 text-sm mb-1">{item.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── OFFER ────────────────────────────────────────────────────────── */}
+        <section id="oferta" aria-labelledby="offer-heading" className="py-20 sm:py-24 relative overflow-hidden" style={{ background: '#0a0a0a' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(250,204,21,0.07) 0%, transparent 65%)' }} aria-hidden="true" />
+          <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Investimento</p>
+            <h2 id="offer-heading" className="text-3xl sm:text-4xl font-black text-white leading-tight mb-4">
+              Preço justo para um<br />
+              <span className="text-yellow-400">resultado de verdade</span>
+            </h2>
+
+            <div className="mt-8 rounded-3xl border border-yellow-400/20 p-8 sm:p-10" style={{ background: 'rgba(250,204,21,0.04)' }}>
+              <p className="text-zinc-500 text-sm uppercase tracking-widest font-bold mb-2">Sites a partir de</p>
+              <p className="text-6xl sm:text-7xl font-black text-yellow-400 leading-none mb-2">R$497</p>
+              <p className="text-zinc-400 text-sm mb-8">O valor varia conforme escopo e complexidade do projeto.</p>
+
+              <div className="bg-yellow-400/10 border border-yellow-400/20 rounded-2xl px-6 py-4 mb-8">
+                <p className="text-yellow-300 text-sm font-bold mb-1">Condição exclusiva de pagamento</p>
+                <p className="text-zinc-300 text-sm leading-relaxed">
+                  Parcele em <strong className="text-white">2x sem juros</strong>: metade na contratação e a outra metade só no mês seguinte.
+                  Você começa sem comprometer o fluxo de caixa.
+                </p>
+              </div>
+
+              <ul className="space-y-2.5 text-left mb-8">
+                {[
+                  'Site personalizado feito à mão, não é template',
+                  'SEO técnico avançado desde o primeiro dia',
+                  'Otimizado para converter visitante em cliente',
+                  'Hospedagem, SSL e monitoramento incluídos',
+                  'Suporte via WhatsApp direto com a equipe',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-zinc-300">
+                    <span className="mt-0.5 text-yellow-400 shrink-0"><IconCheck /></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <CTAPrimary href="/orcamento" size="xl">
+                MONTAR MEU ORÇAMENTO
+                <IconArrow />
+              </CTAPrimary>
+              <p className="text-zinc-600 text-xs mt-4">Sem compromisso. Orçamento gratuito em até 24h.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── HOW IT WORKS ─────────────────────────────────────────────────── */}
+        <section id="como-funciona" aria-labelledby="steps-heading" className="py-20 sm:py-24 bg-white text-gray-900">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-14">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">
-                Do zero ao site publicado
-              </p>
-              <h2
-                id="steps-heading"
-                className="text-3xl sm:text-4xl font-black text-white leading-tight"
-              >
-                Simples assim — 3 passos<br />e seu site está no ar
+              <p className="text-[11px] font-bold uppercase tracking-widest text-yellow-600 mb-3">Como funciona</p>
+              <h2 id="steps-heading" className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight">
+                Do briefing ao site<br />vendendo em 4 passos
               </h2>
             </div>
 
-            <ol className="space-y-8" aria-label="Como funciona a criação do site">
-              {STEPS.map((step, i) => (
-                <li key={step.title} className="flex items-start gap-5">
-                  <div
-                    className="w-12 h-12 rounded-2xl bg-[#FFD100] flex items-center justify-center shrink-0 font-black text-black text-xl"
-                    aria-hidden="true"
-                  >
-                    {i + 1}
+            <ol className="space-y-6" aria-label="Processo de criação do site">
+              {STEPS.map((step) => (
+                <li key={step.num} className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-2xl bg-yellow-400 flex items-center justify-center shrink-0 font-black text-black text-sm" aria-hidden="true">
+                    {step.num}
                   </div>
-                  <div className="pt-1.5 flex-1">
-                    <h3 className="font-bold text-white text-base sm:text-lg mb-1.5">{step.title}</h3>
-                    <p className="text-zinc-400 text-sm leading-relaxed">{step.desc}</p>
+                  <div className="flex-1 pt-2">
+                    <h3 className="font-black text-gray-900 text-base sm:text-lg mb-1">{step.title}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
                   </div>
                 </li>
               ))}
             </ol>
-
-            <div className="mt-12 text-center">
-              <CTAButton href={wa(MSG_START)} size="lg">
-                <WAIcon className="w-5 h-5" />
-                Começar agora
-              </CTAButton>
-            </div>
           </div>
         </section>
 
-        {/* ── FOR WHO ── */}
-        <section
-          id="para-quem"
-          aria-labelledby="segments-heading"
-          className="bg-white text-gray-900 py-20 sm:py-24"
-        >
+        {/* ── TESTIMONIALS ─────────────────────────────────────────────────── */}
+        <section id="depoimentos" aria-labelledby="reviews-heading" className="py-20 sm:py-24" style={{ background: '#0d0d0d' }}>
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-[#A08900] mb-3">
-                Para quem é
-              </p>
-              <h2
-                id="segments-heading"
-                className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight"
-              >
-                Se você tem um negócio,<br />você precisa estar na internet
-              </h2>
-              <p className="text-gray-500 mt-4 max-w-lg mx-auto text-sm sm:text-base">
-                Da MEI ao prestador de serviço, criamos sites que aparecem no Google
-                e convertem visitantes em clientes.
-              </p>
-            </div>
-
-            <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 list-none">
-              {SEGMENTS.map((s) => (
-                <li
-                  key={s}
-                  className="flex items-center gap-2 px-3.5 py-3 rounded-xl border border-gray-100 bg-gray-50 text-sm text-gray-700 font-medium"
-                >
-                  <Check className="w-3.5 h-3.5 text-green-500 shrink-0" />
-                  {s}
-                </li>
-              ))}
-            </ul>
-
-            <p className="text-center text-sm text-gray-400 mt-6">
-              Não encontrou seu segmento?{' '}
-              <a
-                href={wa(MSG_FAQ)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#A08900] hover:underline font-medium"
-              >
-                Pergunte no WhatsApp →
-              </a>
-            </p>
-          </div>
-        </section>
-
-        {/* ── TESTIMONIALS ── */}
-        <section
-          id="depoimentos"
-          aria-labelledby="reviews-heading"
-          className="bg-zinc-950 py-20 sm:py-24"
-        >
-          <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">
-                Depoimentos
-              </p>
-              <h2
-                id="reviews-heading"
-                className="text-3xl sm:text-4xl font-black text-white leading-tight"
-              >
-                Quem tem o site<br />tem resultado
+              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Resultados reais</p>
+              <h2 id="reviews-heading" className="text-3xl sm:text-4xl font-black text-white leading-tight">
+                Negócios que pararam de<br />perder clientes para a concorrência
               </h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {TESTIMONIALS.map((t) => (
-                <article
-                  key={t.name}
-                  className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col"
-                  itemScope
-                  itemType="https://schema.org/Review"
-                >
+                <article key={t.name} className="rounded-2xl border border-white/[0.06] p-6 flex flex-col" style={{ background: '#111111' }} itemScope itemType="https://schema.org/Review">
                   <div className="flex gap-0.5 mb-4" aria-label="Avaliação 5 estrelas">
                     {[...Array(5)].map((_, i) => <IconStar key={i} />)}
                   </div>
-                  <blockquote
-                    className="text-sm text-zinc-300 leading-relaxed mb-6 flex-1"
-                    itemProp="reviewBody"
-                  >
+                  <blockquote className="text-sm text-zinc-300 leading-relaxed mb-6 flex-1" itemProp="reviewBody">
                     &ldquo;{t.text}&rdquo;
                   </blockquote>
-                  <div
-                    className="flex items-center gap-3"
-                    itemProp="author"
-                    itemScope
-                    itemType="https://schema.org/Person"
-                  >
-                    <div
-                      className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
-                      style={{ backgroundColor: t.color }}
-                      aria-hidden="true"
-                    >
-                      {t.name[0]}
+                  <div className="flex items-center gap-3" itemProp="author" itemScope itemType="https://schema.org/Person">
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0" style={{ background: t.color }} aria-hidden="true">
+                      {t.initial}
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white" itemProp="name">{t.name}</p>
@@ -643,185 +568,65 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── COMPARISON ── */}
-        <section
-          id="comparativo"
-          aria-labelledby="comparison-heading"
-          className="bg-black py-20 sm:py-24"
-        >
-          <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">
-                Comparativo
-              </p>
-              <h2
-                id="comparison-heading"
-                className="text-3xl sm:text-4xl font-black text-white leading-tight"
-              >
-                Por que a TOP SITE<br />faz todo o sentido
-              </h2>
-              <p className="text-zinc-500 mt-4 text-sm max-w-md mx-auto">
-                Compare com as alternativas e veja o que você recebe.
-              </p>
-            </div>
+        {/* ── FINAL CTA ────────────────────────────────────────────────────── */}
+        <section id="comecar" aria-labelledby="cta-heading" className="py-24 sm:py-32 relative overflow-hidden" style={{ background: '#0a0a0a' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(250,204,21,0.09) 0%, transparent 65%)' }} aria-hidden="true" />
+          <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '28px 28px' }} aria-hidden="true" />
 
-            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-              <table
-                className="w-full min-w-[600px] text-sm border-separate border-spacing-0"
-                aria-label="Comparativo de serviços de criação de sites"
-              >
-                <thead>
-                  <tr>
-                    <th className="text-left py-4 px-4 text-zinc-500 font-medium w-[26%]"></th>
-                    <th className="py-4 px-4 text-center bg-[#FFD100] text-black font-black rounded-tl-2xl rounded-tr-2xl text-sm">
-                      TOP SITE
-                      <span className="block text-xs font-bold opacity-70">você está aqui</span>
-                    </th>
-                    <th className="py-4 px-4 text-center text-zinc-500 font-semibold">Freelancer</th>
-                    <th className="py-4 px-4 text-center text-zinc-500 font-semibold">Agência</th>
-                    <th className="py-4 px-4 text-center text-zinc-500 font-semibold">Wix / Webflow</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {COMPARISON.map((row, idx) => {
-                    const isLast = idx === COMPARISON.length - 1
-                    return (
-                      <tr key={row.label}>
-                        <td className={`py-3.5 px-4 text-zinc-400 font-medium ${idx % 2 === 0 ? 'bg-zinc-950/60' : ''} ${isLast ? 'rounded-bl-2xl' : ''}`}>
-                          {row.label}
-                        </td>
-                        <td className={`py-3.5 px-4 text-center font-bold text-black bg-[#FFD100]/90 ${isLast ? 'rounded-bl-2xl rounded-br-2xl' : ''}`}>
-                          {row.us}
-                        </td>
-                        <td className={`py-3.5 px-4 text-center text-zinc-500 ${idx % 2 === 0 ? 'bg-zinc-950/60' : ''}`}>{row.freelancer}</td>
-                        <td className={`py-3.5 px-4 text-center text-zinc-500 ${idx % 2 === 0 ? 'bg-zinc-950/60' : ''}`}>{row.agency}</td>
-                        <td className={`py-3.5 px-4 text-center text-zinc-500 ${idx % 2 === 0 ? 'bg-zinc-950/60' : ''} ${isLast ? 'rounded-br-2xl' : ''}`}>{row.wix}</td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-              <p className="text-xs text-zinc-600 mt-3 text-center">
-                * Wix/Webflow: planos com contrato anual. Você mesmo configura o site.
-              </p>
-            </div>
-          </div>
-        </section>
+          <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4">Não espere mais</p>
+            <h2 id="cta-heading" className="text-4xl sm:text-5xl font-black text-white leading-[1.08] mb-5">
+              Pare de perder clientes<br />
+              <span className="text-yellow-400">para quem aparece no Google</span>
+            </h2>
+            <p className="text-zinc-400 text-base leading-relaxed mb-10 max-w-lg mx-auto">
+              Cada dia sem um site estratégico é um dia de clientes indo para o concorrente.
+              Monte seu orçamento agora — é gratuito e sem compromisso.
+            </p>
 
-        {/* ── FAQ ── */}
-        <section
-          id="perguntas-frequentes"
-          aria-labelledby="faq-heading"
-          className="bg-white text-gray-900 py-20 sm:py-24"
-        >
-          <div className="max-w-3xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-[#A08900] mb-3">FAQ</p>
-              <h2
-                id="faq-heading"
-                className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight"
-              >
-                Perguntas frequentes
-              </h2>
-              <p className="text-gray-500 mt-4 text-sm">Tudo que você precisa saber antes de começar</p>
-            </div>
+            <CTAPrimary href="/orcamento" size="xl">
+              MONTAR MEU ORÇAMENTO
+              <IconArrow />
+            </CTAPrimary>
 
-            <dl className="space-y-3">
-              {FAQ.map((item) => (
-                <div
-                  key={item.q}
-                  className="rounded-2xl border border-gray-200 overflow-hidden"
-                >
-                  <dt className="px-6 py-5">
-                    <h3 className="font-semibold text-gray-900 text-base leading-snug">{item.q}</h3>
-                  </dt>
-                  <dd className="px-6 pb-5 -mt-1 border-t border-gray-100 pt-4 text-sm text-gray-600 leading-relaxed">
-                    {item.a}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            <p className="text-zinc-600 text-xs mt-5">
+              Orçamento gratuito em até 24h · Parcele em 2x · Sem contrato de fidelidade
+            </p>
 
-            <div className="mt-10 text-center">
-              <p className="text-gray-500 text-sm mb-3">Ainda tem dúvida?</p>
+            <div className="mt-10 pt-8 border-t border-white/[0.04]">
+              <p className="text-zinc-600 text-xs mb-2">Prefere falar primeiro?</p>
               <a
-                href={wa(MSG_FAQ)}
+                href={wa(MSG_DOUBT)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-green-600 hover:text-green-500 transition-colors"
+                className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors"
                 aria-label="Tirar dúvidas no WhatsApp"
               >
-                <WAIcon className="w-4 h-4" />
-                Perguntar no WhatsApp
+                <WAIcon className="w-4 h-4 text-green-500" />
+                Falar no WhatsApp
               </a>
             </div>
           </div>
         </section>
 
-        {/* ── FINAL CTA ── */}
-        <section
-          id="comecar"
-          aria-labelledby="cta-heading"
-          className="bg-black py-24 sm:py-32 relative overflow-hidden"
-        >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 110%, rgba(255,209,0,0.07) 0%, transparent 65%)' }}
-            aria-hidden="true"
-          />
-          <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4">
-              Pronto para começar?
-            </p>
-            <h2
-              id="cta-heading"
-              className="text-4xl sm:text-5xl font-black text-white leading-[1.08] mb-5"
-            >
-              Seu negócio merece<br />
-              <span className="text-[#FFD100]">estar na internet</span>
-            </h2>
-            <p className="text-zinc-400 text-base mb-3 max-w-md mx-auto leading-relaxed">
-              Fale no WhatsApp, conte sobre seu negócio e veja o resultado
-              antes de pagar qualquer coisa.
-            </p>
-            <p className="text-zinc-600 text-sm mb-10">
-              Pagamento só após aprovação · Sem risco
-            </p>
-
-            <CTAButton href={wa(MSG_MAIN)} size="lg">
-              <WAIcon className="w-6 h-6" />
-              Quero meu site profissional
-            </CTAButton>
-
-            <p className="text-zinc-600 text-xs mt-6">
-              Atendemos via WhatsApp · Seg a Sáb · +55 18 99674-2364
-            </p>
-          </div>
-        </section>
-
-        {/* ── FOOTER ── */}
-        <footer
-          className="bg-zinc-950 border-t border-zinc-900 py-10"
-          aria-label="Rodapé"
-          itemScope
-          itemType="https://schema.org/WPFooter"
-        >
+        {/* ── FOOTER ───────────────────────────────────────────────────────── */}
+        <footer className="border-t border-white/[0.06] py-10" style={{ background: '#060606' }} aria-label="Rodapé" itemScope itemType="https://schema.org/WPFooter">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-5">
             <a href="/" aria-label="TOP SITE — página inicial">
               <Image src="/logo.png" alt="TOP SITE" width={100} height={34} className="h-7 w-auto" />
             </a>
             <p className="text-xs text-zinc-600 text-center order-last sm:order-none">
-              © {new Date().getFullYear()} TOP SITE &middot; Criação de sites profissionais &middot;{' '}
-              <a href="/login" className="hover:text-zinc-400 transition-colors">
-                Área do cliente
-              </a>
+              © {new Date().getFullYear()} TOP SITE &middot;{' '}
+              <a href="/termos" className="hover:text-zinc-400 transition-colors">Termos</a>{' '}·{' '}
+              <a href="/privacidade" className="hover:text-zinc-400 transition-colors">Privacidade</a>{' '}·{' '}
+              <a href="/login" className="hover:text-zinc-400 transition-colors">Área do cliente</a>
             </p>
             <a
-              href={wa(MSG_MAIN)}
+              href={wa(MSG_DOUBT)}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors"
-              aria-label="Contato via WhatsApp — +55 18 99674-2364"
+              aria-label="Contato via WhatsApp"
             >
               <WAIcon className="w-4 h-4 text-green-500" />
               +55 18 99674-2364

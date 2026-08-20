@@ -660,6 +660,22 @@ model PresentationProposalLead {
   @@map("presentation_proposal_leads")
 }
 
+model QuoteLead {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  projectType String   @map("project_type")
+  pageCount   Int?     @map("page_count")
+  segment     String
+  hasAdmin    Boolean  @default(false) @map("has_admin")
+  hasLogo     Boolean  @default(true) @map("has_logo")
+  hasDomain   Boolean  @default(true) @map("has_domain")
+  totalValue  Decimal  @db.Decimal(10, 2) @map("total_value")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("quote_leads")
+}
+
 model EmailOptOut {
   id        String   @id @default(uuid())
   email     String   @unique
