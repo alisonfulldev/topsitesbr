@@ -1,0 +1,38 @@
+import type { ProjectType } from './actions'
+
+export function buildWAMessage(q: {
+  projectType: ProjectType
+  pageCount: number | null
+  hasAdmin: boolean
+  hasLogo: boolean
+  hasDomain: boolean
+  totalValue: number
+}): string {
+  const typeLabel =
+    q.projectType === 'landing_page'
+      ? 'Landing Page'
+      : q.projectType === 'loja_virtual'
+      ? 'Loja Virtual'
+      : `Site Institucional (${q.pageCount ?? 1} página${(q.pageCount ?? 1) !== 1 ? 's' : ''})`
+
+  const addons: string[] = []
+  if (q.hasAdmin) addons.push('Painel admin / backend')
+  if (!q.hasLogo) addons.push('Logotipo')
+  if (!q.hasDomain) addons.push('Domínio')
+  const addonsLine = addons.length > 0 ? addons.join(', ') : 'Nenhum'
+
+  const total = q.totalValue.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
+
+  return [
+    'Olá! Aprovei meu orçamento na TopSite:',
+    '',
+    `Projeto: ${typeLabel}`,
+    `Adicionais: ${addonsLine}`,
+    `Valor total: ${total} — pagamento em 2x`,
+    '',
+    'Quero seguir com meu projeto!',
+  ].join('\n')
+}

@@ -3,7 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useCallback } from 'react'
-import { saveQuoteLeadAction, buildWAMessage } from './actions'
+import { saveQuoteLeadAction } from './actions'
+import { buildWAMessage } from './utils'
 import type { ProjectType } from './actions'
 
 /* ─── Pricing ─────────────────────────────────────────────────────────────── */
