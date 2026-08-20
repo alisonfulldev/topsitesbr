@@ -85,9 +85,9 @@ const jsonLd = {
   ],
 }
 
-/* ─── SVG Icons ──────────────────────────────────────────────────────────── */
+/* ─── Icons ──────────────────────────────────────────────────────────────── */
 
-function WAIcon({ className = 'w-5 h-5' }: { className?: string }) {
+function WAIcon({ className = 'w-4 h-4' }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -104,45 +104,69 @@ function UserIcon() {
 }
 
 function IconStar() {
-  return <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-yellow-400" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5" style={{ color: '#facc15' }} aria-hidden="true">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  )
 }
 
 function IconHand() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden="true"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" /><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" /></svg>
 }
 
 function IconTarget() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden="true"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>
 }
 
 function IconSearch() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden="true"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
 }
 
 function IconZap() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
 }
 
 function IconCheck() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
 }
 
 function IconArrow() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
 }
 
-/* ─── CTA Button ─────────────────────────────────────────────────────────── */
+/* ─── Shared components ──────────────────────────────────────────────────── */
 
-function CTAPrimary({ href, children, size = 'md' }: { href: string; children: React.ReactNode; size?: 'md' | 'lg' | 'xl' }) {
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p
+      className="text-[10px] font-medium tracking-[0.16em] uppercase"
+      style={{ color: 'rgba(250,204,21,0.5)' }}
+    >
+      {children}
+    </p>
+  )
+}
+
+function CTAPrimary({
+  href,
+  children,
+  size = 'md',
+}: {
+  href: string
+  children: React.ReactNode
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+}) {
   const sizes = {
-    md:  'px-6 py-3 text-sm',
-    lg:  'px-8 py-4 text-base',
-    xl:  'px-10 py-5 text-lg',
+    sm: 'px-4 py-2 text-[12px]',
+    md: 'px-5 py-2.5 text-[13px]',
+    lg: 'px-7 py-3.5 text-[14px]',
+    xl: 'px-8 py-4 text-[15px]',
   }
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center gap-2.5 bg-yellow-400 hover:bg-yellow-300 text-black font-black rounded-2xl transition-all duration-200 hover:shadow-[0_0_32px_rgba(250,204,21,0.45)] hover:scale-[1.02] active:scale-[0.98] ${sizes[size]}`}
+      className={`inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold rounded-xl transition-all duration-200 hover:shadow-[0_0_32px_rgba(250,204,21,0.2)] active:scale-[0.99] ${sizes[size]}`}
     >
       {children}
     </Link>
@@ -152,26 +176,10 @@ function CTAPrimary({ href, children, size = 'md' }: { href: string; children: R
 /* ─── Static data ────────────────────────────────────────────────────────── */
 
 const DIFFERENTIALS = [
-  {
-    Icon: IconHand,
-    title: 'Personalizado e avançado',
-    desc: 'Cada site é feito à mão, sob medida para o seu negócio e segmento. Não é template de IA que todo mundo usa — é um projeto exclusivo.',
-  },
-  {
-    Icon: IconTarget,
-    title: 'Focado em conversão',
-    desc: 'Cada elemento é pensado para transformar visitante em cliente: CTAs estratégicos, jornada de compra clara e gatilhos de decisão no lugar certo.',
-  },
-  {
-    Icon: IconSearch,
-    title: 'SEO avançado',
-    desc: 'Seu site otimizado de forma técnica para aparecer no Google quando alguém procura pelo seu serviço na sua cidade. Não é SEO básico de template.',
-  },
-  {
-    Icon: IconZap,
-    title: 'Performance real',
-    desc: 'Sites rápidos convertem mais e ranqueiam melhor. Desenvolvemos com código limpo, imagens otimizadas e carregamento rápido em qualquer dispositivo.',
-  },
+  { Icon: IconHand, title: 'Personalizado e avançado', desc: 'Cada site é feito à mão, sob medida para o seu negócio e segmento. Não é template de IA que todo mundo usa — é um projeto exclusivo.' },
+  { Icon: IconTarget, title: 'Focado em conversão', desc: 'Cada elemento é pensado para transformar visitante em cliente: CTAs estratégicos, jornada de compra clara e gatilhos de decisão no lugar certo.' },
+  { Icon: IconSearch, title: 'SEO avançado', desc: 'Seu site otimizado de forma técnica para aparecer no Google quando alguém procura pelo seu serviço na sua cidade. Não é SEO básico de template.' },
+  { Icon: IconZap, title: 'Performance real', desc: 'Sites rápidos convertem mais e ranqueiam melhor. Desenvolvemos com código limpo, imagens otimizadas e carregamento rápido em qualquer dispositivo.' },
 ]
 
 const PROBLEMS = [
@@ -181,26 +189,10 @@ const PROBLEMS = [
 ]
 
 const STEPS = [
-  {
-    num: '01',
-    title: 'Entendemos o seu negócio',
-    desc: 'Analisamos seu mercado, seus concorrentes e o perfil do seu cliente ideal antes de escrever uma linha de código.',
-  },
-  {
-    num: '02',
-    title: 'Planejamos a estratégia',
-    desc: 'Mapeamos a jornada do visitante, definimos os CTAs, a estrutura de SEO e a hierarquia visual que vai converter.',
-  },
-  {
-    num: '03',
-    title: 'Desenvolvemos personalizado',
-    desc: 'Desenvolvemos do zero: design exclusivo, código limpo, SEO técnico e performance. Sem templates. Sem atalhos.',
-  },
-  {
-    num: '04',
-    title: 'Seu site vai ao ar vendendo',
-    desc: 'Publicamos com hospedagem, SSL e monitoramento. Você começa a receber visitantes e clientes desde o primeiro dia.',
-  },
+  { num: '01', title: 'Entendemos o seu negócio', desc: 'Analisamos seu mercado, seus concorrentes e o perfil do seu cliente ideal antes de escrever uma linha de código.' },
+  { num: '02', title: 'Planejamos a estratégia', desc: 'Mapeamos a jornada do visitante, definimos os CTAs, a estrutura de SEO e a hierarquia visual que vai converter.' },
+  { num: '03', title: 'Desenvolvemos personalizado', desc: 'Desenvolvemos do zero: design exclusivo, código limpo, SEO técnico e performance. Sem templates. Sem atalhos.' },
+  { num: '04', title: 'Seu site vai ao ar vendendo', desc: 'Publicamos com hospedagem, SSL e monitoramento. Você começa a receber visitantes e clientes desde o primeiro dia.' },
 ]
 
 const PORTFOLIO = [
@@ -211,27 +203,23 @@ const PORTFOLIO = [
 ]
 
 const TESTIMONIALS = [
-  {
-    text: 'Antes eu tinha um site que ninguém achava. Agora apareço no Google e recebo contatos toda semana de clientes novos. Valeu cada centavo.',
-    name: 'Marcos A.',
-    role: 'Escritório de Advocacia · SP',
-    initial: 'M',
-    color: '#1d4ed8',
-  },
-  {
-    text: 'Minha clínica triplicou os agendamentos online em dois meses. O site deles não é só bonito — ele realmente converte.',
-    name: 'Dra. Renata S.',
-    role: 'Clínica Estética · RJ',
-    initial: 'R',
-    color: '#7c3aed',
-  },
-  {
-    text: 'Já tinha tentado fazer sozinho no Wix. Não funcionou. Com a TopSite, em 30 dias meu site estava ranqueando para termos do meu bairro.',
-    name: 'Roberto F.',
-    role: 'Empresa de Energia Solar · MG',
-    initial: 'R',
-    color: '#d97706',
-  },
+  { text: 'Antes eu tinha um site que ninguém achava. Agora apareço no Google e recebo contatos toda semana de clientes novos. Valeu cada centavo.', name: 'Marcos A.', role: 'Escritório de Advocacia · SP', initial: 'M', color: '#1d4ed8' },
+  { text: 'Minha clínica triplicou os agendamentos online em dois meses. O site deles não é só bonito — ele realmente converte.', name: 'Dra. Renata S.', role: 'Clínica Estética · RJ', initial: 'R', color: '#7c3aed' },
+  { text: 'Já tinha tentado fazer sozinho no Wix. Não funcionou. Com a TopSite, em 30 dias meu site estava ranqueando para termos do meu bairro.', name: 'Roberto F.', role: 'Empresa de Energia Solar · MG', initial: 'R', color: '#d97706' },
+]
+
+const FOR_WHOM = [
+  { title: 'Pequenas empresas', desc: 'Que querem competir com grandes e aparecer no Google da sua região.' },
+  { title: 'Negócios em crescimento', desc: 'Que precisam de um site que acompanhe a expansão e gere demanda orgânica.' },
+  { title: 'Profissionais liberais', desc: 'Advogados, médicos, arquitetos e consultores que querem mais clientes qualificados.' },
+]
+
+const CHECKLIST = [
+  'Site personalizado feito à mão, não é template',
+  'SEO técnico avançado desde o primeiro dia',
+  'Otimizado para converter visitante em cliente',
+  'Hospedagem, SSL e monitoramento incluídos',
+  'Suporte via WhatsApp direto com a equipe',
 ]
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
@@ -245,10 +233,13 @@ export default function HomePage() {
       />
       <Script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" strategy="afterInteractive" />
 
-      <div className="bg-[#0a0a0a] text-white antialiased">
+      <div className="text-white antialiased" style={{ background: '#0a0a0a' }}>
 
         {/* ── NAV ─────────────────────────────────────────────────────────── */}
-        <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#0a0a0a]/95 backdrop-blur-sm">
+        <header
+          className="sticky top-0 z-50 backdrop-blur-md"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(10,10,10,0.92)' }}
+        >
           <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between" aria-label="Navegação principal">
             <a href="/" aria-label="TOP SITE — página inicial">
               <Image src="/logo.png" alt="TOP SITE" width={120} height={40} className="h-8 w-auto" priority />
@@ -256,7 +247,8 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <a
                 href="/login"
-                className="flex items-center gap-1.5 border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-xs font-medium px-3.5 py-2 rounded-xl transition-all"
+                className="flex items-center gap-1.5 text-[12px] px-3.5 py-2 rounded-xl transition-all duration-200"
+                style={{ color: '#555', border: '1px solid rgba(255,255,255,0.07)' }}
                 aria-label="Acessar painel do cliente"
               >
                 <UserIcon />
@@ -272,55 +264,74 @@ export default function HomePage() {
         </header>
 
         {/* ── HERO ─────────────────────────────────────────────────────────── */}
-        <section id="hero" aria-labelledby="hero-heading" className="relative overflow-hidden py-24 sm:py-32 lg:py-40">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% -5%, rgba(250,204,21,0.11) 0%, transparent 65%)' }} aria-hidden="true" />
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '28px 28px' }} aria-hidden="true" />
+        <section id="hero" aria-labelledby="hero-heading" className="relative overflow-hidden py-24 sm:py-36 lg:py-44">
+          <div
+            className="absolute inset-0 pointer-events-none"
+            aria-hidden
+            style={{ background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(250,204,21,0.09) 0%, transparent 60%)' }}
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            aria-hidden
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
+          />
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 border border-yellow-400/20 rounded-full px-4 py-1.5 text-xs font-semibold text-yellow-400/80 mb-8" style={{ background: 'rgba(250,204,21,0.05)' }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse shrink-0" aria-hidden="true" />
-              +50 negócios confiam na TopSite
+            <div
+              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-10"
+              style={{ border: '1px solid rgba(250,204,21,0.14)', background: 'rgba(250,204,21,0.04)' }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#facc15' }} aria-hidden />
+              <span className="text-[11px] font-medium tracking-wide" style={{ color: 'rgba(250,204,21,0.7)' }}>
+                +50 negócios confiam na TopSite
+              </span>
             </div>
 
-            {/* H1 */}
-            <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.06] tracking-tight text-white mb-6">
+            <h1
+              id="hero-heading"
+              className="text-[42px] sm:text-[58px] lg:text-[72px] font-bold leading-[1.05] tracking-tight text-white mb-8"
+            >
               Seu site deveria estar{' '}
-              <span className="text-yellow-400">VENDENDO</span>{' '}
+              <span style={{ color: '#facc15' }}>VENDENDO</span>{' '}
               por você —<br className="hidden sm:block" />
               não só existindo.
             </h1>
 
-            <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-4 leading-relaxed">
-              Criamos sites <strong className="text-white font-semibold">personalizados e avançados</strong>, focados em conversão e SEO —
-              para transformar visitante em cliente e aparecer no Google.
+            <p className="text-[16px] sm:text-[18px] max-w-2xl mx-auto mb-6 leading-relaxed" style={{ color: '#777' }}>
+              Criamos sites{' '}
+              <span className="text-white font-medium">personalizados e avançados</span>,
+              focados em conversão e SEO — para transformar visitante em cliente e aparecer no Google.
             </p>
 
-            {/* Seal */}
-            <div className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-full px-5 py-2 text-sm text-zinc-300 mb-10 font-medium">
-              A partir de
-              <span className="text-yellow-400 font-black text-base">R$497</span>
-              <span className="text-zinc-600">·</span>
-              <span className="text-zinc-400 text-xs">parcele em 2x</span>
+            <div
+              className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 mb-10 text-[13px]"
+              style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)' }}
+            >
+              <span style={{ color: '#555' }}>A partir de</span>
+              <span className="font-bold" style={{ color: '#facc15' }}>R$497</span>
+              <span style={{ color: '#2a2a2a' }}>·</span>
+              <span style={{ color: '#444' }}>parcele em 2×</span>
             </div>
 
-            {/* Trust pills */}
-            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-sm text-zinc-500 list-none" aria-label="Diferenciais">
+            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 list-none" aria-label="Diferenciais">
               {['Feito à mão — não é template', 'SEO técnico avançado', 'Focado em converter'].map((t) => (
-                <li key={t} className="flex items-center gap-1.5">
-                  <span className="text-yellow-400"><IconCheck /></span>
+                <li key={t} className="flex items-center gap-1.5 text-[13px]" style={{ color: '#555' }}>
+                  <span style={{ color: '#facc15' }}><IconCheck /></span>
                   {t}
                 </li>
               ))}
             </ul>
 
-            {/* CTA group */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <CTAPrimary href="/orcamento" size="lg">
                 MONTAR MEU ORÇAMENTO
                 <IconArrow />
               </CTAPrimary>
-              <a href="#diferenciais" className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors px-2 py-4">
+              <a
+                href="#diferenciais"
+                className="text-[13px] transition-colors px-3 py-3"
+                style={{ color: '#444' }}
+              >
                 Por que somos diferentes? →
               </a>
             </div>
@@ -328,64 +339,91 @@ export default function HomePage() {
         </section>
 
         {/* ── PROBLEM ──────────────────────────────────────────────────────── */}
-        <section id="o-problema" aria-labelledby="problem-heading" className="py-20 sm:py-24 border-t border-white/[0.04]" style={{ background: '#0d0d0d' }}>
+        <section
+          id="o-problema"
+          aria-labelledby="problem-heading"
+          className="py-20 sm:py-28"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: '#0d0d0d' }}
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-14">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">O problema</p>
-              <h2 id="problem-heading" className="text-3xl sm:text-4xl font-black text-white leading-tight">
+              <SectionLabel>O problema</SectionLabel>
+              <h2
+                id="problem-heading"
+                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+              >
                 A maioria dos sites são bonitos.<br />
-                <span className="text-zinc-400">Mas bonito não paga boleto.</span>
+                <span style={{ color: '#3a3a3a' }}>Mas bonito não paga boleto.</span>
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {PROBLEMS.map((p) => (
                 <div
                   key={p.stat}
-                  className="rounded-2xl border border-white/[0.06] p-7 text-center"
-                  style={{ background: '#111111' }}
+                  className="rounded-2xl p-7 text-center"
+                  style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)' }}
                 >
-                  <p className="text-5xl font-black text-yellow-400 mb-3">{p.stat}</p>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{p.text}</p>
+                  <p className="text-[56px] font-black mb-3 leading-none" style={{ color: '#facc15' }}>{p.stat}</p>
+                  <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{p.text}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-8 rounded-2xl border border-yellow-400/10 px-6 py-5 text-center" style={{ background: 'rgba(250,204,21,0.03)' }}>
-              <p className="text-zinc-400 text-base leading-relaxed">
-                <strong className="text-white">Sites genéricos de IA são todos iguais</strong> — seu negócio merece algo
-                feito estrategicamente para converter. É exatamente isso que a TopSite faz.
+            <div
+              className="mt-5 rounded-xl px-6 py-5 text-center"
+              style={{ background: 'rgba(250,204,21,0.025)', border: '1px solid rgba(250,204,21,0.07)' }}
+            >
+              <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>
+                <span className="text-white font-medium">Sites genéricos de IA são todos iguais</span>
+                {' '}— seu negócio merece algo feito estrategicamente para converter. É exatamente isso que a TopSite faz.
               </p>
             </div>
           </div>
         </section>
 
         {/* ── DIFFERENTIALS ────────────────────────────────────────────────── */}
-        <section id="diferenciais" aria-labelledby="diff-heading" className="py-20 sm:py-24 bg-white text-gray-900">
+        <section
+          id="diferenciais"
+          aria-labelledby="diff-heading"
+          className="py-20 sm:py-28"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-14">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-yellow-600 mb-3">Nosso diferencial</p>
-              <h2 id="diff-heading" className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight">
+              <SectionLabel>Nosso diferencial</SectionLabel>
+              <h2
+                id="diff-heading"
+                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+              >
                 O que justifica ser premium
               </h2>
-              <p className="text-gray-500 mt-4 max-w-xl mx-auto text-sm sm:text-base">
-                Não somos mais um serviço de site. Somos uma equipe de estratégia digital que usa
+              <p className="mt-4 max-w-lg mx-auto text-[15px] leading-relaxed" style={{ color: '#666' }}>
+                Não somos mais um serviço de site — somos estratégia digital que usa
                 desenvolvimento e SEO para gerar resultado real.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {DIFFERENTIALS.map((d) => (
                 <div
                   key={d.title}
-                  className="flex items-start gap-5 p-6 rounded-2xl border border-gray-100 hover:border-yellow-200 hover:shadow-lg transition-all"
+                  className="flex items-start gap-5 p-6 rounded-2xl transition-all duration-300"
+                  style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.06)' }}
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-yellow-50 border border-yellow-100 flex items-center justify-center shrink-0 text-yellow-700">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    style={{
+                      background: 'rgba(250,204,21,0.07)',
+                      border: '1px solid rgba(250,204,21,0.12)',
+                      color: '#facc15',
+                    }}
+                  >
                     <d.Icon />
                   </div>
                   <div>
-                    <h3 className="font-black text-gray-900 text-base mb-1.5">{d.title}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">{d.desc}</p>
+                    <h3 className="font-semibold text-white text-[15px] mb-2">{d.title}</h3>
+                    <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{d.desc}</p>
                   </div>
                 </div>
               ))}
@@ -394,26 +432,44 @@ export default function HomePage() {
         </section>
 
         {/* ── PORTFOLIO ────────────────────────────────────────────────────── */}
-        <section id="portfolio" aria-labelledby="portfolio-heading" className="py-20 sm:py-24 border-t border-white/[0.04]" style={{ background: '#0d0d0d' }}>
+        <section
+          id="portfolio"
+          aria-labelledby="portfolio-heading"
+          className="py-20 sm:py-28"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: '#0d0d0d' }}
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Portfólio</p>
-              <h2 id="portfolio-heading" className="text-3xl sm:text-4xl font-black text-white leading-tight">
-                Sites que já colocamos no ar —<br className="hidden sm:block" />
-                feitos para vender
+              <SectionLabel>Portfólio</SectionLabel>
+              <h2
+                id="portfolio-heading"
+                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+              >
+                Sites que já colocamos no ar
               </h2>
-              <p className="text-zinc-500 mt-3 text-sm">Cada um desenvolvido à mão, com estratégia e SEO desde o primeiro dia.</p>
+              <p className="mt-3 text-[14px]" style={{ color: '#555' }}>
+                Cada um desenvolvido à mão, com estratégia e SEO desde o primeiro dia.
+              </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {PORTFOLIO.map((p) => (
-                <div key={p.src} className="rounded-2xl overflow-hidden border border-white/[0.06]" style={{ background: '#111111' }}>
+                <div
+                  key={p.src}
+                  className="rounded-xl overflow-hidden"
+                  style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)' }}
+                >
                   <div className="aspect-square">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.src} alt={`Site TopSite — ${p.segment}`} className="w-full h-full object-cover" loading="lazy" />
+                    <img
+                      src={p.src}
+                      alt={`Site TopSite — ${p.segment}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
                   </div>
                   <div className="px-3 py-2.5">
-                    <p className="text-zinc-400 text-[11px] font-semibold">{p.segment}</p>
+                    <p className="text-[11px] font-medium" style={{ color: '#555' }}>{p.segment}</p>
                   </div>
                 </div>
               ))}
@@ -421,40 +477,55 @@ export default function HomePage() {
 
             <div className="mt-8 flex items-center justify-center gap-3">
               <div className="flex -space-x-2">
-                {['#1d4ed8','#7c3aed','#d97706','#15803d'].map((c, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full border-2 border-[#0d0d0d]" style={{ background: c }} />
+                {['#1d4ed8', '#7c3aed', '#d97706', '#15803d'].map((c, i) => (
+                  <div
+                    key={i}
+                    className="w-7 h-7 rounded-full"
+                    style={{ background: c, border: '2px solid #0d0d0d' }}
+                  />
                 ))}
               </div>
-              <p className="text-sm text-zinc-400">
-                <strong className="text-white">+50 negócios</strong> confiam na TopSite
+              <p className="text-[13px]" style={{ color: '#555' }}>
+                <span className="text-white font-medium">+50 negócios</span> confiam na TopSite
               </p>
             </div>
           </div>
         </section>
 
         {/* ── FOR WHOM ─────────────────────────────────────────────────────── */}
-        <section id="para-quem" aria-labelledby="forwho-heading" className="py-20 sm:py-24 bg-white text-gray-900">
+        <section
+          id="para-quem"
+          aria-labelledby="forwho-heading"
+          className="py-20 sm:py-28"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+        >
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-yellow-600 mb-3">Para quem é</p>
-            <h2 id="forwho-heading" className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-6">
+            <SectionLabel>Para quem é</SectionLabel>
+            <h2
+              id="forwho-heading"
+              className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4 mb-6"
+            >
               Para quem leva o próprio<br />negócio a sério
             </h2>
-            <p className="text-gray-500 text-base leading-relaxed mb-10 max-w-xl mx-auto">
+            <p className="text-[15px] leading-relaxed mb-12 max-w-lg mx-auto" style={{ color: '#666' }}>
               Um site profissional não é custo — é investimento que se paga.{' '}
-              <strong className="text-gray-900">Se você entende que presença digital gera clientes</strong>{' '}
+              <span className="text-white">Se você entende que presença digital gera clientes</span>{' '}
               e quer um site estratégico feito para converter, estamos aqui para isso.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left mb-10">
-              {[
-                { emoji: '🏢', title: 'Pequenas empresas', desc: 'Que querem competir com grandes e aparecer no Google da sua região.' },
-                { emoji: '🚀', title: 'Negócios em crescimento', desc: 'Que precisam de um site que acompanhe a expansão e gere demanda.' },
-                { emoji: '💼', title: 'Profissionais liberais', desc: 'Advogados, médicos, arquitetos e consultores que querem mais clientes qualificados.' },
-              ].map((item) => (
-                <div key={item.title} className="p-5 rounded-2xl border border-gray-100 bg-gray-50">
-                  <div className="text-2xl mb-3">{item.emoji}</div>
-                  <h3 className="font-black text-gray-900 text-sm mb-1">{item.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+              {FOR_WHOM.map((item) => (
+                <div
+                  key={item.title}
+                  className="p-5 rounded-xl"
+                  style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.06)' }}
+                >
+                  <div
+                    className="w-1 h-4 rounded-full mb-4"
+                    style={{ background: 'rgba(250,204,21,0.4)' }}
+                  />
+                  <h3 className="font-semibold text-white text-[14px] mb-2">{item.title}</h3>
+                  <p className="text-[13px] leading-relaxed" style={{ color: '#666' }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -462,38 +533,59 @@ export default function HomePage() {
         </section>
 
         {/* ── OFFER ────────────────────────────────────────────────────────── */}
-        <section id="oferta" aria-labelledby="offer-heading" className="py-20 sm:py-24 relative overflow-hidden" style={{ background: '#0a0a0a' }}>
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(250,204,21,0.07) 0%, transparent 65%)' }} aria-hidden="true" />
-          <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Investimento</p>
-            <h2 id="offer-heading" className="text-3xl sm:text-4xl font-black text-white leading-tight mb-4">
+        <section
+          id="oferta"
+          aria-labelledby="offer-heading"
+          className="py-20 sm:py-28 relative overflow-hidden"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: '#0d0d0d' }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            aria-hidden
+            style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(250,204,21,0.05) 0%, transparent 65%)' }}
+          />
+          <div className="relative max-w-xl mx-auto px-4 sm:px-6 text-center">
+            <SectionLabel>Investimento</SectionLabel>
+            <h2
+              id="offer-heading"
+              className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4 mb-10"
+            >
               Preço justo para um<br />
-              <span className="text-yellow-400">resultado de verdade</span>
+              <span style={{ color: '#facc15' }}>resultado de verdade</span>
             </h2>
 
-            <div className="mt-8 rounded-3xl border border-yellow-400/20 p-8 sm:p-10" style={{ background: 'rgba(250,204,21,0.04)' }}>
-              <p className="text-zinc-500 text-sm uppercase tracking-widest font-bold mb-2">Sites a partir de</p>
-              <p className="text-6xl sm:text-7xl font-black text-yellow-400 leading-none mb-2">R$497</p>
-              <p className="text-zinc-400 text-sm mb-8">O valor varia conforme escopo e complexidade do projeto.</p>
+            <div
+              className="rounded-2xl p-8 sm:p-10"
+              style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <p className="text-[10px] tracking-[0.16em] uppercase mb-3" style={{ color: '#444' }}>
+                Sites a partir de
+              </p>
+              <p className="text-[76px] sm:text-[96px] font-black leading-none mb-3" style={{ color: '#facc15' }}>
+                R$497
+              </p>
+              <p className="text-[14px] mb-8" style={{ color: '#555' }}>
+                O valor varia conforme escopo e complexidade do projeto.
+              </p>
 
-              <div className="bg-yellow-400/10 border border-yellow-400/20 rounded-2xl px-6 py-4 mb-8">
-                <p className="text-yellow-300 text-sm font-bold mb-1">Condição exclusiva de pagamento</p>
-                <p className="text-zinc-300 text-sm leading-relaxed">
-                  Parcele em <strong className="text-white">2x sem juros</strong>: metade na contratação e a outra metade só no mês seguinte.
-                  Você começa sem comprometer o fluxo de caixa.
-                </p>
+              <div
+                className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-8 text-[13px]"
+                style={{
+                  background: 'rgba(250,204,21,0.05)',
+                  border: '1px solid rgba(250,204,21,0.12)',
+                }}
+              >
+                <span className="font-medium" style={{ color: 'rgba(250,204,21,0.85)' }}>
+                  Pagamento em 2× sem juros
+                </span>
+                <span style={{ color: '#2e2e2e' }}>—</span>
+                <span style={{ color: '#666' }}>metade agora, metade no próximo mês</span>
               </div>
 
-              <ul className="space-y-2.5 text-left mb-8">
-                {[
-                  'Site personalizado feito à mão, não é template',
-                  'SEO técnico avançado desde o primeiro dia',
-                  'Otimizado para converter visitante em cliente',
-                  'Hospedagem, SSL e monitoramento incluídos',
-                  'Suporte via WhatsApp direto com a equipe',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-zinc-300">
-                    <span className="mt-0.5 text-yellow-400 shrink-0"><IconCheck /></span>
+              <ul className="space-y-3 text-left mb-8">
+                {CHECKLIST.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-[14px]" style={{ color: '#888' }}>
+                    <span className="mt-0.5 shrink-0" style={{ color: '#facc15' }}><IconCheck /></span>
                     {item}
                   </li>
                 ))}
@@ -503,30 +595,48 @@ export default function HomePage() {
                 MONTAR MEU ORÇAMENTO
                 <IconArrow />
               </CTAPrimary>
-              <p className="text-zinc-600 text-xs mt-4">Sem compromisso. Orçamento gratuito em até 24h.</p>
+              <p className="text-[12px] mt-4" style={{ color: '#333' }}>
+                Sem compromisso · Orçamento gratuito em até 24h
+              </p>
             </div>
           </div>
         </section>
 
         {/* ── HOW IT WORKS ─────────────────────────────────────────────────── */}
-        <section id="como-funciona" aria-labelledby="steps-heading" className="py-20 sm:py-24 bg-white text-gray-900">
+        <section
+          id="como-funciona"
+          aria-labelledby="steps-heading"
+          className="py-20 sm:py-28"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+        >
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-14">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-yellow-600 mb-3">Como funciona</p>
-              <h2 id="steps-heading" className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight">
+              <SectionLabel>Como funciona</SectionLabel>
+              <h2
+                id="steps-heading"
+                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+              >
                 Do briefing ao site<br />vendendo em 4 passos
               </h2>
             </div>
 
-            <ol className="space-y-6" aria-label="Processo de criação do site">
+            <ol className="space-y-3" aria-label="Processo de criação do site">
               {STEPS.map((step) => (
-                <li key={step.num} className="flex items-start gap-5">
-                  <div className="w-12 h-12 rounded-2xl bg-yellow-400 flex items-center justify-center shrink-0 font-black text-black text-sm" aria-hidden="true">
+                <li
+                  key={step.num}
+                  className="flex items-start gap-5 p-5 rounded-2xl"
+                  style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.05)' }}
+                >
+                  <div
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 tabular-nums mt-0.5"
+                    style={{ border: '1px solid rgba(255,255,255,0.08)', color: '#444' }}
+                    aria-hidden="true"
+                  >
                     {step.num}
                   </div>
-                  <div className="flex-1 pt-2">
-                    <h3 className="font-black text-gray-900 text-base sm:text-lg mb-1">{step.title}</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
+                  <div className="flex-1 pt-1.5">
+                    <h3 className="font-semibold text-white text-[15px] mb-1.5">{step.title}</h3>
+                    <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{step.desc}</p>
                   </div>
                 </li>
               ))}
@@ -535,31 +645,53 @@ export default function HomePage() {
         </section>
 
         {/* ── TESTIMONIALS ─────────────────────────────────────────────────── */}
-        <section id="depoimentos" aria-labelledby="reviews-heading" className="py-20 sm:py-24" style={{ background: '#0d0d0d' }}>
+        <section
+          id="depoimentos"
+          aria-labelledby="reviews-heading"
+          className="py-20 sm:py-28"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: '#0d0d0d' }}
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Resultados reais</p>
-              <h2 id="reviews-heading" className="text-3xl sm:text-4xl font-black text-white leading-tight">
-                Negócios que pararam de<br />perder clientes para a concorrência
+              <SectionLabel>Resultados reais</SectionLabel>
+              <h2
+                id="reviews-heading"
+                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+              >
+                Negócios que pararam de perder<br />clientes para a concorrência
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {TESTIMONIALS.map((t) => (
-                <article key={t.name} className="rounded-2xl border border-white/[0.06] p-6 flex flex-col" style={{ background: '#111111' }} itemScope itemType="https://schema.org/Review">
-                  <div className="flex gap-0.5 mb-4" aria-label="Avaliação 5 estrelas">
+                <article
+                  key={t.name}
+                  className="rounded-2xl p-6 flex flex-col"
+                  style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)' }}
+                  itemScope
+                  itemType="https://schema.org/Review"
+                >
+                  <div className="flex gap-0.5 mb-5" aria-label="Avaliação 5 estrelas">
                     {[...Array(5)].map((_, i) => <IconStar key={i} />)}
                   </div>
-                  <blockquote className="text-sm text-zinc-300 leading-relaxed mb-6 flex-1" itemProp="reviewBody">
+                  <blockquote
+                    className="text-[14px] leading-relaxed mb-6 flex-1"
+                    style={{ color: '#888' }}
+                    itemProp="reviewBody"
+                  >
                     &ldquo;{t.text}&rdquo;
                   </blockquote>
                   <div className="flex items-center gap-3" itemProp="author" itemScope itemType="https://schema.org/Person">
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0" style={{ background: t.color }} aria-hidden="true">
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0"
+                      style={{ background: t.color }}
+                      aria-hidden="true"
+                    >
                       {t.initial}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white" itemProp="name">{t.name}</p>
-                      <p className="text-xs text-zinc-500">{t.role}</p>
+                      <p className="text-[13px] font-semibold text-white" itemProp="name">{t.name}</p>
+                      <p className="text-[12px]" style={{ color: '#555' }}>{t.role}</p>
                     </div>
                   </div>
                 </article>
@@ -569,17 +701,33 @@ export default function HomePage() {
         </section>
 
         {/* ── FINAL CTA ────────────────────────────────────────────────────── */}
-        <section id="comecar" aria-labelledby="cta-heading" className="py-24 sm:py-32 relative overflow-hidden" style={{ background: '#0a0a0a' }}>
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(250,204,21,0.09) 0%, transparent 65%)' }} aria-hidden="true" />
-          <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '28px 28px' }} aria-hidden="true" />
+        <section
+          id="comecar"
+          aria-labelledby="cta-heading"
+          className="py-28 sm:py-40 relative overflow-hidden"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            aria-hidden
+            style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 100%, rgba(250,204,21,0.07) 0%, transparent 60%)' }}
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            aria-hidden
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
+          />
 
           <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 mb-4">Não espere mais</p>
-            <h2 id="cta-heading" className="text-4xl sm:text-5xl font-black text-white leading-[1.08] mb-5">
+            <SectionLabel>Não espere mais</SectionLabel>
+            <h2
+              id="cta-heading"
+              className="text-[38px] sm:text-[54px] font-bold text-white leading-[1.1] tracking-tight mt-5 mb-5"
+            >
               Pare de perder clientes<br />
-              <span className="text-yellow-400">para quem aparece no Google</span>
+              <span style={{ color: '#facc15' }}>para quem aparece no Google</span>
             </h2>
-            <p className="text-zinc-400 text-base leading-relaxed mb-10 max-w-lg mx-auto">
+            <p className="text-[15px] leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: '#666' }}>
               Cada dia sem um site estratégico é um dia de clientes indo para o concorrente.
               Monte seu orçamento agora — é gratuito e sem compromisso.
             </p>
@@ -589,17 +737,18 @@ export default function HomePage() {
               <IconArrow />
             </CTAPrimary>
 
-            <p className="text-zinc-600 text-xs mt-5">
-              Orçamento gratuito em até 24h · Parcele em 2x · Sem contrato de fidelidade
+            <p className="text-[12px] mt-5" style={{ color: '#333' }}>
+              Orçamento gratuito em até 24h · Parcele em 2× · Sem contrato
             </p>
 
-            <div className="mt-10 pt-8 border-t border-white/[0.04]">
-              <p className="text-zinc-600 text-xs mb-2">Prefere falar primeiro?</p>
+            <div className="mt-10 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+              <p className="text-[12px] mb-3" style={{ color: '#333' }}>Prefere falar primeiro?</p>
               <a
                 href={wa(MSG_DOUBT)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 text-[13px] transition-colors"
+                style={{ color: '#555' }}
                 aria-label="Tirar dúvidas no WhatsApp"
               >
                 <WAIcon className="w-4 h-4 text-green-500" />
@@ -610,22 +759,29 @@ export default function HomePage() {
         </section>
 
         {/* ── FOOTER ───────────────────────────────────────────────────────── */}
-        <footer className="border-t border-white/[0.06] py-10" style={{ background: '#060606' }} aria-label="Rodapé" itemScope itemType="https://schema.org/WPFooter">
+        <footer
+          className="py-10"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#060606' }}
+          aria-label="Rodapé"
+        >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-5">
             <a href="/" aria-label="TOP SITE — página inicial">
               <Image src="/logo.png" alt="TOP SITE" width={100} height={34} className="h-7 w-auto" />
             </a>
-            <p className="text-xs text-zinc-600 text-center order-last sm:order-none">
+            <p className="text-[12px] text-center order-last sm:order-none" style={{ color: '#333' }}>
               © {new Date().getFullYear()} TOP SITE &middot;{' '}
-              <a href="/termos" className="hover:text-zinc-400 transition-colors">Termos</a>{' '}·{' '}
-              <a href="/privacidade" className="hover:text-zinc-400 transition-colors">Privacidade</a>{' '}·{' '}
+              <a href="/termos" className="hover:text-zinc-400 transition-colors">Termos</a>
+              {' '}·{' '}
+              <a href="/privacidade" className="hover:text-zinc-400 transition-colors">Privacidade</a>
+              {' '}·{' '}
               <a href="/login" className="hover:text-zinc-400 transition-colors">Área do cliente</a>
             </p>
             <a
               href={wa(MSG_DOUBT)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-xs text-zinc-500 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-[12px] transition-colors"
+              style={{ color: '#444' }}
               aria-label="Contato via WhatsApp"
             >
               <WAIcon className="w-4 h-4 text-green-500" />
