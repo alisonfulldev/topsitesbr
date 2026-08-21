@@ -94,7 +94,7 @@ function IconWA() {
 
 function Progress({ current, total }: { current: number; total: number }) {
   return (
-    <div className="mb-10">
+    <div className="mb-3 sm:mb-10">
       <div className="flex gap-[3px] mb-2.5">
         {Array.from({ length: total }).map((_, i) => (
           <div
@@ -115,14 +115,14 @@ function Progress({ current, total }: { current: number; total: number }) {
 
 function StepHeader({ label, title, sub }: { label: string; title: string; sub: string }) {
   return (
-    <div className="mb-7">
-      <p className="text-[10px] font-medium tracking-[0.14em] uppercase mb-3" style={{ color: 'rgba(250,204,21,0.55)' }}>
+    <div className="mb-3 sm:mb-7">
+      <p className="text-[10px] font-medium tracking-[0.14em] uppercase mb-1.5 sm:mb-3" style={{ color: 'rgba(250,204,21,0.55)' }}>
         {label}
       </p>
-      <h2 className="text-[22px] font-bold leading-[1.25] tracking-tight text-white mb-2">
+      <h2 className="text-[18px] sm:text-[22px] font-bold leading-[1.25] tracking-tight text-white mb-1 sm:mb-2">
         {title}
       </h2>
-      <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>
+      <p className="text-[13px] sm:text-[14px] leading-relaxed" style={{ color: '#666' }}>
         {sub}
       </p>
     </div>
@@ -148,7 +148,7 @@ function CardOption({
     <button
       type="button"
       onClick={onClick}
-      className="w-full text-left px-5 py-4 rounded-xl border transition-all duration-200 relative group"
+      className="w-full text-left px-5 py-2.5 sm:py-4 rounded-xl border transition-all duration-200 relative group"
       style={{
         background: selected ? '#111' : '#0a0a0a',
         borderColor: selected ? 'rgba(250,204,21,0.25)' : 'rgba(255,255,255,0.06)',
@@ -199,7 +199,7 @@ function YesNo({
           key={String(val)}
           type="button"
           onClick={() => onChange(val)}
-          className="py-4 rounded-xl border text-[15px] font-medium transition-all duration-200"
+          className="py-3 sm:py-4 rounded-xl border text-[15px] font-medium transition-all duration-200"
           style={{
             background: value === val ? '#111' : '#0a0a0a',
             borderColor: value === val ? 'rgba(250,204,21,0.25)' : 'rgba(255,255,255,0.06)',
@@ -232,7 +232,7 @@ function PrimaryBtn({
       type="button"
       onClick={onClick}
       disabled={disabled || loading}
-      className="w-full py-3.5 rounded-xl text-[15px] font-semibold transition-all duration-200 disabled:opacity-20 disabled:cursor-not-allowed active:scale-[0.99]"
+      className="w-full py-3 sm:py-3.5 rounded-xl text-[15px] font-semibold transition-all duration-200 disabled:opacity-20 disabled:cursor-not-allowed active:scale-[0.99]"
       style={{
         background: '#facc15',
         color: '#000',
@@ -270,7 +270,7 @@ function PrimaryBtn({
 function Note({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="flex gap-3 items-start px-4 py-4 rounded-xl"
+      className="flex gap-3 items-start px-4 py-3 sm:py-4 rounded-xl"
       style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.04)' }}
     >
       <div
@@ -635,7 +635,7 @@ export default function OrcamentoPage() {
 
   function renderStep() {
     if (currentStep === 0) return (
-      <div className="space-y-5">
+      <div className="space-y-3 sm:space-y-5">
         <StepHeader
           label="Tipo de projeto"
           title="O que você precisa?"
@@ -669,13 +669,13 @@ export default function OrcamentoPage() {
     )
 
     if (currentStep === 1) return (
-      <div className="space-y-7">
+      <div className="space-y-4 sm:space-y-7">
         <StepHeader
           label="Páginas"
           title="Quantas páginas terá o site?"
           sub="Exemplos: Início, Sobre, Serviços, Blog, Contato = 5 páginas."
         />
-        <div className="flex items-center justify-center gap-8 py-6">
+        <div className="flex items-center justify-center gap-8 py-3 sm:py-6">
           <button
             type="button"
             onClick={() => set('pageCount', Math.max(1, form.pageCount - 1))}
@@ -686,7 +686,7 @@ export default function OrcamentoPage() {
             −
           </button>
           <div className="text-center">
-            <p className="text-[76px] font-black text-white leading-none tabular-nums">{form.pageCount}</p>
+            <p className="text-[52px] sm:text-[76px] font-black text-white leading-none tabular-nums">{form.pageCount}</p>
             <p className="text-[13px] mt-2 tabular-nums" style={{ color: '#444' }}>
               {form.pageCount <= 4
                 ? `até 4 páginas — ${fmtBRL(697)}`
@@ -716,7 +716,7 @@ export default function OrcamentoPage() {
     )
 
     if (currentStep === 2) return (
-      <div className="space-y-5">
+      <div className="space-y-3 sm:space-y-5">
         <StepHeader
           label="Segmento"
           title="O que o seu negócio faz?"
@@ -726,8 +726,8 @@ export default function OrcamentoPage() {
           value={form.segment}
           onChange={(e) => set('segment', e.target.value)}
           placeholder="Ex.: Escritório de advocacia especializado em direito trabalhista"
-          rows={4}
-          className="w-full rounded-xl px-4 py-4 text-white text-[15px] placeholder-[#2e2e2e] resize-none transition-all duration-200 leading-relaxed focus:outline-none"
+          rows={3}
+          className="w-full rounded-xl px-4 py-3 sm:py-4 text-white text-[15px] placeholder-[#2e2e2e] resize-none transition-all duration-200 leading-relaxed focus:outline-none"
           style={{
             background: '#0a0a0a',
             border: '1px solid rgba(255,255,255,0.07)',
@@ -740,7 +740,7 @@ export default function OrcamentoPage() {
     )
 
     if (currentStep === 3) return (
-      <div className="space-y-5">
+      <div className="space-y-3 sm:space-y-5">
         <StepHeader
           label="Painel administrativo"
           title="Precisa de área logada para gerenciar conteúdo?"
@@ -758,7 +758,7 @@ export default function OrcamentoPage() {
     )
 
     if (currentStep === 4) return (
-      <div className="space-y-5">
+      <div className="space-y-3 sm:space-y-5">
         <StepHeader
           label="Logotipo"
           title="Você já tem logotipo profissional?"
@@ -781,7 +781,7 @@ export default function OrcamentoPage() {
     )
 
     if (currentStep === 5) return (
-      <div className="space-y-5">
+      <div className="space-y-3 sm:space-y-5">
         <StepHeader
           label="Domínio"
           title="Você já tem domínio próprio?"
@@ -804,7 +804,7 @@ export default function OrcamentoPage() {
     )
 
     if (currentStep === 6) return (
-      <div className="space-y-5">
+      <div className="space-y-3 sm:space-y-5">
         <StepHeader
           label="Quase lá"
           title="Onde enviamos seu orçamento?"
@@ -826,7 +826,7 @@ export default function OrcamentoPage() {
               onChange={(e) => { set('name', e.target.value); setEmailError('') }}
               placeholder="João Silva"
               autoComplete="name"
-              className="w-full rounded-xl px-4 py-4 text-white text-[15px] placeholder-[#2e2e2e] transition-all duration-200 focus:outline-none"
+              className="w-full rounded-xl px-4 py-3 sm:py-4 text-white text-[15px] placeholder-[#2e2e2e] transition-all duration-200 focus:outline-none"
               style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.07)' }}
               onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(250,204,21,0.3)' }}
               onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)' }}
@@ -847,7 +847,7 @@ export default function OrcamentoPage() {
               onChange={(e) => { set('email', e.target.value); setEmailError('') }}
               placeholder="voce@empresa.com.br"
               autoComplete="email"
-              className="w-full rounded-xl px-4 py-4 text-white text-[15px] placeholder-[#2e2e2e] transition-all duration-200 focus:outline-none"
+              className="w-full rounded-xl px-4 py-3 sm:py-4 text-white text-[15px] placeholder-[#2e2e2e] transition-all duration-200 focus:outline-none"
               style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.07)' }}
               onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(250,204,21,0.3)' }}
               onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)' }}
@@ -930,19 +930,19 @@ export default function OrcamentoPage() {
         </nav>
       </header>
 
-      <main className="relative z-10 max-w-[480px] mx-auto px-5 sm:px-6 py-14 sm:py-20">
+      <main className="relative z-10 max-w-[480px] mx-auto px-5 sm:px-6 py-4 sm:py-20">
 
         {/* Page header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-4 sm:mb-12">
           {!done ? (
             <>
               <p
-                className="text-[10px] font-medium tracking-[0.18em] uppercase mb-5"
+                className="hidden sm:block text-[10px] font-medium tracking-[0.18em] uppercase mb-5"
                 style={{ color: 'rgba(250,204,21,0.45)' }}
               >
                 Calculadora de orçamento
               </p>
-              <h1 className="text-[34px] sm:text-[40px] font-bold text-white leading-[1.15] tracking-tight">
+              <h1 className="text-[24px] sm:text-[40px] font-bold text-white leading-[1.15] tracking-tight">
                 Quanto custa<br />
                 <span style={{ color: '#facc15' }}>o seu site?</span>
               </h1>
@@ -957,7 +957,7 @@ export default function OrcamentoPage() {
                 Orçamento gerado
                 <span className="w-8 h-px" style={{ background: 'rgba(52,211,153,0.3)' }} />
               </div>
-              <h1 className="text-[34px] sm:text-[40px] font-bold text-white leading-[1.15] tracking-tight">
+              <h1 className="text-[24px] sm:text-[40px] font-bold text-white leading-[1.15] tracking-tight">
                 Aqui está<br />
                 <span style={{ color: '#facc15' }}>seu orçamento.</span>
               </h1>
@@ -974,7 +974,7 @@ export default function OrcamentoPage() {
         <div key={stepIndex} className="animate-in fade-in slide-in-from-right-3 duration-300">
           {!isResult ? (
             <div
-              className="rounded-2xl p-6 sm:p-7"
+              className="rounded-2xl p-4 sm:p-7"
               style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.06)' }}
             >
               {renderStep()}
