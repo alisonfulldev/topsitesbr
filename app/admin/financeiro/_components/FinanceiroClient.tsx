@@ -212,7 +212,7 @@ function TrafficReserveCard({ totalRevenue, percent }: { totalRevenue: number; p
   const [saveError, setSaveError] = useState('')
 
   const displayPercent = editing ? (parseFloat(inputValue) || 0) : percent
-  const reserveAmount = totalRevenue * (displayPercent / 100)
+  const reserveAmount = totalRevenue > 0 ? Math.max(350, totalRevenue * (displayPercent / 100)) : 0
 
   function handleSave() {
     const val = parseFloat(inputValue)
@@ -269,7 +269,7 @@ function TrafficReserveCard({ totalRevenue, percent }: { totalRevenue: number; p
       )}
       {saveError && <p className="text-xs text-red-600 mt-1">{saveError}</p>}
       <p className="text-xs text-amber-500 mt-1.5 leading-relaxed">
-        Deduzido do lucro líquido e incluído nos custos totais.
+        Mín. R$&nbsp;350 · deduzido do lucro líquido.
       </p>
     </div>
   )
