@@ -50,6 +50,7 @@ export type CostBreakdown = {
   trafego_pago: number
   hospedagem_ferramentas: number
   outro: number
+  trafficReserve: number
 }
 
 export type TransactionItem = {
@@ -83,7 +84,7 @@ function fmtPct(n: number) {
   return `${n.toFixed(1)}%`
 }
 
-const PIE_COLORS = ['#0D0B1F', '#FFD100', '#2D2850', '#6b7280']
+const PIE_COLORS = ['#0D0B1F', '#FFD100', '#2D2850', '#6b7280', '#f59e0b']
 
 function PeriodSelector({ period, from, to, granularity }: { period: string; from?: string; to?: string; granularity: string }) {
   const router = useRouter()
@@ -233,7 +234,7 @@ function TrafficReserveCard({ totalRevenue, percent }: { totalRevenue: number; p
 
   return (
     <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 col-span-2 lg:col-span-1">
-      <p className="text-xs font-medium uppercase tracking-wide text-amber-600 mb-1">Reserva p/ Tráfego Pago</p>
+      <p className="text-xs font-medium uppercase tracking-wide text-amber-600 mb-1">Reserva Tráfego (custo)</p>
       {editing ? (
         <div className="flex items-center gap-2 flex-wrap mt-1">
           <input
@@ -268,7 +269,7 @@ function TrafficReserveCard({ totalRevenue, percent }: { totalRevenue: number; p
       )}
       {saveError && <p className="text-xs text-red-600 mt-1">{saveError}</p>}
       <p className="text-xs text-amber-500 mt-1.5 leading-relaxed">
-        Orientativo — quanto separar para reinvestir. Não é custo e não deduz do lucro.
+        Deduzido do lucro líquido e incluído nos custos totais.
       </p>
     </div>
   )
@@ -653,6 +654,7 @@ export function FinanceiroClient({
     { name: 'Tráfego Pago', value: costBreakdown.trafego_pago },
     { name: 'Hospedagem/Ferramentas', value: costBreakdown.hospedagem_ferramentas },
     { name: 'Outro', value: costBreakdown.outro },
+    { name: 'Reserva Tráfego', value: costBreakdown.trafficReserve },
   ].filter((d) => d.value > 0)
 
   const hasRevenue = totalRevenue > 0

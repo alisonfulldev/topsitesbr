@@ -206,7 +206,9 @@ export default async function AdminFinanceiroPage({
     const rev = revMap[m]
     const cos = costMap[m]
     const totalRevenue = rev.subscriptions + rev.upsells + rev.maintenance + rev.siteRevenue + rev.extraRevenue
-    const totalCosts = cos.ia + cos.trafego_pago + cos.hospedagem_ferramentas + cos.outro
+    const baseCosts = cos.ia + cos.trafego_pago + cos.hospedagem_ferramentas + cos.outro
+    const trafficReserve = totalRevenue * (trafficReservePercent / 100)
+    const totalCosts = baseCosts + trafficReserve
     const profit = totalRevenue - totalCosts
     return {
       month: m,
@@ -280,7 +282,9 @@ export default async function AdminFinanceiroPage({
     const rev = qRevMap[q]
     const cos = qCostMap[q]
     const totalRevenue = rev.subscriptions + rev.upsells + rev.maintenance + rev.siteRevenue + rev.extraRevenue
-    const totalCosts = cos.ia + cos.trafego_pago + cos.hospedagem_ferramentas + cos.outro
+    const baseCosts = cos.ia + cos.trafego_pago + cos.hospedagem_ferramentas + cos.outro
+    const trafficReserve = totalRevenue * (trafficReservePercent / 100)
+    const totalCosts = baseCosts + trafficReserve
     const profit = totalRevenue - totalCosts
     return {
       month: q,
@@ -340,6 +344,7 @@ export default async function AdminFinanceiroPage({
     trafego_pago: allCosts.filter((c) => c.category === 'trafego_pago').reduce((a, c) => a + Number(c.amount), 0),
     hospedagem_ferramentas: allCosts.filter((c) => c.category === 'hospedagem_ferramentas').reduce((a, c) => a + Number(c.amount), 0),
     outro: allCosts.filter((c) => c.category === 'outro').reduce((a, c) => a + Number(c.amount), 0),
+    trafficReserve: totalRevenue * (trafficReservePercent / 100),
   }
 
   const mrrByMonth = months.map((m) => ({ label: monthLabel(m), mrr: revMap[m].subscriptions }))
