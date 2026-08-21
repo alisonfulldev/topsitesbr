@@ -103,6 +103,15 @@ export default async function AdminFinanceiroPage({
   const months = buildMonthsList(start, end)
   const quinzenas = buildQuinzenaList(start, end)
 
+  // Default to current quinzena when in quinzena mode without an explicit selection
+  const nowForDefault = new Date()
+  const currentQuinzenaKey = (() => {
+    const y = nowForDefault.getFullYear()
+    const m = String(nowForDefault.getMonth() + 1).padStart(2, '0')
+    const half = nowForDefault.getDate() <= 15 ? 1 : 2
+    return `${y}-${m}-${half}`
+  })()
+
   const [paidInvoices, paidOrders, allCosts, overdueInvoices, activeSubscriptions, newClients, extraRevenues, reserveSetting] =
     await Promise.all([
       prisma.invoice.findMany({
@@ -301,7 +310,11 @@ export default async function AdminFinanceiroPage({
   const totalMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0
 
   // When viewing a specific quinzena, override KPI cards with that quinzena's values
-  const selectedQuinzenaKey = granularity === 'quinzena' ? (searchParams.selectedQuinzena ?? undefined) : undefined
+  const selectedQuinzenaKey =
+    granularity === 'quinzena'
+      ? (searchParams.selectedQuinzena ??
+          (quinzenas.includes(currentQuinzenaKey) ? currentQuinzenaKey : quinzenas[quinzenas.length - 1]))
+      : undefined
   const selectedQuinzenaRow = selectedQuinzenaKey
     ? (quinzenaData.find((r) => r.month === selectedQuinzenaKey) ?? null)
     : null

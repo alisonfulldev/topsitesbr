@@ -167,11 +167,21 @@ function GranularityToggle({ granularity, period, from, to }: { granularity: str
 
   function toggle(g: string) {
     const params = new URLSearchParams()
-    params.set('period', period)
-    params.set('granularity', g)
-    if (period === 'custom' && from && to) {
-      params.set('from', from)
-      params.set('to', to)
+    if (g === 'quinzena') {
+      // Auto-select the current quinzena and restrict to the current month
+      const now = new Date()
+      const y = String(now.getFullYear())
+      const m = String(now.getMonth() + 1).padStart(2, '0')
+      const half = now.getDate() <= 15 ? 1 : 2
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+      params.set('period', 'custom')
+      params.set('from', `${y}-${m}-01`)
+      params.set('to', `${y}-${m}-${String(lastDay).padStart(2, '0')}`)
+      params.set('granularity', 'quinzena')
+      params.set('selectedQuinzena', `${y}-${m}-${half}`)
+    } else {
+      params.set('period', period === 'custom' ? '1m' : period)
+      params.set('granularity', g)
     }
     router.push(`${pathname}?${params.toString()}`)
   }
@@ -319,14 +329,13 @@ function QuinzenaSelector({ selectedQuinzena }: { selectedQuinzena?: string }) {
     <div className="flex items-center gap-2 flex-wrap">
       <span className="text-xs text-gray-500 font-medium">Ver quinzena:</span>
       <select
-        value={selectedQuinzena ?? ''}
+        value={selectedQuinzena ?? options[0]?.key ?? ''}
         onChange={(e) => {
           const opt = options.find((o) => o.key === e.target.value)
           if (opt) select(opt)
         }}
         className="rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
       >
-        <option value="" disabled>Selecione…</option>
         {options.map((o) => (
           <option key={o.key} value={o.key}>{o.label}</option>
         ))}
