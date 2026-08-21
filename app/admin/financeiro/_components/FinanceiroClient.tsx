@@ -385,9 +385,17 @@ function downloadCSV(rows: MonthlyRow[]) {
   URL.revokeObjectURL(url)
 }
 
+type QuinzenaScope = { year: number; month: number; startDay: number; endDay: number; label: string }
+
 // ─── Transaction list sub-component ─────────────────────────────────────────
 
-function TransactionList({ transactions }: { transactions: TransactionItem[] }) {
+function TransactionList({
+  transactions,
+  quinzenaScope,
+}: {
+  transactions: TransactionItem[]
+  quinzenaScope?: QuinzenaScope
+}) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [search, setSearch] = useState('')
@@ -396,15 +404,16 @@ function TransactionList({ transactions }: { transactions: TransactionItem[] }) 
   const [deleteTarget, setDeleteTarget] = useState<TransactionItem | null>(null)
   const [deleteError, setDeleteError] = useState('')
 
-  // Derive available months from transactions
+  // Derive available months from transactions (only used when no quinzena scope)
   const availableMonths = useMemo(() => {
+    if (quinzenaScope) return []
     const keys = new Set<string>()
     for (const t of transactions) {
       const d = new Date(t.date)
-      keys.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+      keys.add(`${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`)
     }
     return Array.from(keys).sort().reverse()
-  }, [transactions])
+  }, [transactions, quinzenaScope])
 
   function monthKeyLabel(key: string) {
     const [year, month] = key.split('-')
@@ -416,9 +425,18 @@ function TransactionList({ transactions }: { transactions: TransactionItem[] }) 
     const q = search.toLowerCase().trim()
     return transactions.filter((t) => {
       if (typeFilter !== 'todos' && t.type !== typeFilter) return false
-      if (monthFilter !== 'todos') {
+      // When a quinzena is selected, filter by its exact date range (client-side guard)
+      if (quinzenaScope) {
         const d = new Date(t.date)
-        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+        const inRange =
+          d.getUTCFullYear() === quinzenaScope.year &&
+          d.getUTCMonth() + 1 === quinzenaScope.month &&
+          d.getUTCDate() >= quinzenaScope.startDay &&
+          d.getUTCDate() <= quinzenaScope.endDay
+        if (!inRange) return false
+      } else if (monthFilter !== 'todos') {
+        const d = new Date(t.date)
+        const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`
         if (key !== monthFilter) return false
       }
       if (q) {
@@ -427,7 +445,7 @@ function TransactionList({ transactions }: { transactions: TransactionItem[] }) 
       }
       return true
     })
-  }, [transactions, typeFilter, monthFilter, search])
+  }, [transactions, quinzenaScope, typeFilter, monthFilter, search])
 
   function handleDelete() {
     if (!deleteTarget) return
@@ -450,10 +468,17 @@ function TransactionList({ transactions }: { transactions: TransactionItem[] }) 
   return (
     <div className="bg-white rounded-lg border border-gray-200 mt-6">
       <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between flex-wrap gap-2">
-        <h3 className="text-sm font-semibold text-gray-700">
-          Lançamentos Detalhados
-          <span className="ml-2 text-xs font-normal text-gray-400">({filtered.length} registros)</span>
-        </h3>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h3 className="text-sm font-semibold text-gray-700">
+            Lançamentos Detalhados
+            <span className="ml-2 text-xs font-normal text-gray-400">({filtered.length} registros)</span>
+          </h3>
+          {quinzenaScope && (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+              {quinzenaScope.label}
+            </span>
+          )}
+        </div>
         {filtered.length > 0 && (
           <span className={`text-sm font-semibold ${totalFiltered >= 0 ? 'text-green-700' : 'text-red-600'}`}>
             Saldo filtrado: {fmtBRL(totalFiltered)}
@@ -479,17 +504,19 @@ function TransactionList({ transactions }: { transactions: TransactionItem[] }) 
           <option value="receita">Receitas</option>
           <option value="despesa">Despesas</option>
         </select>
-        <select
-          value={monthFilter}
-          onChange={(e) => setMonthFilter(e.target.value)}
-          className="rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
-        >
-          <option value="todos">Todos os meses</option>
-          {availableMonths.map((m) => (
-            <option key={m} value={m}>{monthKeyLabel(m)}</option>
-          ))}
-        </select>
-        {(search || typeFilter !== 'todos' || monthFilter !== 'todos') && (
+        {!quinzenaScope && (
+          <select
+            value={monthFilter}
+            onChange={(e) => setMonthFilter(e.target.value)}
+            className="rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+          >
+            <option value="todos">Todos os meses</option>
+            {availableMonths.map((m) => (
+              <option key={m} value={m}>{monthKeyLabel(m)}</option>
+            ))}
+          </select>
+        )}
+        {(search || typeFilter !== 'todos' || (!quinzenaScope && monthFilter !== 'todos')) && (
           <button
             onClick={() => { setSearch(''); setTypeFilter('todos'); setMonthFilter('todos') }}
             className="text-xs text-gray-400 hover:text-gray-600 underline"
@@ -649,6 +676,16 @@ export function FinanceiroClient({
     : granularity === 'quinzena'
       ? quinzenaData
       : monthlyData
+
+  const quinzenaScope: QuinzenaScope | undefined = selectedQuinzena ? (() => {
+    const parts = selectedQuinzena.split('-')
+    const year = parseInt(parts[0])
+    const month = parseInt(parts[1])
+    const half = parseInt(parts[2])
+    const startDay = half === 1 ? 1 : 16
+    const endDay = half === 1 ? 15 : new Date(year, month, 0).getDate()
+    return { year, month, startDay, endDay, label: quinzenaDisplayName(selectedQuinzena) }
+  })() : undefined
   const pieData = [
     { name: 'IA', value: costBreakdown.ia },
     { name: 'Tráfego Pago', value: costBreakdown.trafego_pago },
@@ -926,7 +963,7 @@ export function FinanceiroClient({
       </div>
 
       {/* Transaction list */}
-      <TransactionList transactions={transactions} />
+      <TransactionList transactions={transactions} quinzenaScope={quinzenaScope} />
     </div>
   )
 }
