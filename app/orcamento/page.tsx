@@ -914,7 +914,7 @@ export default function OrcamentoPage() {
       {/* Nav */}
       <header
         className="relative z-20 sticky top-0 backdrop-blur-md"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(10,10,10,0.9)' }}
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: '#000000' }}
       >
         <nav className="max-w-[560px] mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" aria-label="TOP SITE">
@@ -923,7 +923,7 @@ export default function OrcamentoPage() {
           <Link
             href="/login"
             className="text-[12px] px-3 py-1.5 rounded-lg transition-all duration-200"
-            style={{ color: '#444', border: '1px solid rgba(255,255,255,0.06)' }}
+            style={{ color: '#ccc', border: '1px solid rgba(255,255,255,0.18)' }}
           >
             Acessar painel
           </Link>

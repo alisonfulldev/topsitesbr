@@ -238,7 +238,7 @@ export default function HomePage() {
         {/* ── NAV ─────────────────────────────────────────────────────────── */}
         <header
           className="sticky top-0 z-50 backdrop-blur-md"
-          style={{ borderBottom: '1px solid rgba(0,0,0,0.08)', background: 'rgba(255,255,255,0.96)' }}
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: '#000000' }}
         >
           <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between" aria-label="Navegação principal">
             <a href="/" aria-label="TOP SITE — página inicial">
@@ -248,7 +248,7 @@ export default function HomePage() {
               <a
                 href="/login"
                 className="flex items-center gap-1.5 text-[12px] px-3.5 py-2 rounded-xl transition-all duration-200"
-                style={{ color: '#666', border: '1px solid rgba(0,0,0,0.12)' }}
+                style={{ color: '#ccc', border: '1px solid rgba(255,255,255,0.18)' }}
                 aria-label="Acessar painel do cliente"
               >
                 <UserIcon />
