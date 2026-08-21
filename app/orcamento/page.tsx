@@ -438,7 +438,7 @@ function ResultScreen({
             <button
               key={t}
               type="button"
-              onClick={() => { setType(t); if (t !== 'institucional') setPages(1) }}
+              onClick={() => { setType(t); if (t !== 'institucional') setPages(1); else setPages((p) => Math.max(4, p)) }}
               className="flex-1 py-2 text-[11px] font-medium rounded-md transition-all duration-200"
               style={{
                 background: type === t ? '#ffffff' : 'transparent',
@@ -458,12 +458,12 @@ function ResultScreen({
           >
             <p className="text-[11px] mb-3" style={{ color: '#666' }}>
               Número de páginas
-              <span style={{ color: '#aaa' }} className="ml-1.5">· a partir de 5: +R$100 cada</span>
+              <span style={{ color: '#aaa' }} className="ml-1.5">· 4 incluídas, a partir da 5ª: +R$100 cada</span>
             </p>
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                onClick={() => setPages((p) => Math.max(1, p - 1))}
+                onClick={() => setPages((p) => Math.max(4, p - 1))}
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-lg leading-none transition-all duration-200"
                 style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#666' }}
                 aria-label="Reduzir"
@@ -659,7 +659,7 @@ export default function OrcamentoPage() {
           />
           <CardOption
             selected={form.projectType === 'institucional'}
-            onClick={() => set('projectType', 'institucional')}
+            onClick={() => { set('projectType', 'institucional'); set('pageCount', Math.max(4, form.pageCount)) }}
             title="Site Institucional"
             price="a partir de R$697"
             desc="Site com múltiplas páginas — Início, Sobre, Serviços, Contato e mais."
@@ -681,12 +681,12 @@ export default function OrcamentoPage() {
         <StepHeader
           label="Páginas"
           title="Quantas páginas terá o site?"
-          sub="Exemplos: Início, Sobre, Serviços, Blog, Contato = 5 páginas."
+          sub="4 páginas incluídas no valor base. A partir da 5ª, +R$100 cada."
         />
         <div className="flex items-center justify-center gap-8 py-3 sm:py-6">
           <button
             type="button"
-            onClick={() => set('pageCount', Math.max(1, form.pageCount - 1))}
+            onClick={() => set('pageCount', Math.max(4, form.pageCount - 1))}
             className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl leading-none transition-all duration-200"
             style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#666' }}
             aria-label="Reduzir"
