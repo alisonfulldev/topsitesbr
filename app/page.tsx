@@ -297,7 +297,7 @@ export default function HomePage() {
               não só existindo.
             </h1>
 
-            <p className="text-[16px] sm:text-[18px] max-w-2xl mx-auto mb-6 leading-relaxed" style={{ color: '#777' }}>
+            <p className="text-[16px] sm:text-[18px] max-w-2xl mx-auto mb-6 leading-relaxed" style={{ color: '#aaa' }}>
               Criamos sites{' '}
               <span className="text-white font-medium">personalizados e avançados</span>,
               focados em conversão e SEO — para transformar visitante em cliente e aparecer no Google.
@@ -307,15 +307,15 @@ export default function HomePage() {
               className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 mb-10 text-[13px]"
               style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)' }}
             >
-              <span style={{ color: '#555' }}>A partir de</span>
+              <span style={{ color: '#bbb' }}>A partir de</span>
               <span className="font-bold" style={{ color: '#facc15' }}>R$497</span>
-              <span style={{ color: '#2a2a2a' }}>·</span>
-              <span style={{ color: '#444' }}>parcele em 2×</span>
+              <span style={{ color: '#555' }}>·</span>
+              <span style={{ color: '#777' }}>parcele em 2×</span>
             </div>
 
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 list-none" aria-label="Diferenciais">
               {['Feito à mão — não é template', 'SEO técnico avançado', 'Focado em converter'].map((t) => (
-                <li key={t} className="flex items-center gap-1.5 text-[13px]" style={{ color: '#555' }}>
+                <li key={t} className="flex items-center gap-1.5 text-[13px]" style={{ color: '#bbb' }}>
                   <span style={{ color: '#facc15' }}><IconCheck /></span>
                   {t}
                 </li>
@@ -330,7 +330,7 @@ export default function HomePage() {
               <a
                 href="#diferenciais"
                 className="text-[13px] transition-colors px-3 py-3"
-                style={{ color: '#444' }}
+                style={{ color: '#777' }}
               >
                 Por que somos diferentes? →
               </a>
@@ -353,7 +353,7 @@ export default function HomePage() {
                 className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
               >
                 A maioria dos sites são bonitos.<br />
-                <span style={{ color: '#3a3a3a' }}>Mas bonito não paga boleto.</span>
+                <span style={{ color: '#777' }}>Mas bonito não paga boleto.</span>
               </h2>
             </div>
 
@@ -365,7 +365,7 @@ export default function HomePage() {
                   style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)' }}
                 >
                   <p className="text-[56px] font-black mb-3 leading-none" style={{ color: '#facc15' }}>{p.stat}</p>
-                  <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{p.text}</p>
+                  <p className="text-[14px] leading-relaxed" style={{ color: '#999' }}>{p.text}</p>
                 </div>
               ))}
             </div>
@@ -374,7 +374,7 @@ export default function HomePage() {
               className="mt-5 rounded-xl px-6 py-5 text-center"
               style={{ background: 'rgba(250,204,21,0.025)', border: '1px solid rgba(250,204,21,0.07)' }}
             >
-              <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>
+              <p className="text-[14px] leading-relaxed" style={{ color: '#999' }}>
                 <span className="text-white font-medium">Sites genéricos de IA são todos iguais</span>
                 {' '}— seu negócio merece algo feito estrategicamente para converter. É exatamente isso que a TopSite faz.
               </p>
@@ -398,7 +398,7 @@ export default function HomePage() {
               >
                 O que justifica ser premium
               </h2>
-              <p className="mt-4 max-w-lg mx-auto text-[15px] leading-relaxed" style={{ color: '#666' }}>
+              <p className="mt-4 max-w-lg mx-auto text-[15px] leading-relaxed" style={{ color: '#999' }}>
                 Não somos mais um serviço de site — somos estratégia digital que usa
                 desenvolvimento e SEO para gerar resultado real.
               </p>
@@ -423,7 +423,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-white text-[15px] mb-2">{d.title}</h3>
-                    <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{d.desc}</p>
+                    <p className="text-[14px] leading-relaxed" style={{ color: '#999' }}>{d.desc}</p>
                   </div>
                 </div>
               ))}
@@ -447,7 +447,7 @@ export default function HomePage() {
               >
                 Sites que já colocamos no ar
               </h2>
-              <p className="mt-3 text-[14px]" style={{ color: '#555' }}>
+              <p className="mt-3 text-[14px]" style={{ color: '#bbb' }}>
                 Cada um desenvolvido à mão, com estratégia e SEO desde o primeiro dia.
               </p>
             </div>
@@ -469,7 +469,7 @@ export default function HomePage() {
                     />
                   </div>
                   <div className="px-3 py-2.5">
-                    <p className="text-[11px] font-medium" style={{ color: '#555' }}>{p.segment}</p>
+                    <p className="text-[11px] font-medium" style={{ color: '#bbb' }}>{p.segment}</p>
                   </div>
                 </div>
               ))}
@@ -485,7 +485,7 @@ export default function HomePage() {
                   />
                 ))}
               </div>
-              <p className="text-[13px]" style={{ color: '#555' }}>
+              <p className="text-[13px]" style={{ color: '#bbb' }}>
                 <span className="text-white font-medium">+50 negócios</span> confiam na TopSite
               </p>
             </div>
@@ -507,7 +507,7 @@ export default function HomePage() {
             >
               Para quem leva o próprio<br />negócio a sério
             </h2>
-            <p className="text-[15px] leading-relaxed mb-12 max-w-lg mx-auto" style={{ color: '#666' }}>
+            <p className="text-[15px] leading-relaxed mb-12 max-w-lg mx-auto" style={{ color: '#999' }}>
               Um site profissional não é custo — é investimento que se paga.{' '}
               <span className="text-white">Se você entende que presença digital gera clientes</span>{' '}
               e quer um site estratégico feito para converter, estamos aqui para isso.
@@ -525,7 +525,7 @@ export default function HomePage() {
                     style={{ background: 'rgba(250,204,21,0.4)' }}
                   />
                   <h3 className="font-semibold text-white text-[14px] mb-2">{item.title}</h3>
-                  <p className="text-[13px] leading-relaxed" style={{ color: '#666' }}>{item.desc}</p>
+                  <p className="text-[13px] leading-relaxed" style={{ color: '#999' }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -558,13 +558,13 @@ export default function HomePage() {
               className="rounded-2xl p-8 sm:p-10"
               style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}
             >
-              <p className="text-[10px] tracking-[0.16em] uppercase mb-3" style={{ color: '#444' }}>
+              <p className="text-[10px] tracking-[0.16em] uppercase mb-3" style={{ color: '#777' }}>
                 Sites a partir de
               </p>
               <p className="text-[76px] sm:text-[96px] font-black leading-none mb-3" style={{ color: '#facc15' }}>
                 R$497
               </p>
-              <p className="text-[14px] mb-8" style={{ color: '#555' }}>
+              <p className="text-[14px] mb-8" style={{ color: '#bbb' }}>
                 O valor varia conforme escopo e complexidade do projeto.
               </p>
 
@@ -578,13 +578,13 @@ export default function HomePage() {
                 <span className="font-medium" style={{ color: 'rgba(250,204,21,0.85)' }}>
                   Pagamento em 2× sem juros
                 </span>
-                <span style={{ color: '#2e2e2e' }}>—</span>
-                <span style={{ color: '#666' }}>metade agora, metade no próximo mês</span>
+                <span style={{ color: '#555' }}>—</span>
+                <span style={{ color: '#999' }}>metade agora, metade no próximo mês</span>
               </div>
 
               <ul className="space-y-3 text-left mb-8">
                 {CHECKLIST.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-[14px]" style={{ color: '#888' }}>
+                  <li key={item} className="flex items-start gap-3 text-[14px]" style={{ color: '#bbb' }}>
                     <span className="mt-0.5 shrink-0" style={{ color: '#facc15' }}><IconCheck /></span>
                     {item}
                   </li>
@@ -595,7 +595,7 @@ export default function HomePage() {
                 MONTAR MEU ORÇAMENTO
                 <IconArrow />
               </CTAPrimary>
-              <p className="text-[12px] mt-4" style={{ color: '#333' }}>
+              <p className="text-[12px] mt-4" style={{ color: '#666' }}>
                 Sem compromisso · Orçamento gratuito em até 24h
               </p>
             </div>
@@ -636,7 +636,7 @@ export default function HomePage() {
                   </div>
                   <div className="flex-1 pt-1.5">
                     <h3 className="font-semibold text-white text-[15px] mb-1.5">{step.title}</h3>
-                    <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{step.desc}</p>
+                    <p className="text-[14px] leading-relaxed" style={{ color: '#999' }}>{step.desc}</p>
                   </div>
                 </li>
               ))}
@@ -676,7 +676,7 @@ export default function HomePage() {
                   </div>
                   <blockquote
                     className="text-[14px] leading-relaxed mb-6 flex-1"
-                    style={{ color: '#888' }}
+                    style={{ color: '#bbb' }}
                     itemProp="reviewBody"
                   >
                     &ldquo;{t.text}&rdquo;
@@ -691,7 +691,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="text-[13px] font-semibold text-white" itemProp="name">{t.name}</p>
-                      <p className="text-[12px]" style={{ color: '#555' }}>{t.role}</p>
+                      <p className="text-[12px]" style={{ color: '#bbb' }}>{t.role}</p>
                     </div>
                   </div>
                 </article>
@@ -727,7 +727,7 @@ export default function HomePage() {
               Pare de perder clientes<br />
               <span style={{ color: '#facc15' }}>para quem aparece no Google</span>
             </h2>
-            <p className="text-[15px] leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: '#666' }}>
+            <p className="text-[15px] leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: '#999' }}>
               Cada dia sem um site estratégico é um dia de clientes indo para o concorrente.
               Monte seu orçamento agora — é gratuito e sem compromisso.
             </p>
@@ -737,18 +737,18 @@ export default function HomePage() {
               <IconArrow />
             </CTAPrimary>
 
-            <p className="text-[12px] mt-5" style={{ color: '#333' }}>
+            <p className="text-[12px] mt-5" style={{ color: '#666' }}>
               Orçamento gratuito em até 24h · Parcele em 2× · Sem contrato
             </p>
 
             <div className="mt-10 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-              <p className="text-[12px] mb-3" style={{ color: '#333' }}>Prefere falar primeiro?</p>
+              <p className="text-[12px] mb-3" style={{ color: '#666' }}>Prefere falar primeiro?</p>
               <a
                 href={wa(MSG_DOUBT)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-[13px] transition-colors"
-                style={{ color: '#555' }}
+                style={{ color: '#bbb' }}
                 aria-label="Tirar dúvidas no WhatsApp"
               >
                 <WAIcon className="w-4 h-4 text-green-500" />
@@ -768,7 +768,7 @@ export default function HomePage() {
             <a href="/" aria-label="TOP SITE — página inicial">
               <Image src="/logo.png" alt="TOP SITE" width={100} height={34} className="h-7 w-auto" />
             </a>
-            <p className="text-[12px] text-center order-last sm:order-none" style={{ color: '#333' }}>
+            <p className="text-[12px] text-center order-last sm:order-none" style={{ color: '#666' }}>
               © {new Date().getFullYear()} TOP SITE &middot;{' '}
               <a href="/termos" className="hover:text-zinc-400 transition-colors">Termos</a>
               {' '}·{' '}
@@ -781,7 +781,7 @@ export default function HomePage() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-[12px] transition-colors"
-              style={{ color: '#444' }}
+              style={{ color: '#777' }}
               aria-label="Contato via WhatsApp"
             >
               <WAIcon className="w-4 h-4 text-green-500" />
