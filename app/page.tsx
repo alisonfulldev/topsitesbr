@@ -141,7 +141,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <p
       className="text-[10px] font-medium tracking-[0.16em] uppercase"
-      style={{ color: 'rgba(250,204,21,0.5)' }}
+      style={{ color: '#d97706' }}
     >
       {children}
     </p>
@@ -233,12 +233,12 @@ export default function HomePage() {
       />
       <Script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" strategy="afterInteractive" />
 
-      <div className="text-white antialiased" style={{ background: '#0a0a0a' }}>
+      <div className="text-[#0d0d0d] antialiased" style={{ background: '#ffffff' }}>
 
         {/* ── NAV ─────────────────────────────────────────────────────────── */}
         <header
           className="sticky top-0 z-50 backdrop-blur-md"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(10,10,10,0.92)' }}
+          style={{ borderBottom: '1px solid rgba(0,0,0,0.08)', background: 'rgba(255,255,255,0.96)' }}
         >
           <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between" aria-label="Navegação principal">
             <a href="/" aria-label="TOP SITE — página inicial">
@@ -248,7 +248,7 @@ export default function HomePage() {
               <a
                 href="/login"
                 className="flex items-center gap-1.5 text-[12px] px-3.5 py-2 rounded-xl transition-all duration-200"
-                style={{ color: '#555', border: '1px solid rgba(255,255,255,0.07)' }}
+                style={{ color: '#666', border: '1px solid rgba(0,0,0,0.12)' }}
                 aria-label="Acessar painel do cliente"
               >
                 <UserIcon />
@@ -273,13 +273,13 @@ export default function HomePage() {
           <div
             className="absolute inset-0 pointer-events-none"
             aria-hidden
-            style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
           />
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <div
               className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-10"
-              style={{ border: '1px solid rgba(250,204,21,0.14)', background: 'rgba(250,204,21,0.04)' }}
+              style={{ border: '1px solid rgba(250,204,21,0.3)', background: 'rgba(250,204,21,0.08)' }}
             >
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#facc15' }} aria-hidden />
               <span className="text-[11px] font-medium tracking-wide" style={{ color: 'rgba(250,204,21,0.7)' }}>
@@ -289,7 +289,7 @@ export default function HomePage() {
 
             <h1
               id="hero-heading"
-              className="text-[42px] sm:text-[58px] lg:text-[72px] font-bold leading-[1.05] tracking-tight text-white mb-8"
+              className="text-[42px] sm:text-[58px] lg:text-[72px] font-bold leading-[1.05] tracking-tight text-[#0d0d0d] mb-8"
             >
               Seu site deveria estar{' '}
               <span style={{ color: '#facc15' }}>VENDENDO</span>{' '}
@@ -297,17 +297,17 @@ export default function HomePage() {
               não só existindo.
             </h1>
 
-            <p className="text-[16px] sm:text-[18px] max-w-2xl mx-auto mb-6 leading-relaxed" style={{ color: '#aaa' }}>
+            <p className="text-[16px] sm:text-[18px] max-w-2xl mx-auto mb-6 leading-relaxed" style={{ color: '#444' }}>
               Criamos sites{' '}
-              <span className="text-white font-medium">personalizados e avançados</span>,
+              <span className="text-[#0d0d0d] font-medium">personalizados e avançados</span>,
               focados em conversão e SEO — para transformar visitante em cliente e aparecer no Google.
             </p>
 
             <div
               className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 mb-10 text-[13px]"
-              style={{ background: '#111', border: '1px solid rgba(255,255,255,0.07)' }}
+              style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
             >
-              <span style={{ color: '#bbb' }}>A partir de</span>
+              <span style={{ color: '#444' }}>A partir de</span>
               <span className="font-bold" style={{ color: '#facc15' }}>R$497</span>
               <span style={{ color: '#555' }}>·</span>
               <span style={{ color: '#777' }}>parcele em 2×</span>
@@ -315,7 +315,7 @@ export default function HomePage() {
 
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 list-none" aria-label="Diferenciais">
               {['Feito à mão — não é template', 'SEO técnico avançado', 'Focado em converter'].map((t) => (
-                <li key={t} className="flex items-center gap-1.5 text-[13px]" style={{ color: '#bbb' }}>
+                <li key={t} className="flex items-center gap-1.5 text-[13px]" style={{ color: '#444' }}>
                   <span style={{ color: '#facc15' }}><IconCheck /></span>
                   {t}
                 </li>
@@ -343,14 +343,14 @@ export default function HomePage() {
           id="o-problema"
           aria-labelledby="problem-heading"
           className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: '#0d0d0d' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#f7f7f7' }}
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-14">
               <SectionLabel>O problema</SectionLabel>
               <h2
                 id="problem-heading"
-                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
               >
                 A maioria dos sites são bonitos.<br />
                 <span style={{ color: '#777' }}>Mas bonito não paga boleto.</span>
@@ -362,10 +362,10 @@ export default function HomePage() {
                 <div
                   key={p.stat}
                   className="rounded-2xl p-7 text-center"
-                  style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
                 >
                   <p className="text-[56px] font-black mb-3 leading-none" style={{ color: '#facc15' }}>{p.stat}</p>
-                  <p className="text-[14px] leading-relaxed" style={{ color: '#999' }}>{p.text}</p>
+                  <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>{p.text}</p>
                 </div>
               ))}
             </div>
@@ -374,8 +374,8 @@ export default function HomePage() {
               className="mt-5 rounded-xl px-6 py-5 text-center"
               style={{ background: 'rgba(250,204,21,0.025)', border: '1px solid rgba(250,204,21,0.07)' }}
             >
-              <p className="text-[14px] leading-relaxed" style={{ color: '#999' }}>
-                <span className="text-white font-medium">Sites genéricos de IA são todos iguais</span>
+              <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>
+                <span className="text-[#0d0d0d] font-medium">Sites genéricos de IA são todos iguais</span>
                 {' '}— seu negócio merece algo feito estrategicamente para converter. É exatamente isso que a TopSite faz.
               </p>
             </div>
@@ -387,18 +387,18 @@ export default function HomePage() {
           id="diferenciais"
           aria-labelledby="diff-heading"
           className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-14">
               <SectionLabel>Nosso diferencial</SectionLabel>
               <h2
                 id="diff-heading"
-                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
               >
                 O que justifica ser premium
               </h2>
-              <p className="mt-4 max-w-lg mx-auto text-[15px] leading-relaxed" style={{ color: '#999' }}>
+              <p className="mt-4 max-w-lg mx-auto text-[15px] leading-relaxed" style={{ color: '#555' }}>
                 Não somos mais um serviço de site — somos estratégia digital que usa
                 desenvolvimento e SEO para gerar resultado real.
               </p>
@@ -409,7 +409,7 @@ export default function HomePage() {
                 <div
                   key={d.title}
                   className="flex items-start gap-5 p-6 rounded-2xl transition-all duration-300"
-                  style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.06)' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
                 >
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -422,8 +422,8 @@ export default function HomePage() {
                     <d.Icon />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white text-[15px] mb-2">{d.title}</h3>
-                    <p className="text-[14px] leading-relaxed" style={{ color: '#999' }}>{d.desc}</p>
+                    <h3 className="font-semibold text-[#0d0d0d] text-[15px] mb-2">{d.title}</h3>
+                    <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>{d.desc}</p>
                   </div>
                 </div>
               ))}
@@ -436,18 +436,18 @@ export default function HomePage() {
           id="portfolio"
           aria-labelledby="portfolio-heading"
           className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: '#0d0d0d' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#f7f7f7' }}
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
               <SectionLabel>Portfólio</SectionLabel>
               <h2
                 id="portfolio-heading"
-                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
               >
                 Sites que já colocamos no ar
               </h2>
-              <p className="mt-3 text-[14px]" style={{ color: '#bbb' }}>
+              <p className="mt-3 text-[14px]" style={{ color: '#444' }}>
                 Cada um desenvolvido à mão, com estratégia e SEO desde o primeiro dia.
               </p>
             </div>
@@ -457,7 +457,7 @@ export default function HomePage() {
                 <div
                   key={p.src}
                   className="rounded-xl overflow-hidden"
-                  style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
                 >
                   <div className="aspect-square">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -469,7 +469,7 @@ export default function HomePage() {
                     />
                   </div>
                   <div className="px-3 py-2.5">
-                    <p className="text-[11px] font-medium" style={{ color: '#bbb' }}>{p.segment}</p>
+                    <p className="text-[11px] font-medium" style={{ color: '#666' }}>{p.segment}</p>
                   </div>
                 </div>
               ))}
@@ -481,12 +481,12 @@ export default function HomePage() {
                   <div
                     key={i}
                     className="w-7 h-7 rounded-full"
-                    style={{ background: c, border: '2px solid #0d0d0d' }}
+                    style={{ background: c, border: '2px solid #f7f7f7' }}
                   />
                 ))}
               </div>
-              <p className="text-[13px]" style={{ color: '#bbb' }}>
-                <span className="text-white font-medium">+50 negócios</span> confiam na TopSite
+              <p className="text-[13px]" style={{ color: '#444' }}>
+                <span className="text-[#0d0d0d] font-medium">+50 negócios</span> confiam na TopSite
               </p>
             </div>
           </div>
@@ -497,19 +497,19 @@ export default function HomePage() {
           id="para-quem"
           aria-labelledby="forwho-heading"
           className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}
         >
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <SectionLabel>Para quem é</SectionLabel>
             <h2
               id="forwho-heading"
-              className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4 mb-6"
+              className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4 mb-6"
             >
               Para quem leva o próprio<br />negócio a sério
             </h2>
-            <p className="text-[15px] leading-relaxed mb-12 max-w-lg mx-auto" style={{ color: '#999' }}>
+            <p className="text-[15px] leading-relaxed mb-12 max-w-lg mx-auto" style={{ color: '#555' }}>
               Um site profissional não é custo — é investimento que se paga.{' '}
-              <span className="text-white">Se você entende que presença digital gera clientes</span>{' '}
+              <span className="text-[#0d0d0d]">Se você entende que presença digital gera clientes</span>{' '}
               e quer um site estratégico feito para converter, estamos aqui para isso.
             </p>
 
@@ -518,14 +518,14 @@ export default function HomePage() {
                 <div
                   key={item.title}
                   className="p-5 rounded-xl"
-                  style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.06)' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
                 >
                   <div
                     className="w-1 h-4 rounded-full mb-4"
-                    style={{ background: 'rgba(250,204,21,0.4)' }}
+                    style={{ background: 'rgba(250,204,21,0.6)' }}
                   />
-                  <h3 className="font-semibold text-white text-[14px] mb-2">{item.title}</h3>
-                  <p className="text-[13px] leading-relaxed" style={{ color: '#999' }}>{item.desc}</p>
+                  <h3 className="font-semibold text-[#0d0d0d] text-[14px] mb-2">{item.title}</h3>
+                  <p className="text-[13px] leading-relaxed" style={{ color: '#555' }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -537,7 +537,7 @@ export default function HomePage() {
           id="oferta"
           aria-labelledby="offer-heading"
           className="py-20 sm:py-28 relative overflow-hidden"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: '#0d0d0d' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#f7f7f7' }}
         >
           <div
             className="absolute inset-0 pointer-events-none"
@@ -548,7 +548,7 @@ export default function HomePage() {
             <SectionLabel>Investimento</SectionLabel>
             <h2
               id="offer-heading"
-              className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4 mb-10"
+              className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4 mb-10"
             >
               Preço justo para um<br />
               <span style={{ color: '#facc15' }}>resultado de verdade</span>
@@ -556,7 +556,7 @@ export default function HomePage() {
 
             <div
               className="rounded-2xl p-8 sm:p-10"
-              style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.10)' }}
             >
               <p className="text-[10px] tracking-[0.16em] uppercase mb-3" style={{ color: '#777' }}>
                 Sites a partir de
@@ -564,7 +564,7 @@ export default function HomePage() {
               <p className="text-[76px] sm:text-[96px] font-black leading-none mb-3" style={{ color: '#facc15' }}>
                 R$497
               </p>
-              <p className="text-[14px] mb-8" style={{ color: '#bbb' }}>
+              <p className="text-[14px] mb-8" style={{ color: '#444' }}>
                 O valor varia conforme escopo e complexidade do projeto.
               </p>
 
@@ -578,13 +578,13 @@ export default function HomePage() {
                 <span className="font-medium" style={{ color: 'rgba(250,204,21,0.85)' }}>
                   Pagamento em 2× sem juros
                 </span>
-                <span style={{ color: '#555' }}>—</span>
-                <span style={{ color: '#999' }}>metade agora, metade no próximo mês</span>
+                <span style={{ color: '#888' }}>—</span>
+                <span style={{ color: '#555' }}>metade agora, metade no próximo mês</span>
               </div>
 
               <ul className="space-y-3 text-left mb-8">
                 {CHECKLIST.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-[14px]" style={{ color: '#bbb' }}>
+                  <li key={item} className="flex items-start gap-3 text-[14px]" style={{ color: '#444' }}>
                     <span className="mt-0.5 shrink-0" style={{ color: '#facc15' }}><IconCheck /></span>
                     {item}
                   </li>
@@ -595,7 +595,7 @@ export default function HomePage() {
                 MONTAR MEU ORÇAMENTO
                 <IconArrow />
               </CTAPrimary>
-              <p className="text-[12px] mt-4" style={{ color: '#666' }}>
+              <p className="text-[12px] mt-4" style={{ color: '#888' }}>
                 Sem compromisso · Orçamento gratuito em até 24h
               </p>
             </div>
@@ -607,14 +607,14 @@ export default function HomePage() {
           id="como-funciona"
           aria-labelledby="steps-heading"
           className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}
         >
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-14">
               <SectionLabel>Como funciona</SectionLabel>
               <h2
                 id="steps-heading"
-                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
               >
                 Do briefing ao site<br />vendendo em 4 passos
               </h2>
@@ -625,18 +625,18 @@ export default function HomePage() {
                 <li
                   key={step.num}
                   className="flex items-start gap-5 p-5 rounded-2xl"
-                  style={{ background: '#0d0d0d', border: '1px solid rgba(255,255,255,0.05)' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)' }}
                 >
                   <div
                     className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 tabular-nums mt-0.5"
-                    style={{ border: '1px solid rgba(255,255,255,0.08)', color: '#444' }}
+                    style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#888' }}
                     aria-hidden="true"
                   >
                     {step.num}
                   </div>
                   <div className="flex-1 pt-1.5">
-                    <h3 className="font-semibold text-white text-[15px] mb-1.5">{step.title}</h3>
-                    <p className="text-[14px] leading-relaxed" style={{ color: '#999' }}>{step.desc}</p>
+                    <h3 className="font-semibold text-[#0d0d0d] text-[15px] mb-1.5">{step.title}</h3>
+                    <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>{step.desc}</p>
                   </div>
                 </li>
               ))}
@@ -649,14 +649,14 @@ export default function HomePage() {
           id="depoimentos"
           aria-labelledby="reviews-heading"
           className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: '#0d0d0d' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#f7f7f7' }}
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-12">
               <SectionLabel>Resultados reais</SectionLabel>
               <h2
                 id="reviews-heading"
-                className="text-3xl sm:text-[42px] font-bold text-white leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
               >
                 Negócios que pararam de perder<br />clientes para a concorrência
               </h2>
@@ -667,7 +667,7 @@ export default function HomePage() {
                 <article
                   key={t.name}
                   className="rounded-2xl p-6 flex flex-col"
-                  style={{ background: '#111', border: '1px solid rgba(255,255,255,0.06)' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
                   itemScope
                   itemType="https://schema.org/Review"
                 >
@@ -676,7 +676,7 @@ export default function HomePage() {
                   </div>
                   <blockquote
                     className="text-[14px] leading-relaxed mb-6 flex-1"
-                    style={{ color: '#bbb' }}
+                    style={{ color: '#555' }}
                     itemProp="reviewBody"
                   >
                     &ldquo;{t.text}&rdquo;
@@ -690,8 +690,8 @@ export default function HomePage() {
                       {t.initial}
                     </div>
                     <div>
-                      <p className="text-[13px] font-semibold text-white" itemProp="name">{t.name}</p>
-                      <p className="text-[12px]" style={{ color: '#bbb' }}>{t.role}</p>
+                      <p className="text-[13px] font-semibold text-[#0d0d0d]" itemProp="name">{t.name}</p>
+                      <p className="text-[12px]" style={{ color: '#666' }}>{t.role}</p>
                     </div>
                   </div>
                 </article>
@@ -705,7 +705,7 @@ export default function HomePage() {
           id="comecar"
           aria-labelledby="cta-heading"
           className="py-28 sm:py-40 relative overflow-hidden"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}
         >
           <div
             className="absolute inset-0 pointer-events-none"
@@ -715,19 +715,19 @@ export default function HomePage() {
           <div
             className="absolute inset-0 pointer-events-none"
             aria-hidden
-            style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
+            style={{ backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
           />
 
           <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center">
             <SectionLabel>Não espere mais</SectionLabel>
             <h2
               id="cta-heading"
-              className="text-[38px] sm:text-[54px] font-bold text-white leading-[1.1] tracking-tight mt-5 mb-5"
+              className="text-[38px] sm:text-[54px] font-bold text-[#0d0d0d] leading-[1.1] tracking-tight mt-5 mb-5"
             >
               Pare de perder clientes<br />
               <span style={{ color: '#facc15' }}>para quem aparece no Google</span>
             </h2>
-            <p className="text-[15px] leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: '#999' }}>
+            <p className="text-[15px] leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: '#555' }}>
               Cada dia sem um site estratégico é um dia de clientes indo para o concorrente.
               Monte seu orçamento agora — é gratuito e sem compromisso.
             </p>
@@ -737,18 +737,18 @@ export default function HomePage() {
               <IconArrow />
             </CTAPrimary>
 
-            <p className="text-[12px] mt-5" style={{ color: '#666' }}>
+            <p className="text-[12px] mt-5" style={{ color: '#888' }}>
               Orçamento gratuito em até 24h · Parcele em 2× · Sem contrato
             </p>
 
-            <div className="mt-10 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-              <p className="text-[12px] mb-3" style={{ color: '#666' }}>Prefere falar primeiro?</p>
+            <div className="mt-10 pt-8" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+              <p className="text-[12px] mb-3" style={{ color: '#888' }}>Prefere falar primeiro?</p>
               <a
                 href={wa(MSG_DOUBT)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-[13px] transition-colors"
-                style={{ color: '#bbb' }}
+                style={{ color: '#555' }}
                 aria-label="Tirar dúvidas no WhatsApp"
               >
                 <WAIcon className="w-4 h-4 text-green-500" />
@@ -761,14 +761,14 @@ export default function HomePage() {
         {/* ── FOOTER ───────────────────────────────────────────────────────── */}
         <footer
           className="py-10"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#060606' }}
+          style={{ borderTop: '1px solid rgba(0,0,0,0.08)', background: '#f5f5f5' }}
           aria-label="Rodapé"
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-5">
             <a href="/" aria-label="TOP SITE — página inicial">
               <Image src="/logo.png" alt="TOP SITE" width={100} height={34} className="h-7 w-auto" />
             </a>
-            <p className="text-[12px] text-center order-last sm:order-none" style={{ color: '#666' }}>
+            <p className="text-[12px] text-center order-last sm:order-none" style={{ color: '#888' }}>
               © {new Date().getFullYear()} TOP SITE &middot;{' '}
               <a href="/termos" className="hover:text-zinc-400 transition-colors">Termos</a>
               {' '}·{' '}
@@ -781,7 +781,7 @@ export default function HomePage() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-[12px] transition-colors"
-              style={{ color: '#777' }}
+              style={{ color: '#666' }}
               aria-label="Contato via WhatsApp"
             >
               <WAIcon className="w-4 h-4 text-green-500" />
