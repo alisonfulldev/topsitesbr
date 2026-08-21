@@ -105,7 +105,7 @@ function UserIcon() {
 
 function IconStar() {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5" style={{ color: '#facc15' }} aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5" style={{ color: '#b45309' }} aria-hidden="true">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
     </svg>
   )
@@ -292,7 +292,7 @@ export default function HomePage() {
               className="text-[42px] sm:text-[58px] lg:text-[72px] font-bold leading-[1.05] tracking-tight text-[#0d0d0d] mb-8"
             >
               Seu site deveria estar{' '}
-              <span style={{ color: '#facc15' }}>VENDENDO</span>{' '}
+              <span style={{ color: '#b45309' }}>VENDENDO</span>{' '}
               por você —<br className="hidden sm:block" />
               não só existindo.
             </h1>
@@ -308,7 +308,7 @@ export default function HomePage() {
               style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
             >
               <span style={{ color: '#444' }}>A partir de</span>
-              <span className="font-bold" style={{ color: '#facc15' }}>R$497</span>
+              <span className="font-bold" style={{ color: '#b45309' }}>R$497</span>
               <span style={{ color: '#555' }}>·</span>
               <span style={{ color: '#777' }}>parcele em 2×</span>
             </div>
@@ -316,7 +316,7 @@ export default function HomePage() {
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 list-none" aria-label="Diferenciais">
               {['Feito à mão — não é template', 'SEO técnico avançado', 'Focado em converter'].map((t) => (
                 <li key={t} className="flex items-center gap-1.5 text-[13px]" style={{ color: '#444' }}>
-                  <span style={{ color: '#facc15' }}><IconCheck /></span>
+                  <span style={{ color: '#b45309' }}><IconCheck /></span>
                   {t}
                 </li>
               ))}
@@ -364,7 +364,7 @@ export default function HomePage() {
                   className="rounded-2xl p-7 text-center"
                   style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
                 >
-                  <p className="text-[56px] font-black mb-3 leading-none" style={{ color: '#facc15' }}>{p.stat}</p>
+                  <p className="text-[56px] font-black mb-3 leading-none" style={{ color: '#b45309' }}>{p.stat}</p>
                   <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>{p.text}</p>
                 </div>
               ))}
@@ -551,7 +551,7 @@ export default function HomePage() {
               className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4 mb-10"
             >
               Preço justo para um<br />
-              <span style={{ color: '#facc15' }}>resultado de verdade</span>
+              <span style={{ color: '#b45309' }}>resultado de verdade</span>
             </h2>
 
             <div
@@ -561,7 +561,7 @@ export default function HomePage() {
               <p className="text-[10px] tracking-[0.16em] uppercase mb-3" style={{ color: '#777' }}>
                 Sites a partir de
               </p>
-              <p className="text-[76px] sm:text-[96px] font-black leading-none mb-3" style={{ color: '#facc15' }}>
+              <p className="text-[76px] sm:text-[96px] font-black leading-none mb-3" style={{ color: '#b45309' }}>
                 R$497
               </p>
               <p className="text-[14px] mb-8" style={{ color: '#444' }}>
@@ -585,7 +585,7 @@ export default function HomePage() {
               <ul className="space-y-3 text-left mb-8">
                 {CHECKLIST.map((item) => (
                   <li key={item} className="flex items-start gap-3 text-[14px]" style={{ color: '#444' }}>
-                    <span className="mt-0.5 shrink-0" style={{ color: '#facc15' }}><IconCheck /></span>
+                    <span className="mt-0.5 shrink-0" style={{ color: '#b45309' }}><IconCheck /></span>
                     {item}
                   </li>
                 ))}
@@ -725,7 +725,7 @@ export default function HomePage() {
               className="text-[38px] sm:text-[54px] font-bold text-[#0d0d0d] leading-[1.1] tracking-tight mt-5 mb-5"
             >
               Pare de perder clientes<br />
-              <span style={{ color: '#facc15' }}>para quem aparece no Google</span>
+              <span style={{ color: '#b45309' }}>para quem aparece no Google</span>
             </h2>
             <p className="text-[15px] leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: '#555' }}>
               Cada dia sem um site estratégico é um dia de clientes indo para o concorrente.

@@ -686,7 +686,7 @@ export default function OrcamentoPage() {
             −
           </button>
           <div className="text-center">
-            <p className="text-[52px] sm:text-[76px] font-black text-white leading-none tabular-nums">{form.pageCount}</p>
+            <p className="text-[52px] sm:text-[76px] font-black text-[#0d0d0d] leading-none tabular-nums">{form.pageCount}</p>
             <p className="text-[13px] mt-2 tabular-nums" style={{ color: '#444' }}>
               {form.pageCount <= 4
                 ? `até 4 páginas — ${fmtBRL(697)}`
@@ -748,7 +748,7 @@ export default function OrcamentoPage() {
         />
         <Note>
           Se sim, desenvolvemos um{' '}
-          <span className="text-white font-medium">painel admin personalizado</span>{' '}
+          <span className="text-[#0d0d0d] font-medium">painel admin personalizado</span>{' '}
           com CRUD completo. Custo:{' '}
           <span className="font-medium" style={{ color: '#b45309' }}>+R$1.000</span>
         </Note>
@@ -766,7 +766,7 @@ export default function OrcamentoPage() {
         />
         <Note>
           Se não tiver, criamos uma{' '}
-          <span className="text-white font-medium">identidade visual completa</span>{' '}
+          <span className="text-[#0d0d0d] font-medium">identidade visual completa</span>{' '}
           (logo + paleta de cores). Custo:{' '}
           <span className="font-medium" style={{ color: '#b45309' }}>+R$220</span>
         </Note>
@@ -789,7 +789,7 @@ export default function OrcamentoPage() {
         />
         <Note>
           Se não tiver, cuidamos do{' '}
-          <span className="text-white font-medium">registro e configuração completa</span>.{' '}
+          <span className="text-[#0d0d0d] font-medium">registro e configuração completa</span>.{' '}
           Custo:{' '}
           <span className="font-medium" style={{ color: '#b45309' }}>+R$140</span>
         </Note>
