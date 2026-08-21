@@ -159,7 +159,7 @@ export default async function AdminFinanceiroPage({
       prisma.systemSetting.findUnique({ where: { key: 'traffic_reserve_percent' } }),
     ])
 
-  const trafficReservePercent = Number(reserveSetting?.value ?? '40')
+  const trafficReservePercent = Number(reserveSetting?.value ?? '50')
 
   // ── Monthly maps ──────────────────────────────────────────────────────────────
 
