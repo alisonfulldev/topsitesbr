@@ -680,37 +680,27 @@ export default function OrcamentoPage() {
             type="button"
             onClick={() => set('pageCount', Math.max(1, form.pageCount - 1))}
             className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl leading-none transition-all duration-200"
-            style={{ border: '1px solid rgba(255,255,255,0.08)', color: '#555' }}
+            style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#666' }}
             aria-label="Reduzir"
           >
             −
           </button>
           <div className="text-center">
             <p className="text-[52px] sm:text-[76px] font-black text-[#0d0d0d] leading-none tabular-nums">{form.pageCount}</p>
-            <p className="text-[13px] mt-2 tabular-nums" style={{ color: '#444' }}>
-              {form.pageCount <= 4
-                ? `até 4 páginas — ${fmtBRL(697)}`
-                : `${form.pageCount} páginas — ${fmtBRL(697 + (form.pageCount - 4) * 100)}`}
+            <p className="text-[15px] font-bold mt-2 tabular-nums" style={{ color: '#b45309' }}>
+              {fmtBRL(form.pageCount <= 4 ? 697 : 697 + (form.pageCount - 4) * 100)}
             </p>
           </div>
           <button
             type="button"
             onClick={() => set('pageCount', form.pageCount + 1)}
             className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl leading-none transition-all duration-200"
-            style={{ border: '1px solid rgba(255,255,255,0.08)', color: '#555' }}
+            style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#666' }}
             aria-label="Adicionar"
           >
             +
           </button>
         </div>
-        {form.pageCount > 4 && (
-          <p className="text-center text-[13px] tabular-nums" style={{ color: '#444' }}>
-            R$697 base + {form.pageCount - 4} pág. extra × R$100{' '}
-            = <span className="font-semibold" style={{ color: '#b45309' }}>
-              {fmtBRL(697 + (form.pageCount - 4) * 100)}
-            </span>
-          </p>
-        )}
         <PrimaryBtn onClick={next} />
       </div>
     )
@@ -746,12 +736,9 @@ export default function OrcamentoPage() {
           title="Precisa de área logada para gerenciar conteúdo?"
           sub="Ex.: cadastrar produtos, editar textos, gerenciar cadastros no próprio site."
         />
-        <Note>
-          Se sim, desenvolvemos um{' '}
-          <span className="text-[#0d0d0d] font-medium">painel admin personalizado</span>{' '}
-          com CRUD completo. Custo:{' '}
-          <span className="font-medium" style={{ color: '#b45309' }}>+R$1.000</span>
-        </Note>
+        <p className="text-[13px]" style={{ color: '#888' }}>
+          Custo adicional: <span className="font-semibold" style={{ color: '#b45309' }}>+R$1.000</span>
+        </p>
         <YesNo value={form.hasAdmin} onChange={(v) => set('hasAdmin', v)} />
         <PrimaryBtn onClick={next} />
       </div>
@@ -762,18 +749,15 @@ export default function OrcamentoPage() {
         <StepHeader
           label="Logotipo"
           title="Você já tem logotipo profissional?"
-          sub="Um logo profissional é essencial para a identidade visual do site."
+          sub="Um logotipo profissional é essencial para a identidade visual do site."
         />
-        <Note>
-          Se não tiver, criamos uma{' '}
-          <span className="text-[#0d0d0d] font-medium">identidade visual completa</span>{' '}
-          (logo + paleta de cores). Custo:{' '}
-          <span className="font-medium" style={{ color: '#b45309' }}>+R$220</span>
-        </Note>
+        <p className="text-[13px]" style={{ color: '#888' }}>
+          Custo se não tiver: <span className="font-semibold" style={{ color: '#b45309' }}>+R$220</span>
+        </p>
         <YesNo
           value={form.hasLogo}
           onChange={(v) => set('hasLogo', v)}
-          yesLabel="Sim, já tenho"
+          yesLabel="Já tenho"
           noLabel="Não tenho"
         />
         <PrimaryBtn onClick={next} />
@@ -787,16 +771,13 @@ export default function OrcamentoPage() {
           title="Você já tem domínio próprio?"
           sub="Ex.: suaempresa.com.br — o endereço do seu site na internet."
         />
-        <Note>
-          Se não tiver, cuidamos do{' '}
-          <span className="text-[#0d0d0d] font-medium">registro e configuração completa</span>.{' '}
-          Custo:{' '}
-          <span className="font-medium" style={{ color: '#b45309' }}>+R$140</span>
-        </Note>
+        <p className="text-[13px]" style={{ color: '#888' }}>
+          Custo se não tiver: <span className="font-semibold" style={{ color: '#b45309' }}>+R$140</span>
+        </p>
         <YesNo
           value={form.hasDomain}
           onChange={(v) => set('hasDomain', v)}
-          yesLabel="Sim, já tenho"
+          yesLabel="Já tenho"
           noLabel="Não tenho"
         />
         <PrimaryBtn onClick={next} />
