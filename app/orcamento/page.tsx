@@ -403,16 +403,21 @@ function ResultScreen({
         <p className="relative text-[58px] sm:text-[68px] font-black text-[#0d0d0d] leading-none tabular-nums">
           {fmtBRL(total)}
         </p>
-        <div
-          className="relative mt-4 inline-flex items-center gap-1 rounded-full px-4 py-1.5"
-          style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)' }}
-        >
-          <p className="text-[12px]" style={{ color: '#666' }}>
-            2×{' '}
-            <span className="text-[#0d0d0d] font-medium">{fmtBRL(half)}</span>
-            <span style={{ color: '#aaa' }} className="mx-1">·</span>
-            <span className="text-[#0d0d0d] font-medium">{fmtBRL(total - half)}</span>
-            <span style={{ color: '#888' }}> no mês seguinte</span>
+        <div className="relative mt-4 flex flex-col items-center gap-2">
+          <div
+            className="inline-flex items-center gap-1 rounded-full px-4 py-1.5"
+            style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)' }}
+          >
+            <p className="text-[12px]" style={{ color: '#666' }}>
+              2×{' '}
+              <span className="text-[#0d0d0d] font-medium">{fmtBRL(half)}</span>
+              <span style={{ color: '#aaa' }} className="mx-1">·</span>
+              <span className="text-[#0d0d0d] font-medium">{fmtBRL(total - half)}</span>
+              <span style={{ color: '#888' }}> no mês seguinte</span>
+            </p>
+          </div>
+          <p className="text-[12px]" style={{ color: '#aaa' }}>
+            2× no boleto &nbsp;·&nbsp; 12× no cartão
           </p>
         </div>
       </div>
