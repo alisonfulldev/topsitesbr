@@ -20,6 +20,7 @@ export interface QuoteData {
 export interface SaveQuoteInput extends QuoteData {
   name: string
   email: string
+  phone?: string
 }
 
 export async function saveQuoteLeadAction(
@@ -35,6 +36,7 @@ export async function saveQuoteLeadAction(
       data: {
         name: input.name,
         email: input.email,
+        phone: input.phone ?? null,
         projectType: input.projectType,
         pageCount: input.pageCount,
         segment: input.segment,
@@ -105,6 +107,13 @@ function buildQuoteEmail(input: SaveQuoteInput): string {
   const privUrl = `${APP_URL}/privacidade`
   const safeName = esc(input.name)
   const safeSegment = esc(input.segment)
+  const safePhone = input.phone ? esc(input.phone) : null
+  const phoneLine = safePhone
+    ? `<tr>
+         <td style="padding:6px 0;font-size:14px;color:#6b7280;">WhatsApp</td>
+         <td style="padding:6px 0;font-size:14px;color:#111827;font-weight:600;text-align:right;">${safePhone}</td>
+       </tr>`
+    : ''
 
   const pagesLine =
     input.projectType === 'institucional' && input.pageCount
@@ -156,6 +165,7 @@ function buildQuoteEmail(input: SaveQuoteInput): string {
                 <td style="padding:6px 0;font-size:14px;color:#111827;font-weight:600;text-align:right;">${projectTypeLabel(input.projectType)}</td>
               </tr>
               ${pagesLine}
+              ${phoneLine}
               <tr>
                 <td style="padding:6px 0;font-size:14px;color:#6b7280;vertical-align:top;">Segmento</td>
                 <td style="padding:6px 0;font-size:14px;color:#111827;font-weight:600;text-align:right;">${safeSegment}</td>

@@ -38,6 +38,7 @@ interface FormState {
   hasDomain: boolean
   name: string
   email: string
+  whatsapp: string
 }
 
 const INIT: FormState = {
@@ -49,6 +50,7 @@ const INIT: FormState = {
   hasDomain: true,
   name: '',
   email: '',
+  whatsapp: '',
 }
 
 function getSteps(type: ProjectType | null) {
@@ -611,6 +613,7 @@ export default function OrcamentoPage() {
     const result = await saveQuoteLeadAction({
       name: form.name.trim(),
       email: form.email.trim(),
+      phone: form.whatsapp.trim() || undefined,
       projectType: form.projectType!,
       pageCount: form.projectType === 'institucional' ? form.pageCount : null,
       segment: form.segment.trim(),
@@ -737,7 +740,7 @@ export default function OrcamentoPage() {
           sub="Ex.: cadastrar produtos, editar textos, gerenciar cadastros no próprio site."
         />
         <p className="text-[13px]" style={{ color: '#888' }}>
-          Custo adicional: <span className="font-semibold" style={{ color: '#b45309' }}>+R$1.000</span>
+          Investimento: <span className="font-semibold" style={{ color: '#b45309' }}>+R$1.000</span>
         </p>
         <YesNo value={form.hasAdmin} onChange={(v) => set('hasAdmin', v)} />
         <PrimaryBtn onClick={next} />
@@ -752,7 +755,7 @@ export default function OrcamentoPage() {
           sub="Um logotipo profissional é essencial para a identidade visual do site."
         />
         <p className="text-[13px]" style={{ color: '#888' }}>
-          Custo se não tiver: <span className="font-semibold" style={{ color: '#b45309' }}>+R$220</span>
+          Investimento: <span className="font-semibold" style={{ color: '#b45309' }}>+R$220</span>
         </p>
         <YesNo
           value={form.hasLogo}
@@ -772,7 +775,7 @@ export default function OrcamentoPage() {
           sub="Ex.: suaempresa.com.br — o endereço do seu site na internet."
         />
         <p className="text-[13px]" style={{ color: '#888' }}>
-          Custo se não tiver: <span className="font-semibold" style={{ color: '#b45309' }}>+R$140</span>
+          Investimento: <span className="font-semibold" style={{ color: '#b45309' }}>+R$140</span>
         </p>
         <YesNo
           value={form.hasDomain}
@@ -828,6 +831,27 @@ export default function OrcamentoPage() {
               onChange={(e) => { set('email', e.target.value); setEmailError('') }}
               placeholder="voce@empresa.com.br"
               autoComplete="email"
+              className="w-full rounded-xl px-4 py-3 sm:py-4 text-[#0d0d0d] text-[15px] placeholder-[#bbb] transition-all duration-200 focus:outline-none"
+              style={{ background: '#fafafa', border: '1px solid rgba(0,0,0,0.1)' }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(180,83,9,0.4)' }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)' }}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="lead-whatsapp"
+              className="block text-[12px] font-medium mb-2 tracking-wide"
+              style={{ color: '#555' }}
+            >
+              WhatsApp
+            </label>
+            <input
+              id="lead-whatsapp"
+              type="tel"
+              value={form.whatsapp}
+              onChange={(e) => set('whatsapp', e.target.value)}
+              placeholder="(11) 99999-9999"
+              autoComplete="tel"
               className="w-full rounded-xl px-4 py-3 sm:py-4 text-[#0d0d0d] text-[15px] placeholder-[#bbb] transition-all duration-200 focus:outline-none"
               style={{ background: '#fafafa', border: '1px solid rgba(0,0,0,0.1)' }}
               onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(180,83,9,0.4)' }}
