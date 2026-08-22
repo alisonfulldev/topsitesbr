@@ -215,14 +215,14 @@ const TECH_FEATURES = [
 
 const PORTFOLIO = [
   {
-    domain: 'omelhorpasteldomundo.com.br',
-    name: 'O Melhor Pastel do Mundo',
-    segment: 'Pastelaria',
-    query: 'melhor pastel da cidade',
-    desc: 'Pastéis artesanais com ingredientes frescos. Cardápio variado, atendimento rápido e sabor inigualável.',
-    links: ['Cardápio', 'Localização', 'Pedido Online'],
-    comp1: { d: 'pastelariaxyz.com.br', t: 'Pastelaria XYZ — Delivery e Retirada' },
-    comp2: { d: 'lanches123.com.br', t: 'Lanchonete 123 — Pastéis e Salgados' },
+    domain: 'esteticadelsoares.com.br',
+    name: 'Estética Del Soares',
+    segment: 'Clínica Estética',
+    query: 'clínica estética tratamentos faciais',
+    desc: 'Tratamentos faciais e corporais com profissionais especializados. Resultados visíveis e atendimento personalizado.',
+    links: ['Serviços', 'Agendar', 'Contato'],
+    comp1: { d: 'esteticaonline.com.br', t: 'Estética Online — Tratamentos Faciais' },
+    comp2: { d: 'clinicabeleza.com.br', t: 'Clínica Beleza — Estética Avançada' },
   },
   {
     domain: 'ozenergiasolar.com.br',
@@ -235,14 +235,14 @@ const PORTFOLIO = [
     comp2: { d: 'energiaverde.com.br', t: 'Energia Verde — Instalação Solar' },
   },
   {
-    domain: 'wmcredito.com.br',
-    name: 'WM Crédito',
-    segment: 'Crédito e Financiamento',
-    query: 'crédito pessoal aprovação rápida',
-    desc: 'Crédito pessoal e consignado com aprovação em minutos. As melhores taxas do mercado, sem burocracia.',
-    links: ['Simular Crédito', 'Serviços', 'Contato'],
-    comp1: { d: 'creditofacil.com.br', t: 'Crédito Fácil — Empréstimo Online' },
-    comp2: { d: 'financeiras.com.br', t: 'Financeiras — Crédito Pessoal e Consignado' },
+    domain: 'yasmimpinhopsicologa.com.br',
+    name: 'Yasmim Pinho Psicóloga',
+    segment: 'Psicologia',
+    query: 'psicóloga atendimento online e presencial',
+    desc: 'Atendimento psicológico online e presencial. Ambiente acolhedor, sigilo garantido e agenda flexível.',
+    links: ['Sobre', 'Agendamento', 'Contato'],
+    comp1: { d: 'psicologiaonline.com.br', t: 'Psicologia Online — Terapia Individual' },
+    comp2: { d: 'consultoriamente.com.br', t: 'Consultório Mente — Atendimento Psicológico' },
   },
 ]
 
