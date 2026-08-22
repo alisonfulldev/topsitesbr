@@ -216,6 +216,7 @@ const TECH_FEATURES = [
 const PORTFOLIO = [
   {
     domain: 'esteticadelsoares.com.br',
+    favicon: '/faicon/del.png',
     name: 'Estética Del Soares',
     segment: 'Clínica Estética',
     query: 'clínica estética tratamentos faciais',
@@ -226,6 +227,7 @@ const PORTFOLIO = [
   },
   {
     domain: 'ozenergiasolar.com.br',
+    favicon: '/faicon/oz.png',
     name: 'OZ Energia Solar',
     segment: 'Energia Solar',
     query: 'energia solar instalação residencial',
@@ -236,6 +238,7 @@ const PORTFOLIO = [
   },
   {
     domain: 'yasmimpinhopsicologa.com.br',
+    favicon: '/faicon/yasmin.png',
     name: 'Yasmim Pinho Psicóloga',
     segment: 'Psicologia',
     query: 'psicóloga atendimento online e presencial',
@@ -663,9 +666,7 @@ export default function HomePage() {
                     {/* #1 resultado */}
                     <div style={{ marginBottom: 8, padding: '7px 9px', borderRadius: 7, border: '1px solid #e8f0fe', background: '#f8fbff' }}>
                       <div className="flex items-center gap-1 mb-0.5">
-                        <div className="w-3.5 h-3.5 rounded-sm flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
-                          <span style={{ fontSize: 5, fontWeight: 700, color: '#000' }}>1</span>
-                        </div>
+                        <img src={p.favicon} alt="" width={14} height={14} className="rounded-sm flex-shrink-0" style={{ objectFit: 'contain' }} />
                         <span style={{ fontSize: 7, color: '#188038' }}>{p.domain} › inicio</span>
                       </div>
                       <div style={{ fontSize: 10, color: '#1a0dab', fontWeight: 500, lineHeight: 1.3, marginBottom: 2 }}>{p.name} — {p.segment}</div>
@@ -688,7 +689,10 @@ export default function HomePage() {
 
                   {/* Footer do card */}
                   <div className="flex items-center justify-between px-4 py-2.5" style={{ background: '#0d0d0d', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                    <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>{p.domain}</span>
+                    <div className="flex items-center gap-1.5">
+                      <img src={p.favicon} alt="" width={12} height={12} className="rounded-sm opacity-70" style={{ objectFit: 'contain' }} />
+                      <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>{p.domain}</span>
+                    </div>
                     <span className="text-[10px] transition-colors group-hover:text-yellow-400" style={{ color: 'rgba(255,255,255,0.2)' }}>visitar →</span>
                   </div>
                 </a>
