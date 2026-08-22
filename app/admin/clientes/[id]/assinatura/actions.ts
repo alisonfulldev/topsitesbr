@@ -4,6 +4,23 @@ import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
 import { revalidatePath } from 'next/cache'
 
+export async function resetSubscriptionStatus(
+  clientId: string,
+  subscriptionId: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const sub = await prisma.subscription.findUnique({ where: { id: subscriptionId } })
+  if (!sub || sub.clientId !== clientId) return { error: 'Assinatura não encontrada.' }
+
+  await prisma.subscription.update({
+    where: { id: subscriptionId },
+    data: { status: 'active' },
+  })
+
+  revalidatePath(`/admin/clientes/${clientId}/assinatura`)
+  revalidatePath(`/painel/assinatura`)
+  return { success: true }
+}
+
 export async function activateSubscription(
   clientId: string,
   planId: string,
@@ -48,8 +65,7 @@ export async function activateSubscription(
     data: {
       clientId,
       planId,
-      // Sem cobrança imediata (mês grátis) → ativa direto; com cobrança → aguarda pagamento
-      status: chargeId ? 'pending' : 'active',
+      status: freeFirstMonth ? 'active' : chargeId ? 'pending' : 'active',
       asaasSubscriptionId: subscriptionId,
       nextDueDate,
       planActivatedAt: new Date(),

@@ -403,7 +403,9 @@ function ChangesInfoCard({ plan, used }: { plan: PlanFeatures; used: number }) {
 }
 
 function BillingInfoCard({ subscription }: { subscription: SubscriptionData }) {
-  const isOverdue = subscription.status === 'overdue'
+  const isOverdue =
+    subscription.status === 'overdue' &&
+    (subscription.nextDueDate == null || new Date(subscription.nextDueDate) < new Date())
   return (
     <Card className={isOverdue ? 'border-red-200 bg-red-50/30' : ''}>
       <CardTitle>Próxima Cobrança</CardTitle>

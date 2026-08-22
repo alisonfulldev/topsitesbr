@@ -56,6 +56,11 @@ export function AssinaturaPageClient({
 }) {
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ''
 
+  const isActuallyOverdue =
+    subscription.status === 'overdue' &&
+    (subscription.nextDueDate == null || new Date(subscription.nextDueDate) < new Date())
+  const displayStatus = isActuallyOverdue ? subscription.status : subscription.status === 'overdue' ? 'active' : subscription.status
+
   return (
     <div className="space-y-6">
       {/* Current subscription summary */}
@@ -72,10 +77,10 @@ export function AssinaturaPageClient({
             <span className="text-sm text-gray-500">Status</span>
             <span
               className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
-                STATUS_COLOR[subscription.status] ?? 'bg-gray-100 text-gray-600'
+                STATUS_COLOR[displayStatus] ?? 'bg-gray-100 text-gray-600'
               }`}
             >
-              {STATUS_LABEL[subscription.status] ?? subscription.status}
+              {STATUS_LABEL[displayStatus] ?? displayStatus}
             </span>
           </div>
           <div className="flex items-center justify-between py-2 border-b border-gray-100">

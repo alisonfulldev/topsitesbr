@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { activateSubscription, changePlan } from '../actions'
+import { activateSubscription, changePlan, resetSubscriptionStatus } from '../actions'
 
 type SubscriptionInfo = {
   id: string
@@ -58,6 +58,16 @@ export function SubscriptionPageClient({
   const [changeSuccess, setChangeSuccess] = useState<string | null>(null)
   const [changeBlockedUntil, setChangeBlockedUntil] = useState<string | null>(null)
   const [isChangePending, startChangeTransition] = useTransition()
+  const [isResetPending, startResetTransition] = useTransition()
+
+  function handleResetStatus() {
+    if (!subscription) return
+    startResetTransition(async () => {
+      const result = await resetSubscriptionStatus(clientId, subscription.id)
+      if (result.error) setError(result.error)
+      else setSuccessMsg('Status da assinatura corrigido para Ativa.')
+    })
+  }
 
   function handleChangePlan(adminOverride = false) {
     setChangeError(null)
@@ -151,6 +161,20 @@ export function SubscriptionPageClient({
               </div>
             )}
           </div>
+          {subscription.status === 'overdue' && (
+            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-3">
+              <p className="text-xs text-gray-500 flex-1">
+                Status marcado como inadimplente, mas o próximo vencimento ainda não chegou? Corrija manualmente.
+              </p>
+              <button
+                onClick={handleResetStatus}
+                disabled={isResetPending}
+                className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-medium hover:bg-green-700 disabled:opacity-50 transition-colors shrink-0"
+              >
+                {isResetPending ? 'Corrigindo…' : 'Corrigir → Ativa'}
+              </button>
+            </div>
+          )}
         </div>
       ) : null}
 
