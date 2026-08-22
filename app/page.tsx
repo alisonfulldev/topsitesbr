@@ -214,10 +214,36 @@ const TECH_FEATURES = [
 ]
 
 const PORTFOLIO = [
-  { src: '/portfolio/site1.jpg', segment: 'Restaurante' },
-  { src: '/portfolio/site2.jpg', segment: 'Energia Solar' },
-  { src: '/portfolio/site3.jpg', segment: 'Direito' },
-  { src: '/portfolio/site4.jpg', segment: 'Crédito' },
+  {
+    domain: 'omelhorpasteldomundo.com.br',
+    name: 'O Melhor Pastel do Mundo',
+    segment: 'Pastelaria',
+    query: 'melhor pastel da cidade',
+    desc: 'Pastéis artesanais com ingredientes frescos. Cardápio variado, atendimento rápido e sabor inigualável.',
+    links: ['Cardápio', 'Localização', 'Pedido Online'],
+    comp1: { d: 'pastelariaxyz.com.br', t: 'Pastelaria XYZ — Delivery e Retirada' },
+    comp2: { d: 'lanches123.com.br', t: 'Lanchonete 123 — Pastéis e Salgados' },
+  },
+  {
+    domain: 'ozenergiasolar.com.br',
+    name: 'OZ Energia Solar',
+    segment: 'Energia Solar',
+    query: 'energia solar instalação residencial',
+    desc: 'Instalação de painéis solares com economia garantida na conta de luz. Orçamento grátis em 24h.',
+    links: ['Orçamento Grátis', 'Projetos', 'Contato'],
+    comp1: { d: 'solarbrasil.com.br', t: 'Solar Brasil — Painéis Fotovoltaicos' },
+    comp2: { d: 'energiaverde.com.br', t: 'Energia Verde — Instalação Solar' },
+  },
+  {
+    domain: 'wmcredito.com.br',
+    name: 'WM Crédito',
+    segment: 'Crédito e Financiamento',
+    query: 'crédito pessoal aprovação rápida',
+    desc: 'Crédito pessoal e consignado com aprovação em minutos. As melhores taxas do mercado, sem burocracia.',
+    links: ['Simular Crédito', 'Serviços', 'Contato'],
+    comp1: { d: 'creditofacil.com.br', t: 'Crédito Fácil — Empréstimo Online' },
+    comp2: { d: 'financeiras.com.br', t: 'Financeiras — Crédito Pessoal e Consignado' },
+  },
 ]
 
 const TESTIMONIALS = [
@@ -582,40 +608,97 @@ export default function HomePage() {
         <section id="portfolio" className="relative py-24" style={{ background: '#080808' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <div className="text-center mb-16">
-              <Badge className="mb-4">Cases</Badge>
+              <Badge className="mb-4">Sites entregues recentemente</Badge>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                Projetos que
+                Clientes reais no
                 <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                  transformaram negócios
+                  topo do Google
                 </span>
               </h2>
+              <p className="text-white/40 text-sm mt-2">Clique para visitar o site</p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {PORTFOLIO.map((p, i) => (
-                <div
+                <a
                   key={i}
-                  className="group relative overflow-hidden rounded-2xl aspect-[3/4] cursor-pointer"
-                  style={{ background: 'rgba(255,255,255,0.02)' }}
+                  href={`https://${p.domain}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+                  style={{ border: '1px solid rgba(255,255,255,0.06)' }}
                 >
-                  <img
-                    src={p.src}
-                    alt={`${p.segment} - TOP SITE`}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500"
-                    style={{
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%)',
-                    }}
-                  >
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <p className="text-white/80 font-medium text-sm">{p.segment}</p>
-                      <p className="text-white/30 text-xs">Ver case →</p>
+                  {/* Browser chrome */}
+                  <div className="flex items-center gap-2 px-3 py-2.5" style={{ background: '#f1f3f4' }}>
+                    <div className="flex gap-1">
+                      <span className="w-2 h-2 rounded-full bg-red-500" />
+                      <span className="w-2 h-2 rounded-full bg-yellow-400" />
+                      <span className="w-2 h-2 rounded-full bg-green-500" />
+                    </div>
+                    <div className="flex-1 mx-2 px-2 py-0.5 rounded text-[9px] truncate" style={{ background: '#fff', border: '1px solid #dadce0', color: '#5f6368' }}>
+                      google.com.br/search?q={p.query.replace(/ /g, '+')}
                     </div>
                   </div>
-                </div>
+
+                  {/* SERP */}
+                  <div className="p-4" style={{ background: '#fff', fontFamily: 'Arial, sans-serif' }}>
+                    {/* Logo + busca */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <span style={{ fontSize: 14, fontWeight: 700, lineHeight: 1 }}>
+                        <span style={{ color: '#4285f4' }}>G</span>
+                        <span style={{ color: '#ea4335' }}>o</span>
+                        <span style={{ color: '#fbbc04' }}>o</span>
+                        <span style={{ color: '#4285f4' }}>g</span>
+                        <span style={{ color: '#34a853' }}>l</span>
+                        <span style={{ color: '#ea4335' }}>e</span>
+                      </span>
+                      <div className="flex-1 flex items-center gap-1.5 px-2" style={{ height: 22, border: '1px solid #dfe1e5', borderRadius: 12, background: '#fff', boxShadow: '0 1px 4px rgba(32,33,36,.1)' }}>
+                        <span className="flex-1 text-[8px] truncate" style={{ color: '#202124' }}>{p.query}</span>
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#4285f4" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                      </div>
+                    </div>
+
+                    {/* Tabs */}
+                    <div className="flex gap-3 mb-1.5 pb-1" style={{ borderBottom: '1px solid #ebebeb' }}>
+                      {['Tudo', 'Imagens', 'Notícias', 'Maps'].map((t, ti) => (
+                        <span key={t} style={{ fontSize: 8, color: ti === 0 ? '#1a73e8' : '#5f6368', borderBottom: ti === 0 ? '2px solid #1a73e8' : 'none', paddingBottom: 2 }}>{t}</span>
+                      ))}
+                    </div>
+
+                    <p style={{ fontSize: 7, color: '#70757a', marginBottom: 6 }}>Cerca de 2.150.000 resultados (0,31 segundos)</p>
+
+                    {/* #1 resultado */}
+                    <div style={{ marginBottom: 8, padding: '7px 9px', borderRadius: 7, border: '1px solid #e8f0fe', background: '#f8fbff' }}>
+                      <div className="flex items-center gap-1 mb-0.5">
+                        <div className="w-3.5 h-3.5 rounded-sm flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
+                          <span style={{ fontSize: 5, fontWeight: 700, color: '#000' }}>1</span>
+                        </div>
+                        <span style={{ fontSize: 7, color: '#188038' }}>{p.domain} › inicio</span>
+                      </div>
+                      <div style={{ fontSize: 10, color: '#1a0dab', fontWeight: 500, lineHeight: 1.3, marginBottom: 2 }}>{p.name} — {p.segment}</div>
+                      <div style={{ fontSize: 7.5, color: '#4d5156', lineHeight: 1.5 }}>{p.desc}</div>
+                      <div className="flex gap-3 mt-1.5 pt-1.5" style={{ borderTop: '1px solid #e8f0fe' }}>
+                        {p.links.map(l => <span key={l} style={{ fontSize: 7, color: '#1a0dab' }}>{l}</span>)}
+                      </div>
+                    </div>
+
+                    {/* Concorrentes */}
+                    <div style={{ opacity: 0.5, marginBottom: 5 }}>
+                      <div style={{ fontSize: 7, color: '#188038' }}>{p.comp1.d}</div>
+                      <div style={{ fontSize: 9, color: '#1a0dab' }}>{p.comp1.t}</div>
+                    </div>
+                    <div style={{ opacity: 0.25 }}>
+                      <div style={{ fontSize: 7, color: '#188038' }}>{p.comp2.d}</div>
+                      <div style={{ fontSize: 9, color: '#1a0dab' }}>{p.comp2.t}</div>
+                    </div>
+                  </div>
+
+                  {/* Footer do card */}
+                  <div className="flex items-center justify-between px-4 py-2.5" style={{ background: '#0d0d0d', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+                    <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>{p.domain}</span>
+                    <span className="text-[10px] transition-colors group-hover:text-yellow-400" style={{ color: 'rgba(255,255,255,0.2)' }}>visitar →</span>
+                  </div>
+                </a>
               ))}
             </div>
           </div>
