@@ -319,7 +319,7 @@ export default function HomePage() {
 
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6">
                   Sites que
-                  <span className="block text-transparent bg-clip-text" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b, #d97706)' }}>
+                  <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b, #d97706)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                     vendem por você
                   </span>
                 </h1>
@@ -530,7 +530,7 @@ export default function HomePage() {
               <Badge className="mb-4">Tecnologia</Badge>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
                 Feito com as melhores
-                <span className="block text-transparent bg-clip-text" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
+                <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                   ferramentas do mercado
                 </span>
               </h2>
@@ -589,7 +589,7 @@ export default function HomePage() {
               <Badge className="mb-4">Cases</Badge>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
                 Projetos que
-                <span className="block text-transparent bg-clip-text" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
+                <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                   transformaram negócios
                 </span>
               </h2>
@@ -632,7 +632,7 @@ export default function HomePage() {
               <Badge className="mb-4">Depoimentos</Badge>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
                 O que nossos
-                <span className="block text-transparent bg-clip-text" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
+                <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                   clientes dizem
                 </span>
               </h2>
@@ -679,7 +679,7 @@ export default function HomePage() {
               <Badge className="mb-4">Investimento</Badge>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
                 Preço justo para
-                <span className="block text-transparent bg-clip-text" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
+                <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                   resultado de verdade
                 </span>
               </h2>
@@ -730,7 +730,7 @@ export default function HomePage() {
               <Badge className="mb-4">Dúvidas</Badge>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
                 Perguntas
-                <span className="block text-transparent bg-clip-text" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
+                <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                   frequentes
                 </span>
               </h2>
@@ -773,7 +773,7 @@ export default function HomePage() {
           <div className="relative max-w-3xl mx-auto px-4 sm:px-8 text-center">
             <h2 className="text-4xl sm:text-6xl font-bold tracking-tight mb-6">
               Pronto para ter um site
-              <span className="block text-transparent bg-clip-text" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
+              <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                 que realmente vende?
               </span>
             </h2>
