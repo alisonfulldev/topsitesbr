@@ -306,7 +306,7 @@ export default function HomePage() {
             <div className="flex items-center gap-4">
               <a
                 href="/login"
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm text-white/40 hover:text-white/70 transition-colors duration-200 rounded-xl hover:bg-white/5"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm text-white/65 hover:text-white/70 transition-colors duration-200 rounded-xl hover:bg-white/5"
               >
                 Área do cliente
               </a>
@@ -355,7 +355,7 @@ export default function HomePage() {
                   </span>
                 </h1>
 
-                <p className="text-lg text-white/60 leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
+                <p className="text-lg text-white/75 leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
                   Desenvolvemos sites de alta performance com foco em conversão e SEO avançado.
                   Tecnologia de ponta, design estratégico e resultados reais para seu negócio.
                 </p>
@@ -367,7 +367,7 @@ export default function HomePage() {
                   </CTAPrimary>
                   <a
                     href="#tech"
-                    className="flex items-center gap-2 px-4 py-3 text-sm text-white/40 hover:text-white/70 transition-colors duration-200"
+                    className="flex items-center gap-2 px-4 py-3 text-sm text-white/65 hover:text-white/70 transition-colors duration-200"
                   >
                     <span className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-xs">
                       ▶
@@ -392,7 +392,7 @@ export default function HomePage() {
                         <StarIcon key={i} />
                       ))}
                     </div>
-                    <p className="text-sm text-white/30">4.9 de média · 50+ clientes</p>
+                    <p className="text-sm text-white/55">4.9 de média · 50+ clientes</p>
                   </div>
                 </div>
               </div>
@@ -554,7 +554,7 @@ export default function HomePage() {
                   ferramentas do mercado
                 </span>
               </h2>
-              <p className="text-white/40 max-w-lg mx-auto">
+              <p className="text-white/65 max-w-lg mx-auto">
                 Desenvolvimento profissional com as tecnologias mais modernas e eficientes.
               </p>
             </div>
@@ -579,7 +579,7 @@ export default function HomePage() {
                     <feature.icon />
                   </div>
                   <h3 className="font-semibold text-white mb-2">{feature.label}</h3>
-                  <p className="text-sm text-white/30 leading-relaxed">{feature.desc}</p>
+                  <p className="text-sm text-white/55 leading-relaxed">{feature.desc}</p>
                 </div>
               ))}
             </div>
@@ -613,7 +613,7 @@ export default function HomePage() {
                   topo do Google
                 </span>
               </h2>
-              <p className="text-white/40 text-sm mt-2">Clique para visitar o site</p>
+              <p className="text-white/65 text-sm mt-2">Clique para visitar o site</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -731,7 +731,7 @@ export default function HomePage() {
                       <StarIcon key={j} />
                     ))}
                   </div>
-                  <p className="text-white/60 text-sm leading-relaxed flex-1 mb-6">“{t.text}”</p>
+                  <p className="text-white/75 text-sm leading-relaxed flex-1 mb-6">“{t.text}”</p>
                   <div className="flex items-center gap-3 pt-4 border-t border-white/5">
                     <div
                       className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
@@ -741,7 +741,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-white">{t.name}</p>
-                      <p className="text-xs text-white/30">{t.role}</p>
+                      <p className="text-xs text-white/55">{t.role}</p>
                     </div>
                   </div>
                 </div>
@@ -770,9 +770,9 @@ export default function HomePage() {
                 border: '1px solid rgba(255,255,255,0.04)',
               }}
             >
-              <p className="text-sm text-white/30 mb-2">A partir de</p>
+              <p className="text-sm text-white/55 mb-2">A partir de</p>
               <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$397</p>
-              <p className="text-sm text-white/30 mt-2">em até 2× no cartão sem juros</p>
+              <p className="text-sm text-white/55 mt-2">em até 2× no cartão sem juros</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-10 text-left">
                 {[
@@ -783,7 +783,7 @@ export default function HomePage() {
                   'Painel de gerenciamento',
                   'Suporte via WhatsApp',
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-sm text-white/60">
+                  <div key={item} className="flex items-center gap-3 text-sm text-white/75">
                     <span className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: 'rgba(250,204,21,0.1)' }}>
                       <CheckIcon />
                     </span>
@@ -796,7 +796,7 @@ export default function HomePage() {
                 Começar projeto
                 <ArrowIcon />
               </CTAPrimary>
-              <p className="text-center text-xs text-white/20 mt-3">Sem compromisso · Orçamento em 24h</p>
+              <p className="text-center text-xs text-white/45 mt-3">Sem compromisso · Orçamento em 24h</p>
             </div>
           </div>
         </section>
@@ -826,12 +826,12 @@ export default function HomePage() {
                 >
                   <summary className="flex items-center justify-between cursor-pointer list-none p-6">
                     <span className="font-medium text-white/80 text-sm">{faq.q}</span>
-                    <span className="text-white/20 text-sm transition-transform duration-300 group-open:rotate-180">
+                    <span className="text-white/45 text-sm transition-transform duration-300 group-open:rotate-180">
                       ▾
                     </span>
                   </summary>
                   <div className="px-6 pb-6">
-                    <p className="text-sm text-white/30 leading-relaxed">{faq.a}</p>
+                    <p className="text-sm text-white/55 leading-relaxed">{faq.a}</p>
                   </div>
                 </details>
               ))}
@@ -855,7 +855,7 @@ export default function HomePage() {
                 que realmente vende?
               </span>
             </h2>
-            <p className="text-white/40 text-lg mb-10">
+            <p className="text-white/65 text-lg mb-10">
               Comece agora. Orçamento gratuito em até 24h. Sem compromisso.
             </p>
 
@@ -864,7 +864,7 @@ export default function HomePage() {
               <ArrowIcon />
             </CTAPrimary>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-white/20">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-white/45">
               <span className="flex items-center gap-2">✓ Orçamento gratuito</span>
               <span className="w-px h-4 bg-white/10" />
               <span className="flex items-center gap-2">✓ 2× no cartão sem juros</span>
@@ -879,20 +879,20 @@ export default function HomePage() {
               <Image src="/logo.png" alt="TOP SITE" width={120} height={35} className="h-8 w-auto" />
             </a>
 
-            <p className="text-xs text-white/20 text-center">
+            <p className="text-xs text-white/45 text-center">
               © {new Date().getFullYear()} TOP SITE ·{' '}
-              <a href="/termos" className="hover:text-white/40 transition-colors">Termos</a>
+              <a href="/termos" className="hover:text-white/65 transition-colors">Termos</a>
               {' · '}
-              <a href="/privacidade" className="hover:text-white/40 transition-colors">Privacidade</a>
+              <a href="/privacidade" className="hover:text-white/65 transition-colors">Privacidade</a>
               {' · '}
-              <a href="/login" className="hover:text-white/40 transition-colors">Área do cliente</a>
+              <a href="/login" className="hover:text-white/65 transition-colors">Área do cliente</a>
             </p>
 
             <a
               href={wa(MSG_DOUBT)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-white/20 hover:text-white/40 transition-colors"
+              className="flex items-center gap-2 text-sm text-white/45 hover:text-white/65 transition-colors"
             >
               💬 Falar no WhatsApp
             </a>
