@@ -393,7 +393,7 @@ function ResultScreen({
             </p>
           </div>
           <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.25)' }}>
-            2× no boleto &nbsp;·&nbsp; 12× no cartão
+            parcelamento em até 2× no cartão, sem juros
           </p>
         </div>
       </div>

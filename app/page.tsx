@@ -535,13 +535,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Scroll indicator */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-              <span className="text-xs text-white/20">ROLE PARA EXPLORAR</span>
-              <div className="w-5 h-8 rounded-full border border-white/10 flex items-start justify-center p-1">
-                <div className="w-0.5 h-2 rounded-full bg-white/30" />
-              </div>
-            </div>
           </div>
         </section>
 
@@ -773,7 +766,7 @@ export default function HomePage() {
             >
               <p className="text-sm text-white/30 mb-2">A partir de</p>
               <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$497</p>
-              <p className="text-sm text-white/30 mt-2">parcelado em até 2× sem juros</p>
+              <p className="text-sm text-white/30 mt-2">em até 2× no cartão sem juros</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-10 text-left">
                 {[
@@ -868,9 +861,7 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-white/20">
               <span className="flex items-center gap-2">✓ Orçamento gratuito</span>
               <span className="w-px h-4 bg-white/10" />
-              <span className="flex items-center gap-2">✓ Parcele em 2×</span>
-              <span className="w-px h-4 bg-white/10" />
-              <span className="flex items-center gap-2">✓ Sem contrato</span>
+              <span className="flex items-center gap-2">✓ 2× no cartão sem juros</span>
             </div>
           </div>
         </section>
