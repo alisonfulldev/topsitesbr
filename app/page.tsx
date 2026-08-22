@@ -86,8 +86,29 @@ const jsonLd = {
 
 /* ─── Icons ──────────────────────────────────────────────────────────────── */
 
-function Icon({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <span className={`inline-flex items-center justify-center ${className}`}>{children}</span>
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
+  )
+}
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </svg>
+  )
+}
+
+function StarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" style={{ color: '#facc15' }}>
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  )
 }
 
 function CodeIcon() {
@@ -132,75 +153,6 @@ function CpuIcon() {
   )
 }
 
-function LayersIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <polygon points="12 2 2 7 12 12 22 7 12 2" />
-      <polyline points="2 17 12 22 22 17" />
-      <polyline points="2 12 12 17 22 12" />
-    </svg>
-  )
-}
-
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <path d="M20 6L9 17l-5-5" />
-    </svg>
-  )
-}
-
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <line x1="5" y1="12" x2="19" y2="12" />
-      <polyline points="12 5 19 12 12 19" />
-    </svg>
-  )
-}
-
-function StarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4" style={{ color: '#facc15' }}>
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  )
-}
-
-function GithubIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.15 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.62.24 2.85.12 3.15.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-    </svg>
-  )
-}
-
-function TwitterIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  )
-}
-
-function LinkedinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-    </svg>
-  )
-}
-
-function MenuIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-      <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
-  )
-}
-
 /* ─── Shared Components ──────────────────────────────────────────────────── */
 
 function CTAPrimary({
@@ -237,50 +189,6 @@ function CTAPrimary({
   )
 }
 
-function CTASecondary({
-  href,
-  children,
-  className = '',
-}: {
-  href: string
-  children: React.ReactNode
-  className?: string
-}) {
-  return (
-    <Link
-      href={href}
-      className={`group inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium transition-all duration-300 rounded-xl border hover:bg-white/10 ${className}`}
-      style={{
-        color: 'rgba(255,255,255,0.7)',
-        borderColor: 'rgba(255,255,255,0.15)',
-      }}
-    >
-      {children}
-      <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-    </Link>
-  )
-}
-
-function GlassCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div
-      className={`relative overflow-hidden rounded-2xl backdrop-blur-xl transition-all duration-300 hover:shadow-2xl ${className}`}
-      style={{
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid rgba(255,255,255,0.08)',
-      }}
-    >
-      <div
-        className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{
-          background: 'radial-gradient(circle at 50% 0%, rgba(250,204,21,0.03), transparent 60%)',
-        }}
-      />
-      {children}
-    </div>
-  )
-}
-
 function Badge({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
     <span
@@ -298,25 +206,11 @@ function Badge({ children, className = '' }: { children: React.ReactNode; classN
 
 /* ─── Static Data ────────────────────────────────────────────────────────── */
 
-const NAV_LINKS = [
-  { label: 'Tecnologia', href: '#tech' },
-  { label: 'Cases', href: '#portfolio' },
-  { label: 'Processo', href: '#process' },
-  { label: 'Depoimentos', href: '#testimonials' },
-  { label: 'Planos', href: '#pricing' },
-]
-
 const TECH_FEATURES = [
   { icon: CodeIcon, label: 'Código limpo e otimizado', desc: 'Desenvolvimento com boas práticas, semântica e performance' },
   { icon: ZapIcon, label: 'Performance extrema', desc: 'Carregamento em milissegundos com otimização avançada' },
   { icon: ShieldIcon, label: 'Segurança enterprise', desc: 'SSL, firewall, proteção contra ataques e backups' },
   { icon: CpuIcon, label: 'SEO técnico avançado', desc: 'Schema markup, meta tags, sitemaps e estrutura ideal' },
-]
-
-const METRICS = [
-  { value: '50+', label: 'Negócios atendidos' },
-  { value: '4.9', label: 'Avaliação média' },
-  { value: '100%', label: 'Satisfação garantida' },
 ]
 
 const PORTFOLIO = [
@@ -376,29 +270,15 @@ export default function HomePage() {
           }}
         >
           <nav className="max-w-7xl mx-auto px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
-            <a href="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
-                <span className="text-black font-bold text-sm">TS</span>
-              </div>
-              <span className="text-lg font-bold tracking-tight">TOP SITE</span>
+            <a href="/" className="flex items-center gap-3">
+              <Image src="/logo.png" alt="TOP SITE" width={140} height={45} className="h-9 w-auto" priority />
             </a>
 
-            <ul className="hidden lg:flex items-center gap-8 text-sm">
-              {NAV_LINKS.map((link) => (
-                <li key={link.href}>
-                  <a href={link.href} className="text-white/40 hover:text-white/80 transition-colors duration-200">
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <a
                 href="/login"
                 className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm text-white/40 hover:text-white/70 transition-colors duration-200 rounded-xl hover:bg-white/5"
               >
-                <span className="w-4 h-4 rounded-full border border-white/20 flex items-center justify-center text-[10px]">👤</span>
                 Área do cliente
               </a>
               <CTAPrimary href="/orcamento" className="!px-5 !py-2.5 !text-xs">
@@ -410,42 +290,21 @@ export default function HomePage() {
 
         {/* ─── HERO ────────────────────────────────────────────────────────── */}
         <section className="relative min-h-screen flex items-center overflow-hidden pt-20">
-          {/* Background complex */}
+          {/* Background */}
           <div className="absolute inset-0">
-            {/* Gradiente principal */}
             <div
               className="absolute inset-0"
               style={{
-                background: 'radial-gradient(ellipse 60% 50% at 30% 20%, rgba(250,204,21,0.08) 0%, transparent 50%), radial-gradient(ellipse 40% 40% at 70% 80%, rgba(180,83,9,0.05) 0%, transparent 50%), radial-gradient(ellipse 50% 60% at 50% 100%, rgba(0,0,0,0.4) 0%, transparent 50%)',
+                background: 'radial-gradient(ellipse 60% 50% at 30% 20%, rgba(250,204,21,0.06) 0%, transparent 50%), radial-gradient(ellipse 40% 40% at 70% 80%, rgba(180,83,9,0.04) 0%, transparent 50%)',
               }}
             />
-            {/* Grid pattern */}
             <div
               className="absolute inset-0"
               style={{
-                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px)',
+                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.015) 1px, transparent 1px)',
                 backgroundSize: '40px 40px',
               }}
             />
-          </div>
-
-          {/* Animated particles */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {[...Array(20)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full animate-float"
-                style={{
-                  width: Math.random() * 4 + 2,
-                  height: Math.random() * 4 + 2,
-                  background: `rgba(250,204,21,${Math.random() * 0.1 + 0.02})`,
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 5}s`,
-                  animationDuration: `${Math.random() * 10 + 10}s`,
-                }}
-              />
-            ))}
           </div>
 
           {/* Content */}
@@ -465,9 +324,9 @@ export default function HomePage() {
                   </span>
                 </h1>
 
-                <p className="text-lg text-white/50 leading-relaxed mb-8 max-w-lg">
+                <p className="text-lg text-white/60 leading-relaxed mb-8 max-w-lg">
                   Desenvolvemos sites de alta performance com foco em conversão e SEO avançado.
-                  Tecnologia de ponta, design estratégico e resultados reais.
+                  Tecnologia de ponta, design estratégico e resultados reais para seu negócio.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-4 mb-10">
@@ -479,10 +338,10 @@ export default function HomePage() {
                     href="#tech"
                     className="flex items-center gap-2 px-4 py-3 text-sm text-white/40 hover:text-white/70 transition-colors duration-200"
                   >
-                    <span className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center">
+                    <span className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-xs">
                       ▶
                     </span>
-                    Ver tecnologias
+                    Ver tecnologia
                   </a>
                 </div>
 
@@ -507,104 +366,148 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Right - Tech showcase */}
+              {/* Right - Laptop Mockup */}
               <div className="relative">
-                <div className="relative">
-                  {/* Glow */}
-                  <div
-                    className="absolute -inset-10 blur-3xl"
-                    style={{
-                      background: 'radial-gradient(ellipse, rgba(250,204,21,0.06) 0%, transparent 60%)',
-                    }}
-                  />
+                {/* Glow */}
+                <div
+                  className="absolute -inset-10 blur-3xl"
+                  style={{
+                    background: 'radial-gradient(ellipse, rgba(250,204,21,0.04) 0%, transparent 60%)',
+                  }}
+                />
 
-                  <GlassCard className="p-8 relative">
-                    <div className="flex items-center gap-2 mb-6">
+                {/* Laptop */}
+                <div className="relative">
+                  {/* Screen */}
+                  <div
+                    className="rounded-t-2xl overflow-hidden"
+                    style={{
+                      background: '#0d0d0d',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                      boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+                    }}
+                  >
+                    {/* Browser Chrome */}
+                    <div className="flex items-center gap-2 px-4 py-3" style={{ background: 'rgba(255,255,255,0.03)' }}>
                       <div className="flex gap-1.5">
                         <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
                         <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
                         <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
                       </div>
-                      <span className="text-xs text-white/20 ml-2">code.tsx</span>
-                    </div>
-
-                    <div className="space-y-3 font-mono text-sm">
-                      <div className="flex items-start gap-3">
-                        <span className="text-white/10">1</span>
-                        <div>
-                          <span className="text-purple-400">import</span>
-                          <span className="text-white/60"> {'{ '}</span>
-                          <span className="text-blue-400">Strategy</span>
-                          <span className="text-white/60">, </span>
-                          <span className="text-blue-400">SEO</span>
-                          <span className="text-white/60"> from '</span>
-                          <span className="text-green-400">@topsite/core</span>
-                          <span className="text-white/60">'</span>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <span className="text-white/10">2</span>
-                        <div>
-                          <span className="text-purple-400">const</span>
-                          <span className="text-white/60"> {'{ '}</span>
-                          <span className="text-yellow-400">site</span>
-                          <span className="text-white/60"> = </span>
-                          <span className="text-blue-400">new</span>
-                          <span className="text-white/60"> </span>
-                          <span className="text-pink-400">SiteStrategy</span>
-                          <span className="text-white/60">(</span>
-                          <span className="text-green-400">'meu-negocio'</span>
-                          <span className="text-white/60">)</span>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <span className="text-white/10">3</span>
-                        <div>
-                          <span className="text-white/60">  .</span>
-                          <span className="text-yellow-400">withConversion</span>
-                          <span className="text-white/60">(</span>
-                          <span className="text-pink-400">true</span>
-                          <span className="text-white/60">)</span>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <span className="text-white/10">4</span>
-                        <div>
-                          <span className="text-white/60">  .</span>
-                          <span className="text-yellow-400">withSEO</span>
-                          <span className="text-white/60">(</span>
-                          <span className="text-pink-400">'advanced'</span>
-                          <span className="text-white/60">)</span>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <span className="text-white/10">5</span>
-                        <div>
-                          <span className="text-white/60">  .</span>
-                          <span className="text-yellow-400">deploy</span>
-                          <span className="text-white/60">()</span>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-3 pt-3 border-t border-white/5">
-                        <span className="text-white/10">6</span>
-                        <div className="text-green-400 flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                          <span>Site vendendo em 30 dias</span>
+                      <div className="flex-1 mx-4">
+                        <div className="max-w-xs mx-auto px-3 py-1 rounded-full text-xs text-white/20" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                          meunegocio.com.br
                         </div>
                       </div>
                     </div>
-                  </GlassCard>
-                </div>
 
-                {/* Floating stats */}
-                <div className="absolute -bottom-6 -right-6 bg-black/80 backdrop-blur-xl rounded-xl px-6 py-4 border border-white/5">
-                  <div className="flex gap-8">
-                    {METRICS.map((m) => (
-                      <div key={m.label} className="text-center">
-                        <p className="text-2xl font-bold text-white">{m.value}</p>
-                        <p className="text-xs text-white/30">{m.label}</p>
+                    {/* Website Preview */}
+                    <div className="aspect-[16/10] relative overflow-hidden">
+                      <div className="absolute inset-0 p-6">
+                        {/* Site Content Simulator */}
+                        <div className="flex items-start gap-6 h-full">
+                          <div className="flex-1">
+                            {/* Header */}
+                            <div className="flex items-center justify-between mb-6">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }} />
+                                <span className="text-sm font-bold text-white">Meu Negócio</span>
+                              </div>
+                              <div className="flex gap-4">
+                                <span className="text-xs text-white/30">Home</span>
+                                <span className="text-xs text-white/30">Serviços</span>
+                                <span className="text-xs text-white/30">Contato</span>
+                              </div>
+                            </div>
+
+                            {/* Hero do site */}
+                            <div className="mb-6">
+                              <div className="w-3/4 h-8 rounded-lg mb-3" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                              <div className="w-1/2 h-4 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }} />
+                            </div>
+
+                            {/* Cards */}
+                            <div className="grid grid-cols-2 gap-4">
+                              {[1, 2].map((i) => (
+                                <div key={i} className="p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                                  <div className="w-8 h-8 rounded-lg mb-2" style={{ background: 'rgba(250,204,21,0.1)' }} />
+                                  <div className="w-3/4 h-3 rounded mb-1" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                                  <div className="w-1/2 h-2 rounded" style={{ background: 'rgba(255,255,255,0.03)' }} />
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* CTA */}
+                            <div className="mt-4 flex gap-3">
+                              <div className="px-6 py-2 rounded-lg w-32 h-8" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }} />
+                              <div className="px-6 py-2 rounded-lg w-24 h-8" style={{ background: 'rgba(255,255,255,0.04)' }} />
+                            </div>
+                          </div>
+
+                          {/* Sidebar - Google Search Result */}
+                          <div
+                            className="w-48 h-full rounded-xl p-4 flex-shrink-0"
+                            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.03)' }}
+                          >
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="text-xs text-white/30">🔍</span>
+                              <span className="text-xs text-white/20">resultados</span>
+                            </div>
+                            <div className="space-y-3">
+                              <div>
+                                <div className="text-xs text-green-400">meunegocio.com.br</div>
+                                <div className="text-xs font-medium text-white/80">Meu Negócio - Oficial</div>
+                                <div className="text-xs text-white/30">O melhor serviço da região...</div>
+                              </div>
+                              <div>
+                                <div className="text-xs text-green-400">meunegocio.com.br</div>
+                                <div className="text-xs font-medium text-white/80">Serviços Premium</div>
+                                <div className="text-xs text-white/30">Atendimento personalizado...</div>
+                              </div>
+                              <div>
+                                <div className="text-xs text-green-400">meunegocio.com.br</div>
+                                <div className="text-xs font-medium text-white/80">Contato</div>
+                                <div className="text-xs text-white/30">Fale conosco agora...</div>
+                              </div>
+                            </div>
+                            <div className="mt-3 pt-3 border-t border-white/5">
+                              <span className="text-[10px] text-white/10">#1 no Google · SEO</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    ))}
+                    </div>
+                  </div>
+
+                  {/* Laptop Base */}
+                  <div
+                    className="mx-auto h-2 rounded-b-2xl"
+                    style={{
+                      width: '95%',
+                      background: 'linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))',
+                      border: '1px solid rgba(255,255,255,0.04)',
+                      borderTop: 'none',
+                    }}
+                  />
+                  <div
+                    className="mx-auto h-1"
+                    style={{
+                      width: '60%',
+                      background: 'rgba(255,255,255,0.02)',
+                      borderBottom: '1px solid rgba(255,255,255,0.02)',
+                    }}
+                  />
+
+                  {/* Badge overlay */}
+                  <div
+                    className="absolute -top-2 -right-2 px-3 py-1 rounded-full text-[10px] font-bold"
+                    style={{
+                      background: 'linear-gradient(135deg, #facc15, #f59e0b)',
+                      color: '#000',
+                      boxShadow: '0 4px 16px rgba(250,204,21,0.3)',
+                    }}
+                  >
+                    #1 Google
                   </div>
                 </div>
               </div>
@@ -621,10 +524,8 @@ export default function HomePage() {
         </section>
 
         {/* ─── TECH ────────────────────────────────────────────────────────── */}
-        <section id="tech" className="relative py-24">
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 100%)' }} />
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-8">
+        <section id="tech" className="relative py-24" style={{ background: '#0d0d0d' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <div className="text-center mb-16">
               <Badge className="mb-4">Tecnologia</Badge>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
@@ -638,11 +539,15 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {TECH_FEATURES.map((feature, i) => (
-                <GlassCard
+                <div
                   key={i}
-                  className="group p-8 text-center hover:-translate-y-2 transition-all duration-500"
+                  className="group p-8 text-center rounded-2xl transition-all duration-500 hover:-translate-y-2"
+                  style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: '1px solid rgba(255,255,255,0.04)',
+                  }}
                 >
                   <div
                     className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-all duration-300 group-hover:scale-110"
@@ -655,7 +560,7 @@ export default function HomePage() {
                   </div>
                   <h3 className="font-semibold text-white mb-2">{feature.label}</h3>
                   <p className="text-sm text-white/30 leading-relaxed">{feature.desc}</p>
-                </GlassCard>
+                </div>
               ))}
             </div>
 
@@ -665,8 +570,8 @@ export default function HomePage() {
                   key={tech}
                   className="px-4 py-2 text-xs font-medium rounded-full"
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.04)',
                     color: 'rgba(255,255,255,0.3)',
                   }}
                 >
@@ -678,7 +583,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── PORTFOLIO ────────────────────────────────────────────────────── */}
-        <section id="portfolio" className="relative py-24" style={{ background: '#0d0d0d' }}>
+        <section id="portfolio" className="relative py-24" style={{ background: '#080808' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-8">
             <div className="text-center mb-16">
               <Badge className="mb-4">Cases</Badge>
@@ -720,51 +625,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ─── PROCESS ─────────────────────────────────────────────────────── */}
-        <section id="process" className="relative py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-8">
-            <div className="text-center mb-16">
-              <Badge className="mb-4">Processo</Badge>
-              <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                Do zero ao site que
-                <span className="block text-transparent bg-clip-text" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
-                  vende em 4 passos
-                </span>
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-              {[
-                { num: '01', title: 'Estratégia', desc: 'Analisamos seu mercado, concorrentes e público-alvo.' },
-                { num: '02', title: 'Design', desc: 'Criamos uma interface que converte visitantes em clientes.' },
-                { num: '03', title: 'Desenvolvimento', desc: 'Codificamos com as melhores práticas e performance.' },
-                { num: '04', title: 'Lançamento', desc: 'Colocamos no ar com SEO, monitoramento e suporte.' },
-              ].map((step, i) => (
-                <div key={i} className="relative">
-                  <GlassCard className="p-8 text-center h-full">
-                    <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold"
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(250,204,21,0.1), rgba(245,158,11,0.05))',
-                        color: '#facc15',
-                      }}
-                    >
-                      {step.num}
-                    </div>
-                    <h3 className="font-semibold text-white mb-2">{step.title}</h3>
-                    <p className="text-sm text-white/30 leading-relaxed">{step.desc}</p>
-                  </GlassCard>
-                  {i < 3 && (
-                    <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-white/10 text-2xl">
-                      →
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* ─── TESTIMONIALS ────────────────────────────────────────────────── */}
         <section id="testimonials" className="relative py-24" style={{ background: '#0d0d0d' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -780,7 +640,14 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {TESTIMONIALS.map((t, i) => (
-                <GlassCard key={i} className="p-8 flex flex-col h-full">
+                <div
+                  key={i}
+                  className="p-8 rounded-2xl flex flex-col h-full"
+                  style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: '1px solid rgba(255,255,255,0.04)',
+                  }}
+                >
                   <div className="flex gap-0.5 mb-4">
                     {[...Array(5)].map((_, j) => (
                       <StarIcon key={j} />
@@ -799,14 +666,14 @@ export default function HomePage() {
                       <p className="text-xs text-white/30">{t.role}</p>
                     </div>
                   </div>
-                </GlassCard>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
         {/* ─── PRICING ──────────────────────────────────────────────────────── */}
-        <section id="pricing" className="relative py-24">
+        <section id="pricing" className="relative py-24" style={{ background: '#080808' }}>
           <div className="max-w-5xl mx-auto px-4 sm:px-8">
             <div className="text-center mb-16">
               <Badge className="mb-4">Investimento</Badge>
@@ -818,23 +685,18 @@ export default function HomePage() {
               </h2>
             </div>
 
-            <GlassCard className="p-12 max-w-2xl mx-auto relative">
-              <div
-                className="absolute top-0 left-0 right-0 h-1"
-                style={{
-                  background: 'linear-gradient(90deg, #facc15, #f59e0b, #facc15)',
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer 3s ease-in-out infinite',
-                }}
-              />
+            <div
+              className="max-w-2xl mx-auto p-12 rounded-2xl text-center"
+              style={{
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.04)',
+              }}
+            >
+              <p className="text-sm text-white/30 mb-2">A partir de</p>
+              <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$497</p>
+              <p className="text-sm text-white/30 mt-2">parcelado em até 2× sem juros</p>
 
-              <div className="text-center mb-8">
-                <p className="text-sm text-white/30 mb-2">A partir de</p>
-                <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$497</p>
-                <p className="text-sm text-white/30 mt-2">parcelado em até 2× sem juros</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-10 text-left">
                 {[
                   'Site personalizado e exclusivo',
                   'SEO técnico avançado',
@@ -852,12 +714,12 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <CTAPrimary href="/orcamento" className="w-full justify-center !py-4 !text-base">
+              <CTAPrimary href="/orcamento" className="!px-12 !py-4 !text-base">
                 Começar projeto
                 <ArrowIcon />
               </CTAPrimary>
               <p className="text-center text-xs text-white/20 mt-3">Sem compromisso · Orçamento em 24h</p>
-            </GlassCard>
+            </div>
           </div>
         </section>
 
@@ -900,11 +762,11 @@ export default function HomePage() {
         </section>
 
         {/* ─── FINAL CTA ────────────────────────────────────────────────────── */}
-        <section className="relative py-32 overflow-hidden">
+        <section className="relative py-32 overflow-hidden" style={{ background: '#080808' }}>
           <div
             className="absolute inset-0"
             style={{
-              background: 'radial-gradient(ellipse 60% 40% at 50% 50%, rgba(250,204,21,0.05) 0%, transparent 60%)',
+              background: 'radial-gradient(ellipse 60% 40% at 50% 50%, rgba(250,204,21,0.04) 0%, transparent 60%)',
             }}
           />
 
@@ -937,12 +799,9 @@ export default function HomePage() {
         {/* ─── FOOTER ───────────────────────────────────────────────────────── */}
         <footer className="relative py-12" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
-                <span className="text-black font-bold text-sm">TS</span>
-              </div>
-              <span className="text-sm font-bold">TOP SITE</span>
-            </div>
+            <a href="/">
+              <Image src="/logo.png" alt="TOP SITE" width={120} height={35} className="h-8 w-auto" />
+            </a>
 
             <p className="text-xs text-white/20 text-center">
               © {new Date().getFullYear()} TOP SITE ·{' '}
@@ -959,8 +818,7 @@ export default function HomePage() {
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm text-white/20 hover:text-white/40 transition-colors"
             >
-              <span className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 text-xs">💬</span>
-              Falar no WhatsApp
+              💬 Falar no WhatsApp
             </a>
           </div>
         </footer>
@@ -969,17 +827,6 @@ export default function HomePage() {
 
       <style dangerouslySetInnerHTML={{
         __html: `
-          @keyframes shimmer {
-            0%, 100% { background-position: 200% 0; }
-            50% { background-position: -200% 0; }
-          }
-          @keyframes float {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            50% { transform: translateY(-20px) translateX(10px); }
-          }
-          .animate-float {
-            animation: float linear infinite;
-          }
           ::selection {
             background: #facc15;
             color: #0a0a0a;
