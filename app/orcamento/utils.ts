@@ -6,6 +6,7 @@ export function buildWAMessage(q: {
   hasAdmin: boolean
   hasLogo: boolean
   hasDomain: boolean
+  hasHosting?: boolean
   totalValue: number
 }): string {
   const typeLabel =
@@ -16,7 +17,7 @@ export function buildWAMessage(q: {
       : `Site Institucional (${q.pageCount ?? 1} página${(q.pageCount ?? 1) !== 1 ? 's' : ''})`
 
   const addons: string[] = []
-  if (q.hasAdmin) addons.push('Painel admin / backend')
+  if (q.hasAdmin && q.projectType !== 'loja_virtual') addons.push('Painel admin / backend')
   if (!q.hasLogo) addons.push('Logotipo')
   if (!q.hasDomain) addons.push('Domínio')
   const addonsLine = addons.length > 0 ? addons.join(', ') : 'Nenhum'
@@ -26,13 +27,18 @@ export function buildWAMessage(q: {
     currency: 'BRL',
   })
 
+  const monthly = q.hasHosting
+    ? `\nManutenção + Hospedagem: R$${(q.hasAdmin || q.projectType === 'loja_virtual') ? 49 : 29}/mês`
+    : ''
+
   return [
     'Olá! Aprovei meu orçamento na TopSite:',
     '',
     `Projeto: ${typeLabel}`,
     `Adicionais: ${addonsLine}`,
-    `Valor total: ${total} — pagamento em 2x`,
+    `Valor total: ${total} — pagamento em 2× no cartão sem juros`,
+    monthly,
     '',
     'Quero seguir com meu projeto!',
-  ].join('\n')
+  ].filter(Boolean).join('\n')
 }

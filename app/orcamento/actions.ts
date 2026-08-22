@@ -14,6 +14,7 @@ export interface QuoteData {
   hasAdmin: boolean
   hasLogo: boolean
   hasDomain: boolean
+  hasHosting: boolean
   totalValue: number
 }
 
@@ -43,6 +44,7 @@ export async function saveQuoteLeadAction(
         hasAdmin: input.hasAdmin,
         hasLogo: input.hasLogo,
         hasDomain: input.hasDomain,
+        hasHosting: input.hasHosting,
         totalValue: input.totalValue,
       },
     })
@@ -83,10 +85,21 @@ function projectTypeLabel(t: ProjectType) {
 }
 
 function buildAdicionaisList(input: SaveQuoteInput): string {
+  const base =
+    input.projectType === 'landing_page' ? 397
+    : input.projectType === 'loja_virtual' ? 1500
+    : (input.pageCount ?? 4) <= 4 ? 697 : 697 + ((input.pageCount ?? 4) - 4) * 100
   const items: string[] = []
-  if (input.hasAdmin) items.push(`Painel admin / backend — <strong>+R$1.000</strong>`)
+  if (input.hasAdmin && input.projectType !== 'loja_virtual')
+    items.push(`Painel admin / backend — <strong>+${fmtValue(base)}</strong>`)
+  if (input.projectType === 'loja_virtual')
+    items.push(`Painel admin / backend — <strong>incluso</strong>`)
   if (!input.hasLogo) items.push(`Criação de logotipo — <strong>+R$220</strong>`)
   if (!input.hasDomain) items.push(`Domínio + configuração — <strong>+R$140</strong>`)
+  if (input.hasHosting) {
+    const monthly = (input.hasAdmin || input.projectType === 'loja_virtual') ? 49 : 29
+    items.push(`Manutenção + Hospedagem mensal — <strong>R$${monthly}/mês</strong>`)
+  }
   if (items.length === 0) return '<li>Nenhum adicional</li>'
   return items.map((i) => `<li>${i}</li>`).join('')
 }

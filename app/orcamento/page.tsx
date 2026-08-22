@@ -42,6 +42,7 @@ interface FormState {
   hasAdmin: boolean
   hasLogo: boolean
   hasDomain: boolean
+  hasHosting: boolean
   name: string
   email: string
   whatsapp: string
@@ -54,15 +55,20 @@ const INIT: FormState = {
   hasAdmin: false,
   hasLogo: true,
   hasDomain: true,
+  hasHosting: false,
   name: '',
   email: '',
   whatsapp: '',
 }
 
+function monthlyPrice(hasAdmin: boolean, type: ProjectType): number {
+  return hasAdmin || type === 'loja_virtual' ? 49 : 29
+}
+
 function getSteps(type: ProjectType | null) {
-  if (type === 'institucional') return [0, 1, 2, 3, 4, 5, 6, 7]
-  if (type === 'loja_virtual') return [0, 2, 4, 5, 6, 7] // admin sempre incluso
-  return [0, 2, 3, 4, 5, 6, 7]
+  if (type === 'institucional') return [0, 1, 2, 3, 4, 5, 8, 6, 7]
+  if (type === 'loja_virtual') return [0, 2, 4, 5, 8, 6, 7]
+  return [0, 2, 3, 4, 5, 8, 6, 7]
 }
 
 /* ─── Icons ──────────────────────────────────────────────────────────────── */
@@ -304,7 +310,7 @@ function ResultScreen({
   name,
   segment,
 }: {
-  initial: { projectType: ProjectType; pageCount: number; hasAdmin: boolean; hasLogo: boolean; hasDomain: boolean }
+  initial: { projectType: ProjectType; pageCount: number; hasAdmin: boolean; hasLogo: boolean; hasDomain: boolean; hasHosting: boolean }
   name: string
   segment: string
 }) {
@@ -313,6 +319,7 @@ function ResultScreen({
   const [hasAdmin, setHasAdmin] = useState(initial.hasAdmin)
   const [hasLogo, setHasLogo] = useState(initial.hasLogo)
   const [hasDomain, setHasDomain] = useState(initial.hasDomain)
+  const hasHosting = initial.hasHosting
 
   const total = calcTotal(type, pages, hasAdmin, hasLogo, hasDomain)
   const half = Math.ceil(total / 2)
@@ -397,6 +404,22 @@ function ResultScreen({
           </p>
         </div>
       </div>
+
+      {/* Hospedagem mensal */}
+      {hasHosting && (
+        <div
+          className="flex items-center justify-between px-5 py-4 rounded-xl"
+          style={{ background: 'rgba(250,204,21,0.06)', border: '1px solid rgba(250,204,21,0.2)' }}
+        >
+          <div>
+            <p className="text-[13px] font-semibold text-white">Manutenção + Hospedagem</p>
+            <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>SSL · monitoramento · suporte · cancele quando quiser</p>
+          </div>
+          <span className="text-[15px] font-bold tabular-nums" style={{ color: '#facc15' }}>
+            R${monthlyPrice(hasAdmin, type)}/mês
+          </span>
+        </div>
+      )}
 
       {/* Tipo */}
       <div
@@ -589,6 +612,7 @@ export default function OrcamentoPage() {
       hasAdmin: form.hasAdmin,
       hasLogo: form.hasLogo,
       hasDomain: form.hasDomain,
+      hasHosting: form.hasHosting,
       totalValue: total,
     })
 
@@ -760,6 +784,30 @@ export default function OrcamentoPage() {
       </div>
     )
 
+    if (currentStep === 8) {
+      const monthly = monthlyPrice(form.hasAdmin, form.projectType!)
+      return (
+        <div className="space-y-3 sm:space-y-5">
+          <StepHeader
+            label="Manutenção + Hospedagem"
+            title="Quer manter o site no ar com suporte mensal?"
+            sub="Inclui hospedagem, SSL, monitoramento e suporte técnico contínuo."
+          />
+          <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            Valor: <span className="font-semibold" style={{ color: '#facc15' }}>R${monthly}/mês</span>
+            <span className="ml-2 text-[12px]" style={{ color: 'rgba(255,255,255,0.2)' }}>· cancele quando quiser</span>
+          </p>
+          <YesNo
+            value={form.hasHosting}
+            onChange={(v) => set('hasHosting', v)}
+            yesLabel="Sim, quero"
+            noLabel="Não agora"
+          />
+          <PrimaryBtn onClick={next} />
+        </div>
+      )
+    }
+
     if (currentStep === 6) return (
       <div className="space-y-3 sm:space-y-5">
         <StepHeader
@@ -823,6 +871,7 @@ export default function OrcamentoPage() {
             hasAdmin: form.hasAdmin,
             hasLogo: form.hasLogo,
             hasDomain: form.hasDomain,
+            hasHosting: form.hasHosting,
           }}
           name={form.name}
           segment={form.segment}

@@ -670,6 +670,7 @@ model QuoteLead {
   hasAdmin    Boolean  @default(false) @map("has_admin")
   hasLogo     Boolean  @default(true) @map("has_logo")
   hasDomain   Boolean  @default(true) @map("has_domain")
+  hasHosting  Boolean  @default(false) @map("has_hosting")
   totalValue  Decimal  @db.Decimal(10, 2) @map("total_value")
   phone       String?
   createdAt   DateTime @default(now()) @map("created_at")
