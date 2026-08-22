@@ -306,7 +306,7 @@ export default function HomePage() {
             <div className="flex items-center gap-4">
               <a
                 href="/login"
-                className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm text-white/40 hover:text-white/70 transition-colors duration-200 rounded-xl hover:bg-white/5"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm text-white/40 hover:text-white/70 transition-colors duration-200 rounded-xl hover:bg-white/5"
               >
                 Área do cliente
               </a>
@@ -340,11 +340,13 @@ export default function HomePage() {
           <div className="relative max-w-7xl mx-auto px-4 sm:px-8 w-full py-20">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               {/* Left */}
-              <div>
-                <Badge className="mb-6">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  +50 negócios confiam
-                </Badge>
+              <div className="text-center lg:text-left">
+                <div className="flex justify-center lg:justify-start mb-6">
+                  <Badge>
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                    +50 negócios confiam
+                  </Badge>
+                </div>
 
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6">
                   Sites que
@@ -353,12 +355,12 @@ export default function HomePage() {
                   </span>
                 </h1>
 
-                <p className="text-lg text-white/60 leading-relaxed mb-8 max-w-lg">
+                <p className="text-lg text-white/60 leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
                   Desenvolvemos sites de alta performance com foco em conversão e SEO avançado.
                   Tecnologia de ponta, design estratégico e resultados reais para seu negócio.
                 </p>
 
-                <div className="flex flex-wrap items-center gap-4 mb-10">
+                <div className="flex flex-wrap justify-center lg:justify-start items-center gap-4 mb-10">
                   <CTAPrimary href="/orcamento" className="!px-8 !py-4 !text-base">
                     Começar agora
                     <ArrowIcon />
@@ -374,7 +376,7 @@ export default function HomePage() {
                   </a>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-6">
+                <div className="flex flex-wrap justify-center lg:justify-start items-center gap-6">
                   <div className="flex -space-x-2">
                     {['#2563eb', '#7c3aed', '#d97706', '#16a34a'].map((c, i) => (
                       <div
@@ -385,7 +387,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <div>
-                    <div className="flex gap-0.5">
+                    <div className="flex justify-center lg:justify-start gap-0.5">
                       {[...Array(5)].map((_, i) => (
                         <StarIcon key={i} />
                       ))}
