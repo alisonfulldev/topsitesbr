@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'TOP SITE — Sites que Vendem',
-    description: 'Sites estratégicos focados em conversão e SEO. A partir de R$497.',
+    description: 'Sites estratégicos focados em conversão e SEO. A partir de R$397.',
   },
 }
 
@@ -76,7 +76,7 @@ const jsonLd = {
       areaServed: { '@type': 'Country', name: 'Brazil' },
       offers: {
         '@type': 'Offer',
-        price: '497',
+        price: '397',
         priceCurrency: 'BRL',
         availability: 'https://schema.org/InStock',
       },
@@ -769,7 +769,7 @@ export default function HomePage() {
               }}
             >
               <p className="text-sm text-white/30 mb-2">A partir de</p>
-              <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$497</p>
+              <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$397</p>
               <p className="text-sm text-white/30 mt-2">em até 2× no cartão sem juros</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-10 text-left">
