@@ -102,12 +102,12 @@ function Progress({ current, total }: { current: number; total: number }) {
           <div
             key={i}
             className="flex-1 h-[2px] rounded-full transition-all duration-500"
-            style={{ background: i <= current ? '#facc15' : 'rgba(0,0,0,0.1)' }}
+            style={{ background: i <= current ? '#facc15' : 'rgba(255,255,255,0.08)' }}
           />
         ))}
       </div>
-      <p className="text-[11px] tabular-nums" style={{ color: '#444' }}>
-        {current + 1} <span style={{ color: '#2a2a2a' }}>/</span> {total}
+      <p className="text-[11px] tabular-nums" style={{ color: 'rgba(255,255,255,0.35)' }}>
+        {current + 1} <span style={{ color: 'rgba(255,255,255,0.2)' }}>/</span> {total}
       </p>
     </div>
   )
@@ -118,20 +118,20 @@ function Progress({ current, total }: { current: number; total: number }) {
 function StepHeader({ label, title, sub }: { label: string; title: string; sub: string }) {
   return (
     <div className="mb-3 sm:mb-7">
-      <p className="text-[10px] font-medium tracking-[0.14em] uppercase mb-1.5 sm:mb-3" style={{ color: '#d97706' }}>
+      <p className="text-[10px] font-medium tracking-[0.14em] uppercase mb-1.5 sm:mb-3" style={{ color: '#facc15' }}>
         {label}
       </p>
-      <h2 className="text-[18px] sm:text-[22px] font-bold leading-[1.25] tracking-tight text-[#0d0d0d] mb-1 sm:mb-2">
+      <h2 className="text-[18px] sm:text-[22px] font-bold leading-[1.25] tracking-tight text-white mb-1 sm:mb-2">
         {title}
       </h2>
-      <p className="text-[13px] sm:text-[14px] leading-relaxed" style={{ color: '#666' }}>
+      <p className="text-[13px] sm:text-[14px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
         {sub}
       </p>
     </div>
   )
 }
 
-/* ─── Card option (step 1) ────────────────────────────────────────────────── */
+/* ─── Card option (step 0) ────────────────────────────────────────────────── */
 
 function CardOption({
   selected,
@@ -150,10 +150,10 @@ function CardOption({
     <button
       type="button"
       onClick={onClick}
-      className="w-full text-left px-5 py-2.5 sm:py-4 rounded-xl border transition-all duration-200 relative group"
+      className="w-full text-left px-5 py-2.5 sm:py-4 rounded-xl border transition-all duration-200 relative"
       style={{
-        background: selected ? '#f0f0f0' : '#fafafa',
-        borderColor: selected ? 'rgba(250,204,21,0.4)' : 'rgba(0,0,0,0.09)',
+        background: selected ? 'rgba(250,204,21,0.07)' : 'rgba(255,255,255,0.03)',
+        borderColor: selected ? 'rgba(250,204,21,0.45)' : 'rgba(255,255,255,0.07)',
         boxShadow: selected ? '0 0 0 0.5px rgba(250,204,21,0.2)' : undefined,
       }}
     >
@@ -166,15 +166,15 @@ function CardOption({
         </span>
       )}
       <div className="flex items-center justify-between gap-3 mb-1.5 pr-5">
-        <p className="text-[15px] font-semibold text-[#0d0d0d]">{title}</p>
+        <p className="text-[15px] font-semibold text-white">{title}</p>
         <span
           className="text-[13px] font-bold tabular-nums shrink-0"
-          style={{ color: selected ? '#b45309' : '#999' }}
+          style={{ color: selected ? '#facc15' : 'rgba(255,255,255,0.25)' }}
         >
           {price}
         </span>
       </div>
-      <p className="text-[13px] leading-relaxed" style={{ color: '#666' }}>
+      <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
         {desc}
       </p>
     </button>
@@ -203,9 +203,9 @@ function YesNo({
           onClick={() => onChange(val)}
           className="py-3 sm:py-4 rounded-xl border text-[15px] font-medium transition-all duration-200"
           style={{
-            background: value === val ? '#f0f0f0' : '#fafafa',
-            borderColor: value === val ? 'rgba(250,204,21,0.4)' : 'rgba(0,0,0,0.09)',
-            color: value === val ? '#0d0d0d' : '#888',
+            background: value === val ? 'rgba(250,204,21,0.07)' : 'rgba(255,255,255,0.03)',
+            borderColor: value === val ? 'rgba(250,204,21,0.45)' : 'rgba(255,255,255,0.07)',
+            color: value === val ? '#ffffff' : 'rgba(255,255,255,0.35)',
             boxShadow: value === val ? '0 0 0 0.5px rgba(250,204,21,0.2)' : undefined,
           }}
         >
@@ -235,14 +235,11 @@ function PrimaryBtn({
       onClick={onClick}
       disabled={disabled || loading}
       className="w-full py-3 sm:py-3.5 rounded-xl text-[15px] font-semibold transition-all duration-200 disabled:opacity-20 disabled:cursor-not-allowed active:scale-[0.99]"
-      style={{
-        background: '#facc15',
-        color: '#000',
-      }}
+      style={{ background: '#facc15', color: '#000' }}
       onMouseEnter={(e) => {
         if (!disabled && !loading) {
           e.currentTarget.style.background = '#fde047'
-          e.currentTarget.style.boxShadow = '0 0 36px rgba(250,204,21,0.2)'
+          e.currentTarget.style.boxShadow = '0 0 36px rgba(250,204,21,0.25)'
         }
       }}
       onMouseLeave={(e) => {
@@ -267,25 +264,6 @@ function PrimaryBtn({
   )
 }
 
-/* ─── Info note ──────────────────────────────────────────────────────────── */
-
-function Note({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      className="flex gap-3 items-start px-4 py-3 sm:py-4 rounded-xl"
-      style={{ background: '#f5f5f5', border: '1px solid rgba(0,0,0,0.07)' }}
-    >
-      <div
-        className="w-px self-stretch rounded-full shrink-0 mt-0.5"
-        style={{ background: '#d97706' }}
-      />
-      <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>
-        {children}
-      </p>
-    </div>
-  )
-}
-
 /* ─── Toggle switch ──────────────────────────────────────────────────────── */
 
 function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
@@ -298,14 +276,14 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
       className="relative shrink-0 w-9 h-[20px] rounded-full transition-all duration-300"
       style={{
         background: value ? '#facc15' : 'transparent',
-        border: value ? '1px solid #facc15' : '1px solid rgba(0,0,0,0.2)',
+        border: value ? '1px solid #facc15' : '1px solid rgba(255,255,255,0.15)',
       }}
     >
       <span
         className="absolute top-[2px] w-3.5 h-3.5 rounded-full transition-all duration-300"
         style={{
           left: value ? '18px' : '2px',
-          background: value ? '#000' : 'rgba(0,0,0,0.2)',
+          background: value ? '#000' : 'rgba(255,255,255,0.25)',
         }}
       />
     </button>
@@ -384,39 +362,33 @@ function ResultScreen({
       {/* Total card */}
       <div
         className="relative py-10 text-center rounded-2xl overflow-hidden"
-        style={{ background: '#f7f7f7', border: '1px solid rgba(0,0,0,0.07)' }}
+        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
       >
-        {/* Glow */}
         <div
           className="absolute inset-0 pointer-events-none"
           aria-hidden
-          style={{
-            background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(250,204,21,0.08) 0%, transparent 70%)',
-          }}
+          style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(250,204,21,0.06) 0%, transparent 70%)' }}
         />
-        <p
-          className="relative text-[10px] font-medium tracking-[0.16em] uppercase mb-3"
-          style={{ color: '#888' }}
-        >
+        <p className="relative text-[10px] font-medium tracking-[0.16em] uppercase mb-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
           Investimento total
         </p>
-        <p className="relative text-[58px] sm:text-[68px] font-black text-[#0d0d0d] leading-none tabular-nums">
+        <p className="relative text-[58px] sm:text-[68px] font-black text-white leading-none tabular-nums">
           {fmtBRL(total)}
         </p>
         <div className="relative mt-4 flex flex-col items-center gap-2">
           <div
             className="inline-flex items-center gap-1 rounded-full px-4 py-1.5"
-            style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)' }}
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
           >
-            <p className="text-[12px]" style={{ color: '#666' }}>
+            <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.5)' }}>
               2×{' '}
-              <span className="text-[#0d0d0d] font-medium">{fmtBRL(half)}</span>
-              <span style={{ color: '#aaa' }} className="mx-1">·</span>
-              <span className="text-[#0d0d0d] font-medium">{fmtBRL(total - half)}</span>
-              <span style={{ color: '#888' }}> no mês seguinte</span>
+              <span className="text-white font-medium">{fmtBRL(half)}</span>
+              <span style={{ color: 'rgba(255,255,255,0.2)' }} className="mx-1">·</span>
+              <span className="text-white font-medium">{fmtBRL(total - half)}</span>
+              <span style={{ color: 'rgba(255,255,255,0.4)' }}> no mês seguinte</span>
             </p>
           </div>
-          <p className="text-[12px]" style={{ color: '#aaa' }}>
+          <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.25)' }}>
             2× no boleto &nbsp;·&nbsp; 12× no cartão
           </p>
         </div>
@@ -425,14 +397,14 @@ function ResultScreen({
       {/* Tipo */}
       <div
         className="rounded-xl p-4"
-        style={{ background: '#f7f7f7', border: '1px solid rgba(0,0,0,0.07)' }}
+        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
       >
-        <p className="text-[10px] font-medium tracking-[0.12em] uppercase mb-3" style={{ color: '#888' }}>
+        <p className="text-[10px] font-medium tracking-[0.12em] uppercase mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
           Tipo de projeto
         </p>
         <div
           className="flex gap-0.5 rounded-lg p-1"
-          style={{ background: '#ebebeb', border: '1px solid rgba(0,0,0,0.07)' }}
+          style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           {(['landing_page', 'institucional', 'loja_virtual'] as ProjectType[]).map((t) => (
             <button
@@ -441,9 +413,9 @@ function ResultScreen({
               onClick={() => { setType(t); if (t !== 'institucional') setPages(1); else setPages((p) => Math.max(4, p)) }}
               className="flex-1 py-2 text-[11px] font-medium rounded-md transition-all duration-200"
               style={{
-                background: type === t ? '#ffffff' : 'transparent',
-                color: type === t ? '#0d0d0d' : '#888',
-                border: type === t ? '1px solid rgba(0,0,0,0.09)' : '1px solid transparent',
+                background: type === t ? 'rgba(255,255,255,0.1)' : 'transparent',
+                color: type === t ? '#ffffff' : 'rgba(255,255,255,0.35)',
+                border: type === t ? '1px solid rgba(255,255,255,0.1)' : '1px solid transparent',
               }}
             >
               {typeLabels[t]}
@@ -452,35 +424,32 @@ function ResultScreen({
         </div>
 
         {type === 'institucional' && (
-          <div
-            className="mt-4 pt-4"
-            style={{ borderTop: '1px solid rgba(0,0,0,0.07)' }}
-          >
-            <p className="text-[11px] mb-3" style={{ color: '#666' }}>
+          <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+            <p className="text-[11px] mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
               Número de páginas
-              <span style={{ color: '#aaa' }} className="ml-1.5">· 4 incluídas, a partir da 5ª: +R$100 cada</span>
+              <span style={{ color: 'rgba(255,255,255,0.2)' }} className="ml-1.5">· 4 incluídas, a partir da 5ª: +R$100 cada</span>
             </p>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setPages((p) => Math.max(4, p - 1))}
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-lg leading-none transition-all duration-200"
-                style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#666' }}
+                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}
                 aria-label="Reduzir"
               >
                 −
               </button>
-              <span className="text-2xl font-bold text-[#0d0d0d] w-7 text-center tabular-nums">{pages}</span>
+              <span className="text-2xl font-bold text-white w-7 text-center tabular-nums">{pages}</span>
               <button
                 type="button"
                 onClick={() => setPages((p) => p + 1)}
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-lg leading-none transition-all duration-200"
-                style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#666' }}
+                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}
                 aria-label="Adicionar"
               >
                 +
               </button>
-              <span className="text-[13px] tabular-nums ml-1" style={{ color: '#666' }}>
+              <span className="text-[13px] tabular-nums ml-1" style={{ color: '#facc15' }}>
                 = {fmtBRL(basePrice())}
               </span>
             </div>
@@ -491,34 +460,28 @@ function ResultScreen({
       {/* Adicionais */}
       <div
         className="rounded-xl px-4"
-        style={{ background: '#f7f7f7', border: '1px solid rgba(0,0,0,0.07)' }}
+        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
       >
-        <p
-          className="text-[10px] font-medium tracking-[0.12em] uppercase pt-4 pb-3"
-          style={{ color: '#888' }}
-        >
+        <p className="text-[10px] font-medium tracking-[0.12em] uppercase pt-4 pb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
           Adicionais
         </p>
-        <div style={{ borderTop: '1px solid rgba(0,0,0,0.07)' }}>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           {addons.map(({ label, tip, price, value, onChange }) => (
             <div
               key={label}
               className="flex items-center gap-3.5 py-4"
-              style={{ borderBottom: '1px solid rgba(0,0,0,0.07)' }}
+              style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
             >
               <Toggle value={value} onChange={onChange} />
               <div className="flex-1 min-w-0">
-                <p
-                  className="text-[14px] transition-colors"
-                  style={{ color: value ? '#0d0d0d' : '#888' }}
-                >
+                <p className="text-[14px] transition-colors" style={{ color: value ? '#ffffff' : 'rgba(255,255,255,0.35)' }}>
                   {label}
                 </p>
-                <p className="text-[12px] mt-0.5" style={{ color: '#aaa' }}>{tip}</p>
+                <p className="text-[12px] mt-0.5" style={{ color: 'rgba(255,255,255,0.2)' }}>{tip}</p>
               </div>
               <span
                 className="text-[13px] font-semibold tabular-nums shrink-0 transition-colors"
-                style={{ color: value ? '#b45309' : '#ccc' }}
+                style={{ color: value ? '#facc15' : 'rgba(255,255,255,0.15)' }}
               >
                 +{fmtBRL(price)}
               </span>
@@ -530,20 +493,17 @@ function ResultScreen({
       {/* Resumo */}
       <div
         className="flex items-center gap-3 px-4 py-3 rounded-xl"
-        style={{ background: '#f5f5f5', border: '1px solid rgba(0,0,0,0.07)' }}
+        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
       >
-        <div
-          className="w-px self-stretch rounded-full shrink-0"
-          style={{ background: 'rgba(0,0,0,0.12)' }}
-        />
+        <div className="w-px self-stretch rounded-full shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }} />
         <div className="space-y-0.5 text-[13px]">
           <p>
-            <span style={{ color: '#888' }}>Nome — </span>
-            <span style={{ color: '#444' }}>{name}</span>
+            <span style={{ color: 'rgba(255,255,255,0.3)' }}>Nome — </span>
+            <span style={{ color: 'rgba(255,255,255,0.7)' }}>{name}</span>
           </p>
           <p>
-            <span style={{ color: '#888' }}>Segmento — </span>
-            <span style={{ color: '#444' }}>{segment}</span>
+            <span style={{ color: 'rgba(255,255,255,0.3)' }}>Segmento — </span>
+            <span style={{ color: 'rgba(255,255,255,0.7)' }}>{segment}</span>
           </p>
         </div>
       </div>
@@ -556,7 +516,7 @@ function ResultScreen({
         style={{ background: '#facc15', color: '#000' }}
         onMouseEnter={(e) => {
           e.currentTarget.style.background = '#fde047'
-          e.currentTarget.style.boxShadow = '0 0 40px rgba(250,204,21,0.25)'
+          e.currentTarget.style.boxShadow = '0 0 40px rgba(250,204,21,0.3)'
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.background = '#facc15'
@@ -570,7 +530,7 @@ function ResultScreen({
         </span>
       </button>
 
-      <p className="text-center text-[12px]" style={{ color: '#aaa' }}>
+      <p className="text-center text-[12px]" style={{ color: 'rgba(255,255,255,0.2)' }}>
         Você será redirecionado ao WhatsApp com o resumo final ajustado.
       </p>
     </div>
@@ -688,14 +648,14 @@ export default function OrcamentoPage() {
             type="button"
             onClick={() => set('pageCount', Math.max(4, form.pageCount - 1))}
             className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl leading-none transition-all duration-200"
-            style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#666' }}
+            style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}
             aria-label="Reduzir"
           >
             −
           </button>
           <div className="text-center">
-            <p className="text-[52px] sm:text-[76px] font-black text-[#0d0d0d] leading-none tabular-nums">{form.pageCount}</p>
-            <p className="text-[15px] font-bold mt-2 tabular-nums" style={{ color: '#b45309' }}>
+            <p className="text-[52px] sm:text-[76px] font-black text-white leading-none tabular-nums">{form.pageCount}</p>
+            <p className="text-[15px] font-bold mt-2 tabular-nums" style={{ color: '#facc15' }}>
               {fmtBRL(form.pageCount <= 4 ? 697 : 697 + (form.pageCount - 4) * 100)}
             </p>
           </div>
@@ -703,7 +663,7 @@ export default function OrcamentoPage() {
             type="button"
             onClick={() => set('pageCount', form.pageCount + 1)}
             className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl leading-none transition-all duration-200"
-            style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#666' }}
+            style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}
             aria-label="Adicionar"
           >
             +
@@ -725,13 +685,14 @@ export default function OrcamentoPage() {
           onChange={(e) => set('segment', e.target.value)}
           placeholder="Ex.: Escritório de advocacia especializado em direito trabalhista"
           rows={3}
-          className="w-full rounded-xl px-4 py-3 sm:py-4 text-[#0d0d0d] text-[15px] placeholder-[#bbb] resize-none transition-all duration-200 leading-relaxed focus:outline-none"
+          className="w-full rounded-xl px-4 py-3 sm:py-4 text-white text-[15px] resize-none transition-all duration-200 leading-relaxed focus:outline-none"
           style={{
-            background: '#fafafa',
-            border: '1px solid rgba(0,0,0,0.1)',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            color: '#fff',
           }}
-          onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(180,83,9,0.4)' }}
-          onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)' }}
+          onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(250,204,21,0.4)' }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
         />
         <PrimaryBtn onClick={next} disabled={form.segment.trim().length < 3} />
       </div>
@@ -744,8 +705,8 @@ export default function OrcamentoPage() {
           title="Precisa de área logada para gerenciar conteúdo?"
           sub="Ex.: cadastrar produtos, editar textos, gerenciar cadastros no próprio site."
         />
-        <p className="text-[13px]" style={{ color: '#888' }}>
-          Investimento: <span className="font-semibold" style={{ color: '#b45309' }}>+R$1.000</span>
+        <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          Investimento: <span className="font-semibold" style={{ color: '#facc15' }}>+R$1.000</span>
         </p>
         <YesNo value={form.hasAdmin} onChange={(v) => set('hasAdmin', v)} />
         <PrimaryBtn onClick={next} />
@@ -759,8 +720,8 @@ export default function OrcamentoPage() {
           title="Você já tem logotipo profissional?"
           sub="Um logotipo profissional é essencial para a identidade visual do site."
         />
-        <p className="text-[13px]" style={{ color: '#888' }}>
-          Investimento: <span className="font-semibold" style={{ color: '#b45309' }}>+R$220</span>
+        <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          Investimento: <span className="font-semibold" style={{ color: '#facc15' }}>+R$220</span>
         </p>
         <YesNo
           value={form.hasLogo}
@@ -779,8 +740,8 @@ export default function OrcamentoPage() {
           title="Você já tem domínio próprio?"
           sub="Ex.: suaempresa.com.br — o endereço do seu site na internet."
         />
-        <p className="text-[13px]" style={{ color: '#888' }}>
-          Investimento: <span className="font-semibold" style={{ color: '#b45309' }}>+R$140</span>
+        <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          Investimento: <span className="font-semibold" style={{ color: '#facc15' }}>+R$140</span>
         </p>
         <YesNo
           value={form.hasDomain}
@@ -800,75 +761,39 @@ export default function OrcamentoPage() {
           sub="Informe seus dados para receber uma cópia por e-mail."
         />
         <div className="space-y-3">
-          <div>
-            <label
-              htmlFor="lead-name"
-              className="block text-[12px] font-medium mb-2 tracking-wide"
-              style={{ color: '#555' }}
-            >
-              Nome completo
-            </label>
-            <input
-              id="lead-name"
-              type="text"
-              value={form.name}
-              onChange={(e) => { set('name', e.target.value); setEmailError('') }}
-              placeholder="João Silva"
-              autoComplete="name"
-              className="w-full rounded-xl px-4 py-3 sm:py-4 text-[#0d0d0d] text-[15px] placeholder-[#bbb] transition-all duration-200 focus:outline-none"
-              style={{ background: '#fafafa', border: '1px solid rgba(0,0,0,0.1)' }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(180,83,9,0.4)' }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)' }}
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="lead-email"
-              className="block text-[12px] font-medium mb-2 tracking-wide"
-              style={{ color: '#555' }}
-            >
-              E-mail
-            </label>
-            <input
-              id="lead-email"
-              type="email"
-              value={form.email}
-              onChange={(e) => { set('email', e.target.value); setEmailError('') }}
-              placeholder="voce@empresa.com.br"
-              autoComplete="email"
-              className="w-full rounded-xl px-4 py-3 sm:py-4 text-[#0d0d0d] text-[15px] placeholder-[#bbb] transition-all duration-200 focus:outline-none"
-              style={{ background: '#fafafa', border: '1px solid rgba(0,0,0,0.1)' }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(180,83,9,0.4)' }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)' }}
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="lead-whatsapp"
-              className="block text-[12px] font-medium mb-2 tracking-wide"
-              style={{ color: '#555' }}
-            >
-              WhatsApp
-            </label>
-            <input
-              id="lead-whatsapp"
-              type="tel"
-              value={form.whatsapp}
-              onChange={(e) => set('whatsapp', e.target.value)}
-              placeholder="(11) 99999-9999"
-              autoComplete="tel"
-              className="w-full rounded-xl px-4 py-3 sm:py-4 text-[#0d0d0d] text-[15px] placeholder-[#bbb] transition-all duration-200 focus:outline-none"
-              style={{ background: '#fafafa', border: '1px solid rgba(0,0,0,0.1)' }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(180,83,9,0.4)' }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)' }}
-            />
-          </div>
+          {[
+            { id: 'lead-name', label: 'Nome completo', type: 'text', value: form.name, onChange: (v: string) => { set('name', v); setEmailError('') }, placeholder: 'João Silva', autoComplete: 'name' },
+            { id: 'lead-email', label: 'E-mail', type: 'email', value: form.email, onChange: (v: string) => { set('email', v); setEmailError('') }, placeholder: 'voce@empresa.com.br', autoComplete: 'email' },
+            { id: 'lead-whatsapp', label: 'WhatsApp', type: 'tel', value: form.whatsapp, onChange: (v: string) => set('whatsapp', v), placeholder: '(11) 99999-9999', autoComplete: 'tel' },
+          ].map(({ id, label, type, value, onChange, placeholder, autoComplete }) => (
+            <div key={id}>
+              <label htmlFor={id} className="block text-[12px] font-medium mb-2 tracking-wide" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                {label}
+              </label>
+              <input
+                id={id}
+                type={type}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder={placeholder}
+                autoComplete={autoComplete}
+                className="w-full rounded-xl px-4 py-3 sm:py-4 text-white text-[15px] transition-all duration-200 focus:outline-none"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  caretColor: '#facc15',
+                }}
+                onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(250,204,21,0.4)' }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+              />
+            </div>
+          ))}
         </div>
         {emailError && (
           <p className="text-[13px]" style={{ color: 'rgba(248,113,113,0.8)' }}>{emailError}</p>
         )}
         <PrimaryBtn onClick={handleEmailSubmit} loading={saving} label="Ver meu orçamento" />
-        <p className="text-center text-[12px]" style={{ color: '#333' }}>
+        <p className="text-center text-[12px]" style={{ color: 'rgba(255,255,255,0.25)' }}>
           Sem spam — apenas seu orçamento e contato para dúvidas.
         </p>
       </div>
@@ -879,7 +804,7 @@ export default function OrcamentoPage() {
         {emailFailed && (
           <div
             className="mb-5 px-4 py-3 rounded-xl text-[13px]"
-            style={{ background: '#f5f5f5', border: '1px solid rgba(0,0,0,0.07)', color: '#666' }}
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.5)' }}
           >
             Não foi possível enviar o e-mail — mas seu orçamento está calculado abaixo.
           </div>
@@ -904,7 +829,7 @@ export default function OrcamentoPage() {
   const isResult = currentStep === 7
 
   return (
-    <div className="min-h-screen antialiased" style={{ background: '#ffffff', color: '#0d0d0d' }}>
+    <div className="min-h-screen antialiased" style={{ background: '#0a0a0a', color: '#ffffff' }}>
 
       {/* Background decoration */}
       <div className="fixed inset-0 pointer-events-none" aria-hidden>
@@ -915,7 +840,7 @@ export default function OrcamentoPage() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px)',
             backgroundSize: '28px 28px',
           }}
         />
@@ -946,30 +871,24 @@ export default function OrcamentoPage() {
         <div className="text-center mb-4 sm:mb-12">
           {!done ? (
             <>
-              <p
-                className="hidden sm:block text-[10px] font-medium tracking-[0.18em] uppercase mb-5"
-                style={{ color: '#d97706' }}
-              >
+              <p className="hidden sm:block text-[10px] font-medium tracking-[0.18em] uppercase mb-5" style={{ color: 'rgba(250,204,21,0.7)' }}>
                 Calculadora de orçamento
               </p>
-              <h1 className="text-[24px] sm:text-[40px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight">
+              <h1 className="text-[24px] sm:text-[40px] font-bold text-white leading-[1.15] tracking-tight">
                 Quanto custa<br />
-                <span style={{ color: '#b45309' }}>o seu site?</span>
+                <span style={{ color: '#facc15' }}>o seu site?</span>
               </h1>
             </>
           ) : (
             <>
-              <div
-                className="inline-flex items-center gap-2 text-[11px] tracking-[0.1em] uppercase mb-5"
-                style={{ color: 'rgba(5,150,105,0.9)' }}
-              >
-                <span className="w-8 h-px" style={{ background: 'rgba(5,150,105,0.4)' }} />
+              <div className="inline-flex items-center gap-2 text-[11px] tracking-[0.1em] uppercase mb-5" style={{ color: 'rgba(52,211,153,0.9)' }}>
+                <span className="w-8 h-px" style={{ background: 'rgba(52,211,153,0.4)' }} />
                 Orçamento gerado
-                <span className="w-8 h-px" style={{ background: 'rgba(5,150,105,0.4)' }} />
+                <span className="w-8 h-px" style={{ background: 'rgba(52,211,153,0.4)' }} />
               </div>
-              <h1 className="text-[24px] sm:text-[40px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight">
+              <h1 className="text-[24px] sm:text-[40px] font-bold text-white leading-[1.15] tracking-tight">
                 Aqui está<br />
-                <span style={{ color: '#b45309' }}>seu orçamento.</span>
+                <span style={{ color: '#facc15' }}>seu orçamento.</span>
               </h1>
             </>
           )}
@@ -980,12 +899,12 @@ export default function OrcamentoPage() {
           <Progress current={stepIndex} total={progressTotal} />
         )}
 
-        {/* Step content — card wrapper only for non-result steps */}
+        {/* Step content */}
         <div key={stepIndex} className="animate-in fade-in slide-in-from-right-3 duration-300">
           {!isResult ? (
             <div
               className="rounded-2xl p-4 sm:p-7"
-              style={{ background: '#f7f7f7', border: '1px solid rgba(0,0,0,0.07)' }}
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
             >
               {renderStep()}
             </div>
@@ -1001,9 +920,9 @@ export default function OrcamentoPage() {
               type="button"
               onClick={back}
               className="flex items-center gap-1.5 text-[12px] transition-colors duration-200 py-2 px-1"
-              style={{ color: '#bbb' }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#666' }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = '#bbb' }}
+              style={{ color: 'rgba(255,255,255,0.2)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.55)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.2)' }}
             >
               <IconChevronLeft />
               Voltar
