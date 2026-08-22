@@ -388,93 +388,86 @@ export default function HomePage() {
                     }}
                   >
                     {/* Browser Chrome */}
-                    <div className="flex items-center gap-2 px-4 py-3" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                    <div className="flex items-center gap-2 px-4 py-3" style={{ background: '#f1f3f4' }}>
                       <div className="flex gap-1.5">
                         <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                        <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
                         <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
                       </div>
                       <div className="flex-1 mx-4">
-                        <div className="max-w-xs mx-auto px-3 py-1 rounded-full text-xs text-white/20" style={{ background: 'rgba(255,255,255,0.04)' }}>
-                          meunegocio.com.br
+                        <div className="max-w-xs mx-auto px-3 py-1 rounded flex items-center gap-2 text-xs" style={{ background: '#fff', border: '1px solid #dadce0', color: '#202124', fontSize: 10 }}>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="#5f6368"/></svg>
+                          google.com.br/search?q=melhor+clínica+estética+SP
                         </div>
                       </div>
                     </div>
 
-                    {/* Website Preview */}
-                    <div className="aspect-[16/10] relative overflow-hidden">
-                      <div className="absolute inset-0 p-6">
-                        {/* Site Content Simulator */}
-                        <div className="flex items-start gap-6 h-full">
-                          <div className="flex-1">
-                            {/* Header */}
-                            <div className="flex items-center justify-between mb-6">
-                              <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }} />
-                                <span className="text-sm font-bold text-white">Meu Negócio</span>
-                              </div>
-                              <div className="flex gap-4">
-                                <span className="text-xs text-white/30">Home</span>
-                                <span className="text-xs text-white/30">Serviços</span>
-                                <span className="text-xs text-white/30">Contato</span>
-                              </div>
-                            </div>
+                    {/* Google SERP */}
+                    <div className="aspect-[16/10] relative overflow-hidden" style={{ background: '#fff' }}>
+                      <div className="absolute inset-0 flex flex-col" style={{ padding: '12px 16px', fontFamily: 'Arial, sans-serif' }}>
 
-                            {/* Hero do site */}
-                            <div className="mb-6">
-                              <div className="w-3/4 h-8 rounded-lg mb-3" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                              <div className="w-1/2 h-4 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }} />
-                            </div>
-
-                            {/* Cards */}
-                            <div className="grid grid-cols-2 gap-4">
-                              {[1, 2].map((i) => (
-                                <div key={i} className="p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                                  <div className="w-8 h-8 rounded-lg mb-2" style={{ background: 'rgba(250,204,21,0.1)' }} />
-                                  <div className="w-3/4 h-3 rounded mb-1" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                                  <div className="w-1/2 h-2 rounded" style={{ background: 'rgba(255,255,255,0.03)' }} />
-                                </div>
-                              ))}
-                            </div>
-
-                            {/* CTA */}
-                            <div className="mt-4 flex gap-3">
-                              <div className="px-6 py-2 rounded-lg w-32 h-8" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }} />
-                              <div className="px-6 py-2 rounded-lg w-24 h-8" style={{ background: 'rgba(255,255,255,0.04)' }} />
-                            </div>
-                          </div>
-
-                          {/* Sidebar - Google Search Result */}
-                          <div
-                            className="w-48 h-full rounded-xl p-4 flex-shrink-0"
-                            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.03)' }}
-                          >
-                            <div className="flex items-center gap-2 mb-3">
-                              <span className="text-xs text-white/30">🔍</span>
-                              <span className="text-xs text-white/20">resultados</span>
-                            </div>
-                            <div className="space-y-3">
-                              <div>
-                                <div className="text-xs text-green-400">meunegocio.com.br</div>
-                                <div className="text-xs font-medium text-white/80">Meu Negócio - Oficial</div>
-                                <div className="text-xs text-white/30">O melhor serviço da região...</div>
-                              </div>
-                              <div>
-                                <div className="text-xs text-green-400">meunegocio.com.br</div>
-                                <div className="text-xs font-medium text-white/80">Serviços Premium</div>
-                                <div className="text-xs text-white/30">Atendimento personalizado...</div>
-                              </div>
-                              <div>
-                                <div className="text-xs text-green-400">meunegocio.com.br</div>
-                                <div className="text-xs font-medium text-white/80">Contato</div>
-                                <div className="text-xs text-white/30">Fale conosco agora...</div>
-                              </div>
-                            </div>
-                            <div className="mt-3 pt-3 border-t border-white/5">
-                              <span className="text-[10px] text-white/10">#1 no Google · SEO</span>
-                            </div>
+                        {/* Google logo + search bar */}
+                        <div className="flex items-center gap-3 mb-2">
+                          <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: -0.5, lineHeight: 1 }}>
+                            <span style={{ color: '#4285f4' }}>G</span>
+                            <span style={{ color: '#ea4335' }}>o</span>
+                            <span style={{ color: '#fbbc04' }}>o</span>
+                            <span style={{ color: '#4285f4' }}>g</span>
+                            <span style={{ color: '#34a853' }}>l</span>
+                            <span style={{ color: '#ea4335' }}>e</span>
+                          </span>
+                          <div className="flex-1 flex items-center gap-2 px-3" style={{ height: 26, border: '1px solid #dfe1e5', borderRadius: 14, boxShadow: '0 1px 6px rgba(32,33,36,.1)', background: '#fff' }}>
+                            <span style={{ fontSize: 9, color: '#202124', flex: 1 }}>melhor clínica estética SP</span>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4285f4" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                           </div>
                         </div>
+
+                        {/* Tabs */}
+                        <div className="flex items-center gap-4 mb-1.5 pb-1" style={{ borderBottom: '1px solid #ebebeb' }}>
+                          {[['Tudo', true], ['Imagens', false], ['Notícias', false], ['Maps', false], ['Mais', false]].map(([label, active]) => (
+                            <span key={label as string} style={{ fontSize: 9, color: active ? '#1a73e8' : '#5f6368', borderBottom: active ? '2px solid #1a73e8' : 'none', paddingBottom: 3, fontWeight: active ? 500 : 400 }}>
+                              {label as string}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Result count */}
+                        <p style={{ fontSize: 7.5, color: '#70757a', marginBottom: 8 }}>Cerca de 3.840.000 resultados (0,38 segundos)</p>
+
+                        {/* #1 Result — highlighted */}
+                        <div style={{ marginBottom: 10, padding: '8px 10px', borderRadius: 8, border: '1px solid #e8f0fe', background: '#f8fbff' }}>
+                          <div className="flex items-center gap-1.5 mb-0.5">
+                            <div className="w-4 h-4 rounded-sm flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
+                              <span style={{ fontSize: 6, fontWeight: 700, color: '#000' }}>1</span>
+                            </div>
+                            <span style={{ fontSize: 8, color: '#188038' }}>clinicaestética.com.br › inicio › serviços</span>
+                          </div>
+                          <div style={{ fontSize: 11, color: '#1a0dab', fontWeight: 500, lineHeight: 1.3, marginBottom: 3 }}>
+                            Clínica Estética SP — Tratamentos Exclusivos | Agende Online
+                          </div>
+                          <div style={{ fontSize: 8.5, color: '#4d5156', lineHeight: 1.5 }}>
+                            Líder em estética avançada em São Paulo. Botox, preenchimento, limpeza de pele e muito mais. ⭐⭐⭐⭐⭐ Mais de 500 avaliações 5 estrelas.
+                          </div>
+                          {/* Sitelinks */}
+                          <div className="flex gap-4 mt-2 pt-2" style={{ borderTop: '1px solid #e8f0fe' }}>
+                            {['Agendar Consulta', 'Serviços', 'Contato', 'Localização'].map(l => (
+                              <span key={l} style={{ fontSize: 8, color: '#1a0dab' }}>{l}</span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* #2 e #3 — concorrentes desbotados */}
+                        <div style={{ opacity: 0.55, marginBottom: 7 }}>
+                          <div style={{ fontSize: 7.5, color: '#188038' }}>outraclínica.com.br</div>
+                          <div style={{ fontSize: 10, color: '#1a0dab' }}>Clínica Estética — Tratamentos Faciais e Corporais</div>
+                          <div style={{ fontSize: 8, color: '#4d5156' }}>Procedimentos estéticos com agendamento online. Confira nossos planos...</div>
+                        </div>
+                        <div style={{ opacity: 0.28 }}>
+                          <div style={{ fontSize: 7.5, color: '#188038' }}>esteticaonline.com.br</div>
+                          <div style={{ fontSize: 10, color: '#1a0dab' }}>Estética SP — Resultados Comprovados</div>
+                          <div style={{ fontSize: 8, color: '#4d5156' }}>Tratamentos a partir de R$80. Agende sua avaliação gratuita...</div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
