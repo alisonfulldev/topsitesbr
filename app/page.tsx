@@ -13,15 +13,21 @@ const MSG_DOUBT = 'Olá! Tenho uma dúvida sobre os sites da TopSite. Pode me aj
 
 /* ─── SEO ────────────────────────────────────────────────────────────────── */
 
+const BASE_URL = 'https://topsitebr.com.br'
+
 export const metadata: Metadata = {
-  title: 'TOP SITE — Criação de Sites Estratégicos com SEO e Conversão',
+  metadataBase: new URL(BASE_URL),
+  title: 'TOP SITE — Criação de Sites Profissionais com SEO | A partir de R$397',
   description:
-    'Desenvolvemos sites de alta performance com foco em conversão e SEO avançado. Tecnologia, design estratégico e resultados reais para seu negócio.',
+    'Criamos sites profissionais para pequenas empresas e autônomos com foco em SEO e conversão. Landing page, site institucional e loja virtual. Orçamento grátis em 24h.',
   keywords:
-    'site profissional, criação de site, SEO avançado, conversão digital, site estratégico, desenvolvimento web, site que vende',
+    'criação de site profissional, site para empresa, site para pequenas empresas, criação de landing page, site para psicólogo, site para clínica, site para salão de beleza, site barato, desenvolvimento web, SEO para pequenas empresas',
   authors: [{ name: 'TOP SITE' }],
   creator: 'TOP SITE',
   publisher: 'TOP SITE',
+  alternates: {
+    canonical: BASE_URL,
+  },
   robots: {
     index: true,
     follow: true,
@@ -29,15 +35,19 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    title: 'TOP SITE — Criação de Sites Estratégicos com SEO e Conversão',
-    description: 'Desenvolvemos sites de alta performance com foco em conversão e SEO avançado.',
+    url: BASE_URL,
+    title: 'TOP SITE — Sites Profissionais com SEO | A partir de R$397',
+    description:
+      'Sites profissionais para pequenas empresas e autônomos. SEO, conversão e suporte inclusos. Orçamento grátis em 24h.',
     siteName: 'TOP SITE',
     locale: 'pt_BR',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'TOP SITE — Criação de Sites Profissionais' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TOP SITE — Sites que Vendem',
-    description: 'Sites estratégicos focados em conversão e SEO. A partir de R$397.',
+    title: 'TOP SITE — Sites que Vendem | A partir de R$397',
+    description: 'Sites profissionais com SEO e conversão para pequenas empresas. Orçamento grátis em 24h.',
+    images: ['/og-image.png'],
   },
 }
 
@@ -48,37 +58,72 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'Organization',
-      '@id': '#organization',
+      '@id': `${BASE_URL}/#organization`,
       name: 'TOP SITE',
-      description: 'Criação de sites personalizados focados em conversão e SEO para empresas brasileiras',
+      url: BASE_URL,
+      logo: `${BASE_URL}/logo.png`,
+      description: 'Criação de sites profissionais para pequenas empresas e autônomos, com foco em SEO e conversão. Atendemos todo o Brasil.',
+      telephone: '+55-18-99674-2364',
+      email: 'contato@topsitebr.com.br',
+      areaServed: { '@type': 'Country', name: 'Brazil' },
+      sameAs: [`https://wa.me/5518996742364`],
       contactPoint: {
         '@type': 'ContactPoint',
-        contactType: 'sales',
+        contactType: 'customer service',
         telephone: '+55-18-99674-2364',
         availableLanguage: 'Portuguese',
+        contactOption: 'TollFree',
       },
     },
     {
       '@type': 'WebSite',
-      '@id': '#website',
+      '@id': `${BASE_URL}/#website`,
+      url: BASE_URL,
       name: 'TOP SITE',
-      description: 'Sites que vendem — Conversão + SEO Avançado',
-      publisher: { '@id': '#organization' },
+      description: 'Sites profissionais com SEO e conversão para pequenas empresas. A partir de R$397.',
+      publisher: { '@id': `${BASE_URL}/#organization` },
       inLanguage: 'pt-BR',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${BASE_URL}/orcamento`,
+        'query-input': 'required name=search_term_string',
+      },
     },
     {
       '@type': 'Service',
-      name: 'Criação de Site Estratégico — Conversão e SEO',
+      '@id': `${BASE_URL}/#service`,
+      name: 'Criação de Site Profissional com SEO',
       description:
-        'Site personalizado e avançado, feito à mão sob medida, focado em conversão e SEO avançado.',
-      provider: { '@id': '#organization' },
-      serviceType: 'Criação de Sites Profissionais e Estratégicos',
+        'Desenvolvemos sites profissionais personalizados para pequenas empresas e autônomos, com foco em SEO, conversão e design estratégico. Landing pages, sites institucionais e lojas virtuais.',
+      provider: { '@id': `${BASE_URL}/#organization` },
+      serviceType: 'Criação de Sites Profissionais',
       areaServed: { '@type': 'Country', name: 'Brazil' },
-      offers: {
-        '@type': 'Offer',
-        price: '397',
-        priceCurrency: 'BRL',
-        availability: 'https://schema.org/InStock',
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Planos de Criação de Site',
+        itemListElement: [
+          {
+            '@type': 'Offer',
+            name: 'Landing Page',
+            price: '397',
+            priceCurrency: 'BRL',
+            availability: 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            name: 'Site Institucional',
+            price: '697',
+            priceCurrency: 'BRL',
+            availability: 'https://schema.org/InStock',
+          },
+          {
+            '@type': 'Offer',
+            name: 'Loja Virtual',
+            price: '1500',
+            priceCurrency: 'BRL',
+            availability: 'https://schema.org/InStock',
+          },
+        ],
       },
     },
   ],
@@ -286,6 +331,15 @@ export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: FAQS.map(({ q, a }) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      }) }} />
       <Script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" strategy="afterInteractive" />
 
       <div className="min-h-screen text-white antialiased" style={{ background: '#0a0a0a' }}>
