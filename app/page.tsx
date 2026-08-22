@@ -397,7 +397,7 @@ export default function HomePage() {
                       <div className="flex-1 mx-4">
                         <div className="max-w-xs mx-auto px-3 py-1 rounded flex items-center gap-2 text-xs" style={{ background: '#fff', border: '1px solid #dadce0', color: '#202124', fontSize: 10 }}>
                           <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="#5f6368"/></svg>
-                          google.com.br/search?q=melhor+clínica+estética+SP
+                          google.com.br/search?q=melhor+[seu+negócio]+[cidade]
                         </div>
                       </div>
                     </div>
@@ -417,7 +417,7 @@ export default function HomePage() {
                             <span style={{ color: '#ea4335' }}>e</span>
                           </span>
                           <div className="flex-1 flex items-center gap-2 px-3" style={{ height: 26, border: '1px solid #dfe1e5', borderRadius: 14, boxShadow: '0 1px 6px rgba(32,33,36,.1)', background: '#fff' }}>
-                            <span style={{ fontSize: 9, color: '#202124', flex: 1 }}>melhor clínica estética SP</span>
+                            <span style={{ fontSize: 9, color: '#202124', flex: 1 }}>melhor [seu negócio] em [cidade]</span>
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4285f4" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                           </div>
                         </div>
@@ -440,17 +440,17 @@ export default function HomePage() {
                             <div className="w-4 h-4 rounded-sm flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}>
                               <span style={{ fontSize: 6, fontWeight: 700, color: '#000' }}>1</span>
                             </div>
-                            <span style={{ fontSize: 8, color: '#188038' }}>clinicaestética.com.br › inicio › serviços</span>
+                            <span style={{ fontSize: 8, color: '#188038' }}>seunegocio.com.br › inicio › serviços</span>
                           </div>
                           <div style={{ fontSize: 11, color: '#1a0dab', fontWeight: 500, lineHeight: 1.3, marginBottom: 3 }}>
-                            Clínica Estética SP — Tratamentos Exclusivos | Agende Online
+                            Seu Negócio — O Líder do Segmento na Região
                           </div>
                           <div style={{ fontSize: 8.5, color: '#4d5156', lineHeight: 1.5 }}>
-                            Líder em estética avançada em São Paulo. Botox, preenchimento, limpeza de pele e muito mais. ⭐⭐⭐⭐⭐ Mais de 500 avaliações 5 estrelas.
+                            O melhor serviço da região com atendimento personalizado. Qualidade garantida e resultado comprovado. ⭐⭐⭐⭐⭐ Mais de 500 avaliações 5 estrelas.
                           </div>
                           {/* Sitelinks */}
                           <div className="flex gap-4 mt-2 pt-2" style={{ borderTop: '1px solid #e8f0fe' }}>
-                            {['Agendar Consulta', 'Serviços', 'Contato', 'Localização'].map(l => (
+                            {['Agendar Agora', 'Serviços', 'Contato', 'Localização'].map(l => (
                               <span key={l} style={{ fontSize: 8, color: '#1a0dab' }}>{l}</span>
                             ))}
                           </div>
@@ -458,14 +458,14 @@ export default function HomePage() {
 
                         {/* #2 e #3 — concorrentes desbotados */}
                         <div style={{ opacity: 0.55, marginBottom: 7 }}>
-                          <div style={{ fontSize: 7.5, color: '#188038' }}>outraclínica.com.br</div>
-                          <div style={{ fontSize: 10, color: '#1a0dab' }}>Clínica Estética — Tratamentos Faciais e Corporais</div>
-                          <div style={{ fontSize: 8, color: '#4d5156' }}>Procedimentos estéticos com agendamento online. Confira nossos planos...</div>
+                          <div style={{ fontSize: 7.5, color: '#188038' }}>concorrente1.com.br</div>
+                          <div style={{ fontSize: 10, color: '#1a0dab' }}>Concorrente — Serviços na Região</div>
+                          <div style={{ fontSize: 8, color: '#4d5156' }}>Atendimento online. Confira nossos planos e entre em contato...</div>
                         </div>
                         <div style={{ opacity: 0.28 }}>
-                          <div style={{ fontSize: 7.5, color: '#188038' }}>esteticaonline.com.br</div>
-                          <div style={{ fontSize: 10, color: '#1a0dab' }}>Estética SP — Resultados Comprovados</div>
-                          <div style={{ fontSize: 8, color: '#4d5156' }}>Tratamentos a partir de R$80. Agende sua avaliação gratuita...</div>
+                          <div style={{ fontSize: 7.5, color: '#188038' }}>concorrente2.com.br</div>
+                          <div style={{ fontSize: 10, color: '#1a0dab' }}>Serviços na Cidade — Resultados Comprovados</div>
+                          <div style={{ fontSize: 8, color: '#4d5156' }}>Anos de experiência no mercado. Agende sua avaliação...</div>
                         </div>
 
                       </div>
@@ -503,6 +503,9 @@ export default function HomePage() {
                     #1 Google
                   </div>
                 </div>
+                <p className="text-center mt-3 text-[11px]" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                  Exemplo ilustrativo · adaptamos o SEO para o seu segmento
+                </p>
               </div>
             </div>
 
