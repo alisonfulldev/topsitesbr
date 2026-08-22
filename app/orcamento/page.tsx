@@ -9,6 +9,12 @@ import type { ProjectType } from './actions'
 
 /* ─── Pricing ─────────────────────────────────────────────────────────────── */
 
+function siteBase(type: ProjectType, pages: number): number {
+  if (type === 'landing_page') return 397
+  if (type === 'loja_virtual') return 1500
+  return pages <= 4 ? 697 : 697 + (pages - 4) * 100
+}
+
 function calcTotal(
   type: ProjectType,
   pages: number,
@@ -16,11 +22,11 @@ function calcTotal(
   hasLogo: boolean,
   hasDomain: boolean,
 ): number {
-  let base = 0
-  if (type === 'landing_page') base = 497
-  else if (type === 'loja_virtual') base = 1500
-  else base = pages <= 4 ? 697 : 697 + (pages - 4) * 100
-  return base + (hasAdmin ? 1000 : 0) + (!hasLogo ? 220 : 0) + (!hasDomain ? 140 : 0)
+  const base = siteBase(type, pages)
+  // Loja virtual: admin sempre incluso no preço fixo
+  // Demais: admin = mesmo valor do site base (dobra o investimento)
+  const adminCost = type === 'loja_virtual' ? 0 : (hasAdmin ? base : 0)
+  return base + adminCost + (!hasLogo ? 220 : 0) + (!hasDomain ? 140 : 0)
 }
 
 function fmtBRL(v: number) {
@@ -55,6 +61,7 @@ const INIT: FormState = {
 
 function getSteps(type: ProjectType | null) {
   if (type === 'institucional') return [0, 1, 2, 3, 4, 5, 6, 7]
+  if (type === 'loja_virtual') return [0, 2, 4, 5, 6, 7] // admin sempre incluso
   return [0, 2, 3, 4, 5, 6, 7]
 }
 
@@ -326,19 +333,16 @@ function ResultScreen({
     loja_virtual: 'Loja Virtual',
   }
 
-  function basePrice() {
-    if (type === 'landing_page') return 497
-    if (type === 'loja_virtual') return 1500
-    return pages <= 4 ? 697 : 697 + (pages - 4) * 100
-  }
+  const base = siteBase(type, pages)
 
   const addons = [
     {
       label: 'Painel admin / backend',
-      tip: 'Área administrativa para gerenciar conteúdo.',
-      price: 1000,
-      value: hasAdmin,
-      onChange: setHasAdmin,
+      tip: type === 'loja_virtual' ? 'Incluso no valor da loja virtual.' : 'Dobra o investimento — área para gerenciar conteúdo.',
+      price: type === 'loja_virtual' ? 0 : base,
+      value: type === 'loja_virtual' ? true : hasAdmin,
+      onChange: type === 'loja_virtual' ? () => {} : setHasAdmin,
+      disabled: type === 'loja_virtual',
     },
     {
       label: 'Criação de logotipo',
@@ -450,7 +454,7 @@ function ResultScreen({
                 +
               </button>
               <span className="text-[13px] tabular-nums ml-1" style={{ color: '#facc15' }}>
-                = {fmtBRL(basePrice())}
+                = {fmtBRL(base)}
               </span>
             </div>
           </div>
@@ -466,13 +470,13 @@ function ResultScreen({
           Adicionais
         </p>
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          {addons.map(({ label, tip, price, value, onChange }) => (
+          {addons.map(({ label, tip, price, value, onChange, disabled }) => (
             <div
               key={label}
               className="flex items-center gap-3.5 py-4"
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+              style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', opacity: disabled ? 0.5 : 1 }}
             >
-              <Toggle value={value} onChange={onChange} />
+              <Toggle value={value} onChange={disabled ? () => {} : onChange} />
               <div className="flex-1 min-w-0">
                 <p className="text-[14px] transition-colors" style={{ color: value ? '#ffffff' : 'rgba(255,255,255,0.35)' }}>
                   {label}
@@ -481,9 +485,9 @@ function ResultScreen({
               </div>
               <span
                 className="text-[13px] font-semibold tabular-nums shrink-0 transition-colors"
-                style={{ color: value ? '#facc15' : 'rgba(255,255,255,0.15)' }}
+                style={{ color: disabled ? 'rgba(255,255,255,0.3)' : value ? '#facc15' : 'rgba(255,255,255,0.15)' }}
               >
-                +{fmtBRL(price)}
+                {disabled ? 'incluso' : `+${fmtBRL(price)}`}
               </span>
             </div>
           ))}
@@ -614,7 +618,7 @@ export default function OrcamentoPage() {
             selected={form.projectType === 'landing_page'}
             onClick={() => set('projectType', 'landing_page')}
             title="Landing Page"
-            price="R$497"
+            price="R$397"
             desc="Página única focada em converter visitas em contatos. Ideal para um produto ou serviço específico."
           />
           <CardOption
@@ -698,20 +702,23 @@ export default function OrcamentoPage() {
       </div>
     )
 
-    if (currentStep === 3) return (
-      <div className="space-y-3 sm:space-y-5">
-        <StepHeader
-          label="Painel administrativo"
-          title="Precisa de área logada para gerenciar conteúdo?"
-          sub="Ex.: cadastrar produtos, editar textos, gerenciar cadastros no próprio site."
-        />
-        <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          Investimento: <span className="font-semibold" style={{ color: '#facc15' }}>+R$1.000</span>
-        </p>
-        <YesNo value={form.hasAdmin} onChange={(v) => set('hasAdmin', v)} />
-        <PrimaryBtn onClick={next} />
-      </div>
-    )
+    if (currentStep === 3) {
+      const adminPrice = siteBase(form.projectType!, form.pageCount)
+      return (
+        <div className="space-y-3 sm:space-y-5">
+          <StepHeader
+            label="Painel administrativo"
+            title="Precisa de área logada para gerenciar conteúdo?"
+            sub="Ex.: editar textos, gerenciar cadastros, atualizar conteúdo no próprio site."
+          />
+          <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            Investimento: <span className="font-semibold" style={{ color: '#facc15' }}>+{fmtBRL(adminPrice)}</span>
+          </p>
+          <YesNo value={form.hasAdmin} onChange={(v) => set('hasAdmin', v)} />
+          <PrimaryBtn onClick={next} />
+        </div>
+      )
+    }
 
     if (currentStep === 4) return (
       <div className="space-y-3 sm:space-y-5">
