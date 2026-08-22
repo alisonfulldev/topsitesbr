@@ -229,7 +229,7 @@ function CTAGhost({
   )
 }
 
-function GlassCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function GlassCard({ children, className = '', style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   return (
     <div
       className={`backdrop-blur-sm rounded-2xl transition-all duration-300 ${className}`}
@@ -237,6 +237,7 @@ function GlassCard({ children, className = '' }: { children: React.ReactNode; cl
         background: 'rgba(255, 255, 255, 0.7)',
         border: '1px solid rgba(255, 255, 255, 0.8)',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.04)',
+        ...style,
       }}
     >
       {children}
@@ -391,8 +392,7 @@ export default function HomePage() {
           />
           <div
             className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none animate-pulse"
-            style={{ background: 'rgba(180,83,9,0.04)' }}
-            style={{ animationDelay: '1s' }}
+            style={{ background: 'rgba(180,83,9,0.04)', animationDelay: '1s' }}
           />
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
