@@ -135,16 +135,42 @@ function IconArrow() {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
 }
 
+function IconSparkle() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5" aria-hidden="true">
+      <path d="M12 2L12 7M12 17L12 22M2 12L7 12M17 12L22 12M4.93 4.93L8.46 8.46M15.54 15.54L19.07 19.07M4.93 19.07L8.46 15.54M15.54 8.46L19.07 4.93" />
+    </svg>
+  )
+}
+
+function IconShield() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  )
+}
+
+function IconClock() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  )
+}
+
 /* ─── Shared components ──────────────────────────────────────────────────── */
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p
-      className="text-[10px] font-medium tracking-[0.16em] uppercase"
-      style={{ color: '#d97706' }}
-    >
-      {children}
-    </p>
+    <div className="inline-flex items-center gap-2 mb-4">
+      <span className="w-8 h-0.5 rounded-full" style={{ background: 'linear-gradient(90deg, #facc15, #b45309)' }} />
+      <p className="text-[10px] font-medium tracking-[0.2em] uppercase" style={{ color: '#b45309' }}>
+        {children}
+      </p>
+      <span className="w-8 h-0.5 rounded-full" style={{ background: 'linear-gradient(90deg, #b45309, #facc15)' }} />
+    </div>
   )
 }
 
@@ -152,10 +178,12 @@ function CTAPrimary({
   href,
   children,
   size = 'md',
+  className = '',
 }: {
   href: string
   children: React.ReactNode
   size?: 'sm' | 'md' | 'lg' | 'xl'
+  className?: string
 }) {
   const sizes = {
     sm: 'px-4 py-2 text-[12px]',
@@ -166,14 +194,65 @@ function CTAPrimary({
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-black font-semibold rounded-xl transition-all duration-200 hover:shadow-[0_0_32px_rgba(250,204,21,0.2)] active:scale-[0.99] ${sizes[size]}`}
+      className={`inline-flex items-center justify-center gap-2 text-black font-semibold rounded-xl transition-all duration-300 relative overflow-hidden group ${sizes[size]} ${className}`}
+      style={{
+        background: 'linear-gradient(135deg, #facc15 0%, #f59e0b 100%)',
+        boxShadow: '0 4px 20px rgba(250, 204, 21, 0.3)',
+      }}
+    >
+      <span className="relative z-10 flex items-center gap-2">{children}</span>
+      <span
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+        }}
+      />
+    </Link>
+  )
+}
+
+function CTAGhost({
+  href,
+  children,
+}: {
+  href: string
+  children: React.ReactNode
+}) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex items-center gap-1.5 text-[13px] transition-all duration-300 px-4 py-3 rounded-xl hover:bg-black/5"
+      style={{ color: '#555' }}
     >
       {children}
     </Link>
   )
 }
 
+function GlassCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div
+      className={`backdrop-blur-sm rounded-2xl transition-all duration-300 ${className}`}
+      style={{
+        background: 'rgba(255, 255, 255, 0.7)',
+        border: '1px solid rgba(255, 255, 255, 0.8)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.04)',
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
 /* ─── Static data ────────────────────────────────────────────────────────── */
+
+const NAV_LINKS = [
+  { label: 'Diferenciais', href: '#diferenciais' },
+  { label: 'Portfólio', href: '#portfolio' },
+  { label: 'Processo', href: '#como-funciona' },
+  { label: 'Depoimentos', href: '#depoimentos' },
+  { label: 'Preço', href: '#oferta' },
+]
 
 const DIFFERENTIALS = [
   { Icon: IconHand, title: 'Personalizado e avançado', desc: 'Cada site é feito à mão, sob medida para o seu negócio e segmento. Não é template de IA que todo mundo usa — é um projeto exclusivo.' },
@@ -183,9 +262,9 @@ const DIFFERENTIALS = [
 ]
 
 const PROBLEMS = [
-  { stat: '90%', text: 'dos sites não aparecem na primeira página do Google — e quem não aparece, não existe para o cliente.' },
-  { stat: '3s', text: 'é o tempo máximo que o visitante espera o site carregar. Sites lentos perdem clientes antes mesmo de mostrar o serviço.' },
-  { stat: '0', text: 'conversões vêm de sites genéricos de IA — todos iguais, sem personalidade, sem estratégia, sem diferencial.' },
+  { stat: '90%', label: 'não aparecem no Google', desc: 'dos sites não aparecem na primeira página do Google — e quem não aparece, não existe para o cliente.' },
+  { stat: '3s', label: 'tempo máximo de espera', desc: 'é o tempo máximo que o visitante espera o site carregar. Sites lentos perdem clientes antes mesmo de mostrar o serviço.' },
+  { stat: '0', label: 'conversões de IA', desc: 'conversões vêm de sites genéricos de IA — todos iguais, sem personalidade, sem estratégia, sem diferencial.' },
 ]
 
 const STEPS = [
@@ -196,22 +275,22 @@ const STEPS = [
 ]
 
 const PORTFOLIO = [
-  { src: '/portfolio/site1.jpg', segment: 'Restaurante' },
-  { src: '/portfolio/site2.jpg', segment: 'Energia Solar' },
-  { src: '/portfolio/site3.jpg', segment: 'Direito' },
-  { src: '/portfolio/site4.jpg', segment: 'Empresa de Crédito' },
+  { src: '/portfolio/site1.jpg', segment: 'Restaurante', color: '#dc2626' },
+  { src: '/portfolio/site2.jpg', segment: 'Energia Solar', color: '#16a34a' },
+  { src: '/portfolio/site3.jpg', segment: 'Direito', color: '#2563eb' },
+  { src: '/portfolio/site4.jpg', segment: 'Crédito', color: '#7c3aed' },
 ]
 
 const TESTIMONIALS = [
-  { text: 'Antes eu tinha um site que ninguém achava. Agora apareço no Google e recebo contatos toda semana de clientes novos. Valeu cada centavo.', name: 'Marcos A.', role: 'Escritório de Advocacia · SP', initial: 'M', color: '#1d4ed8' },
+  { text: 'Antes eu tinha um site que ninguém achava. Agora apareço no Google e recebo contatos toda semana de clientes novos. Valeu cada centavo.', name: 'Marcos A.', role: 'Escritório de Advocacia · SP', initial: 'M', color: '#2563eb' },
   { text: 'Minha clínica triplicou os agendamentos online em dois meses. O site deles não é só bonito — ele realmente converte.', name: 'Dra. Renata S.', role: 'Clínica Estética · RJ', initial: 'R', color: '#7c3aed' },
   { text: 'Já tinha tentado fazer sozinho no Wix. Não funcionou. Com a TopSite, em 30 dias meu site estava ranqueando para termos do meu bairro.', name: 'Roberto F.', role: 'Empresa de Energia Solar · MG', initial: 'R', color: '#d97706' },
 ]
 
 const FOR_WHOM = [
-  { title: 'Pequenas empresas', desc: 'Que querem competir com grandes e aparecer no Google da sua região.' },
-  { title: 'Negócios em crescimento', desc: 'Que precisam de um site que acompanhe a expansão e gere demanda orgânica.' },
-  { title: 'Profissionais liberais', desc: 'Advogados, médicos, arquitetos e consultores que querem mais clientes qualificados.' },
+  { title: 'Pequenas empresas', desc: 'Que querem competir com grandes e aparecer no Google da sua região.', icon: '🏢' },
+  { title: 'Negócios em crescimento', desc: 'Que precisam de um site que acompanhe a expansão e gere demanda orgânica.', icon: '📈' },
+  { title: 'Profissionais liberais', desc: 'Advogados, médicos, arquitetos e consultores que querem mais clientes qualificados.', icon: '👨‍⚖️' },
 ]
 
 const CHECKLIST = [
@@ -220,6 +299,13 @@ const CHECKLIST = [
   'Otimizado para converter visitante em cliente',
   'Hospedagem, SSL e monitoramento incluídos',
   'Suporte via WhatsApp direto com a equipe',
+]
+
+const FAQS = [
+  { q: 'Quanto tempo leva para ficar pronto?', a: 'O prazo médio é de 15 a 30 dias, dependendo da complexidade do projeto e da agilidade no envio de conteúdos.' },
+  { q: 'Preciso ter um domínio e hospedagem?', a: 'Não! Cuidamos de tudo: domínio, hospedagem, SSL, e-mail profissional e monitoramento. Você só precisa do conteúdo.' },
+  { q: 'Vou conseguir administrar o site depois?', a: 'Sim! Entregamos com um painel de fácil gerenciamento e damos todo o suporte necessário para você atualizar o conteúdo quando quiser.' },
+  { q: 'E se eu quiser mudar algo depois?', a: 'Suporte e ajustes finos estão inclusos. Para mudanças maiores, fazemos um orçamento justo e ágil.' },
 ]
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
@@ -233,29 +319,45 @@ export default function HomePage() {
       />
       <Script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" strategy="afterInteractive" />
 
-      <div className="text-[#0d0d0d] antialiased" style={{ background: '#ffffff' }}>
+      <div className="text-[#0d0d0d] antialiased" style={{ background: '#fafaf9' }}>
 
         {/* ── NAV ─────────────────────────────────────────────────────────── */}
         <header
-          className="sticky top-0 z-50 backdrop-blur-md"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', background: '#000000' }}
+          className="sticky top-0 z-50 backdrop-blur-xl"
+          style={{
+            background: 'rgba(0, 0, 0, 0.85)',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+          }}
         >
           <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between" aria-label="Navegação principal">
-            <a href="/" aria-label="TOP SITE — página inicial">
+            <a href="/" aria-label="TOP SITE — página inicial" className="hover:opacity-80 transition-opacity">
               <Image src="/logo.png" alt="TOP SITE" width={120} height={40} className="h-8 w-auto" priority />
             </a>
+
+            <ul className="hidden md:flex items-center gap-8 text-[13px]">
+              {NAV_LINKS.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-white/60 hover:text-white transition-colors duration-200 font-medium"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
             <div className="flex items-center gap-3">
               <a
                 href="/login"
-                className="flex items-center gap-1.5 text-[12px] px-3.5 py-2 rounded-xl transition-all duration-200"
-                style={{ color: '#ccc', border: '1px solid rgba(255,255,255,0.18)' }}
+                className="flex items-center gap-1.5 text-[12px] px-3.5 py-2 rounded-xl transition-all duration-200 text-white/50 hover:text-white/80 hover:bg-white/5"
                 aria-label="Acessar painel do cliente"
               >
                 <UserIcon />
                 <span className="hidden sm:inline">Acessar painel</span>
                 <span className="sm:hidden">Entrar</span>
               </a>
-              <CTAPrimary href="/orcamento" size="md">
+              <CTAPrimary href="/orcamento" size="md" className="!shadow-[0_4px_20px_rgba(250,204,21,0.25)]">
                 <span className="hidden sm:inline">Montar meu orçamento</span>
                 <span className="sm:hidden">Orçamento</span>
               </CTAPrimary>
@@ -264,76 +366,122 @@ export default function HomePage() {
         </header>
 
         {/* ── HERO ─────────────────────────────────────────────────────────── */}
-        <section id="hero" aria-labelledby="hero-heading" className="relative overflow-hidden py-24 sm:py-36 lg:py-44">
+        <section id="hero" aria-labelledby="hero-heading" className="relative overflow-hidden py-28 sm:py-40 lg:py-48">
+          {/* Background gradients */}
           <div
             className="absolute inset-0 pointer-events-none"
             aria-hidden
-            style={{ background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(250,204,21,0.09) 0%, transparent 60%)' }}
+            style={{
+              background: 'radial-gradient(ellipse 80% 60% at 20% 20%, rgba(250,204,21,0.08) 0%, transparent 50%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(180,83,9,0.06) 0%, transparent 50%)',
+            }}
           />
           <div
             className="absolute inset-0 pointer-events-none"
             aria-hidden
-            style={{ backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
+            style={{
+              backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 1px)',
+              backgroundSize: '32px 32px',
+            }}
+          />
+
+          {/* Floating orbs */}
+          <div
+            className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-3xl pointer-events-none animate-pulse"
+            style={{ background: 'rgba(250,204,21,0.05)' }}
+          />
+          <div
+            className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none animate-pulse"
+            style={{ background: 'rgba(180,83,9,0.04)' }}
+            style={{ animationDelay: '1s' }}
           />
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <div
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-10"
-              style={{ border: '1px solid rgba(250,204,21,0.3)', background: 'rgba(250,204,21,0.08)' }}
+              className="inline-flex items-center gap-2 rounded-full px-5 py-2 mb-10 backdrop-blur-sm"
+              style={{
+                border: '1px solid rgba(250,204,21,0.2)',
+                background: 'rgba(250,204,21,0.06)',
+              }}
             >
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#facc15' }} aria-hidden />
-              <span className="text-[11px] font-medium tracking-wide" style={{ color: 'rgba(250,204,21,0.7)' }}>
+              <span className="text-[11px] font-medium tracking-wide" style={{ color: 'rgba(250,204,21,0.8)' }}>
                 +50 negócios confiam na TopSite
               </span>
+              <IconSparkle />
             </div>
 
             <h1
               id="hero-heading"
-              className="text-[42px] sm:text-[58px] lg:text-[72px] font-bold leading-[1.05] tracking-tight text-[#0d0d0d] mb-8"
+              className="text-[44px] sm:text-[62px] lg:text-[76px] font-bold leading-[1.02] tracking-tight text-[#0d0d0d] mb-8"
             >
               Seu site deveria estar{' '}
-              <span style={{ color: '#b45309' }}>VENDENDO</span>{' '}
-              por você —<br className="hidden sm:block" />
+              <span className="relative">
+                <span style={{ color: '#b45309' }}>VENDENDO</span>
+                <span
+                  className="absolute -bottom-2 left-0 right-0 h-2 rounded-full opacity-40 blur-sm"
+                  style={{ background: 'rgba(180,83,9,0.3)' }}
+                />
+              </span>
+              {' '}por você —<br className="hidden sm:block" />
               não só existindo.
             </h1>
 
-            <p className="text-[16px] sm:text-[18px] max-w-2xl mx-auto mb-6 leading-relaxed" style={{ color: '#444' }}>
+            <p className="text-[17px] sm:text-[20px] max-w-2xl mx-auto mb-8 leading-relaxed" style={{ color: '#555' }}>
               Criamos sites{' '}
-              <span className="text-[#0d0d0d] font-medium">personalizados e avançados</span>,
+              <span className="text-[#0d0d0d] font-semibold">personalizados e avançados</span>,
               focados em conversão e SEO — para transformar visitante em cliente e aparecer no Google.
             </p>
 
             <div
-              className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 mb-10 text-[13px]"
-              style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
+              className="inline-flex items-center gap-3 rounded-full px-6 py-2.5 mb-10 text-[13px] backdrop-blur-sm"
+              style={{
+                background: 'rgba(255,255,255,0.7)',
+                border: '1px solid rgba(0,0,0,0.06)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+              }}
             >
-              <span style={{ color: '#444' }}>A partir de</span>
-              <span className="font-bold" style={{ color: '#b45309' }}>R$497</span>
-              <span style={{ color: '#555' }}>·</span>
+              <span style={{ color: '#555' }}>A partir de</span>
+              <span className="font-bold text-xl" style={{ color: '#b45309' }}>R$497</span>
+              <span style={{ color: '#999' }}>·</span>
               <span style={{ color: '#777' }}>parcele em 2×</span>
             </div>
 
-            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 list-none" aria-label="Diferenciais">
+            <ul className="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-10 list-none">
               {['Feito à mão — não é template', 'SEO técnico avançado', 'Focado em converter'].map((t) => (
-                <li key={t} className="flex items-center gap-1.5 text-[13px]" style={{ color: '#444' }}>
-                  <span style={{ color: '#b45309' }}><IconCheck /></span>
+                <li key={t} className="flex items-center gap-2 text-[13px]" style={{ color: '#555' }}>
+                  <span className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: 'rgba(180,83,9,0.1)' }}>
+                    <IconCheck />
+                  </span>
                   {t}
                 </li>
               ))}
             </ul>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <CTAPrimary href="/orcamento" size="lg">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <CTAPrimary href="/orcamento" size="lg" className="!px-10 !py-4 !text-[16px]">
                 MONTAR MEU ORÇAMENTO
                 <IconArrow />
               </CTAPrimary>
-              <a
-                href="#diferenciais"
-                className="text-[13px] transition-colors px-3 py-3"
-                style={{ color: '#777' }}
-              >
+              <CTAGhost href="#diferenciais">
                 Por que somos diferentes? →
-              </a>
+              </CTAGhost>
+            </div>
+
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-[12px]" style={{ color: '#999' }}>
+              <span className="flex items-center gap-2">
+                <IconShield />
+                Orçamento grátis em 24h
+              </span>
+              <span className="w-px h-4 bg-zinc-200" />
+              <span className="flex items-center gap-2">
+                <IconClock />
+                Sem compromisso
+              </span>
+              <span className="w-px h-4 bg-zinc-200" />
+              <span className="flex items-center gap-2">
+                <IconCheck />
+                Parcele em 2×
+              </span>
             </div>
           </div>
         </section>
@@ -342,40 +490,50 @@ export default function HomePage() {
         <section
           id="o-problema"
           aria-labelledby="problem-heading"
-          className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#f7f7f7' }}
+          className="py-24 sm:py-32 relative"
+          style={{ background: '#f5f5f0' }}
         >
+          <div className="absolute inset-0 pointer-events-none" aria-hidden>
+            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent)' }} />
+          </div>
+
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-14">
-              <SectionLabel>O problema</SectionLabel>
+            <div className="text-center mb-16">
+              <div className="flex justify-center">
+                <SectionLabel>O problema</SectionLabel>
+              </div>
               <h2
                 id="problem-heading"
-                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[44px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight mt-2"
               >
                 A maioria dos sites são bonitos.<br />
-                <span style={{ color: '#777' }}>Mas bonito não paga boleto.</span>
+                <span style={{ color: '#999' }}>Mas bonito não paga boleto.</span>
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {PROBLEMS.map((p) => (
-                <div
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {PROBLEMS.map((p, index) => (
+                <GlassCard
                   key={p.stat}
-                  className="rounded-2xl p-7 text-center"
-                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
+                  className="p-8 text-center hover:shadow-xl hover:-translate-y-1"
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <p className="text-[56px] font-black mb-3 leading-none" style={{ color: '#b45309' }}>{p.stat}</p>
-                  <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>{p.text}</p>
-                </div>
+                  <p className="text-[60px] font-black mb-2 leading-none" style={{ color: '#b45309' }}>{p.stat}</p>
+                  <p className="text-[11px] font-medium uppercase tracking-wider mb-3" style={{ color: '#999' }}>{p.label}</p>
+                  <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{p.desc}</p>
+                </GlassCard>
               ))}
             </div>
 
             <div
-              className="mt-5 rounded-xl px-6 py-5 text-center"
-              style={{ background: 'rgba(250,204,21,0.025)', border: '1px solid rgba(250,204,21,0.07)' }}
+              className="mt-6 rounded-2xl px-8 py-6 text-center backdrop-blur-sm"
+              style={{
+                background: 'rgba(250,204,21,0.04)',
+                border: '1px solid rgba(250,204,21,0.08)',
+              }}
             >
-              <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>
-                <span className="text-[#0d0d0d] font-medium">Sites genéricos de IA são todos iguais</span>
+              <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>
+                <span className="text-[#0d0d0d] font-semibold">Sites genéricos de IA são todos iguais</span>
                 {' '}— seu negócio merece algo feito estrategicamente para converter. É exatamente isso que a TopSite faz.
               </p>
             </div>
@@ -386,44 +544,49 @@ export default function HomePage() {
         <section
           id="diferenciais"
           aria-labelledby="diff-heading"
-          className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}
+          className="py-24 sm:py-32"
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-14">
-              <SectionLabel>Nosso diferencial</SectionLabel>
+            <div className="text-center mb-16">
+              <div className="flex justify-center">
+                <SectionLabel>Nosso diferencial</SectionLabel>
+              </div>
               <h2
                 id="diff-heading"
-                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[44px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight mt-2"
               >
                 O que justifica ser premium
               </h2>
-              <p className="mt-4 max-w-lg mx-auto text-[15px] leading-relaxed" style={{ color: '#555' }}>
+              <p className="mt-4 max-w-lg mx-auto text-[16px] leading-relaxed" style={{ color: '#666' }}>
                 Não somos mais um serviço de site — somos estratégia digital que usa
                 desenvolvimento e SEO para gerar resultado real.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {DIFFERENTIALS.map((d) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {DIFFERENTIALS.map((d, index) => (
                 <div
                   key={d.title}
-                  className="flex items-start gap-5 p-6 rounded-2xl transition-all duration-300"
-                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
+                  className="group flex items-start gap-6 p-7 rounded-2xl transition-all duration-500 hover:shadow-xl hover:-translate-y-1"
+                  style={{
+                    background: '#ffffff',
+                    border: '1px solid rgba(0,0,0,0.05)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
+                  }}
                 >
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110"
                     style={{
-                      background: 'rgba(250,204,21,0.07)',
-                      border: '1px solid rgba(250,204,21,0.12)',
-                      color: '#facc15',
+                      background: 'linear-gradient(135deg, rgba(250,204,21,0.12), rgba(180,83,9,0.08))',
+                      border: '1px solid rgba(250,204,21,0.15)',
+                      color: '#b45309',
                     }}
                   >
                     <d.Icon />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#0d0d0d] text-[15px] mb-2">{d.title}</h3>
-                    <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>{d.desc}</p>
+                    <h3 className="font-semibold text-[#0d0d0d] text-[16px] mb-2">{d.title}</h3>
+                    <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{d.desc}</p>
                   </div>
                 </div>
               ))}
@@ -435,58 +598,73 @@ export default function HomePage() {
         <section
           id="portfolio"
           aria-labelledby="portfolio-heading"
-          className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#f7f7f7' }}
+          className="py-24 sm:py-32"
+          style={{ background: '#f5f5f0' }}
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
-              <SectionLabel>Portfólio</SectionLabel>
+            <div className="text-center mb-16">
+              <div className="flex justify-center">
+                <SectionLabel>Portfólio</SectionLabel>
+              </div>
               <h2
                 id="portfolio-heading"
-                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[44px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight mt-2"
               >
                 Sites que já colocamos no ar
               </h2>
-              <p className="mt-3 text-[14px]" style={{ color: '#444' }}>
+              <p className="mt-3 text-[15px]" style={{ color: '#666' }}>
                 Cada um desenvolvido à mão, com estratégia e SEO desde o primeiro dia.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {PORTFOLIO.map((p) => (
                 <div
                   key={p.src}
-                  className="rounded-xl overflow-hidden"
-                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
+                  className="group rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 cursor-pointer"
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.05)' }}
                 >
-                  <div className="aspect-square">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <div className="aspect-square relative overflow-hidden">
                     <img
                       src={p.src}
                       alt={`Site TopSite — ${p.segment}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       loading="lazy"
                     />
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: `linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)`,
+                      }}
+                    />
+                    <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                      <span
+                        className="inline-block px-3 py-1 rounded-full text-[10px] font-semibold text-white"
+                        style={{ background: p.color }}
+                      >
+                        {p.segment}
+                      </span>
+                    </div>
                   </div>
-                  <div className="px-3 py-2.5">
-                    <p className="text-[11px] font-medium" style={{ color: '#666' }}>{p.segment}</p>
+                  <div className="px-4 py-3">
+                    <p className="text-[12px] font-medium" style={{ color: '#999' }}>{p.segment}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-8 flex items-center justify-center gap-3">
+            <div className="mt-10 flex items-center justify-center gap-4">
               <div className="flex -space-x-2">
-                {['#1d4ed8', '#7c3aed', '#d97706', '#15803d'].map((c, i) => (
+                {['#2563eb', '#7c3aed', '#d97706', '#16a34a'].map((c, i) => (
                   <div
                     key={i}
-                    className="w-7 h-7 rounded-full"
-                    style={{ background: c, border: '2px solid #f7f7f7' }}
+                    className="w-8 h-8 rounded-full ring-2 ring-white"
+                    style={{ background: c }}
                   />
                 ))}
               </div>
-              <p className="text-[13px]" style={{ color: '#444' }}>
-                <span className="text-[#0d0d0d] font-medium">+50 negócios</span> confiam na TopSite
+              <p className="text-[14px]" style={{ color: '#666' }}>
+                <span className="text-[#0d0d0d] font-semibold">+50 negócios</span> confiam na TopSite
               </p>
             </div>
           </div>
@@ -496,36 +674,38 @@ export default function HomePage() {
         <section
           id="para-quem"
           aria-labelledby="forwho-heading"
-          className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}
+          className="py-24 sm:py-32"
         >
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-            <SectionLabel>Para quem é</SectionLabel>
+            <div className="flex justify-center">
+              <SectionLabel>Para quem é</SectionLabel>
+            </div>
             <h2
               id="forwho-heading"
-              className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4 mb-6"
+              className="text-3xl sm:text-[44px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight mt-2 mb-6"
             >
               Para quem leva o próprio<br />negócio a sério
             </h2>
-            <p className="text-[15px] leading-relaxed mb-12 max-w-lg mx-auto" style={{ color: '#555' }}>
+            <p className="text-[16px] leading-relaxed mb-14 max-w-lg mx-auto" style={{ color: '#666' }}>
               Um site profissional não é custo — é investimento que se paga.{' '}
-              <span className="text-[#0d0d0d]">Se você entende que presença digital gera clientes</span>{' '}
+              <span className="text-[#0d0d0d] font-medium">Se você entende que presença digital gera clientes</span>{' '}
               e quer um site estratégico feito para converter, estamos aqui para isso.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-left">
               {FOR_WHOM.map((item) => (
                 <div
                   key={item.title}
-                  className="p-5 rounded-xl"
-                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
+                  className="group p-7 rounded-2xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                  style={{
+                    background: '#ffffff',
+                    border: '1px solid rgba(0,0,0,0.05)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
+                  }}
                 >
-                  <div
-                    className="w-1 h-4 rounded-full mb-4"
-                    style={{ background: 'rgba(250,204,21,0.6)' }}
-                  />
-                  <h3 className="font-semibold text-[#0d0d0d] text-[14px] mb-2">{item.title}</h3>
-                  <p className="text-[13px] leading-relaxed" style={{ color: '#555' }}>{item.desc}</p>
+                  <div className="text-3xl mb-4">{item.icon}</div>
+                  <h3 className="font-semibold text-[#0d0d0d] text-[15px] mb-2">{item.title}</h3>
+                  <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -536,69 +716,82 @@ export default function HomePage() {
         <section
           id="oferta"
           aria-labelledby="offer-heading"
-          className="py-20 sm:py-28 relative overflow-hidden"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#f7f7f7' }}
+          className="py-24 sm:py-32 relative overflow-hidden"
+          style={{ background: '#f5f5f0' }}
         >
           <div
             className="absolute inset-0 pointer-events-none"
             aria-hidden
-            style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(250,204,21,0.05) 0%, transparent 65%)' }}
+            style={{
+              background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(250,204,21,0.04) 0%, transparent 60%)',
+            }}
           />
+
           <div className="relative max-w-xl mx-auto px-4 sm:px-6 text-center">
-            <SectionLabel>Investimento</SectionLabel>
+            <div className="flex justify-center">
+              <SectionLabel>Investimento</SectionLabel>
+            </div>
             <h2
               id="offer-heading"
-              className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4 mb-10"
+              className="text-3xl sm:text-[44px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight mt-2 mb-12"
             >
               Preço justo para um<br />
               <span style={{ color: '#b45309' }}>resultado de verdade</span>
             </h2>
 
-            <div
-              className="rounded-2xl p-8 sm:p-10"
-              style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.10)' }}
-            >
-              <p className="text-[10px] tracking-[0.16em] uppercase mb-3" style={{ color: '#777' }}>
+            <GlassCard className="p-10 sm:p-12 relative overflow-hidden">
+              <div
+                className="absolute top-0 left-0 right-0 h-1"
+                style={{
+                  background: 'linear-gradient(90deg, #facc15, #b45309, #f59e0b)',
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer 3s ease-in-out infinite',
+                }}
+              />
+
+              <p className="text-[10px] tracking-[0.2em] uppercase mb-4" style={{ color: '#999' }}>
                 Sites a partir de
               </p>
-              <p className="text-[76px] sm:text-[96px] font-black leading-none mb-3" style={{ color: '#b45309' }}>
+              <p className="text-[80px] sm:text-[100px] font-black leading-none mb-4" style={{ color: '#b45309' }}>
                 R$497
               </p>
-              <p className="text-[14px] mb-8" style={{ color: '#444' }}>
+              <p className="text-[14px] mb-10" style={{ color: '#666' }}>
                 O valor varia conforme escopo e complexidade do projeto.
               </p>
 
               <div
-                className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-8 text-[13px]"
+                className="inline-flex items-center gap-3 rounded-full px-5 py-2.5 mb-10 text-[13px]"
                 style={{
-                  background: 'rgba(250,204,21,0.05)',
+                  background: 'rgba(250,204,21,0.06)',
                   border: '1px solid rgba(250,204,21,0.12)',
                 }}
               >
-                <span className="font-medium" style={{ color: 'rgba(250,204,21,0.85)' }}>
+                <span className="font-medium" style={{ color: '#b45309' }}>
                   Pagamento em 2× sem juros
                 </span>
-                <span style={{ color: '#888' }}>—</span>
-                <span style={{ color: '#555' }}>metade agora, metade no próximo mês</span>
+                <span style={{ color: '#ccc' }}>—</span>
+                <span style={{ color: '#888' }}>metade agora, metade no próximo mês</span>
               </div>
 
-              <ul className="space-y-3 text-left mb-8">
+              <ul className="space-y-3.5 text-left mb-10">
                 {CHECKLIST.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-[14px]" style={{ color: '#444' }}>
-                    <span className="mt-0.5 shrink-0" style={{ color: '#b45309' }}><IconCheck /></span>
+                  <li key={item} className="flex items-start gap-3.5 text-[14px]" style={{ color: '#555' }}>
+                    <span className="mt-0.5 shrink-0 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: 'rgba(180,83,9,0.08)' }}>
+                      <IconCheck />
+                    </span>
                     {item}
                   </li>
                 ))}
               </ul>
 
-              <CTAPrimary href="/orcamento" size="xl">
+              <CTAPrimary href="/orcamento" size="xl" className="!px-12 !py-5 !text-[16px] w-full sm:w-auto">
                 MONTAR MEU ORÇAMENTO
                 <IconArrow />
               </CTAPrimary>
-              <p className="text-[12px] mt-4" style={{ color: '#888' }}>
+              <p className="text-[12px] mt-5" style={{ color: '#aaa' }}>
                 Sem compromisso · Orçamento gratuito em até 24h
               </p>
-            </div>
+            </GlassCard>
           </div>
         </section>
 
@@ -606,41 +799,57 @@ export default function HomePage() {
         <section
           id="como-funciona"
           aria-labelledby="steps-heading"
-          className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}
+          className="py-24 sm:py-32"
         >
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-14">
-              <SectionLabel>Como funciona</SectionLabel>
+            <div className="text-center mb-16">
+              <div className="flex justify-center">
+                <SectionLabel>Como funciona</SectionLabel>
+              </div>
               <h2
                 id="steps-heading"
-                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[44px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight mt-2"
               >
                 Do briefing ao site<br />vendendo em 4 passos
               </h2>
             </div>
 
-            <ol className="space-y-3" aria-label="Processo de criação do site">
-              {STEPS.map((step) => (
-                <li
-                  key={step.num}
-                  className="flex items-start gap-5 p-5 rounded-2xl"
-                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)' }}
-                >
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 tabular-nums mt-0.5"
-                    style={{ border: '1px solid rgba(0,0,0,0.12)', color: '#888' }}
-                    aria-hidden="true"
+            <div className="relative">
+              {/* Connecting line */}
+              <div
+                className="absolute left-[19px] top-12 bottom-12 w-0.5 hidden sm:block"
+                style={{ background: 'linear-gradient(to bottom, #facc15, #b45309)' }}
+              />
+
+              <ol className="space-y-4" aria-label="Processo de criação do site">
+                {STEPS.map((step, index) => (
+                  <li
+                    key={step.num}
+                    className="group flex items-start gap-6 p-6 rounded-2xl transition-all duration-300 hover:shadow-lg"
+                    style={{
+                      background: '#ffffff',
+                      border: '1px solid rgba(0,0,0,0.04)',
+                    }}
                   >
-                    {step.num}
-                  </div>
-                  <div className="flex-1 pt-1.5">
-                    <h3 className="font-semibold text-[#0d0d0d] text-[15px] mb-1.5">{step.title}</h3>
-                    <p className="text-[14px] leading-relaxed" style={{ color: '#555' }}>{step.desc}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+                    <div
+                      className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0 transition-all duration-300 group-hover:scale-110"
+                      style={{
+                        background: index === 0 ? 'linear-gradient(135deg, #facc15, #f59e0b)' : '#f5f5f0',
+                        color: index === 0 ? '#000' : '#999',
+                        border: index === 0 ? 'none' : '1px solid rgba(0,0,0,0.06)',
+                      }}
+                      aria-hidden="true"
+                    >
+                      {step.num}
+                    </div>
+                    <div className="flex-1 pt-0.5">
+                      <h3 className="font-semibold text-[#0d0d0d] text-[16px] mb-1.5">{step.title}</h3>
+                      <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>{step.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </section>
 
@@ -648,26 +857,31 @@ export default function HomePage() {
         <section
           id="depoimentos"
           aria-labelledby="reviews-heading"
-          className="py-20 sm:py-28"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: '#f7f7f7' }}
+          className="py-24 sm:py-32"
+          style={{ background: '#f5f5f0' }}
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
-              <SectionLabel>Resultados reais</SectionLabel>
+            <div className="text-center mb-16">
+              <div className="flex justify-center">
+                <SectionLabel>Resultados reais</SectionLabel>
+              </div>
               <h2
                 id="reviews-heading"
-                className="text-3xl sm:text-[42px] font-bold text-[#0d0d0d] leading-[1.2] tracking-tight mt-4"
+                className="text-3xl sm:text-[44px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight mt-2"
               >
                 Negócios que pararam de perder<br />clientes para a concorrência
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {TESTIMONIALS.map((t) => (
                 <article
                   key={t.name}
-                  className="rounded-2xl p-6 flex flex-col"
-                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)' }}
+                  className="group p-7 rounded-2xl flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                  style={{
+                    background: '#ffffff',
+                    border: '1px solid rgba(0,0,0,0.04)',
+                  }}
                   itemScope
                   itemType="https://schema.org/Review"
                 >
@@ -681,9 +895,9 @@ export default function HomePage() {
                   >
                     &ldquo;{t.text}&rdquo;
                   </blockquote>
-                  <div className="flex items-center gap-3" itemProp="author" itemScope itemType="https://schema.org/Person">
+                  <div className="flex items-center gap-3 pt-4 border-t" style={{ borderColor: 'rgba(0,0,0,0.04)' }}>
                     <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0"
+                      className="w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-bold text-white shrink-0"
                       style={{ background: t.color }}
                       aria-hidden="true"
                     >
@@ -691,10 +905,60 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="text-[13px] font-semibold text-[#0d0d0d]" itemProp="name">{t.name}</p>
-                      <p className="text-[12px]" style={{ color: '#666' }}>{t.role}</p>
+                      <p className="text-[12px]" style={{ color: '#999' }}>{t.role}</p>
                     </div>
                   </div>
                 </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── FAQ ───────────────────────────────────────────────────────────── */}
+        <section
+          id="faq"
+          aria-labelledby="faq-heading"
+          className="py-24 sm:py-32"
+        >
+          <div className="max-w-3xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <div className="flex justify-center">
+                <SectionLabel>Dúvidas</SectionLabel>
+              </div>
+              <h2
+                id="faq-heading"
+                className="text-3xl sm:text-[44px] font-bold text-[#0d0d0d] leading-[1.15] tracking-tight mt-2"
+              >
+                Perguntas frequentes
+              </h2>
+            </div>
+
+            <div className="space-y-3">
+              {FAQS.map((faq, index) => (
+                <details
+                  key={faq.q}
+                  className="group rounded-2xl transition-all duration-300 hover:shadow-md"
+                  style={{
+                    background: '#ffffff',
+                    border: '1px solid rgba(0,0,0,0.04)',
+                  }}
+                  open={index === 0}
+                >
+                  <summary className="flex items-center justify-between cursor-pointer list-none p-6">
+                    <span className="font-semibold text-[#0d0d0d] text-[15px] pr-4">{faq.q}</span>
+                    <span
+                      className="text-[#b45309] text-sm transition-transform duration-300 group-open:rotate-180"
+                      style={{ fontSize: '18px' }}
+                    >
+                      ▾
+                    </span>
+                  </summary>
+                  <div className="px-6 pb-6">
+                    <p className="text-[14px] leading-relaxed" style={{ color: '#666' }}>
+                      {faq.a}
+                    </p>
+                  </div>
+                </details>
               ))}
             </div>
           </div>
@@ -704,54 +968,75 @@ export default function HomePage() {
         <section
           id="comecar"
           aria-labelledby="cta-heading"
-          className="py-28 sm:py-40 relative overflow-hidden"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}
+          className="py-32 sm:py-44 relative overflow-hidden"
+          style={{ background: '#0d0d0d' }}
         >
+          {/* Animated background */}
           <div
             className="absolute inset-0 pointer-events-none"
             aria-hidden
-            style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 100%, rgba(250,204,21,0.07) 0%, transparent 60%)' }}
+            style={{
+              background: 'radial-gradient(ellipse 70% 50% at 50% 50%, rgba(250,204,21,0.06) 0%, transparent 60%)',
+            }}
           />
           <div
             className="absolute inset-0 pointer-events-none"
             aria-hidden
-            style={{ backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px)', backgroundSize: '28px 28px' }}
+            style={{
+              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px)',
+              backgroundSize: '32px 32px',
+            }}
           />
 
           <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center">
-            <SectionLabel>Não espere mais</SectionLabel>
+            <div className="flex justify-center">
+              <SectionLabel>Não espere mais</SectionLabel>
+            </div>
             <h2
               id="cta-heading"
-              className="text-[38px] sm:text-[54px] font-bold text-[#0d0d0d] leading-[1.1] tracking-tight mt-5 mb-5"
+              className="text-[40px] sm:text-[56px] font-bold text-white leading-[1.1] tracking-tight mt-4 mb-6"
             >
               Pare de perder clientes<br />
-              <span style={{ color: '#b45309' }}>para quem aparece no Google</span>
+              <span style={{ color: '#facc15' }}>para quem aparece no Google</span>
             </h2>
-            <p className="text-[15px] leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: '#555' }}>
+            <p className="text-[16px] leading-relaxed mb-12 max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.5)' }}>
               Cada dia sem um site estratégico é um dia de clientes indo para o concorrente.
               Monte seu orçamento agora — é gratuito e sem compromisso.
             </p>
 
-            <CTAPrimary href="/orcamento" size="xl">
+            <CTAPrimary href="/orcamento" size="xl" className="!px-12 !py-5 !text-[17px] !shadow-[0_8px_40px_rgba(250,204,21,0.3)]">
               MONTAR MEU ORÇAMENTO
               <IconArrow />
             </CTAPrimary>
 
-            <p className="text-[12px] mt-5" style={{ color: '#888' }}>
-              Orçamento gratuito em até 24h · Parcele em 2× · Sem contrato
-            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-[12px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              <span className="flex items-center gap-2">
+                <IconShield />
+                Orçamento gratuito em 24h
+              </span>
+              <span className="w-px h-3 bg-white/10" />
+              <span className="flex items-center gap-2">
+                <IconClock />
+                Parcele em 2× sem juros
+              </span>
+              <span className="w-px h-3 bg-white/10" />
+              <span className="flex items-center gap-2">
+                <IconCheck />
+                Sem contrato
+              </span>
+            </div>
 
-            <div className="mt-10 pt-8" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-              <p className="text-[12px] mb-3" style={{ color: '#888' }}>Prefere falar primeiro?</p>
+            <div className="mt-12 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <p className="text-[12px] mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>Prefere falar primeiro?</p>
               <a
                 href={wa(MSG_DOUBT)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-[13px] transition-colors"
-                style={{ color: '#555' }}
+                className="inline-flex items-center gap-2.5 text-[14px] transition-colors hover:text-white/60"
+                style={{ color: 'rgba(255,255,255,0.4)' }}
                 aria-label="Tirar dúvidas no WhatsApp"
               >
-                <WAIcon className="w-4 h-4 text-green-500" />
+                <WAIcon className="w-5 h-5 text-green-500" />
                 Falar no WhatsApp
               </a>
             </div>
@@ -760,28 +1045,28 @@ export default function HomePage() {
 
         {/* ── FOOTER ───────────────────────────────────────────────────────── */}
         <footer
-          className="py-10"
-          style={{ borderTop: '1px solid rgba(0,0,0,0.08)', background: '#f5f5f5' }}
+          className="py-12"
+          style={{ background: '#0a0a0a', borderTop: '1px solid rgba(255,255,255,0.04)' }}
           aria-label="Rodapé"
         >
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-5">
-            <a href="/" aria-label="TOP SITE — página inicial">
-              <Image src="/logo.png" alt="TOP SITE" width={100} height={34} className="h-7 w-auto" />
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <a href="/" aria-label="TOP SITE — página inicial" className="hover:opacity-70 transition-opacity">
+              <Image src="/logo.png" alt="TOP SITE" width={100} height={34} className="h-7 w-auto brightness-0 invert" />
             </a>
-            <p className="text-[12px] text-center order-last sm:order-none" style={{ color: '#888' }}>
+            <p className="text-[12px] text-center order-last sm:order-none" style={{ color: 'rgba(255,255,255,0.2)' }}>
               © {new Date().getFullYear()} TOP SITE &middot;{' '}
-              <a href="/termos" className="hover:text-zinc-400 transition-colors">Termos</a>
+              <a href="/termos" className="hover:text-white/40 transition-colors">Termos</a>
               {' '}·{' '}
-              <a href="/privacidade" className="hover:text-zinc-400 transition-colors">Privacidade</a>
+              <a href="/privacidade" className="hover:text-white/40 transition-colors">Privacidade</a>
               {' '}·{' '}
-              <a href="/login" className="hover:text-zinc-400 transition-colors">Área do cliente</a>
+              <a href="/login" className="hover:text-white/40 transition-colors">Área do cliente</a>
             </p>
             <a
               href={wa(MSG_DOUBT)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-[12px] transition-colors"
-              style={{ color: '#666' }}
+              className="flex items-center gap-2 text-[12px] transition-colors hover:text-white/40"
+              style={{ color: 'rgba(255,255,255,0.2)' }}
               aria-label="Contato via WhatsApp"
             >
               <WAIcon className="w-4 h-4 text-green-500" />
@@ -791,6 +1076,20 @@ export default function HomePage() {
         </footer>
 
       </div>
+
+      {/* ─── Global styles ────────────────────────────────────────────────── */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+          }
+          ::selection {
+            background: #facc15;
+            color: #0d0d0d;
+          }
+        `
+      }} />
     </>
   )
 }
