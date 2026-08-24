@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { APP_URL } from '@/lib/config'
 
 type ProjectType = 'landing_page' | 'institucional' | 'loja_virtual'
 
@@ -51,12 +52,14 @@ export default async function OrcamentosAdminPage() {
                 <tr className="border-b border-brand-dark-border bg-brand-dark">
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Nome</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">E-mail</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">WhatsApp</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Tipo</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Páginas</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden lg:table-cell">Segmento</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Adicionais</th>
                   <th className="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Valor</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Data</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden lg:table-cell">Link</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-dark-border">
@@ -67,6 +70,15 @@ export default async function OrcamentosAdminPage() {
                       <a href={`mailto:${lead.email}`} className="hover:text-brand transition-colors">
                         {lead.email}
                       </a>
+                    </td>
+                    <td className="px-4 py-3 text-gray-300 hidden sm:table-cell">
+                      {lead.phone ? (
+                        <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="hover:text-brand transition-colors">
+                          {lead.phone}
+                        </a>
+                      ) : (
+                        <span className="text-gray-600">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-gray-300">{typeLabel(lead.projectType)}</td>
                     <td className="px-4 py-3 text-gray-300 hidden md:table-cell">
@@ -98,6 +110,20 @@ export default async function OrcamentosAdminPage() {
                     </td>
                     <td className="px-4 py-3 text-gray-500 text-xs hidden sm:table-cell whitespace-nowrap">
                       {fmtDate(lead.createdAt)}
+                    </td>
+                    <td className="px-4 py-3 hidden lg:table-cell">
+                      {lead.token ? (
+                        <a
+                          href={`${APP_URL}/orcamento/${lead.token}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-brand hover:underline"
+                        >
+                          Ver orçamento →
+                        </a>
+                      ) : (
+                        <span className="text-gray-600 text-xs">—</span>
+                      )}
                     </td>
                   </tr>
                 ))}

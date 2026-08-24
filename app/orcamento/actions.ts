@@ -26,15 +26,18 @@ export interface SaveQuoteInput extends QuoteData {
 
 export async function saveQuoteLeadAction(
   input: SaveQuoteInput,
-): Promise<{ ok: boolean; error?: string; emailFailed?: boolean }> {
+): Promise<{ ok: boolean; error?: string; emailFailed?: boolean; token?: string }> {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(input.email)) {
     return { ok: false, error: 'email_invalid' }
   }
 
+  const token = crypto.randomUUID()
+
   try {
     await prisma.quoteLead.create({
       data: {
+        token,
         name: input.name,
         email: input.email,
         phone: input.phone ?? null,
@@ -65,7 +68,7 @@ export async function saveQuoteLeadAction(
     emailFailed = true
   }
 
-  return { ok: true, emailFailed }
+  return { ok: true, emailFailed, token }
 }
 
 /* ─── Helpers ─────────────────────────────────────────────────────────────── */

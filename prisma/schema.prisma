@@ -662,6 +662,7 @@ model PresentationProposalLead {
 
 model QuoteLead {
   id          String   @id @default(uuid())
+  token       String?  @unique @map("token")
   name        String
   email       String
   projectType String   @map("project_type")

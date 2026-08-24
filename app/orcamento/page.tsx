@@ -4,34 +4,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useCallback } from 'react'
 import { saveQuoteLeadAction } from './actions'
-import { buildWAMessage } from './utils'
+import { siteBase, calcTotal, fmtBRL, monthlyPrice } from './utils'
+import QuoteResult from './_components/QuoteResult'
 import type { ProjectType } from './actions'
-
-/* ─── Pricing ─────────────────────────────────────────────────────────────── */
-
-function siteBase(type: ProjectType, pages: number): number {
-  if (type === 'landing_page') return 397
-  if (type === 'loja_virtual') return 1500
-  return pages <= 4 ? 697 : 697 + (pages - 4) * 100
-}
-
-function calcTotal(
-  type: ProjectType,
-  pages: number,
-  hasAdmin: boolean,
-  hasLogo: boolean,
-  hasDomain: boolean,
-): number {
-  const base = siteBase(type, pages)
-  // Loja virtual: admin sempre incluso no preço fixo
-  // Demais: admin = mesmo valor do site base (dobra o investimento)
-  const adminCost = type === 'loja_virtual' ? 0 : (hasAdmin ? base : 0)
-  return base + adminCost + (!hasLogo ? 220 : 0) + (!hasDomain ? 140 : 0)
-}
-
-function fmtBRL(v: number) {
-  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
 
 /* ─── State ───────────────────────────────────────────────────────────────── */
 
@@ -59,10 +34,6 @@ const INIT: FormState = {
   name: '',
   email: '',
   whatsapp: '',
-}
-
-function monthlyPrice(hasAdmin: boolean, type: ProjectType): number {
-  return hasAdmin || type === 'loja_virtual' ? 49 : 29
 }
 
 function getSteps(type: ProjectType | null) {
@@ -303,267 +274,6 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
   )
 }
 
-/* ─── Result screen ───────────────────────────────────────────────────────── */
-
-function ResultScreen({
-  initial,
-  name,
-  segment,
-}: {
-  initial: { projectType: ProjectType; pageCount: number; hasAdmin: boolean; hasLogo: boolean; hasDomain: boolean; hasHosting: boolean }
-  name: string
-  segment: string
-}) {
-  const [type, setType] = useState<ProjectType>(initial.projectType)
-  const [pages, setPages] = useState(initial.pageCount)
-  const [hasAdmin, setHasAdmin] = useState(initial.hasAdmin)
-  const [hasLogo, setHasLogo] = useState(initial.hasLogo)
-  const [hasDomain, setHasDomain] = useState(initial.hasDomain)
-  const hasHosting = initial.hasHosting
-
-  const total = calcTotal(type, pages, hasAdmin, hasLogo, hasDomain)
-  const half = Math.ceil(total / 2)
-  const WA_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5511999999999').replace(/\D/g, '')
-
-  function handleApprove() {
-    const msg = buildWAMessage({
-      projectType: type,
-      pageCount: type === 'institucional' ? pages : null,
-      hasAdmin, hasLogo, hasDomain, totalValue: total,
-    })
-    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer')
-  }
-
-  const typeLabels: Record<ProjectType, string> = {
-    landing_page: 'Landing Page',
-    institucional: 'Institucional',
-    loja_virtual: 'Loja Virtual',
-  }
-
-  const base = siteBase(type, pages)
-
-  const addons = [
-    {
-      label: 'Painel admin / backend',
-      tip: type === 'loja_virtual' ? 'Incluso no valor da loja virtual.' : 'Dobra o investimento — área para gerenciar conteúdo.',
-      price: type === 'loja_virtual' ? 0 : base,
-      value: type === 'loja_virtual' ? true : hasAdmin,
-      onChange: type === 'loja_virtual' ? () => {} : setHasAdmin,
-      disabled: type === 'loja_virtual',
-    },
-    {
-      label: 'Criação de logotipo',
-      tip: 'Identidade visual completa (logo + paleta).',
-      price: 220,
-      value: !hasLogo,
-      onChange: (v: boolean) => setHasLogo(!v),
-    },
-    {
-      label: 'Domínio + configuração DNS',
-      tip: 'Registro e configuração do .com.br.',
-      price: 140,
-      value: !hasDomain,
-      onChange: (v: boolean) => setHasDomain(!v),
-    },
-  ]
-
-  return (
-    <div className="space-y-4">
-
-      {/* Total card */}
-      <div
-        className="relative py-10 text-center rounded-2xl overflow-hidden"
-        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          aria-hidden
-          style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(250,204,21,0.06) 0%, transparent 70%)' }}
-        />
-        <p className="relative text-[10px] font-medium tracking-[0.16em] uppercase mb-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
-          Investimento total
-        </p>
-        <p className="relative text-[58px] sm:text-[68px] font-black text-white leading-none tabular-nums">
-          {fmtBRL(total)}
-        </p>
-        <div className="relative mt-4 flex flex-col items-center gap-2">
-          <div
-            className="inline-flex items-center gap-1 rounded-full px-4 py-1.5"
-            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              2×{' '}
-              <span className="text-white font-medium">{fmtBRL(half)}</span>
-              <span style={{ color: 'rgba(255,255,255,0.2)' }} className="mx-1">·</span>
-              <span className="text-white font-medium">{fmtBRL(total - half)}</span>
-              <span style={{ color: 'rgba(255,255,255,0.4)' }}> no mês seguinte</span>
-            </p>
-          </div>
-          <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.25)' }}>
-            parcelamento em até 2× no cartão, sem juros
-          </p>
-        </div>
-      </div>
-
-      {/* Hospedagem mensal */}
-      {hasHosting && (
-        <div
-          className="flex items-center justify-between px-5 py-4 rounded-xl"
-          style={{ background: 'rgba(250,204,21,0.06)', border: '1px solid rgba(250,204,21,0.2)' }}
-        >
-          <div>
-            <p className="text-[13px] font-semibold text-white">Manutenção + Hospedagem</p>
-            <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>SSL · monitoramento · suporte · cancele quando quiser</p>
-          </div>
-          <span className="text-[15px] font-bold tabular-nums" style={{ color: '#facc15' }}>
-            R${monthlyPrice(hasAdmin, type)}/mês
-          </span>
-        </div>
-      )}
-
-      {/* Tipo */}
-      <div
-        className="rounded-xl p-4"
-        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
-      >
-        <p className="text-[10px] font-medium tracking-[0.12em] uppercase mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
-          Tipo de projeto
-        </p>
-        <div
-          className="flex gap-0.5 rounded-lg p-1"
-          style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.06)' }}
-        >
-          {(['landing_page', 'institucional', 'loja_virtual'] as ProjectType[]).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => { setType(t); if (t !== 'institucional') setPages(1); else setPages((p) => Math.max(4, p)) }}
-              className="flex-1 py-2 text-[11px] font-medium rounded-md transition-all duration-200"
-              style={{
-                background: type === t ? 'rgba(255,255,255,0.1)' : 'transparent',
-                color: type === t ? '#ffffff' : 'rgba(255,255,255,0.35)',
-                border: type === t ? '1px solid rgba(255,255,255,0.1)' : '1px solid transparent',
-              }}
-            >
-              {typeLabels[t]}
-            </button>
-          ))}
-        </div>
-
-        {type === 'institucional' && (
-          <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-            <p className="text-[11px] mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              Número de páginas
-              <span style={{ color: 'rgba(255,255,255,0.2)' }} className="ml-1.5">· 4 incluídas, a partir da 5ª: +R$100 cada</span>
-            </p>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setPages((p) => Math.max(4, p - 1))}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-lg leading-none transition-all duration-200"
-                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}
-                aria-label="Reduzir"
-              >
-                −
-              </button>
-              <span className="text-2xl font-bold text-white w-7 text-center tabular-nums">{pages}</span>
-              <button
-                type="button"
-                onClick={() => setPages((p) => p + 1)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-lg leading-none transition-all duration-200"
-                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}
-                aria-label="Adicionar"
-              >
-                +
-              </button>
-              <span className="text-[13px] tabular-nums ml-1" style={{ color: '#facc15' }}>
-                = {fmtBRL(base)}
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Adicionais */}
-      <div
-        className="rounded-xl px-4"
-        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
-      >
-        <p className="text-[10px] font-medium tracking-[0.12em] uppercase pt-4 pb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
-          Adicionais
-        </p>
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          {addons.map(({ label, tip, price, value, onChange, disabled }) => (
-            <div
-              key={label}
-              className="flex items-center gap-3.5 py-4"
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', opacity: disabled ? 0.5 : 1 }}
-            >
-              <Toggle value={value} onChange={disabled ? () => {} : onChange} />
-              <div className="flex-1 min-w-0">
-                <p className="text-[14px] transition-colors" style={{ color: value ? '#ffffff' : 'rgba(255,255,255,0.35)' }}>
-                  {label}
-                </p>
-                <p className="text-[12px] mt-0.5" style={{ color: 'rgba(255,255,255,0.2)' }}>{tip}</p>
-              </div>
-              <span
-                className="text-[13px] font-semibold tabular-nums shrink-0 transition-colors"
-                style={{ color: disabled ? 'rgba(255,255,255,0.3)' : value ? '#facc15' : 'rgba(255,255,255,0.15)' }}
-              >
-                {disabled ? 'incluso' : `+${fmtBRL(price)}`}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Resumo */}
-      <div
-        className="flex items-center gap-3 px-4 py-3 rounded-xl"
-        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
-      >
-        <div className="w-px self-stretch rounded-full shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }} />
-        <div className="space-y-0.5 text-[13px]">
-          <p>
-            <span style={{ color: 'rgba(255,255,255,0.3)' }}>Nome — </span>
-            <span style={{ color: 'rgba(255,255,255,0.7)' }}>{name}</span>
-          </p>
-          <p>
-            <span style={{ color: 'rgba(255,255,255,0.3)' }}>Segmento — </span>
-            <span style={{ color: 'rgba(255,255,255,0.7)' }}>{segment}</span>
-          </p>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <button
-        type="button"
-        onClick={handleApprove}
-        className="w-full py-4 rounded-xl text-[15px] font-semibold transition-all duration-200 active:scale-[0.99]"
-        style={{ background: '#facc15', color: '#000' }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = '#fde047'
-          e.currentTarget.style.boxShadow = '0 0 40px rgba(250,204,21,0.3)'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = '#facc15'
-          e.currentTarget.style.boxShadow = ''
-        }}
-      >
-        <span className="flex items-center justify-center gap-2.5">
-          <IconWA />
-          Aprovar orçamento no WhatsApp
-          <IconChevron />
-        </span>
-      </button>
-
-      <p className="text-center text-[12px]" style={{ color: 'rgba(255,255,255,0.2)' }}>
-        Você será redirecionado ao WhatsApp com o resumo final ajustado.
-      </p>
-    </div>
-  )
-}
-
 /* ─── Main ────────────────────────────────────────────────────────────────── */
 
 export default function OrcamentoPage() {
@@ -573,6 +283,7 @@ export default function OrcamentoPage() {
   const [emailError, setEmailError] = useState('')
   const [done, setDone] = useState(false)
   const [emailFailed, setEmailFailed] = useState(false)
+  const [quoteToken, setQuoteToken] = useState<string | null>(null)
 
   const steps = getSteps(form.projectType)
   const currentStep = steps[stepIndex]
@@ -623,6 +334,7 @@ export default function OrcamentoPage() {
       return
     }
     if (result.emailFailed) setEmailFailed(true)
+    if (result.token) setQuoteToken(result.token)
     setDone(true)
     next()
   }
@@ -864,7 +576,7 @@ export default function OrcamentoPage() {
             Não foi possível enviar o e-mail — mas seu orçamento está calculado abaixo.
           </div>
         )}
-        <ResultScreen
+        <QuoteResult
           initial={{
             projectType: form.projectType!,
             pageCount: form.pageCount,
@@ -875,6 +587,7 @@ export default function OrcamentoPage() {
           }}
           name={form.name}
           segment={form.segment}
+          shareLink={quoteToken ? `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://topsitebr.com.br'}/orcamento/${quoteToken}` : undefined}
         />
       </>
     )

@@ -1,5 +1,31 @@
 import type { ProjectType } from './actions'
 
+export function siteBase(type: ProjectType, pages: number): number {
+  if (type === 'landing_page') return 397
+  if (type === 'loja_virtual') return 1500
+  return pages <= 4 ? 697 : 697 + (pages - 4) * 100
+}
+
+export function calcTotal(
+  type: ProjectType,
+  pages: number,
+  hasAdmin: boolean,
+  hasLogo: boolean,
+  hasDomain: boolean,
+): number {
+  const base = siteBase(type, pages)
+  const adminCost = type === 'loja_virtual' ? 0 : (hasAdmin ? base : 0)
+  return base + adminCost + (!hasLogo ? 220 : 0) + (!hasDomain ? 140 : 0)
+}
+
+export function monthlyPrice(hasAdmin: boolean, type: ProjectType): number {
+  return hasAdmin || type === 'loja_virtual' ? 49 : 29
+}
+
+export function fmtBRL(v: number): string {
+  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
+
 export function buildWAMessage(q: {
   projectType: ProjectType
   pageCount: number | null
