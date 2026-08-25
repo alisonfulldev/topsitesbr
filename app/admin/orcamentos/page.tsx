@@ -27,43 +27,43 @@ export default async function OrcamentosAdminPage() {
   const leads = await prisma.quoteLead.findMany({ orderBy: { createdAt: 'desc' } })
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-5xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Orçamentos</h1>
-        <p className="text-sm text-gray-400 mt-1">
+        <h2 className="text-xl font-semibold text-gray-900">Orçamentos</h2>
+        <p className="text-sm text-gray-500 mt-1">
           {leads.length} orçamento{leads.length !== 1 ? 's' : ''} recebido{leads.length !== 1 ? 's' : ''}
         </p>
       </div>
 
       {leads.length === 0 ? (
-        <div className="rounded-xl border border-brand-dark-border bg-brand-dark p-12 text-center">
-          <p className="text-gray-400">Nenhum orçamento recebido ainda.</p>
-          <p className="text-sm text-gray-600 mt-2">Os leads do formulário <strong>/orcamento</strong> aparecem aqui.</p>
+        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+          <p className="text-gray-500">Nenhum orçamento recebido ainda.</p>
+          <p className="text-sm text-gray-400 mt-2">Os leads do formulário <strong>/orcamento</strong> aparecem aqui.</p>
         </div>
       ) : (
-        <div className="rounded-xl border border-brand-dark-border overflow-hidden">
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[640px]">
-              <thead>
-                <tr className="border-b border-brand-dark-border bg-brand-dark">
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Lead</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Projeto</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Adicionais</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Valor</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Data</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Desconto</th>
+            <table className="min-w-full divide-y divide-gray-100 text-sm">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Lead</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Projeto</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Adicionais</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Valor</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Data</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Desconto</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-brand-dark-border">
+              <tbody className="divide-y divide-gray-100">
                 {leads.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-brand-dark-hover transition-colors align-top">
+                  <tr key={lead.id} className="hover:bg-gray-50 transition-colors align-top">
 
                     {/* Lead — nome + email + fone */}
                     <td className="px-4 py-3">
-                      <p className="text-white font-semibold leading-tight">{lead.name}</p>
+                      <p className="text-gray-900 font-semibold leading-tight">{lead.name}</p>
                       <a
                         href={`mailto:${lead.email}`}
-                        className="text-[12px] text-gray-400 hover:text-brand transition-colors"
+                        className="text-[12px] text-gray-500 hover:text-gray-800 transition-colors"
                       >
                         {lead.email}
                       </a>
@@ -72,28 +72,28 @@ export default async function OrcamentosAdminPage() {
                           href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block text-[12px] text-gray-500 hover:text-green-400 transition-colors"
+                          className="block text-[12px] text-gray-400 hover:text-green-600 transition-colors"
                         >
                           {lead.phone}
                         </a>
                       )}
                     </td>
 
-                    {/* Projeto — tipo + páginas + link */}
+                    {/* Projeto — tipo + segmento + link */}
                     <td className="px-4 py-3">
-                      <p className="text-gray-200 font-medium leading-tight">
+                      <p className="text-gray-800 font-medium leading-tight">
                         {typeLabel(lead.projectType)}
                         {lead.projectType === 'institucional' && lead.pageCount != null && (
-                          <span className="text-gray-500 font-normal"> · {lead.pageCount} pág.</span>
+                          <span className="text-gray-400 font-normal"> · {lead.pageCount} pág.</span>
                         )}
                       </p>
-                      <p className="text-[12px] text-gray-500 mt-0.5 truncate max-w-[180px]">{lead.segment}</p>
+                      <p className="text-[12px] text-gray-400 mt-0.5 truncate max-w-[200px]">{lead.segment}</p>
                       {lead.token && (
                         <a
                           href={`${APP_URL}/orcamento/${lead.token}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[11px] text-brand hover:underline"
+                          className="text-[11px] text-amber-600 hover:underline"
                         >
                           ver orçamento →
                         </a>
@@ -104,27 +104,27 @@ export default async function OrcamentosAdminPage() {
                     <td className="px-4 py-3 hidden md:table-cell">
                       <div className="flex flex-wrap gap-1">
                         {lead.hasAdmin && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-900/40 text-blue-300 border border-blue-800/50">Admin</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">Admin</span>
                         )}
                         {!lead.hasLogo && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-900/40 text-purple-300 border border-purple-800/50">Logo</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">Logo</span>
                         )}
                         {!lead.hasDomain && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-900/40 text-amber-300 border border-amber-800/50">Domínio</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">Domínio</span>
                         )}
                         {!lead.hasAdmin && lead.hasLogo && lead.hasDomain && (
-                          <span className="text-gray-600 text-xs">—</span>
+                          <span className="text-gray-400 text-xs">—</span>
                         )}
                       </div>
                     </td>
 
                     {/* Valor */}
                     <td className="px-4 py-3 text-right whitespace-nowrap">
-                      <span className="text-brand font-bold">{fmtBRL(lead.totalValue)}</span>
+                      <span className="text-gray-900 font-bold">{fmtBRL(lead.totalValue)}</span>
                     </td>
 
                     {/* Data */}
-                    <td className="px-4 py-3 text-gray-500 text-xs hidden sm:table-cell whitespace-nowrap">
+                    <td className="px-4 py-3 text-gray-400 text-xs hidden sm:table-cell whitespace-nowrap">
                       {fmtDate(lead.createdAt)}
                     </td>
 

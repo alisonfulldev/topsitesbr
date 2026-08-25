@@ -55,6 +55,11 @@ export default function DiscountButton(props: Props) {
     ? new Date(sentState.discountExpiresAt) < new Date()
     : false
 
+  // Cores para o status inline (fundo claro do admin)
+  const sentBg    = isExpired ? 'rgba(243,244,246,1)' : 'rgba(220,252,231,1)'
+  const sentColor = isExpired ? '#6b7280' : '#15803d'
+  const sentBorder= isExpired ? '1px solid #e5e7eb' : '1px solid #bbf7d0'
+
   function openModal() {
     setStep('form')
     setError(null)
@@ -107,29 +112,25 @@ export default function DiscountButton(props: Props) {
           <div className="flex items-center gap-1.5 flex-wrap">
             <span
               className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold"
-              style={{
-                background: isExpired ? 'rgba(107,114,128,0.15)' : 'rgba(52,211,153,0.12)',
-                color: isExpired ? '#9ca3af' : '#34d399',
-                border: isExpired ? '1px solid rgba(107,114,128,0.2)' : '1px solid rgba(52,211,153,0.2)',
-              }}
+              style={{ background: sentBg, color: sentColor, border: sentBorder }}
             >
               {isExpired ? 'Expirado' : '✓ Enviado'}
             </span>
             {sentState.discountedTotal != null && (
-              <span className="text-[11px] text-gray-400">
+              <span className="text-[11px] text-gray-600 font-semibold">
                 {fmtBRL(sentState.discountedTotal)}
               </span>
             )}
           </div>
           {sentState.discountExpiresAt && (
-            <p className="text-[10px] text-gray-600">
+            <p className="text-[10px] text-gray-400">
               {isExpired ? 'Expirou' : 'Válido até'} {fmtDate(sentState.discountExpiresAt)}
             </p>
           )}
           <button
             type="button"
             onClick={openModal}
-            className="text-[11px] text-gray-500 hover:text-gray-300 transition-colors underline underline-offset-2"
+            className="text-[11px] text-gray-400 hover:text-gray-700 transition-colors underline underline-offset-2"
           >
             Reenviar
           </button>
@@ -138,18 +139,7 @@ export default function DiscountButton(props: Props) {
         <button
           type="button"
           onClick={openModal}
-          className="text-[12px] font-medium px-3 py-1.5 rounded-lg transition-all duration-200 whitespace-nowrap"
-          style={{
-            background: 'rgba(250,204,21,0.1)',
-            color: '#facc15',
-            border: '1px solid rgba(250,204,21,0.2)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(250,204,21,0.18)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(250,204,21,0.1)'
-          }}
+          className="text-[12px] font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 whitespace-nowrap bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
         >
           Enviar desconto
         </button>
