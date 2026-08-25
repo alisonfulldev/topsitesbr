@@ -661,20 +661,25 @@ model PresentationProposalLead {
 }
 
 model QuoteLead {
-  id          String   @id @default(uuid())
-  token       String?  @unique @map("token")
-  name        String
-  email       String
-  projectType String   @map("project_type")
-  pageCount   Int?     @map("page_count")
-  segment     String
-  hasAdmin    Boolean  @default(false) @map("has_admin")
-  hasLogo     Boolean  @default(true) @map("has_logo")
-  hasDomain   Boolean  @default(true) @map("has_domain")
-  hasHosting  Boolean  @default(false) @map("has_hosting")
-  totalValue  Decimal  @db.Decimal(10, 2) @map("total_value")
-  phone       String?
-  createdAt   DateTime @default(now()) @map("created_at")
+  id                String    @id @default(uuid())
+  token             String?   @unique @map("token")
+  name              String
+  email             String
+  projectType       String    @map("project_type")
+  pageCount         Int?      @map("page_count")
+  segment           String
+  hasAdmin          Boolean   @default(false) @map("has_admin")
+  hasLogo           Boolean   @default(true) @map("has_logo")
+  hasDomain         Boolean   @default(true) @map("has_domain")
+  hasHosting        Boolean   @default(false) @map("has_hosting")
+  totalValue        Decimal   @db.Decimal(10, 2) @map("total_value")
+  phone             String?
+  discountType      String?   @map("discount_type")
+  discountValue     Decimal?  @db.Decimal(10, 2) @map("discount_value")
+  discountedTotal   Decimal?  @db.Decimal(10, 2) @map("discounted_total")
+  discountSentAt    DateTime? @map("discount_sent_at")
+  discountExpiresAt DateTime? @map("discount_expires_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
 
   @@map("quote_leads")
 }

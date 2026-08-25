@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { APP_URL } from '@/lib/config'
+import DiscountButton from './_components/DiscountButton'
 
 type ProjectType = 'landing_page' | 'institucional' | 'loja_virtual'
 
@@ -60,6 +61,7 @@ export default async function OrcamentosAdminPage() {
                   <th className="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Valor</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Data</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden lg:table-cell">Link</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Desconto</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-dark-border">
@@ -124,6 +126,18 @@ export default async function OrcamentosAdminPage() {
                       ) : (
                         <span className="text-gray-600 text-xs">—</span>
                       )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <DiscountButton
+                        leadId={lead.id}
+                        name={lead.name}
+                        totalValue={lead.totalValue.toNumber()}
+                        discountType={lead.discountType}
+                        discountValue={lead.discountValue ? lead.discountValue.toNumber() : null}
+                        discountedTotal={lead.discountedTotal ? lead.discountedTotal.toNumber() : null}
+                        discountSentAt={lead.discountSentAt ? lead.discountSentAt.toISOString() : null}
+                        discountExpiresAt={lead.discountExpiresAt ? lead.discountExpiresAt.toISOString() : null}
+                      />
                     </td>
                   </tr>
                 ))}
