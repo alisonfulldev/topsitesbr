@@ -135,7 +135,7 @@ export default function QuoteResult({
       {/* Popup de boas-vindas — só na primeira vez */}
       {showIntro && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
           style={{ background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(6px)' }}
         >
           <div
