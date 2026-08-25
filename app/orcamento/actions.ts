@@ -89,9 +89,9 @@ function projectTypeLabel(t: ProjectType) {
 
 function buildAdicionaisList(input: SaveQuoteInput): string {
   const base =
-    input.projectType === 'landing_page' ? 397
-    : input.projectType === 'loja_virtual' ? 1500
-    : (input.pageCount ?? 4) <= 4 ? 697 : 697 + ((input.pageCount ?? 4) - 4) * 100
+    input.projectType === 'landing_page' ? 297
+    : input.projectType === 'loja_virtual' ? 1200
+    : (input.pageCount ?? 4) <= 4 ? 500 : 500 + ((input.pageCount ?? 4) - 4) * 100
   const items: string[] = []
   if (input.hasAdmin && input.projectType !== 'loja_virtual')
     items.push(`Painel admin / backend — <strong>+${fmtValue(base)}</strong>`)

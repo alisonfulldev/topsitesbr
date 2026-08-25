@@ -1,9 +1,9 @@
 import type { ProjectType } from './actions'
 
 export function siteBase(type: ProjectType, pages: number): number {
-  if (type === 'landing_page') return 397
-  if (type === 'loja_virtual') return 1500
-  return pages <= 4 ? 697 : 697 + (pages - 4) * 100
+  if (type === 'landing_page') return 297
+  if (type === 'loja_virtual') return 1200
+  return pages <= 4 ? 500 : 500 + (pages - 4) * 100
 }
 
 export function calcTotal(
