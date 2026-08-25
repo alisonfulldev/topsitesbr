@@ -439,7 +439,6 @@ export default function OrcamentoPage() {
     )
 
     if (currentStep === 3) {
-      const adminPrice = siteBase(form.projectType!, form.pageCount)
       return (
         <div className="space-y-3 sm:space-y-5">
           <StepHeader
@@ -447,9 +446,6 @@ export default function OrcamentoPage() {
             title="Precisa de área logada para gerenciar conteúdo?"
             sub="Ex.: editar textos, gerenciar cadastros, atualizar conteúdo no próprio site."
           />
-          <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            Investimento: <span className="font-semibold" style={{ color: '#facc15' }}>+{fmtBRL(adminPrice)}</span>
-          </p>
           <YesNo value={form.hasAdmin} onChange={(v) => set('hasAdmin', v)} />
           <PrimaryBtn onClick={next} />
         </div>
@@ -463,9 +459,6 @@ export default function OrcamentoPage() {
           title="Você já tem logotipo profissional?"
           sub="Um logotipo profissional é essencial para a identidade visual do site."
         />
-        <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          Investimento: <span className="font-semibold" style={{ color: '#facc15' }}>+R$220</span>
-        </p>
         <YesNo
           value={form.hasLogo}
           onChange={(v) => set('hasLogo', v)}
@@ -483,9 +476,6 @@ export default function OrcamentoPage() {
           title="Você já tem domínio próprio?"
           sub="Ex.: suaempresa.com.br — o endereço do seu site na internet."
         />
-        <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          Investimento: <span className="font-semibold" style={{ color: '#facc15' }}>+R$140</span>
-        </p>
         <YesNo
           value={form.hasDomain}
           onChange={(v) => set('hasDomain', v)}
@@ -497,7 +487,6 @@ export default function OrcamentoPage() {
     )
 
     if (currentStep === 8) {
-      const monthly = monthlyPrice(form.hasAdmin, form.projectType!)
       return (
         <div className="space-y-3 sm:space-y-5">
           <StepHeader
@@ -505,10 +494,6 @@ export default function OrcamentoPage() {
             title="Quer manter o site no ar com suporte mensal?"
             sub="Inclui hospedagem, SSL, monitoramento e suporte técnico contínuo."
           />
-          <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            Valor: <span className="font-semibold" style={{ color: '#facc15' }}>R${monthly}/mês</span>
-            <span className="ml-2 text-[12px]" style={{ color: 'rgba(255,255,255,0.2)' }}>· cancele quando quiser</span>
-          </p>
           <YesNo
             value={form.hasHosting}
             onChange={(v) => set('hasHosting', v)}

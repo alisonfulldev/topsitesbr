@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { buildWAMessage, siteBase, calcTotal, fmtBRL, monthlyPrice } from '../utils'
 import type { ProjectType } from '../actions'
 
@@ -61,7 +61,19 @@ export default function QuoteResult({
   const [hasLogo, setHasLogo] = useState(initial.hasLogo)
   const [hasDomain, setHasDomain] = useState(initial.hasDomain)
   const [copied, setCopied] = useState(false)
+  const [showIntro, setShowIntro] = useState(false)
   const hasHosting = initial.hasHosting
+
+  useEffect(() => {
+    if (!localStorage.getItem('quote_result_intro_seen')) {
+      setShowIntro(true)
+    }
+  }, [])
+
+  function dismissIntro() {
+    localStorage.setItem('quote_result_intro_seen', '1')
+    setShowIntro(false)
+  }
 
   const total = calcTotal(type, pages, hasAdmin, hasLogo, hasDomain)
   const half = Math.ceil(total / 2)
@@ -119,6 +131,54 @@ export default function QuoteResult({
 
   return (
     <div className="space-y-4">
+
+      {/* Popup de boas-vindas — só na primeira vez */}
+      {showIntro && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(6px)' }}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl p-6 space-y-4"
+            style={{ background: '#111827', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+              style={{ background: 'rgba(250,204,21,0.12)', border: '1px solid rgba(250,204,21,0.2)' }}
+            >
+              🎛️
+            </div>
+            <div>
+              <h3 className="text-white font-bold text-[18px] leading-snug mb-2">
+                Seu orçamento é flexível!
+              </h3>
+              <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                O valor calculado inclui tudo que você respondeu — mas você pode{' '}
+                <span className="text-white font-semibold">ativar ou desativar cada item</span>{' '}
+                para ajustar o total ao que faz sentido pra você.
+              </p>
+            </div>
+            <div
+              className="rounded-xl p-3.5"
+              style={{ background: 'rgba(250,204,21,0.06)', border: '1px solid rgba(250,204,21,0.15)' }}
+            >
+              <p className="text-[13px]" style={{ color: 'rgba(250,204,21,0.9)' }}>
+                💡 Exemplo: se não precisar de painel admin, basta desativá-lo e o valor cai na hora.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={dismissIntro}
+              className="w-full py-3.5 rounded-xl text-[15px] font-bold transition-all duration-200 active:scale-[0.98]"
+              style={{ background: '#facc15', color: '#000' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#fde047' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#facc15' }}
+            >
+              Ver meu orçamento →
+            </button>
+          </div>
+        </div>
+      )}
 
       {shareLink && (
         <div
@@ -263,9 +323,22 @@ export default function QuoteResult({
         className="rounded-xl px-4"
         style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
       >
-        <p className="text-[10px] font-medium tracking-[0.12em] uppercase pt-4 pb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
-          Adicionais
-        </p>
+        <div className="pt-4 pb-3 flex items-center justify-between gap-2">
+          <div>
+            <p className="text-[10px] font-medium tracking-[0.12em] uppercase" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              Personalize seu orçamento
+            </p>
+            <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.2)' }}>
+              Ative ou desative para ajustar o valor
+            </p>
+          </div>
+          <span
+            className="text-[10px] font-semibold px-2 py-1 rounded-full shrink-0"
+            style={{ background: 'rgba(250,204,21,0.08)', color: 'rgba(250,204,21,0.6)', border: '1px solid rgba(250,204,21,0.12)' }}
+          >
+            editável
+          </span>
+        </div>
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           {addons.map(({ label, tip, price, value, onChange, disabled }) => (
             <div
