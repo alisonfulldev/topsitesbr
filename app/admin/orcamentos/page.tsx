@@ -5,11 +5,9 @@ import { prisma } from '@/lib/prisma'
 import { APP_URL } from '@/lib/config'
 import DiscountButton from './_components/DiscountButton'
 
-type ProjectType = 'landing_page' | 'institucional' | 'loja_virtual'
-
 function typeLabel(t: string) {
-  if (t === 'landing_page')  return 'Landing Page'
-  if (t === 'loja_virtual')  return 'Loja Virtual'
+  if (t === 'landing_page') return 'Landing Page'
+  if (t === 'loja_virtual') return 'Loja Virtual'
   return 'Institucional'
 }
 
@@ -19,8 +17,7 @@ function fmtBRL(v: { toNumber(): number } | number | string) {
 }
 
 function fmtDate(d: Date) {
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
-    + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })
 }
 
 export default async function OrcamentosAdminPage() {
@@ -30,14 +27,12 @@ export default async function OrcamentosAdminPage() {
   const leads = await prisma.quoteLead.findMany({ orderBy: { createdAt: 'desc' } })
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Orçamentos</h1>
-          <p className="text-sm text-gray-400 mt-1">
-            {leads.length} orçamento{leads.length !== 1 ? 's' : ''} recebido{leads.length !== 1 ? 's' : ''}
-          </p>
-        </div>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-white">Orçamentos</h1>
+        <p className="text-sm text-gray-400 mt-1">
+          {leads.length} orçamento{leads.length !== 1 ? 's' : ''} recebido{leads.length !== 1 ? 's' : ''}
+        </p>
       </div>
 
       {leads.length === 0 ? (
@@ -48,49 +43,64 @@ export default async function OrcamentosAdminPage() {
       ) : (
         <div className="rounded-xl border border-brand-dark-border overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[640px]">
               <thead>
                 <tr className="border-b border-brand-dark-border bg-brand-dark">
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Nome</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">E-mail</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">WhatsApp</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Tipo</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Páginas</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden lg:table-cell">Segmento</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Lead</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Projeto</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Adicionais</th>
                   <th className="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Valor</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Data</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden lg:table-cell">Link</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Desconto</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-dark-border">
                 {leads.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-brand-dark-hover transition-colors">
-                    <td className="px-4 py-3 text-white font-medium">{lead.name}</td>
-                    <td className="px-4 py-3 text-gray-300">
-                      <a href={`mailto:${lead.email}`} className="hover:text-brand transition-colors">
+                  <tr key={lead.id} className="hover:bg-brand-dark-hover transition-colors align-top">
+
+                    {/* Lead — nome + email + fone */}
+                    <td className="px-4 py-3">
+                      <p className="text-white font-semibold leading-tight">{lead.name}</p>
+                      <a
+                        href={`mailto:${lead.email}`}
+                        className="text-[12px] text-gray-400 hover:text-brand transition-colors"
+                      >
                         {lead.email}
                       </a>
-                    </td>
-                    <td className="px-4 py-3 text-gray-300 hidden sm:table-cell">
-                      {lead.phone ? (
-                        <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="hover:text-brand transition-colors">
+                      {lead.phone && (
+                        <a
+                          href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-[12px] text-gray-500 hover:text-green-400 transition-colors"
+                        >
                           {lead.phone}
                         </a>
-                      ) : (
-                        <span className="text-gray-600">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-gray-300">{typeLabel(lead.projectType)}</td>
-                    <td className="px-4 py-3 text-gray-300 hidden md:table-cell">
-                      {lead.projectType === 'institucional' && lead.pageCount != null
-                        ? `${lead.pageCount} pág.`
-                        : '—'}
+
+                    {/* Projeto — tipo + páginas + link */}
+                    <td className="px-4 py-3">
+                      <p className="text-gray-200 font-medium leading-tight">
+                        {typeLabel(lead.projectType)}
+                        {lead.projectType === 'institucional' && lead.pageCount != null && (
+                          <span className="text-gray-500 font-normal"> · {lead.pageCount} pág.</span>
+                        )}
+                      </p>
+                      <p className="text-[12px] text-gray-500 mt-0.5 truncate max-w-[180px]">{lead.segment}</p>
+                      {lead.token && (
+                        <a
+                          href={`${APP_URL}/orcamento/${lead.token}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] text-brand hover:underline"
+                        >
+                          ver orçamento →
+                        </a>
+                      )}
                     </td>
-                    <td className="px-4 py-3 text-gray-400 hidden lg:table-cell max-w-xs truncate">
-                      {lead.segment}
-                    </td>
+
+                    {/* Adicionais */}
                     <td className="px-4 py-3 hidden md:table-cell">
                       <div className="flex flex-wrap gap-1">
                         {lead.hasAdmin && (
@@ -103,30 +113,22 @@ export default async function OrcamentosAdminPage() {
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-900/40 text-amber-300 border border-amber-800/50">Domínio</span>
                         )}
                         {!lead.hasAdmin && lead.hasLogo && lead.hasDomain && (
-                          <span className="text-gray-600 text-xs">Nenhum</span>
+                          <span className="text-gray-600 text-xs">—</span>
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-right">
+
+                    {/* Valor */}
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
                       <span className="text-brand font-bold">{fmtBRL(lead.totalValue)}</span>
                     </td>
+
+                    {/* Data */}
                     <td className="px-4 py-3 text-gray-500 text-xs hidden sm:table-cell whitespace-nowrap">
                       {fmtDate(lead.createdAt)}
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell">
-                      {lead.token ? (
-                        <a
-                          href={`${APP_URL}/orcamento/${lead.token}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-brand hover:underline"
-                        >
-                          Ver orçamento →
-                        </a>
-                      ) : (
-                        <span className="text-gray-600 text-xs">—</span>
-                      )}
-                    </td>
+
+                    {/* Desconto */}
                     <td className="px-4 py-3">
                       <DiscountButton
                         leadId={lead.id}
