@@ -354,14 +354,14 @@ export default function OrcamentoPage() {
             selected={form.projectType === 'landing_page'}
             onClick={() => set('projectType', 'landing_page')}
             title="Landing Page"
-            price="R$297"
+            price="R$567"
             desc="Página única focada em converter visitas em contatos. Ideal para um produto ou serviço específico."
           />
           <CardOption
             selected={form.projectType === 'institucional'}
             onClick={() => { set('projectType', 'institucional'); set('pageCount', Math.max(4, form.pageCount)) }}
             title="Site Institucional"
-            price="a partir de R$500"
+            price="a partir de R$780"
             desc="Site com múltiplas páginas — Início, Sobre, Serviços, Contato e mais."
           />
           <CardOption
@@ -396,7 +396,7 @@ export default function OrcamentoPage() {
           <div className="text-center">
             <p className="text-[52px] sm:text-[76px] font-black text-white leading-none tabular-nums">{form.pageCount}</p>
             <p className="text-[15px] font-bold mt-2 tabular-nums" style={{ color: '#facc15' }}>
-              {fmtBRL(form.pageCount <= 4 ? 500 : 500 + (form.pageCount - 4) * 100)}
+              {fmtBRL(form.pageCount <= 4 ? 780 : 780 + (form.pageCount - 4) * 100)}
             </p>
           </div>
           <button

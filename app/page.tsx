@@ -17,7 +17,7 @@ const BASE_URL = 'https://topsitebr.com.br'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: 'TOP SITE — Criação de Sites Profissionais com SEO | A partir de R$297',
+  title: 'TOP SITE — Criação de Sites Profissionais com SEO | A partir de R$567',
   description:
     'Criamos sites profissionais para pequenas empresas e autônomos com foco em SEO e conversão. Landing page, site institucional e loja virtual. Orçamento grátis em 24h.',
   keywords:
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: BASE_URL,
-    title: 'TOP SITE — Sites Profissionais com SEO | A partir de R$297',
+    title: 'TOP SITE — Sites Profissionais com SEO | A partir de R$567',
     description:
       'Sites profissionais para pequenas empresas e autônomos. SEO, conversão e suporte inclusos. Orçamento grátis em 24h.',
     siteName: 'TOP SITE',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TOP SITE — Sites que Vendem | A partir de R$297',
+    title: 'TOP SITE — Sites que Vendem | A partir de R$567',
     description: 'Sites profissionais com SEO e conversão para pequenas empresas. Orçamento grátis em 24h.',
     images: ['/og-image.png'],
   },
@@ -80,7 +80,7 @@ const jsonLd = {
       '@id': `${BASE_URL}/#website`,
       url: BASE_URL,
       name: 'TOP SITE',
-      description: 'Sites profissionais com SEO e conversão para pequenas empresas. A partir de R$297.',
+      description: 'Sites profissionais com SEO e conversão para pequenas empresas. A partir de R$567.',
       publisher: { '@id': `${BASE_URL}/#organization` },
       inLanguage: 'pt-BR',
       potentialAction: {
@@ -105,14 +105,14 @@ const jsonLd = {
           {
             '@type': 'Offer',
             name: 'Landing Page',
-            price: '297',
+            price: '567',
             priceCurrency: 'BRL',
             availability: 'https://schema.org/InStock',
           },
           {
             '@type': 'Offer',
             name: 'Site Institucional',
-            price: '500',
+            price: '780',
             priceCurrency: 'BRL',
             availability: 'https://schema.org/InStock',
           },
@@ -825,7 +825,7 @@ export default function HomePage() {
               }}
             >
               <p className="text-sm text-white/55 mb-2">A partir de</p>
-              <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$297</p>
+              <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$567</p>
               <p className="text-sm text-white/55 mt-2">em até 2× no cartão sem juros</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-10 text-left">
