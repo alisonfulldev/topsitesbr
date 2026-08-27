@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clínica VitaSaúde — Dr. Paulo Ferreira</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a1628;
+      color: #cbd5e1;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; object-fit: cover; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── Tokens ───────────────────────────────────────────────────────────── */
+    :root {
+      --black:    #0a1628;
+      --s1:       #0f1e38;
+      --s2:       #162540;
+      --s3:       #1e3050;
+      --s4:       #263d62;
+      --blue:     #0ea5e9;
+      --blue-lt:  #38bdf8;
+      --blue-dk:  #0284c7;
+      --white:    #f0f9ff;
+      --muted:    #94a3b8;
+      --muted2:   #64748b;
+      --font-b:   'Inter', sans-serif;
+      --r:        10px;
+      --r-lg:     20px;
+      --blue-grd: linear-gradient(135deg, #0284c7 0%, #0ea5e9 50%, #38bdf8 100%);
+    }
+
+    /* ── Utilities ────────────────────────────────────────────────────────── */
+    .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+    .accent-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--blue);
+      margin-bottom: 16px;
+    }
+    .accent-label::before, .accent-label::after {
+      content: ''; display: block; width: 30px; height: 1px; background: var(--blue);
+    }
+    .section-title {
+      font-size: clamp(28px, 5vw, 44px); font-weight: 800;
+      color: var(--white); line-height: 1.2; margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 15px; color: var(--muted); max-width: 520px; line-height: 1.75;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue-grd); color: #fff;
+      font-weight: 700; font-size: 14px; letter-spacing: 0.5px;
+      padding: 14px 30px; border-radius: var(--r);
+      border: none; cursor: pointer; transition: opacity .2s, transform .15s;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--white);
+      font-weight: 600; font-size: 14px;
+      padding: 13px 28px; border-radius: var(--r);
+      border: 1.5px solid rgba(255,255,255,0.25); cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+    .divider { width: 50px; height: 3px; background: var(--blue); margin: 20px 0; }
+
+    /* ── NAV ──────────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 0; background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background .3s, border-color .3s, padding .3s;
+    }
+    nav.scrolled {
+      background: rgba(10,22,40,0.96); backdrop-filter: blur(12px);
+      border-bottom-color: rgba(14,165,233,0.15); padding: 12px 0;
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .nav-logo { font-size: 20px; font-weight: 800; color: var(--white); letter-spacing: -0.5px; line-height: 1; }
+    .nav-logo span { color: var(--blue); }
+    .nav-logo small {
+      display: block; font-size: 9px; font-weight: 400; letter-spacing: 4px;
+      color: var(--muted); text-transform: uppercase; margin-top: 3px;
+    }
+    .nav-links { display: none; list-style: none; gap: 32px; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.75); transition: color .2s; }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-cta { display: none; }
+    .nav-hamburger {
+      display: flex; flex-direction: column; gap: 5px;
+      width: 28px; cursor: pointer; background: none; border: none; padding: 0;
+    }
+    .nav-hamburger span { display: block; height: 2px; background: var(--white); border-radius: 2px; transition: .3s; }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 99;
+      background: rgba(10,22,40,0.98); backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-size: 26px; font-weight: 700; color: var(--white); transition: color .2s; }
+    .mobile-menu a:hover { color: var(--blue); }
+    .mobile-close { position: absolute; top: 24px; right: 24px; font-size: 28px; cursor: pointer; color: var(--muted); background: none; border: none; }
+    @media(min-width: 900px) {
+      .nav-links { display: flex; }
+      .nav-cta { display: inline-flex; }
+      .nav-hamburger { display: none; }
+    }
+
+    /* ── HERO ─────────────────────────────────────────────────────────────── */
+    #inicio { position: relative; min-height: 100svh; display: flex; align-items: center; overflow: hidden; }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1800&q=80') center/cover no-repeat;
+    }
+    .hero-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(100deg, rgba(10,22,40,0.97) 0%, rgba(10,22,40,0.85) 55%, rgba(10,22,40,0.5) 100%);
+    }
+    .hero-content { position: relative; z-index: 2; padding: 120px 0 80px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.3);
+      color: var(--blue); font-size: 11px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase;
+      padding: 8px 18px; border-radius: 100px; margin-bottom: 24px;
+    }
+    .hero-title {
+      font-size: clamp(36px, 7.5vw, 72px); font-weight: 800;
+      color: var(--white); line-height: 1.1; letter-spacing: -1.5px;
+      max-width: 620px; margin-bottom: 20px;
+    }
+    .hero-title em { font-style: normal; color: var(--blue); }
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px); color: rgba(255,255,255,0.6);
+      max-width: 480px; line-height: 1.7; margin-bottom: 36px;
+    }
+    .hero-btns { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 56px; }
+    .hero-stats {
+      display: flex; flex-wrap: wrap; gap: 32px;
+      padding-top: 36px; border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero-stat strong { display: block; font-size: 32px; font-weight: 800; color: var(--blue); }
+    .hero-stat span { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
+    .hero-scroll {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--muted); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .hero-scroll svg { width: 20px; height: 20px; stroke: var(--blue); }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── SOBRE ────────────────────────────────────────────────────────────── */
+    #sobre { background: var(--s1); padding: 80px 0; }
+    .sobre-grid { display: grid; gap: 48px; grid-template-columns: 1fr; }
+    .sobre-img-wrap { position: relative; }
+    .sobre-img { width: 100%; height: 340px; border-radius: var(--r-lg); object-fit: cover; }
+    .sobre-badge {
+      position: absolute; bottom: -20px; right: 20px;
+      background: var(--blue-grd); color: #fff;
+      padding: 16px 24px; border-radius: var(--r); text-align: center;
+      box-shadow: 0 8px 32px rgba(14,165,233,0.3);
+    }
+    .sobre-badge strong { font-size: 28px; font-weight: 800; display: block; }
+    .sobre-badge span { font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+    .sobre-text { padding-top: 24px; }
+    .sobre-text p { font-size: 15px; color: rgba(240,249,255,0.65); line-height: 1.8; margin-bottom: 16px; }
+    .sobre-feats { display: flex; flex-direction: column; gap: 12px; margin: 28px 0; }
+    .sobre-feat { display: flex; align-items: center; gap: 12px; font-size: 14px; color: rgba(240,249,255,0.85); }
+    .sobre-feat-icon {
+      width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+      background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.2);
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    @media(min-width: 768px) {
+      #sobre { padding: 100px 0; }
+      .sobre-grid { grid-template-columns: 1fr 1fr; align-items: center; }
+      .sobre-img { height: 500px; }
+    }
+
+    /* ── ESPECIALIDADES ───────────────────────────────────────────────────── */
+    #especialidades { background: var(--black); padding: 80px 0; }
+    .espec-header { text-align: center; margin-bottom: 52px; }
+    .espec-header .accent-label { justify-content: center; }
+    .espec-header .section-sub { margin: 0 auto; }
+    .espec-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+    .espec-card {
+      background: var(--s2); border: 1px solid var(--s4);
+      border-radius: var(--r-lg); padding: 28px;
+      display: flex; align-items: flex-start; gap: 20px;
+      transition: border-color .25s, transform .2s;
+    }
+    .espec-card:hover { border-color: rgba(14,165,233,0.4); transform: translateY(-2px); }
+    .espec-icon {
+      width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0;
+      background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.2);
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .espec-info { flex: 1; }
+    .espec-info h3 { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+    .espec-info p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+    .espec-preco { font-size: 13px; color: var(--blue); font-weight: 600; }
+    .espec-cta { text-align: center; margin-top: 44px; }
+    @media(min-width: 640px) { .espec-grid { grid-template-columns: 1fr 1fr; } }
+    @media(min-width: 900px) {
+      #especialidades { padding: 100px 0; }
+      .espec-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ── COMO FUNCIONA ────────────────────────────────────────────────────── */
+    #como-funciona { background: var(--s1); padding: 80px 0; }
+    .steps-header { text-align: center; margin-bottom: 52px; }
+    .steps-header .accent-label { justify-content: center; }
+    .steps-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    .step-card {
+      background: var(--s2); border: 1px solid var(--s4);
+      border-radius: var(--r-lg); padding: 32px 28px;
+      position: relative; text-align: center;
+      transition: border-color .25s;
+    }
+    .step-card:hover { border-color: rgba(14,165,233,0.35); }
+    .step-num {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--blue-grd); color: #fff;
+      font-size: 22px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .step-icon { font-size: 32px; margin-bottom: 16px; }
+    .step-card h3 { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+    .step-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    @media(min-width: 768px) {
+      #como-funciona { padding: 100px 0; }
+      .steps-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ── DEPOIMENTOS ──────────────────────────────────────────────────────── */
+    #depoimentos { background: var(--black); padding: 80px 0; }
+    .depo-header { text-align: center; margin-bottom: 48px; }
+    .depo-header .accent-label { justify-content: center; }
+    .depo-track {
+      display: flex; gap: 20px; overflow-x: auto;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px; scrollbar-width: none;
+    }
+    .depo-track::-webkit-scrollbar { display: none; }
+    .depo-card {
+      background: var(--s2); border: 1px solid var(--s4);
+      border-radius: var(--r-lg); padding: 28px;
+      min-width: 280px; flex-shrink: 0; scroll-snap-align: start;
+      transition: border-color .25s;
+    }
+    .depo-card:hover { border-color: rgba(14,165,233,0.25); }
+    .depo-stars { color: var(--blue); font-size: 16px; letter-spacing: 2px; margin-bottom: 14px; }
+    .depo-text { font-size: 15px; line-height: 1.75; color: rgba(240,249,255,0.7); margin-bottom: 20px; font-style: italic; }
+    .depo-text::before { content: '"'; }
+    .depo-text::after  { content: '"'; }
+    .depo-author { display: flex; align-items: center; gap: 12px; }
+    .depo-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(14,165,233,0.3); }
+    .depo-author strong { font-size: 14px; color: var(--white); display: block; }
+    .depo-author span { font-size: 12px; color: var(--muted); }
+    @media(min-width: 768px) {
+      #depoimentos { padding: 100px 0; }
+      .depo-card { min-width: 340px; }
+    }
+
+    /* ── AGENDAMENTO ──────────────────────────────────────────────────────── */
+    #agendamento { position: relative; padding: 80px 0; overflow: hidden; background: var(--s1); }
+    .agendar-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1581093588401-fbb62a02f120?w=1400&q=70') center/cover;
+      opacity: 0.08;
+    }
+    .agendar-content { position: relative; text-align: center; max-width: 580px; margin: 0 auto; }
+    .agendar-content .section-title { margin-bottom: 12px; }
+    .agendar-content p { font-size: 16px; color: var(--muted); margin-bottom: 36px; line-height: 1.7; }
+    .agendar-btns { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+    @media(min-width: 768px) { #agendamento { padding: 100px 0; } }
+
+    /* ── CONTATO ──────────────────────────────────────────────────────────── */
+    #contato { background: var(--black); padding: 80px 0; }
+    .contato-grid { display: grid; gap: 48px; grid-template-columns: 1fr; }
+    .contato-itens { display: flex; flex-direction: column; gap: 20px; margin-bottom: 32px; }
+    .contato-item { display: flex; align-items: flex-start; gap: 16px; }
+    .contato-item-icon {
+      width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+      background: rgba(14,165,233,0.08); border: 1px solid rgba(14,165,233,0.2);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .contato-item strong { display: block; font-size: 13px; color: var(--muted); font-weight: 500; margin-bottom: 3px; }
+    .contato-item span, .contato-item a { font-size: 15px; color: var(--white); line-height: 1.5; }
+    .contato-item a:hover { color: var(--blue); }
+    .horarios { background: var(--s2); border: 1px solid var(--s4); border-radius: var(--r-lg); padding: 24px; margin-top: 8px; }
+    .horarios h4 { font-size: 13px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+    .horario-row { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; border-bottom: 1px solid var(--s4); }
+    .horario-row:last-child { border-bottom: none; }
+    .horario-row span:first-child { color: rgba(240,249,255,0.6); }
+    .horario-row span:last-child { color: var(--white); font-weight: 500; }
+    .contato-mapa {
+      border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--s4);
+      min-height: 320px; background: var(--s2);
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .contato-mapa img { width: 100%; height: 100%; min-height: 320px; object-fit: cover; opacity: 0.5; }
+    .mapa-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+    .mapa-pin { font-size: 40px; }
+    .mapa-overlay p { font-size: 14px; color: var(--muted); text-align: center; }
+    .mapa-overlay a { font-size: 13px; color: var(--blue); font-weight: 600; border: 1px solid rgba(14,165,233,0.4); padding: 8px 20px; border-radius: 100px; }
+    @media(min-width: 900px) {
+      #contato { padding: 100px 0; }
+      .contato-grid { grid-template-columns: 1fr 1fr; align-items: start; }
+    }
+
+    /* ── FOOTER ───────────────────────────────────────────────────────────── */
+    footer { background: var(--s1); border-top: 1px solid rgba(14,165,233,0.12); padding: 48px 0 32px; }
+    .footer-top { display: flex; flex-direction: column; gap: 36px; margin-bottom: 40px; }
+    .footer-logo { font-size: 22px; font-weight: 800; color: var(--white); }
+    .footer-logo span { color: var(--blue); }
+    .footer-logo p { font-size: 13px; color: var(--muted); font-weight: 400; margin-top: 8px; }
+    .footer-links { display: flex; flex-direction: column; gap: 12px; }
+    .footer-links h4 { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .footer-links a { font-size: 14px; color: rgba(240,249,255,0.7); transition: color .2s; }
+    .footer-links a:hover { color: var(--blue); }
+    .footer-social { display: flex; gap: 12px; margin-top: 8px; }
+    .footer-social a { width: 40px; height: 40px; border-radius: 10px; background: var(--s3); border: 1px solid var(--s4); display: flex; align-items: center; justify-content: center; font-size: 18px; transition: border-color .2s, background .2s; }
+    .footer-social a:hover { border-color: var(--blue); background: rgba(14,165,233,0.08); }
+    .footer-bottom { padding-top: 24px; border-top: 1px solid var(--s4); display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); }
+    @media(min-width: 768px) {
+      .footer-top { flex-direction: row; justify-content: space-between; }
+      .footer-links { flex-direction: row; gap: 40px; }
+    }
+
+    /* ── WHATSAPP FLOAT ───────────────────────────────────────────────────── */
+    .wa-float { position: fixed; bottom: 24px; right: 24px; z-index: 90; width: 56px; height: 56px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: transform .2s, box-shadow .2s; }
+    .wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.55); }
+    .wa-float svg { width: 28px; height: 28px; fill: white; }
+
+    /* ── Reveal ───────────────────────────────────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- ── MOBILE MENU ──────────────────────────────────────────────────────── -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobile()">✕</button>
+  <a href="#inicio"           onclick="closeMobile()">Início</a>
+  <a href="#sobre"            onclick="closeMobile()">Sobre</a>
+  <a href="#especialidades"   onclick="closeMobile()">Especialidades</a>
+  <a href="#como-funciona"    onclick="closeMobile()">Como Funciona</a>
+  <a href="#depoimentos"      onclick="closeMobile()">Depoimentos</a>
+  <a href="#contato"          onclick="closeMobile()">Contato</a>
+  <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta." class="btn-primary" style="margin-top:8px">📅 Agendar Consulta</a>
+</div>
+
+<!-- ── NAV ─────────────────────────────────────────────────────────────── -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="#inicio" class="nav-logo">
+      Vita<span>Saúde</span>
+      <small>Clínica Médica · CRM 12345/SP</small>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#especialidades">Especialidades</a></li>
+      <li><a href="#como-funciona">Como Funciona</a></li>
+      <li><a href="#depoimentos">Depoimentos</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+    <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta." class="btn-primary nav-cta">
+      📅 Agendar Consulta
+    </a>
+    <button class="nav-hamburger" onclick="openMobile()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
+<section id="inicio">
+  <div class="hero-bg"></div>
+  <div class="container hero-content">
+    <div class="hero-badge">🏥 CRM 12345/SP · Equipe Multidisciplinar</div>
+    <h1 class="hero-title">Sua saúde em<br><em>mãos experientes</em></h1>
+    <p class="hero-sub">Cuidado médico de qualidade, com atendimento humanizado e tecnologia moderna. Agende sua consulta e comece a investir na sua saúde hoje.</p>
+    <div class="hero-btns">
+      <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta." class="btn-primary">📅 Agendar pelo WhatsApp</a>
+      <a href="#especialidades" class="btn-outline">Ver Especialidades</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>+5.000</strong><span>Pacientes atendidos</span></div>
+      <div class="hero-stat"><strong>15</strong><span>Anos de experiência</span></div>
+      <div class="hero-stat"><strong>98%</strong><span>Satisfação dos pacientes</span></div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    scroll
+  </div>
+</section>
+
+<!-- ── SOBRE ──────────────────────────────────────────────────────────────── -->
+<section id="sobre">
+  <div class="container">
+    <div class="sobre-grid">
+      <div class="sobre-img-wrap reveal">
+        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=700&q=80" alt="Clínica VitaSaúde" class="sobre-img">
+        <div class="sobre-badge">
+          <strong>+15</strong>
+          <span>Anos de Cuidado</span>
+        </div>
+      </div>
+      <div class="sobre-text reveal">
+        <div class="accent-label">Quem Somos</div>
+        <h2 class="section-title">Medicina com propósito e dedicação</h2>
+        <div class="divider"></div>
+        <p>A Clínica VitaSaúde foi fundada pelo Dr. <strong style="color:#f0f9ff">Paulo Ferreira</strong> em 2009 com uma missão clara: oferecer atendimento médico de excelência de forma humanizada, acessível e completa.</p>
+        <p>Nossa equipe multidisciplinar trabalha integrada para que cada paciente receba o cuidado certo, no tempo certo, com o acolhimento que merece.</p>
+        <div class="sobre-feats">
+          <div class="sobre-feat"><span class="sobre-feat-icon">🏥</span> Registrada no CRM com toda equipe credenciada</div>
+          <div class="sobre-feat"><span class="sobre-feat-icon">👩‍⚕️</span> Equipe multidisciplinar em 6 especialidades</div>
+          <div class="sobre-feat"><span class="sobre-feat-icon">📅</span> Agendamento rápido pelo WhatsApp, sem filas</div>
+          <div class="sobre-feat"><span class="sobre-feat-icon">🏆</span> Infraestrutura moderna com equipamentos de última geração</div>
+        </div>
+        <a href="#especialidades" class="btn-primary">Ver nossas especialidades</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ESPECIALIDADES ─────────────────────────────────────────────────────── -->
+<section id="especialidades">
+  <div class="container">
+    <div class="espec-header reveal">
+      <div class="accent-label">Nossas Áreas</div>
+      <h2 class="section-title">Especialidades médicas</h2>
+      <p class="section-sub">Cuidado completo para você e sua família, com profissionais dedicados em cada área.</p>
+    </div>
+    <div class="espec-grid">
+      <div class="espec-card reveal">
+        <span class="espec-icon">🩺</span>
+        <div class="espec-info">
+          <h3>Clínica Geral</h3>
+          <p>Atendimento completo para diagnóstico, prevenção e acompanhamento da saúde geral. Seu médico de confiança.</p>
+          <span class="espec-preco">A partir de R$150</span>
+        </div>
+      </div>
+      <div class="espec-card reveal">
+        <span class="espec-icon">❤️</span>
+        <div class="espec-info">
+          <h3>Cardiologia</h3>
+          <p>Avaliação e acompanhamento da saúde cardiovascular com eletrocardiograma e holter 24h.</p>
+          <span class="espec-preco">A partir de R$220</span>
+        </div>
+      </div>
+      <div class="espec-card reveal">
+        <span class="espec-icon">🌿</span>
+        <div class="espec-info">
+          <h3>Dermatologia</h3>
+          <p>Tratamentos para pele, cabelos e unhas. Do diagnóstico clínico a procedimentos estéticos médicos.</p>
+          <span class="espec-preco">A partir de R$200</span>
+        </div>
+      </div>
+      <div class="espec-card reveal">
+        <span class="espec-icon">🦴</span>
+        <div class="espec-info">
+          <h3>Ortopedia</h3>
+          <p>Avaliação e tratamento de lesões musculares, ósseas e articulares. Prevenção e reabilitação.</p>
+          <span class="espec-preco">A partir de R$200</span>
+        </div>
+      </div>
+      <div class="espec-card reveal">
+        <span class="espec-icon">🌸</span>
+        <div class="espec-info">
+          <h3>Ginecologia</h3>
+          <p>Saúde da mulher em todas as fases da vida, desde consultas de rotina até acompanhamento pré-natal.</p>
+          <span class="espec-preco">A partir de R$180</span>
+        </div>
+      </div>
+      <div class="espec-card reveal">
+        <span class="espec-icon">🧠</span>
+        <div class="espec-info">
+          <h3>Psicologia</h3>
+          <p>Atendimento psicológico individual com abordagem humanista. Presencial ou online, conforme sua necessidade.</p>
+          <span class="espec-preco">A partir de R$160</span>
+        </div>
+      </div>
+    </div>
+    <div class="espec-cta reveal">
+      <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta." class="btn-primary">📅 Agendar sua Consulta</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMO FUNCIONA ──────────────────────────────────────────────────────── -->
+<section id="como-funciona">
+  <div class="container">
+    <div class="steps-header reveal">
+      <div class="accent-label">Simples e Rápido</div>
+      <h2 class="section-title">Como funciona o atendimento</h2>
+      <p class="section-sub" style="margin:0 auto">Do agendamento à consulta, tudo pensado para o seu conforto e comodidade.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">1</div>
+        <div class="step-icon">💬</div>
+        <h3>Agendamento</h3>
+        <p>Entre em contato pelo WhatsApp ou telefone. Escolha a especialidade, data e horário que melhor encaixam na sua rotina. Confirmamos na hora.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">2</div>
+        <div class="step-icon">🏥</div>
+        <h3>Consulta</h3>
+        <p>Atendimento humanizado e completo com o especialista. Diagnóstico, orientações e prescrições de forma clara e acolhedora, sem pressa.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">3</div>
+        <div class="step-icon">📋</div>
+        <h3>Acompanhamento</h3>
+        <p>Receba retorno ágil de exames, agende consultas de retorno com facilidade e tenha acesso ao histórico do seu atendimento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEPOIMENTOS ───────────────────────────────────────────────────────── -->
+<section id="depoimentos">
+  <div class="container">
+    <div class="depo-header reveal">
+      <div class="accent-label">O que dizem</div>
+      <h2 class="section-title">Pacientes que <em style="color:var(--blue)">confiam</em></h2>
+    </div>
+    <div class="depo-track reveal">
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">O Dr. Paulo é um médico excepcional. Atendimento humanizado, explicou tudo com paciência e clareza. Finalmente encontrei um clínico geral em quem confio de verdade.</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/80?img=5" alt="Mariana S." class="depo-avatar">
+          <div><strong>Mariana Silva</strong><span>Paciente há 3 anos</span></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">Fiz minha consulta de cardiologia aqui e fiquei impressionado com a estrutura e o cuidado da equipe. Resultado de exame chegou rápido e tive retorno no mesmo dia.</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/80?img=22" alt="Rodrigo L." class="depo-avatar">
+          <div><strong>Rodrigo Lima</strong><span>Paciente novo</span></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">Toda minha família é atendida aqui. Agendar pelo WhatsApp é super prático, nunca esperamos muito, e os médicos sempre tiram todas as dúvidas. Indicação garantida!</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/80?img=32" alt="Cláudia F." class="depo-avatar">
+          <div><strong>Cláudia Ferraz</strong><span>Paciente há 5 anos</span></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">Fui à psicóloga aqui por indicação e foi uma das melhores decisões que tomei. Atendimento acolhedor, ambiente tranquilo e a profissional é excelente. Recomendo muito!</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/80?img=47" alt="Tatiane O." class="depo-avatar">
+          <div><strong>Tatiane Oliveira</strong><span>Paciente há 1 ano</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AGENDAMENTO ───────────────────────────────────────────────────────── -->
+<section id="agendamento">
+  <div class="agendar-bg"></div>
+  <div class="container">
+    <div class="agendar-content reveal">
+      <div class="accent-label" style="justify-content:center">Cuide da sua saúde</div>
+      <h2 class="section-title">Agende sua consulta<br>agora mesmo</h2>
+      <p>Atendimento ágil pelo WhatsApp. Informe a especialidade e o horário de preferência — respondemos em minutos.</p>
+      <div class="agendar-btns">
+        <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta%20na%20Clínica%20VitaSaúde." class="btn-primary">
+          💬 Agendar pelo WhatsApp
+        </a>
+        <a href="tel:+5511999999999" class="btn-outline">📞 Ligar agora</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTATO ────────────────────────────────────────────────────────────── -->
+<section id="contato">
+  <div class="container">
+    <div class="accent-label reveal">Onde estamos</div>
+    <h2 class="section-title reveal">Venha nos visitar</h2>
+    <div class="divider reveal"></div>
+    <div class="contato-grid" style="margin-top:40px">
+      <div class="contato-info reveal">
+        <div class="contato-itens">
+          <div class="contato-item">
+            <span class="contato-item-icon">📍</span>
+            <div>
+              <strong>Endereço</strong>
+              <span>Av. Paulista, 1000 — Sala 302, Bela Vista<br>São Paulo — SP, 01310-100</span>
+            </div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item-icon">📞</span>
+            <div>
+              <strong>Telefone / WhatsApp</strong>
+              <a href="https://wa.me/5511999999999">(11) 99999-9999</a>
+            </div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item-icon">📧</span>
+            <div>
+              <strong>E-mail</strong>
+              <a href="mailto:contato@vitasaude.com.br">contato@vitasaude.com.br</a>
+            </div>
+          </div>
+        </div>
+        <div class="horarios">
+          <h4>Horário de Funcionamento</h4>
+          <div class="horario-row"><span>Segunda — Sexta</span><span>07h às 19h</span></div>
+          <div class="horario-row"><span>Sábado</span><span>08h às 13h</span></div>
+          <div class="horario-row"><span>Domingo</span><span>Fechado</span></div>
+        </div>
+      </div>
+      <div class="contato-mapa reveal">
+        <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=60" alt="Mapa">
+        <div class="mapa-overlay">
+          <span class="mapa-pin">📍</span>
+          <p>Av. Paulista, 1000 — Sala 302<br>Bela Vista — São Paulo, SP</p>
+          <a href="https://maps.google.com" target="_blank" rel="noopener">Abrir no Google Maps →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">Vita<span>Saúde</span><p>Clínica Médica · Cuidando de você desde 2009</p></div>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>Navegação</h4>
+          <a href="#sobre">Sobre nós</a>
+          <a href="#especialidades">Especialidades</a>
+          <a href="#como-funciona">Como Funciona</a>
+          <a href="#contato">Contato</a>
+        </div>
+        <div>
+          <h4>Redes Sociais</h4>
+          <div class="footer-social">
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="Facebook">👍</a>
+            <a href="https://wa.me/5511999999999" title="WhatsApp">💬</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Clínica VitaSaúde. Todos os direitos reservados.</span>
+      <span>Desenvolvido por <a href="https://topsitebr.com.br" style="color:var(--blue)">TopSite</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ── WHATSAPP FLOAT ─────────────────────────────────────────────────────── -->
+<a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta%20na%20Clínica%20VitaSaúde." class="wa-float" title="Agendar pelo WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────────────────────── -->
+<script>
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  function openMobile() { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow=''; }
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+</body>
+</html>

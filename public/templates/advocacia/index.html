@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ferreira &amp; Associados — Advocacia e Consultoria Jurídica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0c1119;
+      color: #f5f0e8;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; object-fit: cover; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── Tokens ───────────────────────────────────────────────────────────── */
+    :root {
+      --bg:       #0c1119;
+      --s1:       #111823;
+      --s2:       #162030;
+      --s3:       #1c2a3e;
+      --s4:       #243550;
+      --gold:     #b8922a;
+      --gold-lt:  #d4a93c;
+      --gold-dk:  #8b6d1f;
+      --white:    #f5f0e8;
+      --muted:    #7a7a7a;
+      --muted2:   #4a5568;
+      --font-h:   'Playfair Display', serif;
+      --font-b:   'Inter', sans-serif;
+      --r:        10px;
+      --r-lg:     20px;
+      --gold-grd: linear-gradient(135deg, #b8922a 0%, #d4a93c 50%, #b8922a 100%);
+    }
+
+    /* ── Utilities ────────────────────────────────────────────────────────── */
+    .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+    .gold-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .gold-label::before, .gold-label::after {
+      content: ''; display: block; width: 30px; height: 1px; background: var(--gold);
+    }
+    .section-title {
+      font-family: var(--font-h); font-size: clamp(28px, 5vw, 44px);
+      font-weight: 700; color: var(--white); line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 15px; color: var(--muted); max-width: 520px; line-height: 1.75;
+    }
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-grd); color: #0c1119;
+      font-weight: 700; font-size: 14px; letter-spacing: 0.5px;
+      padding: 14px 30px; border-radius: var(--r);
+      border: none; cursor: pointer; transition: opacity .2s, transform .15s;
+    }
+    .btn-gold:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--white);
+      font-weight: 600; font-size: 14px; letter-spacing: 0.5px;
+      padding: 13px 28px; border-radius: var(--r);
+      border: 1.5px solid rgba(245,240,232,0.25); cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .divider { width: 50px; height: 3px; background: var(--gold); margin: 20px 0; }
+
+    /* ── NAV ──────────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 0;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background .3s, border-color .3s, padding .3s;
+    }
+    nav.scrolled {
+      background: rgba(12,17,25,0.96);
+      backdrop-filter: blur(14px);
+      border-bottom-color: rgba(184,146,42,0.15);
+      padding: 12px 0;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    }
+    .nav-logo {
+      font-family: var(--font-h); font-size: 22px; font-weight: 900;
+      color: var(--white); letter-spacing: 1px; line-height: 1;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-logo small {
+      display: block; font-family: var(--font-b); font-size: 9px;
+      font-weight: 400; letter-spacing: 4px; color: var(--muted);
+      text-transform: uppercase; margin-top: 3px;
+    }
+    .nav-links {
+      display: none; list-style: none; gap: 32px;
+    }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+      color: rgba(245,240,232,0.75); transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta { display: none; }
+    .nav-hamburger {
+      display: flex; flex-direction: column; gap: 5px;
+      width: 28px; cursor: pointer; background: none; border: none; padding: 0;
+    }
+    .nav-hamburger span {
+      display: block; height: 2px; background: var(--white);
+      border-radius: 2px; transition: .3s;
+    }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 99;
+      background: rgba(12,17,25,0.99); backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font-h); font-size: 28px; color: var(--white);
+      font-weight: 700; transition: color .2s;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-close {
+      position: absolute; top: 24px; right: 24px;
+      font-size: 28px; cursor: pointer; color: var(--muted); background: none; border: none;
+    }
+    @media(min-width: 900px) {
+      .nav-links { display: flex; }
+      .nav-cta { display: inline-flex; }
+      .nav-hamburger { display: none; }
+    }
+
+    /* ── HERO ─────────────────────────────────────────────────────────────── */
+    #inicio {
+      position: relative; min-height: 100svh; display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1800&q=80') center/cover no-repeat;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        105deg,
+        rgba(12,17,25,0.97) 0%,
+        rgba(12,17,25,0.85) 55%,
+        rgba(12,17,25,0.45) 100%
+      );
+    }
+    .hero-content {
+      position: relative; z-index: 2; padding: 120px 0 80px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(184,146,42,0.1); border: 1px solid rgba(184,146,42,0.3);
+      color: var(--gold); font-size: 11px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      padding: 8px 18px; border-radius: 100px; margin-bottom: 24px;
+    }
+    .hero-title {
+      font-family: var(--font-h);
+      font-size: clamp(36px, 8vw, 72px);
+      font-weight: 900; color: var(--white);
+      line-height: 1.08; letter-spacing: -1px;
+      max-width: 640px; margin-bottom: 20px;
+    }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px); color: rgba(245,240,232,0.6);
+      max-width: 500px; line-height: 1.7; margin-bottom: 36px;
+    }
+    .hero-btns { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 56px; }
+    .hero-stats {
+      display: flex; flex-wrap: wrap; gap: 32px;
+      padding-top: 36px;
+      border-top: 1px solid rgba(245,240,232,0.1);
+    }
+    .hero-stat strong {
+      display: block; font-family: var(--font-h);
+      font-size: 32px; font-weight: 900; color: var(--gold);
+    }
+    .hero-stat span {
+      font-size: 12px; color: var(--muted); letter-spacing: 0.5px;
+    }
+    .hero-scroll {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--muted); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .hero-scroll svg { width: 20px; height: 20px; stroke: var(--gold); }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── SOBRE ────────────────────────────────────────────────────────────── */
+    #sobre {
+      background: var(--s1);
+      padding: 80px 0;
+    }
+    .sobre-grid {
+      display: grid; gap: 48px;
+      grid-template-columns: 1fr;
+    }
+    .sobre-img-wrap {
+      position: relative;
+    }
+    .sobre-img {
+      width: 100%; height: 340px; border-radius: var(--r-lg); object-fit: cover;
+    }
+    .sobre-img-badge {
+      position: absolute; bottom: -20px; right: 20px;
+      background: var(--gold-grd); color: #0c1119;
+      padding: 16px 24px; border-radius: var(--r);
+      text-align: center; box-shadow: 0 8px 32px rgba(184,146,42,0.35);
+    }
+    .sobre-img-badge strong { font-family: var(--font-h); font-size: 28px; font-weight: 900; display: block; }
+    .sobre-img-badge span { font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+    .sobre-text { padding-top: 24px; }
+    .sobre-text p { font-size: 15px; color: rgba(245,240,232,0.65); line-height: 1.8; margin-bottom: 16px; }
+    .sobre-feats {
+      display: flex; flex-direction: column; gap: 12px; margin: 28px 0;
+    }
+    .sobre-feat {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 14px; color: rgba(245,240,232,0.82);
+    }
+    .sobre-feat-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(184,146,42,0.1); border: 1px solid rgba(184,146,42,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    @media(min-width: 768px) {
+      #sobre { padding: 100px 0; }
+      .sobre-grid { grid-template-columns: 1fr 1fr; align-items: center; }
+      .sobre-img { height: 520px; }
+      .sobre-img-badge { bottom: -24px; }
+    }
+
+    /* ── ÁREAS DE ATUAÇÃO ─────────────────────────────────────────────────── */
+    #atuacao {
+      background: var(--bg);
+      padding: 80px 0;
+    }
+    .atuacao-header {
+      text-align: center; margin-bottom: 52px;
+    }
+    .atuacao-header .gold-label { justify-content: center; }
+    .atuacao-header .section-sub { margin: 0 auto; }
+    .atuacao-grid {
+      display: grid; gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    .area-card {
+      background: var(--s2); border: 1px solid var(--s3);
+      border-radius: var(--r-lg); padding: 32px 28px;
+      display: flex; align-items: flex-start; gap: 20px;
+      transition: border-color .25s, transform .2s;
+      position: relative; overflow: hidden;
+    }
+    .area-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(184,146,42,0.04) 0%, transparent 60%);
+      opacity: 0; transition: opacity .3s;
+    }
+    .area-card:hover::before { opacity: 1; }
+    .area-card:hover {
+      border-color: rgba(184,146,42,0.35);
+      transform: translateY(-3px);
+    }
+    .area-icon {
+      width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0;
+      background: rgba(184,146,42,0.08); border: 1px solid rgba(184,146,42,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .area-info { flex: 1; }
+    .area-info h3 {
+      font-family: var(--font-h); font-size: 19px; font-weight: 700;
+      color: var(--white); margin-bottom: 8px;
+    }
+    .area-info p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .area-arrow {
+      color: var(--gold); font-size: 18px; opacity: 0;
+      transition: opacity .25s, transform .25s;
+      flex-shrink: 0; align-self: center;
+    }
+    .area-card:hover .area-arrow { opacity: 1; transform: translateX(4px); }
+    @media(min-width: 640px) {
+      .atuacao-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media(min-width: 900px) {
+      #atuacao { padding: 100px 0; }
+      .atuacao-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ── COMO TRABALHAMOS ─────────────────────────────────────────────────── */
+    #processo {
+      background: var(--s1); padding: 80px 0;
+    }
+    .processo-header { text-align: center; margin-bottom: 60px; }
+    .processo-header .gold-label { justify-content: center; }
+    .processo-header .section-sub { margin: 0 auto; }
+    .processo-steps {
+      display: grid; gap: 32px; grid-template-columns: 1fr;
+      position: relative;
+    }
+    .processo-step {
+      display: flex; align-items: flex-start; gap: 24px;
+      background: var(--s2); border: 1px solid var(--s3);
+      border-radius: var(--r-lg); padding: 32px 28px;
+      transition: border-color .25s;
+    }
+    .processo-step:hover { border-color: rgba(184,146,42,0.3); }
+    .step-num {
+      font-family: var(--font-h); font-size: 48px; font-weight: 900;
+      color: rgba(184,146,42,0.18); line-height: 1;
+      flex-shrink: 0; min-width: 60px;
+    }
+    .step-body {}
+    .step-icon { font-size: 28px; margin-bottom: 12px; }
+    .step-body h3 {
+      font-family: var(--font-h); font-size: 22px; font-weight: 700;
+      color: var(--white); margin-bottom: 10px;
+    }
+    .step-body p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .step-connector {
+      display: none; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 24px;
+    }
+    @media(min-width: 768px) {
+      #processo { padding: 100px 0; }
+      .processo-steps { grid-template-columns: 1fr auto 1fr auto 1fr; align-items: stretch; }
+      .step-connector { display: flex; }
+    }
+
+    /* ── DEPOIMENTOS ──────────────────────────────────────────────────────── */
+    #depoimentos {
+      background: var(--bg); padding: 80px 0;
+    }
+    .depo-header { text-align: center; margin-bottom: 48px; }
+    .depo-header .gold-label { justify-content: center; }
+    .depo-track {
+      display: flex; gap: 20px; overflow-x: auto;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px; scrollbar-width: none;
+    }
+    .depo-track::-webkit-scrollbar { display: none; }
+    .depo-card {
+      background: var(--s2); border: 1px solid var(--s3);
+      border-radius: var(--r-lg); padding: 32px;
+      min-width: 290px; flex-shrink: 0;
+      scroll-snap-align: start;
+      transition: border-color .25s;
+      position: relative;
+    }
+    .depo-card::before {
+      content: '\201C';
+      position: absolute; top: 16px; right: 24px;
+      font-family: var(--font-h); font-size: 80px; line-height: 1;
+      color: rgba(184,146,42,0.08); pointer-events: none;
+    }
+    .depo-card:hover { border-color: rgba(184,146,42,0.25); }
+    .depo-stars { color: var(--gold); font-size: 16px; letter-spacing: 2px; margin-bottom: 16px; }
+    .depo-text {
+      font-size: 14px; line-height: 1.8; color: rgba(245,240,232,0.72);
+      margin-bottom: 24px; font-style: italic;
+    }
+    .depo-case {
+      display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--gold);
+      background: rgba(184,146,42,0.08); border: 1px solid rgba(184,146,42,0.2);
+      padding: 4px 12px; border-radius: 100px; margin-bottom: 16px;
+    }
+    .depo-author { display: flex; align-items: center; gap: 12px; }
+    .depo-avatar {
+      width: 46px; height: 46px; border-radius: 50%;
+      object-fit: cover; border: 2px solid rgba(184,146,42,0.3);
+    }
+    .depo-author strong { font-size: 14px; color: var(--white); display: block; }
+    .depo-author span { font-size: 12px; color: var(--muted); }
+    @media(min-width: 768px) {
+      #depoimentos { padding: 100px 0; }
+      .depo-card { min-width: 360px; }
+    }
+
+    /* ── CTA ──────────────────────────────────────────────────────────────── */
+    #consulta {
+      position: relative; padding: 80px 0; overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1400&q=70') center/cover;
+    }
+    .cta-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(12,17,25,0.97) 0%, rgba(12,17,25,0.90) 100%);
+    }
+    .cta-content {
+      position: relative; z-index: 2; text-align: center; max-width: 620px; margin: 0 auto;
+    }
+    .cta-content .section-title { margin-bottom: 12px; }
+    .cta-content p {
+      font-size: 16px; color: rgba(245,240,232,0.65); margin-bottom: 36px; line-height: 1.75;
+    }
+    .cta-tags {
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 36px;
+    }
+    .cta-tag {
+      font-size: 12px; color: var(--gold); font-weight: 600; letter-spacing: 0.5px;
+      background: rgba(184,146,42,0.08); border: 1px solid rgba(184,146,42,0.2);
+      padding: 6px 14px; border-radius: 100px;
+    }
+    .cta-btns { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+    @media(min-width: 768px) { #consulta { padding: 120px 0; } }
+
+    /* ── CONTATO ──────────────────────────────────────────────────────────── */
+    #contato {
+      background: var(--s1); padding: 80px 0;
+    }
+    .contato-grid {
+      display: grid; gap: 48px; grid-template-columns: 1fr;
+    }
+    .contato-info .section-sub { margin-bottom: 32px; }
+    .contato-itens {
+      display: flex; flex-direction: column; gap: 20px; margin-bottom: 32px;
+    }
+    .contato-item {
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    .contato-item-icon {
+      width: 46px; height: 46px; border-radius: 10px; flex-shrink: 0;
+      background: rgba(184,146,42,0.08); border: 1px solid rgba(184,146,42,0.2);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .contato-item strong { display: block; font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .contato-item span, .contato-item a {
+      font-size: 15px; color: var(--white); line-height: 1.5;
+    }
+    .contato-item a:hover { color: var(--gold); }
+    .horarios {
+      background: var(--s2); border: 1px solid var(--s3);
+      border-radius: var(--r-lg); padding: 24px; margin-top: 8px;
+    }
+    .horarios h4 {
+      font-size: 11px; color: var(--muted); letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 16px; font-weight: 600;
+    }
+    .horario-row {
+      display: flex; justify-content: space-between;
+      font-size: 14px; padding: 10px 0;
+      border-bottom: 1px solid rgba(28,42,62,0.8);
+    }
+    .horario-row:last-child { border-bottom: none; }
+    .horario-row span:first-child { color: rgba(245,240,232,0.55); }
+    .horario-row span:last-child { color: var(--white); font-weight: 500; }
+    .contato-mapa {
+      border-radius: var(--r-lg); overflow: hidden;
+      border: 1px solid var(--s3); min-height: 340px;
+      background: var(--s2); display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .contato-mapa img {
+      width: 100%; height: 100%; min-height: 340px; object-fit: cover; opacity: 0.45;
+    }
+    .mapa-overlay {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+    }
+    .mapa-pin { font-size: 44px; }
+    .mapa-overlay p { font-size: 14px; color: rgba(245,240,232,0.75); text-align: center; line-height: 1.6; }
+    .mapa-overlay a {
+      font-size: 13px; color: var(--gold); font-weight: 600;
+      border: 1px solid rgba(184,146,42,0.4); padding: 8px 22px; border-radius: 100px;
+      transition: background .2s;
+    }
+    .mapa-overlay a:hover { background: rgba(184,146,42,0.1); }
+    @media(min-width: 900px) {
+      #contato { padding: 100px 0; }
+      .contato-grid { grid-template-columns: 1fr 1fr; align-items: start; }
+    }
+
+    /* ── FOOTER ───────────────────────────────────────────────────────────── */
+    footer {
+      background: var(--bg); border-top: 1px solid rgba(184,146,42,0.12);
+      padding: 56px 0 32px;
+    }
+    .footer-top {
+      display: flex; flex-direction: column; gap: 36px; margin-bottom: 48px;
+    }
+    .footer-logo { font-family: var(--font-h); font-size: 24px; font-weight: 900; color: var(--white); }
+    .footer-logo span { color: var(--gold); }
+    .footer-logo p { font-family: var(--font-b); font-size: 13px; color: var(--muted); font-weight: 400; margin-top: 8px; line-height: 1.6; max-width: 280px; }
+    .footer-links { display: flex; flex-direction: column; gap: 12px; }
+    .footer-links h4 { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
+    .footer-links a { font-size: 14px; color: rgba(245,240,232,0.65); transition: color .2s; display: block; margin-bottom: 6px; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-oab {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 1px;
+      background: rgba(184,146,42,0.06); border: 1px solid rgba(184,146,42,0.15);
+      padding: 6px 14px; border-radius: 100px; margin-top: 12px;
+    }
+    .footer-social { display: flex; gap: 12px; margin-top: 12px; }
+    .footer-social a {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--s2); border: 1px solid var(--s3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; transition: border-color .2s, background .2s;
+    }
+    .footer-social a:hover { border-color: var(--gold); background: rgba(184,146,42,0.08); }
+    .footer-bottom {
+      padding-top: 24px; border-top: 1px solid var(--s2);
+      display: flex; flex-wrap: wrap; gap: 12px;
+      align-items: center; justify-content: space-between;
+      font-size: 12px; color: var(--muted);
+    }
+    @media(min-width: 768px) {
+      .footer-top { flex-direction: row; justify-content: space-between; }
+      .footer-links { flex-direction: row; gap: 48px; }
+    }
+
+    /* ── WHATSAPP FLOAT ───────────────────────────────────────────────────── */
+    .wa-float {
+      position: fixed; bottom: 24px; right: 24px; z-index: 90;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #25D366;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.55); }
+    .wa-float svg { width: 28px; height: 28px; fill: white; }
+
+    /* ── Reveal animation ─────────────────────────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- ── MOBILE MENU ──────────────────────────────────────────────────────── -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobile()">✕</button>
+  <a href="#inicio"      onclick="closeMobile()">Início</a>
+  <a href="#sobre"       onclick="closeMobile()">Escritório</a>
+  <a href="#atuacao"     onclick="closeMobile()">Atuação</a>
+  <a href="#processo"    onclick="closeMobile()">Processo</a>
+  <a href="#depoimentos" onclick="closeMobile()">Clientes</a>
+  <a href="#contato"     onclick="closeMobile()">Contato</a>
+  <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta%20gratuita." class="btn-gold" style="margin-top:8px">⚖️ Consulta Gratuita</a>
+</div>
+
+<!-- ── NAV ─────────────────────────────────────────────────────────────── -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="#inicio" class="nav-logo">
+      F<span>&</span>A
+      <small>Advocacia</small>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#sobre">Escritório</a></li>
+      <li><a href="#atuacao">Atuação</a></li>
+      <li><a href="#processo">Processo</a></li>
+      <li><a href="#depoimentos">Clientes</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+    <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta%20gratuita." class="btn-gold nav-cta">
+      ⚖️ Consulta Gratuita
+    </a>
+    <button class="nav-hamburger" onclick="openMobile()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
+<section id="inicio">
+  <div class="hero-bg"></div>
+  <div class="container hero-content">
+    <div class="hero-badge">⚖️ OAB/SP 12.345 — Advocacia Especializada</div>
+    <h1 class="hero-title">Defendemos seus direitos com <em>excelência</em> e dedicação</h1>
+    <p class="hero-sub">Há 18 anos ao lado dos nossos clientes, com rigor técnico, ética inabalável e comprometimento com resultados que fazem diferença.</p>
+    <div class="hero-btns">
+      <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta%20gratuita." class="btn-gold">📋 Agendar Consulta Gratuita</a>
+      <a href="#atuacao" class="btn-outline">Nossas Áreas de Atuação</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>+1.200</strong><span>Casos atendidos</span></div>
+      <div class="hero-stat"><strong>18</strong><span>Anos de experiência</span></div>
+      <div class="hero-stat"><strong>94%</strong><span>Taxa de êxito</span></div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    rolar
+  </div>
+</section>
+
+<!-- ── SOBRE ──────────────────────────────────────────────────────────────── -->
+<section id="sobre">
+  <div class="container">
+    <div class="sobre-grid">
+      <div class="sobre-img-wrap reveal">
+        <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=700&q=80" alt="Escritório de advocacia Ferreira e Associados" class="sobre-img">
+        <div class="sobre-img-badge">
+          <strong>18</strong>
+          <span>Anos de Experiência</span>
+        </div>
+      </div>
+      <div class="sobre-text reveal">
+        <div class="gold-label">Nosso Escritório</div>
+        <h2 class="section-title">Tradição jurídica a<br>serviço da sua causa</h2>
+        <div class="divider"></div>
+        <p>Fundado em 2006 pelo Dr. <strong style="color:var(--white)">Eduardo Ferreira</strong>, o escritório Ferreira &amp; Associados consolidou-se como referência em advocacia especializada no estado de São Paulo, reunindo profissionais de excelência com profundo conhecimento em diversas áreas do direito.</p>
+        <p>Nossa atuação é pautada pela ética, transparência e pela busca incessante de soluções jurídicas eficazes. Cada cliente recebe atenção individualizada, com estratégias desenhadas para as especificidades de cada caso.</p>
+        <div class="sobre-feats">
+          <div class="sobre-feat"><span class="sobre-feat-icon">🏛️</span> Inscrição regular na OAB/SP — regularidade e credibilidade garantidas</div>
+          <div class="sobre-feat"><span class="sobre-feat-icon">👨‍⚖️</span> Equipe multidisciplinar especializada em diferentes ramos do direito</div>
+          <div class="sobre-feat"><span class="sobre-feat-icon">🤝</span> Atendimento personalizado com acompanhamento integral do seu processo</div>
+          <div class="sobre-feat"><span class="sobre-feat-icon">🔒</span> Sigilo absoluto e total confidencialidade em todas as tratativas</div>
+        </div>
+        <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta%20gratuita." class="btn-gold">Agendar consulta gratuita</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ÁREAS DE ATUAÇÃO ───────────────────────────────────────────────────── -->
+<section id="atuacao">
+  <div class="container">
+    <div class="atuacao-header reveal">
+      <div class="gold-label">Especialidades</div>
+      <h2 class="section-title">Áreas de <em style="font-style:italic;color:var(--gold)">Atuação</em></h2>
+      <p class="section-sub">Atuamos nas principais áreas do direito, com equipes especializadas dedicadas a cada segmento jurídico.</p>
+    </div>
+    <div class="atuacao-grid">
+      <div class="area-card reveal">
+        <span class="area-icon">⚖️</span>
+        <div class="area-info">
+          <h3>Direito Civil</h3>
+          <p>Contratos, responsabilidade civil, cobranças, indenizações, usucapião e questões patrimoniais com suporte jurídico completo.</p>
+        </div>
+        <span class="area-arrow">→</span>
+      </div>
+      <div class="area-card reveal">
+        <span class="area-icon">📋</span>
+        <div class="area-info">
+          <h3>Direito Trabalhista</h3>
+          <p>Defesa de trabalhadores e empresas em reclamações trabalhistas, rescisões, horas extras, assédio moral e negociações coletivas.</p>
+        </div>
+        <span class="area-arrow">→</span>
+      </div>
+      <div class="area-card reveal">
+        <span class="area-icon">🏠</span>
+        <div class="area-info">
+          <h3>Direito de Família</h3>
+          <p>Divórcio, guarda de filhos, pensão alimentícia, inventário, partilha de bens e adoção com sensibilidade e rigor técnico.</p>
+        </div>
+        <span class="area-arrow">→</span>
+      </div>
+      <div class="area-card reveal">
+        <span class="area-icon">🏢</span>
+        <div class="area-info">
+          <h3>Direito Empresarial</h3>
+          <p>Constituição e dissolução de sociedades, contratos empresariais, recuperação judicial, fusões, aquisições e compliance.</p>
+        </div>
+        <span class="area-arrow">→</span>
+      </div>
+      <div class="area-card reveal">
+        <span class="area-icon">🛒</span>
+        <div class="area-info">
+          <h3>Direito do Consumidor</h3>
+          <p>Defesa em relações de consumo, produtos defeituosos, cobranças indevidas, propaganda enganosa e vícios de serviço.</p>
+        </div>
+        <span class="area-arrow">→</span>
+      </div>
+      <div class="area-card reveal">
+        <span class="area-icon">📜</span>
+        <div class="area-info">
+          <h3>Direito Previdenciário</h3>
+          <p>Aposentadoria por tempo de contribuição, por invalidez, pensão por morte, benefício por incapacidade e revisões de benefícios.</p>
+        </div>
+        <span class="area-arrow">→</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMO TRABALHAMOS ───────────────────────────────────────────────────── -->
+<section id="processo">
+  <div class="container">
+    <div class="processo-header reveal">
+      <div class="gold-label">Metodologia</div>
+      <h2 class="section-title">Como <em style="font-style:italic;color:var(--gold)">Trabalhamos</em></h2>
+      <p class="section-sub">Um processo estruturado que garante clareza, eficiência e os melhores resultados possíveis para o seu caso.</p>
+    </div>
+    <div class="processo-steps">
+      <div class="processo-step reveal">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-icon">🤝</div>
+          <h3>Consulta Inicial</h3>
+          <p>Na primeira reunião, ouvimos atentamente sua situação, esclarecemos dúvidas e avaliamos as melhores alternativas jurídicas disponíveis — sem compromisso e com total sigilo.</p>
+        </div>
+      </div>
+      <div class="step-connector">→</div>
+      <div class="processo-step reveal">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-icon">🔍</div>
+          <h3>Análise do Caso</h3>
+          <p>Realizamos uma análise técnica aprofundada da documentação e dos fatos, identificando os fundamentos jurídicos mais sólidos e os pontos que merecem atenção especial.</p>
+        </div>
+      </div>
+      <div class="step-connector">→</div>
+      <div class="processo-step reveal">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-icon">⚖️</div>
+          <h3>Estratégia e Defesa</h3>
+          <p>Elaboramos a estratégia jurídica mais adequada ao seu perfil e objetivos, conduzindo o processo com agilidade, transparência e comunicação constante em cada etapa.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEPOIMENTOS ───────────────────────────────────────────────────────── -->
+<section id="depoimentos">
+  <div class="container">
+    <div class="depo-header reveal">
+      <div class="gold-label">Quem confiou em nós</div>
+      <h2 class="section-title">Clientes que <em style="font-style:italic;color:var(--gold)">obtiveram resultados</em></h2>
+    </div>
+    <div class="depo-track reveal">
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <span class="depo-case">Direito Trabalhista</span>
+        <p class="depo-text">Após meses tentando resolver sozinho, encontrei o escritório Ferreira &amp; Associados. Em menos de seis meses, minha reclamação trabalhista foi concluída com um acordo bem acima do que eu esperava. Profissionalismo exemplar em todas as etapas.</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/92?img=11" alt="Roberto M." class="depo-avatar">
+          <div><strong>Roberto Mendes</strong><span>Caso encerrado em 2024</span></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <span class="depo-case">Direito de Família</span>
+        <p class="depo-text">Em um momento tão delicado quanto o divórcio, contar com uma equipe que alia competência técnica e sensibilidade humana fez toda a diferença. A guarda dos meus filhos foi resolvida de forma justa e tranquila. Sou eternamente grata.</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/92?img=25" alt="Ana C." class="depo-avatar">
+          <div><strong>Ana Carolina Reis</strong><span>Caso encerrado em 2023</span></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <span class="depo-case">Direito Previdenciário</span>
+        <p class="depo-text">Lutei três anos pelo meu benefício de aposentadoria por invalidez sem sucesso. O Dr. Eduardo analisou meu caso em detalhes e, em oito meses, consegui o benefício retroativo. Recomendo sem hesitação a qualquer pessoa nessa situação.</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/92?img=53" alt="Marcos T." class="depo-avatar">
+          <div><strong>Marcos Tavares</strong><span>Caso encerrado em 2024</span></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <span class="depo-case">Direito Empresarial</span>
+        <p class="depo-text">Contratei o escritório para a reestruturação societária da minha empresa. A equipe demonstrou domínio técnico impressionante, cumpriu todos os prazos e manteve comunicação transparente do início ao fim. Parceria que não troco por nada.</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/92?img=67" alt="Patricia L." class="depo-avatar">
+          <div><strong>Patricia Lopes</strong><span>Cliente desde 2021</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ────────────────────────────────────────────────────────────────── -->
+<section id="consulta">
+  <div class="cta-bg"></div>
+  <div class="container">
+    <div class="cta-content reveal">
+      <div class="gold-label" style="justify-content:center">Dê o primeiro passo</div>
+      <h2 class="section-title">Agende sua consulta<br>gratuita agora</h2>
+      <p>Sem compromisso, sem custo. Nossa primeira conversa é confidencial, e você sairá com clareza sobre os seus direitos e as melhores alternativas para o seu caso.</p>
+      <div class="cta-tags">
+        <span class="cta-tag">🔒 100% Confidencial</span>
+        <span class="cta-tag">✅ Sem compromisso</span>
+        <span class="cta-tag">⚡ Resposta rápida</span>
+        <span class="cta-tag">📱 WhatsApp ou presencial</span>
+      </div>
+      <div class="cta-btns">
+        <a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta%20gratuita%20com%20a%20Ferreira%20%26%20Associados." class="btn-gold">
+          💬 Falar pelo WhatsApp
+        </a>
+        <a href="tel:+5511999999999" class="btn-outline">📞 Ligar agora</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTATO ────────────────────────────────────────────────────────────── -->
+<section id="contato">
+  <div class="container">
+    <div class="gold-label reveal">Onde estamos</div>
+    <h2 class="section-title reveal">Venha até nós</h2>
+    <div class="divider reveal"></div>
+    <div class="contato-grid" style="margin-top:40px">
+      <div class="contato-info reveal">
+        <div class="contato-itens">
+          <div class="contato-item">
+            <span class="contato-item-icon">📍</span>
+            <div>
+              <strong>Endereço</strong>
+              <span>Av. Paulista, 1.765 — Sala 1401, 14º andar<br>Bela Vista — São Paulo, SP — 01311-200</span>
+            </div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item-icon">📞</span>
+            <div>
+              <strong>Telefone / WhatsApp</strong>
+              <a href="https://wa.me/5511999999999">(11) 99999-9999</a>
+            </div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item-icon">📧</span>
+            <div>
+              <strong>E-mail</strong>
+              <a href="mailto:contato@ferreiraassociados.adv.br">contato@ferreiraassociados.adv.br</a>
+            </div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item-icon">🏛️</span>
+            <div>
+              <strong>Registro OAB</strong>
+              <span>OAB/SP nº 12.345 — Eduardo R. Ferreira</span>
+            </div>
+          </div>
+        </div>
+        <div class="horarios">
+          <h4>Horário de Atendimento</h4>
+          <div class="horario-row"><span>Segunda — Sexta</span><span>08h às 18h</span></div>
+          <div class="horario-row"><span>Sábado</span><span>Mediante agendamento</span></div>
+          <div class="horario-row"><span>Domingo e feriados</span><span>Fechado</span></div>
+        </div>
+      </div>
+      <div class="contato-mapa reveal">
+        <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=60" alt="Localização do escritório">
+        <div class="mapa-overlay">
+          <span class="mapa-pin">📍</span>
+          <p>Av. Paulista, 1.765 — Sala 1401<br>Bela Vista — São Paulo, SP</p>
+          <a href="https://maps.google.com" target="_blank" rel="noopener">Abrir no Google Maps →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">
+          F<span>&amp;</span>A
+          <p>Ferreira &amp; Associados — Advocacia e<br>Consultoria Jurídica desde 2006</p>
+        </div>
+        <div class="footer-oab">⚖️ OAB/SP nº 12.345</div>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>Navegação</h4>
+          <a href="#sobre">O Escritório</a>
+          <a href="#atuacao">Áreas de Atuação</a>
+          <a href="#processo">Como Trabalhamos</a>
+          <a href="#depoimentos">Clientes</a>
+          <a href="#contato">Contato</a>
+        </div>
+        <div>
+          <h4>Especialidades</h4>
+          <a href="#atuacao">Direito Civil</a>
+          <a href="#atuacao">Direito Trabalhista</a>
+          <a href="#atuacao">Direito de Família</a>
+          <a href="#atuacao">Direito Empresarial</a>
+          <a href="#atuacao">Direito Previdenciário</a>
+        </div>
+        <div>
+          <h4>Contato</h4>
+          <div class="footer-social">
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="LinkedIn">💼</a>
+            <a href="https://wa.me/5511999999999" title="WhatsApp">💬</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Ferreira &amp; Associados Advocacia. Todos os direitos reservados. — OAB/SP 12.345</span>
+      <span>Desenvolvido por <a href="https://topsitebr.com.br" style="color:var(--gold)">TopSite</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ── WHATSAPP FLOAT ─────────────────────────────────────────────────────── -->
+<a href="https://wa.me/5511999999999?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta%20gratuita%20com%20a%20Ferreira%20%26%20Associados." class="wa-float" title="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────────────────────── -->
+<script>
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Mobile menu
+  function openMobile() { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow = ''; }
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
