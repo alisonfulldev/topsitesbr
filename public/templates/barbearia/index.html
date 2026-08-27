@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CorteReal Barbearia — Premium &amp; Estilo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #e8e8e8;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; object-fit: cover; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── Tokens ───────────────────────────────────────────────────────────── */
+    :root {
+      --black:    #0a0a0a;
+      --s1:       #111111;
+      --s2:       #181818;
+      --s3:       #222222;
+      --s4:       #2a2a2a;
+      --gold:     #c9a84c;
+      --gold-lt:  #dfc070;
+      --gold-dk:  #9e8038;
+      --white:    #ffffff;
+      --muted:    #888888;
+      --muted2:   #555555;
+      --font-h:   'Playfair Display', serif;
+      --font-b:   'Inter', sans-serif;
+      --r:        10px;
+      --r-lg:     20px;
+      --gold-grd: linear-gradient(135deg, #c9a84c 0%, #e8cc7a 50%, #c9a84c 100%);
+    }
+
+    /* ── Utilities ────────────────────────────────────────────────────────── */
+    .container { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+    .gold-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .gold-label::before, .gold-label::after {
+      content: ''; display: block; width: 30px; height: 1px; background: var(--gold);
+    }
+    .section-title {
+      font-family: var(--font-h); font-size: clamp(28px, 5vw, 44px);
+      font-weight: 700; color: var(--white); line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 15px; color: var(--muted); max-width: 520px; line-height: 1.75;
+    }
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-grd); color: #000;
+      font-weight: 700; font-size: 14px; letter-spacing: 0.5px;
+      padding: 14px 30px; border-radius: var(--r);
+      border: none; cursor: pointer; transition: opacity .2s, transform .15s;
+    }
+    .btn-gold:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--white);
+      font-weight: 600; font-size: 14px; letter-spacing: 0.5px;
+      padding: 13px 28px; border-radius: var(--r);
+      border: 1.5px solid rgba(255,255,255,0.25); cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .divider { width: 50px; height: 3px; background: var(--gold); margin: 20px 0; }
+
+    /* ── NAV ──────────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 18px 0;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background .3s, border-color .3s, padding .3s;
+    }
+    nav.scrolled {
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom-color: rgba(201,168,76,0.15);
+      padding: 12px 0;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    }
+    .nav-logo {
+      font-family: var(--font-h); font-size: 22px; font-weight: 900;
+      color: var(--white); letter-spacing: 1px; line-height: 1;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-logo small {
+      display: block; font-family: var(--font-b); font-size: 9px;
+      font-weight: 400; letter-spacing: 4px; color: var(--muted);
+      text-transform: uppercase; margin-top: 3px;
+    }
+    .nav-links {
+      display: none; list-style: none; gap: 32px;
+    }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.75); transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta { display: none; }
+    .nav-hamburger {
+      display: flex; flex-direction: column; gap: 5px;
+      width: 28px; cursor: pointer; background: none; border: none; padding: 0;
+    }
+    .nav-hamburger span {
+      display: block; height: 2px; background: var(--white);
+      border-radius: 2px; transition: .3s;
+    }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 99;
+      background: rgba(10,10,10,0.98); backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font-h); font-size: 28px; color: var(--white);
+      font-weight: 700; transition: color .2s;
+    }
+    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-close {
+      position: absolute; top: 24px; right: 24px;
+      font-size: 28px; cursor: pointer; color: var(--muted); background: none; border: none;
+    }
+    @media(min-width: 900px) {
+      .nav-links { display: flex; }
+      .nav-cta { display: inline-flex; }
+      .nav-hamburger { display: none; }
+    }
+
+    /* ── HERO ─────────────────────────────────────────────────────────────── */
+    #inicio {
+      position: relative; min-height: 100svh; display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=1800&q=80') center/cover no-repeat;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        100deg,
+        rgba(10,10,10,0.95) 0%,
+        rgba(10,10,10,0.82) 55%,
+        rgba(10,10,10,0.4) 100%
+      );
+    }
+    .hero-content {
+      position: relative; z-index: 2; padding: 120px 0 80px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold); font-size: 11px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      padding: 8px 18px; border-radius: 100px; margin-bottom: 24px;
+    }
+    .hero-title {
+      font-family: var(--font-h);
+      font-size: clamp(38px, 8vw, 76px);
+      font-weight: 900; color: var(--white);
+      line-height: 1.08; letter-spacing: -1px;
+      max-width: 620px; margin-bottom: 20px;
+    }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px); color: rgba(255,255,255,0.6);
+      max-width: 480px; line-height: 1.7; margin-bottom: 36px;
+    }
+    .hero-btns { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 56px; }
+    .hero-stats {
+      display: flex; flex-wrap: wrap; gap: 32px;
+      padding-top: 36px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero-stat strong {
+      display: block; font-family: var(--font-h);
+      font-size: 32px; font-weight: 900; color: var(--gold);
+    }
+    .hero-stat span {
+      font-size: 12px; color: var(--muted); letter-spacing: 0.5px;
+    }
+    .hero-scroll {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--muted); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .hero-scroll svg { width: 20px; height: 20px; stroke: var(--gold); }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── SOBRE ────────────────────────────────────────────────────────────── */
+    #sobre {
+      background: var(--s1);
+      padding: 80px 0;
+    }
+    .sobre-grid {
+      display: grid; gap: 48px;
+      grid-template-columns: 1fr;
+    }
+    .sobre-img-wrap {
+      position: relative;
+    }
+    .sobre-img {
+      width: 100%; height: 340px; border-radius: var(--r-lg); object-fit: cover;
+    }
+    .sobre-img-badge {
+      position: absolute; bottom: -20px; right: 20px;
+      background: var(--gold-grd); color: #000;
+      padding: 16px 24px; border-radius: var(--r);
+      text-align: center; box-shadow: 0 8px 32px rgba(201,168,76,0.3);
+    }
+    .sobre-img-badge strong { font-family: var(--font-h); font-size: 28px; font-weight: 900; display: block; }
+    .sobre-img-badge span { font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+    .sobre-text { padding-top: 24px; }
+    .sobre-text p { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.8; margin-bottom: 16px; }
+    .sobre-feats {
+      display: flex; flex-direction: column; gap: 12px; margin: 28px 0;
+    }
+    .sobre-feat {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 14px; color: rgba(255,255,255,0.8);
+    }
+    .sobre-feat-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    @media(min-width: 768px) {
+      #sobre { padding: 100px 0; }
+      .sobre-grid { grid-template-columns: 1fr 1fr; align-items: center; }
+      .sobre-img { height: 500px; }
+      .sobre-img-badge { bottom: -24px; }
+    }
+
+    /* ── SERVIÇOS ─────────────────────────────────────────────────────────── */
+    #servicos {
+      background: var(--black);
+      padding: 80px 0;
+    }
+    .servicos-header {
+      text-align: center; margin-bottom: 52px;
+    }
+    .servicos-header .gold-label { justify-content: center; }
+    .servicos-header .section-sub { margin: 0 auto; }
+    .servicos-grid {
+      display: grid; gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    .servico-card {
+      background: var(--s2); border: 1px solid var(--s4);
+      border-radius: var(--r-lg); padding: 28px;
+      display: flex; align-items: flex-start; gap: 20px;
+      transition: border-color .25s, transform .2s;
+    }
+    .servico-card:hover {
+      border-color: rgba(201,168,76,0.35);
+      transform: translateY(-2px);
+    }
+    .servico-icon {
+      width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0;
+      background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .servico-info { flex: 1; }
+    .servico-info h3 {
+      font-family: var(--font-h); font-size: 19px; font-weight: 700;
+      color: var(--white); margin-bottom: 6px;
+    }
+    .servico-info p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .servico-price {
+      font-family: var(--font-h); font-size: 22px; font-weight: 900;
+      color: var(--gold); white-space: nowrap;
+    }
+    .servico-price small { font-family: var(--font-b); font-size: 11px; font-weight: 400; color: var(--muted); display: block; text-align: right; }
+    .servicos-cta { text-align: center; margin-top: 44px; }
+    @media(min-width: 640px) {
+      .servicos-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media(min-width: 900px) {
+      #servicos { padding: 100px 0; }
+      .servicos-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ── GALERIA ──────────────────────────────────────────────────────────── */
+    #galeria {
+      background: var(--s1); padding: 80px 0;
+    }
+    .galeria-header { text-align: center; margin-bottom: 40px; }
+    .galeria-header .gold-label { justify-content: center; }
+    .galeria-grid {
+      display: grid; gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 180px;
+    }
+    .galeria-item {
+      overflow: hidden; border-radius: var(--r); position: relative; cursor: pointer;
+    }
+    .galeria-item:nth-child(1) { grid-row: span 2; }
+    .galeria-item:nth-child(4) { grid-column: span 2; grid-row: span 1; }
+    .galeria-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .5s ease;
+    }
+    .galeria-item:hover img { transform: scale(1.06); }
+    .galeria-item::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(201,168,76,0.3) 0%, transparent 60%);
+      opacity: 0; transition: opacity .3s;
+    }
+    .galeria-item:hover::after { opacity: 1; }
+    @media(min-width: 768px) {
+      #galeria { padding: 100px 0; }
+      .galeria-grid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 220px;
+      }
+      .galeria-item:nth-child(4) { grid-column: 1; grid-row: 2; }
+    }
+
+    /* ── DEPOIMENTOS ──────────────────────────────────────────────────────── */
+    #depoimentos {
+      background: var(--black); padding: 80px 0;
+    }
+    .depo-header { text-align: center; margin-bottom: 48px; }
+    .depo-header .gold-label { justify-content: center; }
+    .depo-track {
+      display: flex; gap: 20px; overflow-x: auto;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px; scrollbar-width: none;
+    }
+    .depo-track::-webkit-scrollbar { display: none; }
+    .depo-card {
+      background: var(--s2); border: 1px solid var(--s4);
+      border-radius: var(--r-lg); padding: 28px;
+      min-width: 280px; flex-shrink: 0;
+      scroll-snap-align: start;
+      transition: border-color .25s;
+    }
+    .depo-card:hover { border-color: rgba(201,168,76,0.25); }
+    .depo-stars { color: var(--gold); font-size: 16px; letter-spacing: 2px; margin-bottom: 14px; }
+    .depo-text {
+      font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.7);
+      margin-bottom: 20px; font-style: italic;
+    }
+    .depo-text::before { content: '"'; }
+    .depo-text::after  { content: '"'; }
+    .depo-author { display: flex; align-items: center; gap: 12px; }
+    .depo-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      object-fit: cover; border: 2px solid rgba(201,168,76,0.3);
+    }
+    .depo-author strong { font-size: 14px; color: var(--white); display: block; }
+    .depo-author span { font-size: 12px; color: var(--muted); }
+    @media(min-width: 768px) {
+      #depoimentos { padding: 100px 0; }
+      .depo-card { min-width: 340px; }
+    }
+
+    /* ── AGENDAMENTO ──────────────────────────────────────────────────────── */
+    #agendamento {
+      position: relative; padding: 80px 0; overflow: hidden;
+      background: var(--s1);
+    }
+    .agendar-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1400&q=70') center/cover;
+      opacity: 0.12;
+    }
+    .agendar-content {
+      position: relative; text-align: center; max-width: 580px; margin: 0 auto;
+    }
+    .agendar-content .section-title { margin-bottom: 12px; }
+    .agendar-content p {
+      font-size: 16px; color: var(--muted); margin-bottom: 36px; line-height: 1.7;
+    }
+    .agendar-btns { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+    @media(min-width: 768px) { #agendamento { padding: 100px 0; } }
+
+    /* ── CONTATO ──────────────────────────────────────────────────────────── */
+    #contato {
+      background: var(--black); padding: 80px 0;
+    }
+    .contato-grid {
+      display: grid; gap: 48px; grid-template-columns: 1fr;
+    }
+    .contato-info .section-sub { margin-bottom: 32px; }
+    .contato-itens {
+      display: flex; flex-direction: column; gap: 20px; margin-bottom: 32px;
+    }
+    .contato-item {
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    .contato-item-icon {
+      width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+      background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .contato-item strong { display: block; font-size: 13px; color: var(--muted); font-weight: 500; margin-bottom: 3px; }
+    .contato-item span, .contato-item a {
+      font-size: 15px; color: var(--white); line-height: 1.5;
+    }
+    .contato-item a:hover { color: var(--gold); }
+    .horarios {
+      background: var(--s2); border: 1px solid var(--s4);
+      border-radius: var(--r-lg); padding: 24px; margin-top: 8px;
+    }
+    .horarios h4 {
+      font-size: 13px; color: var(--muted); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+    .horario-row {
+      display: flex; justify-content: space-between;
+      font-size: 14px; padding: 8px 0;
+      border-bottom: 1px solid var(--s4);
+    }
+    .horario-row:last-child { border-bottom: none; }
+    .horario-row span:first-child { color: rgba(255,255,255,0.6); }
+    .horario-row span:last-child { color: var(--white); font-weight: 500; }
+    .contato-mapa {
+      border-radius: var(--r-lg); overflow: hidden;
+      border: 1px solid var(--s4); min-height: 320px;
+      background: var(--s2); display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .contato-mapa img {
+      width: 100%; height: 100%; min-height: 320px; object-fit: cover; opacity: 0.6;
+    }
+    .mapa-overlay {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+    }
+    .mapa-pin { font-size: 40px; }
+    .mapa-overlay p { font-size: 14px; color: var(--muted); text-align: center; }
+    .mapa-overlay a {
+      font-size: 13px; color: var(--gold); font-weight: 600;
+      border: 1px solid rgba(201,168,76,0.4); padding: 8px 20px; border-radius: 100px;
+    }
+    @media(min-width: 900px) {
+      #contato { padding: 100px 0; }
+      .contato-grid { grid-template-columns: 1fr 1fr; align-items: start; }
+    }
+
+    /* ── FOOTER ───────────────────────────────────────────────────────────── */
+    footer {
+      background: var(--s1); border-top: 1px solid rgba(201,168,76,0.12);
+      padding: 48px 0 32px;
+    }
+    .footer-top {
+      display: flex; flex-direction: column; gap: 36px; margin-bottom: 40px;
+    }
+    .footer-logo { font-family: var(--font-h); font-size: 24px; font-weight: 900; color: var(--white); }
+    .footer-logo span { color: var(--gold); }
+    .footer-logo p { font-family: var(--font-b); font-size: 13px; color: var(--muted); font-weight: 400; margin-top: 8px; }
+    .footer-links { display: flex; flex-direction: column; gap: 12px; }
+    .footer-links h4 { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .footer-links a { font-size: 14px; color: rgba(255,255,255,0.7); transition: color .2s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-social { display: flex; gap: 12px; margin-top: 8px; }
+    .footer-social a {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--s3); border: 1px solid var(--s4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; transition: border-color .2s, background .2s;
+    }
+    .footer-social a:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+    .footer-bottom {
+      padding-top: 24px; border-top: 1px solid var(--s4);
+      display: flex; flex-wrap: wrap; gap: 12px;
+      align-items: center; justify-content: space-between;
+      font-size: 12px; color: var(--muted);
+    }
+    @media(min-width: 768px) {
+      .footer-top { flex-direction: row; justify-content: space-between; }
+      .footer-links { flex-direction: row; gap: 40px; }
+    }
+
+    /* ── WHATSAPP FLOAT ───────────────────────────────────────────────────── */
+    .wa-float {
+      position: fixed; bottom: 24px; right: 24px; z-index: 90;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #25D366;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(37,211,102,0.55); }
+    .wa-float svg { width: 28px; height: 28px; fill: white; }
+
+    /* ── Reveal animation ─────────────────────────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- ── MOBILE MENU ──────────────────────────────────────────────────────── -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobile()">✕</button>
+  <a href="#inicio"      onclick="closeMobile()">Início</a>
+  <a href="#sobre"       onclick="closeMobile()">Sobre</a>
+  <a href="#servicos"    onclick="closeMobile()">Serviços</a>
+  <a href="#galeria"     onclick="closeMobile()">Galeria</a>
+  <a href="#depoimentos" onclick="closeMobile()">Depoimentos</a>
+  <a href="#contato"     onclick="closeMobile()">Contato</a>
+  <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20agendar%20um%20horário." class="btn-gold" style="margin-top:8px">📅 Agendar</a>
+</div>
+
+<!-- ── NAV ─────────────────────────────────────────────────────────────── -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="#inicio" class="nav-logo">
+      CORTE<span>REAL</span>
+      <small>Barbearia Premium</small>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#galeria">Galeria</a></li>
+      <li><a href="#depoimentos">Depoimentos</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+    <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20agendar%20um%20horário." class="btn-gold nav-cta">
+      📅 Agendar Horário
+    </a>
+    <button class="nav-hamburger" onclick="openMobile()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
+<section id="inicio">
+  <div class="hero-bg"></div>
+  <div class="container hero-content">
+    <div class="hero-badge">✂ Barbearia Premium — Desde 2010</div>
+    <h1 class="hero-title">A Arte do<br><em>Corte Perfeito</em></h1>
+    <p class="hero-sub">Onde tradição encontra estilo moderno. Cortes precisos, barba impecável e uma experiência que vai além da cadeira.</p>
+    <div class="hero-btns">
+      <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20agendar%20um%20horário." class="btn-gold">📅 Agendar Agora</a>
+      <a href="#servicos" class="btn-outline">Ver Serviços</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>+2.500</strong><span>Clientes atendidos</span></div>
+      <div class="hero-stat"><strong>14</strong><span>Anos de experiência</span></div>
+      <div class="hero-stat"><strong>98%</strong><span>Satisfação garantida</span></div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    scroll
+  </div>
+</section>
+
+<!-- ── SOBRE ──────────────────────────────────────────────────────────────── -->
+<section id="sobre">
+  <div class="container">
+    <div class="sobre-grid">
+      <div class="sobre-img-wrap reveal">
+        <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=700&q=80" alt="Barbeiro trabalhando" class="sobre-img">
+        <div class="sobre-img-badge">
+          <strong>#1</strong>
+          <span>da Região</span>
+        </div>
+      </div>
+      <div class="sobre-text reveal">
+        <div class="gold-label">Nossa História</div>
+        <h2 class="section-title">Mais que um corte —<br>uma experiência</h2>
+        <div class="divider"></div>
+        <p>Fundada em 2010 pelo barbeiro <strong style="color:#fff">Ricardo Souza</strong>, a CorteReal nasceu do desejo de trazer o melhor da barbearia tradicional com o toque contemporâneo que o homem moderno merece.</p>
+        <p>Cada detalhe do nosso espaço foi pensado para você se sentir bem-vindo: ambiente aconchegante, profissionais experientes e atendimento personalizado do início ao fim.</p>
+        <div class="sobre-feats">
+          <div class="sobre-feat"><span class="sobre-feat-icon">✂</span> Barbeiros certificados com mais de 10 anos de experiência</div>
+          <div class="sobre-feat"><span class="sobre-feat-icon">🪒</span> Produtos premium nacionais e importados</div>
+          <div class="sobre-feat"><span class="sobre-feat-icon">📅</span> Agendamento online rápido pelo WhatsApp</div>
+          <div class="sobre-feat"><span class="sobre-feat-icon">🏆</span> Eleita melhor barbearia da cidade por 3 anos seguidos</div>
+        </div>
+        <a href="#servicos" class="btn-gold">Conhecer nossos serviços</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVIÇOS ───────────────────────────────────────────────────────────── -->
+<section id="servicos">
+  <div class="container">
+    <div class="servicos-header reveal">
+      <div class="gold-label">O que oferecemos</div>
+      <h2 class="section-title">Serviços que <em style="font-style:italic;color:var(--gold)">transformam</em></h2>
+      <p class="section-sub">Do corte clássico ao degradê mais moderno — temos o serviço certo para o seu estilo.</p>
+    </div>
+    <div class="servicos-grid">
+      <div class="servico-card reveal">
+        <span class="servico-icon">✂</span>
+        <div class="servico-info">
+          <h3>Corte Social</h3>
+          <p>Corte clássico executado com tesoura e máquina, acabamento perfeito.</p>
+        </div>
+        <div class="servico-price">R$45<small>~30 min</small></div>
+      </div>
+      <div class="servico-card reveal">
+        <span class="servico-icon">⚡</span>
+        <div class="servico-info">
+          <h3>Corte Degradê</h3>
+          <p>Fade americano com transição suave, do claro ao escuro com precisão.</p>
+        </div>
+        <div class="servico-price">R$55<small>~40 min</small></div>
+      </div>
+      <div class="servico-card reveal">
+        <span class="servico-icon">🪒</span>
+        <div class="servico-info">
+          <h3>Barba Completa</h3>
+          <p>Aparar, modelar e finalizar com toalha quente e produtos especiais.</p>
+        </div>
+        <div class="servico-price">R$35<small>~25 min</small></div>
+      </div>
+      <div class="servico-card reveal">
+        <span class="servico-icon">👑</span>
+        <div class="servico-info">
+          <h3>Corte + Barba</h3>
+          <p>O combo completo para o homem que cuida do visual de verdade.</p>
+        </div>
+        <div class="servico-price">R$80<small>~55 min</small></div>
+      </div>
+      <div class="servico-card reveal">
+        <span class="servico-icon">🔥</span>
+        <div class="servico-info">
+          <h3>Sobrancelha</h3>
+          <p>Design de sobrancelha na navalha para um visual mais definido.</p>
+        </div>
+        <div class="servico-price">R$20<small>~15 min</small></div>
+      </div>
+      <div class="servico-card reveal">
+        <span class="servico-icon">💆</span>
+        <div class="servico-info">
+          <h3>Tratamento Capilar</h3>
+          <p>Hidratação profunda, anti-queda ou reconstrução. Cabelo saudável.</p>
+        </div>
+        <div class="servico-price">R$65<small>~50 min</small></div>
+      </div>
+    </div>
+    <div class="servicos-cta reveal">
+      <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20agendar%20um%20horário." class="btn-gold">📅 Agendar pelo WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALERIA ────────────────────────────────────────────────────────────── -->
+<section id="galeria">
+  <div class="container">
+    <div class="galeria-header reveal">
+      <div class="gold-label">Nosso Trabalho</div>
+      <h2 class="section-title">Galeria de Cortes</h2>
+    </div>
+    <div class="galeria-grid reveal">
+      <div class="galeria-item">
+        <img src="https://images.unsplash.com/photo-1596728325488-58c87691e9af?w=600&q=80" alt="Corte degradê">
+      </div>
+      <div class="galeria-item">
+        <img src="https://images.unsplash.com/photo-1534297635766-a262cdcb8ee4?w=500&q=80" alt="Fade haircut">
+      </div>
+      <div class="galeria-item">
+        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=500&q=80" alt="Barba cuidada">
+      </div>
+      <div class="galeria-item">
+        <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=900&q=80" alt="Interior da barbearia">
+      </div>
+      <div class="galeria-item">
+        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500&q=80" alt="Ferramentas de barbearia">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEPOIMENTOS ───────────────────────────────────────────────────────── -->
+<section id="depoimentos">
+  <div class="container">
+    <div class="depo-header reveal">
+      <div class="gold-label">O que dizem</div>
+      <h2 class="section-title">Clientes que <em style="font-style:italic;color:var(--gold)">confiam</em></h2>
+    </div>
+    <div class="depo-track reveal">
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">Melhor barbearia da cidade, sem dúvida. O Ricardo tem um olho clínico para o que combina com cada rosto. Já indiquei pra todos os meus amigos.</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/80?img=11" alt="Carlos M." class="depo-avatar">
+          <div><strong>Carlos Mendes</strong><span>Cliente há 4 anos</span></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">Vim pela primeira vez na semana passada e já virei cliente fixo. O ambiente é incrível, equipe super atenciosa e o corte ficou exatamente como eu pedi.</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/80?img=15" alt="Felipe R." class="depo-avatar">
+          <div><strong>Felipe Rocha</strong><span>Cliente novo</span></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">Faço corte e barba toda semana aqui. Pontualidade perfeita, qualidade impecável. Não troco por nenhuma outra barbearia da cidade.</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/80?img=33" alt="André L." class="depo-avatar">
+          <div><strong>André Lima</strong><span>Cliente há 2 anos</span></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">Atendimento de alto nível. Além do corte ser nota 10, o ambiente é super agradável, boa música, boa conversa. Recomendo de olhos fechados!</p>
+        <div class="depo-author">
+          <img src="https://i.pravatar.cc/80?img=52" alt="Marcos V." class="depo-avatar">
+          <div><strong>Marcos Vieira</strong><span>Cliente há 1 ano</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AGENDAMENTO ───────────────────────────────────────────────────────── -->
+<section id="agendamento">
+  <div class="agendar-bg"></div>
+  <div class="container">
+    <div class="agendar-content reveal">
+      <div class="gold-label" style="justify-content:center">Pronto para mudar?</div>
+      <h2 class="section-title">Reserve seu horário<br>agora mesmo</h2>
+      <p>Atendimento rápido pelo WhatsApp. Escolha o dia, o serviço e deixa o resto com a gente.</p>
+      <div class="agendar-btns">
+        <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20agendar%20um%20horário%20na%20CorteReal." class="btn-gold">
+          💬 Agendar pelo WhatsApp
+        </a>
+        <a href="tel:+5511999999999" class="btn-outline">📞 Ligar agora</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTATO ────────────────────────────────────────────────────────────── -->
+<section id="contato">
+  <div class="container">
+    <div class="gold-label reveal">Onde estamos</div>
+    <h2 class="section-title reveal">Venha nos visitar</h2>
+    <div class="divider reveal"></div>
+    <div class="contato-grid" style="margin-top:40px">
+      <div class="contato-info reveal">
+        <div class="contato-itens">
+          <div class="contato-item">
+            <span class="contato-item-icon">📍</span>
+            <div>
+              <strong>Endereço</strong>
+              <span>Rua das Palmeiras, 142 — Centro<br>São Paulo — SP, 01310-000</span>
+            </div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item-icon">📞</span>
+            <div>
+              <strong>Telefone / WhatsApp</strong>
+              <a href="https://wa.me/5511999999999">(11) 99999-9999</a>
+            </div>
+          </div>
+          <div class="contato-item">
+            <span class="contato-item-icon">📧</span>
+            <div>
+              <strong>E-mail</strong>
+              <a href="mailto:contato@cortereal.com.br">contato@cortereal.com.br</a>
+            </div>
+          </div>
+        </div>
+        <div class="horarios">
+          <h4>Horário de Funcionamento</h4>
+          <div class="horario-row"><span>Segunda — Sexta</span><span>09h às 20h</span></div>
+          <div class="horario-row"><span>Sábado</span><span>08h às 18h</span></div>
+          <div class="horario-row"><span>Domingo</span><span>09h às 14h</span></div>
+        </div>
+      </div>
+      <div class="contato-mapa reveal">
+        <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=60" alt="Mapa">
+        <div class="mapa-overlay">
+          <span class="mapa-pin">📍</span>
+          <p>Rua das Palmeiras, 142<br>Centro — São Paulo, SP</p>
+          <a href="https://maps.google.com" target="_blank" rel="noopener">Abrir no Google Maps →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">CORTE<span>REAL</span><p>Barbearia Premium desde 2010</p></div>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>Navegação</h4>
+          <a href="#sobre">Sobre nós</a>
+          <a href="#servicos">Serviços</a>
+          <a href="#galeria">Galeria</a>
+          <a href="#contato">Contato</a>
+        </div>
+        <div>
+          <h4>Redes Sociais</h4>
+          <div class="footer-social">
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="Facebook">👍</a>
+            <a href="https://wa.me/5511999999999" title="WhatsApp">💬</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 CorteReal Barbearia. Todos os direitos reservados.</span>
+      <span>Desenvolvido por <a href="https://topsitebr.com.br" style="color:var(--gold)">TopSite</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ── WHATSAPP FLOAT ─────────────────────────────────────────────────────── -->
+<a href="https://wa.me/5511999999999?text=Olá!%20Quero%20agendar%20um%20horário%20na%20CorteReal." class="wa-float" title="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────────────────────── -->
+<script>
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Mobile menu
+  function openMobile() { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow=''; }
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
