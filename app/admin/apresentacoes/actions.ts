@@ -47,6 +47,16 @@ export async function createPresentation(formData: FormData) {
   redirect(`/admin/apresentacoes/${presentation.id}`)
 }
 
+export async function deletePresentation(id: string) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== 'admin') throw new Error('Não autorizado')
+
+  await prisma.templatePresentation.delete({ where: { id } })
+
+  revalidatePath('/admin/apresentacoes')
+  redirect('/admin/apresentacoes')
+}
+
 export async function cancelPresentation(id: string) {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'admin') throw new Error('Não autorizado')

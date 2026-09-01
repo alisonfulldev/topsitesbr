@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import { createPresentation } from '../actions'
+import SubmitButton from './_components/SubmitButton'
 
 export default async function NovaApresentacaoPage() {
   const session = await getServerSession(authOptions)
@@ -128,12 +129,7 @@ export default async function NovaApresentacaoPage() {
           >
             Cancelar
           </Link>
-          <button
-            type="submit"
-            className="bg-brand text-brand-dark text-sm font-semibold px-5 py-2 rounded-lg hover:bg-brand/90 transition-colors"
-          >
-            Criar e gerar link
-          </button>
+          <SubmitButton />
         </div>
       </form>
     </div>

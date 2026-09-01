@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition, useRef } from 'react'
+import Image from 'next/image'
 import { checkoutAction } from '../actions'
 import { validateDocument, formatDocument } from '@/lib/cpf'
 
@@ -161,7 +162,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
         {/* Header */}
         <header className="border-b border-gray-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
           <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-            <span className="font-black text-lg tracking-tight text-gray-900">TOP SITE</span>
+            <Image src="/logo.png" alt="TOP SITE" width={120} height={36} className="h-8 w-auto" priority />
             <a
               href="#checkout"
               className="text-xs font-semibold bg-brand text-brand-dark px-4 py-1.5 rounded-full hover:bg-brand/90 transition-colors"
@@ -387,7 +388,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
         {/* Footer */}
         <footer className="border-t border-gray-100 py-8 px-4">
           <div className="max-w-5xl mx-auto text-center text-xs text-gray-400">
-            <p className="font-semibold text-gray-500 mb-1">TOP SITE</p>
+            <Image src="/logo.png" alt="TOP SITE" width={100} height={30} className="h-6 w-auto mx-auto mb-2 opacity-50" />
             <p>Sites profissionais para pequenos negócios.</p>
           </div>
         </footer>

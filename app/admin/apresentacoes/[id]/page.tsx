@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { APP_URL } from '@/lib/config'
 import CancelButton from './_components/CancelButton'
 import CopyLinkButton from './_components/CopyLinkButton'
+import DeleteButton from './_components/DeleteButton'
 
 function statusBadge(status: string) {
   if (status === 'pago') return <span className="inline-flex px-2.5 py-1 rounded-md text-xs font-semibold bg-green-100 text-green-700">Pago</span>
@@ -184,11 +185,10 @@ export default async function ApresentacaoDetailPage({ params }: { params: { id:
       )}
 
       {/* Actions */}
-      {p.status === 'pendente' && (
-        <div className="flex justify-end">
-          <CancelButton id={p.id} />
-        </div>
-      )}
+      <div className="flex items-center justify-between">
+        <DeleteButton id={p.id} />
+        {p.status === 'pendente' && <CancelButton id={p.id} />}
+      </div>
     </div>
   )
 }
