@@ -714,6 +714,7 @@ model TemplatePresentation {
   leadName            String                     @map("lead_name")
   leadPhone           String?                    @map("lead_phone")
   leadEmail           String?                    @map("lead_email")
+  leadDocument        String?                    @map("lead_document")
   template1Html       String                     @db.Text @map("template1_html")
   template2Html       String                     @db.Text @map("template2_html")
   template1Name       String                     @map("template1_name")

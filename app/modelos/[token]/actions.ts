@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
+import { validateDocument } from '@/lib/cpf'
 import { APP_URL } from '@/lib/config'
 
 function slugify(name: string): string {
@@ -34,6 +35,7 @@ export async function checkoutAction(
   name: string,
   email: string,
   phone: string,
+  document: string,
 ): Promise<{ error?: string; paymentUrl?: string }> {
   const presentation = await prisma.templatePresentation.findUnique({
     where: { token },
@@ -45,6 +47,11 @@ export async function checkoutAction(
   if (!['plano1', 'plano2', 'plano3'].includes(planChosen)) return { error: 'Plano inválido.' }
   if (!name.trim()) return { error: 'Nome é obrigatório.' }
   if (!email.trim() || !email.includes('@')) return { error: 'E-mail inválido.' }
+
+  const docClean = document.replace(/\D/g, '')
+  if (!validateDocument(docClean)) {
+    return { error: 'CPF ou CNPJ inválido. Verifique os dígitos informados.' }
+  }
 
   const price = PLAN_PRICES[planChosen]
   const description = PLAN_LABELS[planChosen]
@@ -61,10 +68,11 @@ export async function checkoutAction(
       name: name.trim(),
       email: email.trim().toLowerCase(),
       phone: phone.trim() || null,
+      document: docClean,
     })
     customerId = customer.customerId
   } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Erro ao processar pagamento'
+    const msg = err instanceof Error ? err.message : 'Erro ao processar pagamento.'
     return { error: msg }
   }
 
@@ -78,7 +86,7 @@ export async function checkoutAction(
     chargeId = charge.chargeId
     paymentUrl = charge.paymentUrl
   } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Erro ao gerar cobrança'
+    const msg = err instanceof Error ? err.message : 'Erro ao gerar cobrança.'
     return { error: msg }
   }
 
@@ -96,6 +104,7 @@ export async function checkoutAction(
       subdomain: subdomain ?? null,
       leadEmail: email.trim().toLowerCase(),
       leadPhone: phone.trim() || presentation.leadPhone,
+      leadDocument: docClean,
     },
   })
 
