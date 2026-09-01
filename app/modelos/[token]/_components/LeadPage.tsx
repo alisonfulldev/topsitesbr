@@ -27,7 +27,7 @@ const PLANS = [
       'Sem mensalidade',
     ],
     highlight: false,
-    cta: 'Escolher este plano',
+    cta: 'Quero esta opção',
   },
   {
     id: 'plano2',
@@ -45,7 +45,7 @@ const PLANS = [
     ],
     highlight: true,
     badge: 'Mais popular',
-    cta: 'Escolher este plano',
+    cta: 'Quero esta opção',
   },
   {
     id: 'plano3',
@@ -61,7 +61,7 @@ const PLANS = [
       'E-mail profissional',
     ],
     highlight: false,
-    cta: 'Escolher este plano',
+    cta: 'Quero esta opção',
   },
 ]
 
@@ -251,8 +251,10 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
         <section className="py-14 px-4 bg-gray-50" id="planos">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-10">
-              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Escolha seu plano</h2>
-              <p className="text-gray-500">Comece hoje. Sem fidelidade. Cancele quando quiser.</p>
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Como você quer ter o seu site?</h2>
+              <p className="text-gray-500 max-w-lg mx-auto">
+                O site custa <strong className="text-gray-700">R$ 97 uma única vez</strong>. A hospedagem mensal é opcional — você escolhe se quer que a gente cuide de tudo ou se prefere hospedar por conta própria.
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {PLANS.map((plan) => (
@@ -297,7 +299,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    {selectedPlan === plan.id ? '✓ Selecionado' : plan.cta}
+                    {selectedPlan === plan.id ? '✓ Selecionado' : 'Quero esta opção'}
                   </button>
                 </div>
               ))}
