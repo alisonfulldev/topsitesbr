@@ -191,7 +191,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
 
         {/* Phone mockups */}
         <section className="py-12 px-4">
-          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-start justify-center gap-10 sm:gap-16">
+          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-start justify-center gap-10 sm:gap-16">
             {(['1', '2'] as const).map((num) => (
               <div key={num} className="flex flex-col items-center gap-4">
                 {/* Phone frame */}
