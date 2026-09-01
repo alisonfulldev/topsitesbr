@@ -61,7 +61,7 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
     })
 
     if (!order) {
-      return { ok: false, message: `Cobrança não encontrada: ${chargeId}` }
+      return handlePresentationPayment(chargeId)
     }
 
     await prisma.order.update({
@@ -401,6 +401,90 @@ export async function syncOrderPayment(clientId: string): Promise<boolean> {
     return result.ok
   } catch {
     return false
+  }
+}
+
+// ── Pagamento de apresentação de templates ────────────────────────────────────
+
+async function handlePresentationPayment(chargeId: string): Promise<{ ok: boolean; message: string }> {
+  const presentation = await prisma.templatePresentation.findFirst({
+    where: { asaasChargeId: chargeId },
+  })
+
+  if (!presentation) {
+    return { ok: false, message: `Cobrança não encontrada: ${chargeId}` }
+  }
+
+  if (presentation.status === 'pago') {
+    return { ok: true, message: `Apresentação de ${presentation.leadName} já processada.` }
+  }
+
+  await prisma.templatePresentation.update({
+    where: { id: presentation.id },
+    data: { status: 'pago', paidAt: new Date() },
+  })
+
+  const planLabels: Record<string, string> = {
+    plano1: 'Site (R$97 — arquivos)',
+    plano2: 'Essencial (R$97 + R$19/mês)',
+    plano3: 'Completo (R$188 + R$19/mês)',
+  }
+  const planLabel = presentation.planChosen ? (planLabels[presentation.planChosen] ?? presentation.planChosen) : 'desconhecido'
+
+  const subdomainInfo = presentation.subdomain ? ` Subdomínio: ${presentation.subdomain}.` : ''
+
+  await sendNotification(
+    null,
+    `Apresentação paga — ${presentation.leadName}`,
+    `O lead ${presentation.leadName} pagou o plano "${planLabel}" via apresentação de templates.${subdomainInfo} Suba os arquivos e ative o site.`,
+  )
+
+  // Para planos 2 e 3: cria assinatura recorrente de R$19/mês
+  if (
+    (presentation.planChosen === 'plano2' || presentation.planChosen === 'plano3') &&
+    presentation.asaasCustomerId
+  ) {
+    if (process.env.PAYMENT_DRIVER !== 'asaas') {
+      console.log(`[MOCK] Assinatura R$19/mês criada para apresentação de ${presentation.leadName}`)
+    } else {
+      try {
+        const today = new Date()
+        const nextDue = new Date(today)
+        nextDue.setDate(today.getDate() + 30)
+        const yyyy = nextDue.getFullYear()
+        const mm = String(nextDue.getMonth() + 1).padStart(2, '0')
+        const dd = String(nextDue.getDate()).padStart(2, '0')
+
+        const sub = await asaasFetch<{ id: string }>('/subscriptions', {
+          method: 'POST',
+          body: JSON.stringify({
+            customer: presentation.asaasCustomerId,
+            billingType: 'UNDEFINED',
+            value: 19,
+            nextDueDate: `${yyyy}-${mm}-${dd}`,
+            cycle: 'MONTHLY',
+            description: `Site no Ar — ${presentation.leadName}`,
+          }),
+        })
+
+        await prisma.templatePresentation.update({
+          where: { id: presentation.id },
+          data: { asaasSubscriptionId: sub.id },
+        })
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err)
+        await sendNotification(
+          null,
+          `Erro ao criar assinatura — ${presentation.leadName}`,
+          `Pagamento confirmado, mas a assinatura R$19/mês não foi criada automaticamente. Erro: ${errMsg}. Crie manualmente no Asaas (customerId: ${presentation.asaasCustomerId}).`,
+        )
+      }
+    }
+  }
+
+  return {
+    ok: true,
+    message: `Apresentação de ${presentation.leadName} — pagamento confirmado (${planLabel}).`,
   }
 }
 

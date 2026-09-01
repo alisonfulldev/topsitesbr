@@ -22,6 +22,7 @@ const navItems = [
   { href: '/admin/propostas-lp', label: 'Propostas LP' },
   { href: '/admin/propostas-lp/leads', label: 'Leads LP', indent: true },
   { href: '/admin/orcamentos', label: 'Orçamentos' },
+  { href: '/admin/apresentacoes', label: 'Apresentações' },
 ]
 
 interface AdminSidebarProps {
