@@ -21,7 +21,8 @@ const PLANS = [
     period: 'pagamento único',
     description: 'Receba os arquivos do seu site para hospedar onde quiser.',
     features: [
-      'Site desenvolvido com IA',
+      'Design exclusivo para o seu negócio',
+      'Personalizado com sua logo, cores e textos',
       'Arquivo HTML/CSS completo',
       'Sem mensalidade',
     ],
@@ -36,6 +37,7 @@ const PLANS = [
     description: 'Seu site no ar hoje, com hospedagem gerenciada e SSL inclusos.',
     features: [
       'Tudo do plano Site',
+      '1º mês de mensalidade grátis',
       'Hospedagem gerenciada',
       'Certificado SSL',
       'Subdomínio .topsitebr.com.br',
@@ -53,6 +55,7 @@ const PLANS = [
     description: 'Tudo incluído: hospedagem, SSL e domínio .com.br no 1º ano.',
     features: [
       'Tudo do plano Essencial',
+      '1º mês de mensalidade grátis',
       'Domínio .com.br incluso (1º ano)',
       'Configuração de DNS',
       'E-mail profissional',
@@ -178,9 +181,12 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
           <h1 className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-4">
             {leadName.split(' ')[0]}, veja os modelos<br className="hidden sm:block" /> criados para o seu negócio
           </h1>
-          <p className="text-gray-500 text-base max-w-lg mx-auto">
-            Desenvolvemos dois modelos exclusivos com design profissional. Escolha o que mais combina com a sua marca.
+          <p className="text-gray-500 text-base max-w-xl mx-auto mb-5">
+            Criamos dois modelos de site pensados para o seu segmento de negócio. Após a contratação, personalizamos tudo com a sua identidade — logo, cores, textos e fotos — do jeito que você quiser.
           </p>
+          <span className="inline-flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 px-4 py-2 rounded-full">
+            ⚡ Estes são modelos de demonstração — o site final é 100% personalizado com a sua marca.
+          </span>
         </section>
 
         {/* Phone mockups */}
