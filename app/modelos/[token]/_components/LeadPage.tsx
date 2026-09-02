@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useTransition, useRef } from 'react'
+import { useState, useTransition, useRef, useEffect } from 'react'
 import Image from 'next/image'
-import { checkoutAction } from '../actions'
+import { captureEmailAction, checkoutAction } from '../actions'
 import { validateDocument, formatDocument } from '@/lib/cpf'
 
 interface Props {
@@ -13,6 +13,42 @@ interface Props {
   alreadyPaid: boolean
 }
 
+// ── Cases reais (dados da home) ───────────────────────────────────────────────
+const CASES = [
+  {
+    name: 'Estética Del Soares',
+    segment: 'Clínica Estética',
+    domain: 'esteticadelsoares.com.br',
+    favicon: '/faicon/del.png',
+    desc: 'Tratamentos faciais e corporais com profissionais especializados.',
+  },
+  {
+    name: 'OZ Energia Solar',
+    segment: 'Energia Solar',
+    domain: 'ozenergiasolar.com.br',
+    favicon: '/faicon/oz.png',
+    desc: 'Instalação de painéis solares com orçamento grátis em 24h.',
+  },
+  {
+    name: 'Yasmim Pinho Psicóloga',
+    segment: 'Psicologia',
+    domain: 'yasmimpinhopsicologa.com.br',
+    favicon: '/faicon/yasmin.png',
+    desc: 'Atendimento psicológico online e presencial, com agenda flexível.',
+  },
+]
+
+// ── SEO técnicas ──────────────────────────────────────────────────────────────
+const SEO_ITEMS = [
+  { icon: '🔍', title: 'SEO on-page', desc: 'Cada título, parágrafo e imagem do site são preparados para o Google entender o seu negócio.' },
+  { icon: '🏷️', title: 'Meta tags otimizadas', desc: 'Título e descrição que aparecem direto nos resultados de busca — o primeiro contato do cliente com a sua empresa.' },
+  { icon: '📋', title: 'Dados estruturados (Schema)', desc: 'Um "código especial" que ajuda o Google a identificar o seu negócio: nome, endereço, telefone, horário.' },
+  { icon: '🔗', title: 'URLs amigáveis', desc: 'Endereços simples e descritivos que tanto o Google quanto seus clientes entendem de primeira.' },
+  { icon: '⚡', title: 'Velocidade otimizada', desc: 'Sites lentos perdem visitantes. O seu é leve e rápido — o Google valoriza isso na hora de ranquear.' },
+  { icon: '📊', title: 'Google Search Console', desc: 'Entregamos o site conectado ao Google Search Console para monitorar as buscas e evoluir o posicionamento.' },
+]
+
+// ── Planos ────────────────────────────────────────────────────────────────────
 const PLANS = [
   {
     id: 'plano1',
@@ -27,7 +63,6 @@ const PLANS = [
       'Sem mensalidade',
     ],
     highlight: false,
-    cta: 'Quero esta opção',
   },
   {
     id: 'plano2',
@@ -45,7 +80,6 @@ const PLANS = [
     ],
     highlight: true,
     badge: 'Mais popular',
-    cta: 'Quero esta opção',
   },
   {
     id: 'plano3',
@@ -61,74 +95,140 @@ const PLANS = [
       'E-mail profissional',
     ],
     highlight: false,
-    cta: 'Quero esta opção',
   },
 ]
 
+// ── Componente principal ──────────────────────────────────────────────────────
 export default function LeadPage({ token, leadName, template1Name, template2Name, alreadyPaid }: Props) {
+  const firstName = leadName.split(' ')[0]
+  const templateNames = { '1': template1Name, '2': template2Name } as const
+
+  // Gate
+  const [gateOpen, setGateOpen] = useState(true)
+  const [gateEmail, setGateEmail] = useState('')
+  const [gateError, setGateError] = useState('')
+  const [gatePending, startGateTransition] = useTransition()
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && localStorage.getItem(`tps_gate_${token}`)) {
+      setGateOpen(false)
+    }
+  }, [token])
+
+  function handleGateSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!gateEmail.trim() || !gateEmail.includes('@')) {
+      setGateError('Informe um e-mail válido.')
+      return
+    }
+    setGateError('')
+    startGateTransition(async () => {
+      const res = await captureEmailAction(token, gateEmail)
+      if (res.error) { setGateError(res.error); return }
+      localStorage.setItem(`tps_gate_${token}`, '1')
+      setGateOpen(false)
+    })
+  }
+
+  // Preview modal
+  const [previewOpen, setPreviewOpen] = useState<'1' | '2' | null>(null)
+
+  // Checkout
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
   const [name, setName] = useState(leadName)
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [document, setDocument] = useState('')
-  const [error, setError] = useState('')
-  const [pending, startTransition] = useTransition()
-  const [previewOpen, setPreviewOpen] = useState<'1' | '2' | null>(null)
+  const [checkoutError, setCheckoutError] = useState('')
+  const [checkoutPending, startCheckoutTransition] = useTransition()
   const formRef = useRef<HTMLElement>(null)
-
-  const templateNames = { '1': template1Name, '2': template2Name }
 
   function choosePlan(planId: string) {
     setSelectedPlan(planId)
-    setError('')
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 50)
+    setCheckoutError('')
+    setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
   }
 
   function handleDocumentChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const digits = e.target.value.replace(/\D/g, '').slice(0, 14)
-    setDocument(formatDocument(digits))
+    setDocument(formatDocument(e.target.value.replace(/\D/g, '').slice(0, 14)))
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleCheckout(e: React.FormEvent) {
     e.preventDefault()
-    if (!selectedPlan) { setError('Selecione um plano acima.'); return }
-    if (!name.trim()) { setError('Informe seu nome.'); return }
-    if (!email.trim() || !email.includes('@')) { setError('Informe um e-mail válido.'); return }
-
+    if (!selectedPlan) { setCheckoutError('Selecione uma opção acima.'); return }
+    if (!name.trim()) { setCheckoutError('Informe seu nome.'); return }
+    if (!email.trim() || !email.includes('@')) { setCheckoutError('Informe um e-mail válido.'); return }
     const docClean = document.replace(/\D/g, '')
-    if (!validateDocument(docClean)) {
-      setError('CPF ou CNPJ inválido. Verifique os dígitos informados.')
-      return
-    }
-
-    setError('')
-    startTransition(async () => {
-      const result = await checkoutAction(token, selectedPlan, name, email, phone, document)
-      if (result.error) {
-        setError(result.error)
-      } else if (result.paymentUrl) {
-        window.location.href = result.paymentUrl
-      }
+    if (!validateDocument(docClean)) { setCheckoutError('CPF ou CNPJ inválido.'); return }
+    setCheckoutError('')
+    startCheckoutTransition(async () => {
+      const res = await checkoutAction(token, selectedPlan, name, email, phone, document)
+      if (res.error) { setCheckoutError(res.error); return }
+      if (res.paymentUrl) window.location.href = res.paymentUrl
     })
   }
 
+  // ── Já pago ───────────────────────────────────────────────────────────────
   if (alreadyPaid) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+      <main className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="text-center max-w-md">
-          <div className="text-5xl mb-4">✅</div>
+          <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Site já adquirido!</h1>
-          <p className="text-gray-500">Este site já foi contratado. Entraremos em contato em breve para colocá-lo no ar.</p>
+          <p className="text-gray-500 text-sm">Entraremos em contato em breve para colocá-lo no ar.</p>
         </div>
       </main>
     )
   }
 
+  // ── Gate de e-mail ────────────────────────────────────────────────────────
+  if (gateOpen) {
+    return (
+      <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center p-6">
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-8">
+            <Image src="/logo.png" alt="TOP SITE" width={120} height={36} className="h-9 w-auto mx-auto mb-6" priority />
+            <h1 className="text-2xl font-black text-white mb-2">
+              Olá, {firstName}! Seu site está pronto.
+            </h1>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Preparamos modelos exclusivos para o seu negócio.<br />
+              Informe seu e-mail para visualizar.
+            </p>
+          </div>
+
+          <form onSubmit={handleGateSubmit} className="space-y-3">
+            <input
+              type="email"
+              value={gateEmail}
+              onChange={(e) => setGateEmail(e.target.value)}
+              required
+              placeholder="seu@email.com"
+              className="w-full rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-500 px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand/50"
+            />
+            {gateError && <p className="text-red-400 text-xs">{gateError}</p>}
+            <button
+              type="submit"
+              disabled={gatePending}
+              className="w-full bg-brand text-brand-dark font-bold py-3.5 rounded-xl text-sm hover:bg-brand/90 transition-colors disabled:opacity-50"
+            >
+              {gatePending ? 'Aguarde...' : 'Ver os modelos →'}
+            </button>
+          </form>
+          <p className="text-center text-xs text-gray-600 mt-4">Sem spam. Só seus modelos.</p>
+        </div>
+      </main>
+    )
+  }
+
+  // ── Página principal ──────────────────────────────────────────────────────
   return (
     <>
-      {/* ── Modal de preview completo ─────────────────────────────────────── */}
+      {/* Modal preview completo */}
       {previewOpen !== null && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
@@ -138,25 +238,11 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
             className="relative flex flex-col w-full h-full sm:w-96 sm:h-[88vh] sm:rounded-3xl overflow-hidden bg-white"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Top bar */}
             <div className="shrink-0 flex items-center justify-between px-4 py-2.5 bg-gray-900">
-              <span className="text-xs font-semibold text-white/80 truncate max-w-[240px]">
-                {templateNames[previewOpen]}
-              </span>
-              <button
-                onClick={() => setPreviewOpen(null)}
-                className="shrink-0 ml-3 text-white/60 hover:text-white transition-colors text-xl leading-none"
-                aria-label="Fechar"
-              >
-                ✕
-              </button>
+              <span className="text-xs font-semibold text-white/80 truncate">{templateNames[previewOpen]}</span>
+              <button onClick={() => setPreviewOpen(null)} className="ml-3 text-white/60 hover:text-white text-xl leading-none">✕</button>
             </div>
-            {/* Iframe — full scroll */}
-            <iframe
-              src={`/modelos/${token}/preview/${previewOpen}`}
-              title={templateNames[previewOpen]}
-              className="flex-1 w-full border-none"
-            />
+            <iframe src={`/modelos/${token}/preview/${previewOpen}`} title={templateNames[previewOpen]} className="flex-1 w-full border-none" />
           </div>
         </div>
       )}
@@ -166,10 +252,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
         <header className="border-b border-gray-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
           <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
             <Image src="/logo.png" alt="TOP SITE" width={120} height={36} className="h-8 w-auto" priority />
-            <a
-              href="#checkout"
-              className="text-xs font-semibold bg-brand text-brand-dark px-4 py-1.5 rounded-full hover:bg-brand/90 transition-colors"
-            >
+            <a href="#checkout" className="text-xs font-semibold bg-brand text-brand-dark px-4 py-1.5 rounded-full hover:bg-brand/90 transition-colors">
               Contratar
             </a>
           </div>
@@ -177,58 +260,38 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
 
         {/* Hero */}
         <section className="py-14 px-4 text-center bg-gradient-to-b from-gray-50 to-white">
-          <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-3">Seu site está pronto</p>
-          <h1 className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-4">
-            {leadName.split(' ')[0]}, veja os modelos<br className="hidden sm:block" /> criados para o seu negócio
+          <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-3">Criado exclusivamente para você</p>
+          <h1 className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight mb-5">
+            {firstName}, veja os modelos<br className="hidden sm:block" /> do seu site
           </h1>
-          <p className="text-gray-500 text-base max-w-xl mx-auto mb-5">
-            Criamos dois modelos de site pensados para o seu segmento de negócio. Após a contratação, personalizamos tudo com a sua identidade — logo, cores, textos e fotos — do jeito que você quiser.
+          <p className="text-gray-500 text-base max-w-xl mx-auto">
+            Desenvolvemos modelos de site pensados para o seu segmento de negócio.
+            Após a contratação, personalizamos tudo com a sua identidade —
+            logo, cores, textos e imagens — <strong className="text-gray-700">do jeito que você quiser</strong>.
           </p>
-          <span className="inline-flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 px-4 py-2 rounded-full">
-            ⚡ Estes são modelos de demonstração — o site final é 100% personalizado com a sua marca.
-          </span>
         </section>
 
-        {/* Phone mockups */}
+        {/* Mockups */}
         <section className="py-12 px-4">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-start justify-center gap-10 sm:gap-16">
             {(['1', '2'] as const).map((num) => (
               <div key={num} className="flex flex-col items-center gap-4">
-                {/* Phone frame */}
                 <div className="relative" style={{ width: 220 }}>
-                  <div
-                    className="relative rounded-[32px] bg-gray-900 shadow-2xl"
-                    style={{ padding: '10px 8px 14px', width: 220 }}
-                  >
-                    {/* Notch */}
+                  <div className="relative rounded-[32px] bg-gray-900 shadow-2xl" style={{ padding: '10px 8px 14px' }}>
                     <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-gray-900 rounded-b-xl z-10" />
-                    {/* Screen */}
-                    <div
-                      className="rounded-[24px] overflow-hidden bg-white relative"
-                      style={{ width: 204, height: 432 }}
-                    >
+                    <div className="rounded-[24px] overflow-hidden bg-white" style={{ width: 204, height: 432 }}>
                       <iframe
                         src={`/modelos/${token}/preview/${num}`}
                         title={`Template ${num}`}
                         scrolling="no"
-                        style={{
-                          width: 390,
-                          height: 844,
-                          border: 'none',
-                          transformOrigin: 'top left',
-                          transform: `scale(${204 / 390})`,
-                          pointerEvents: 'none',
-                        }}
+                        style={{ width: 390, height: 844, border: 'none', transformOrigin: 'top left', transform: `scale(${204 / 390})`, pointerEvents: 'none' }}
                       />
                     </div>
                   </div>
-                  {/* Side buttons */}
                   <div className="absolute right-0 top-20 w-1 h-12 bg-gray-700 rounded-r-full" />
                   <div className="absolute left-0 top-16 w-1 h-8 bg-gray-700 rounded-l-full" />
                   <div className="absolute left-0 top-28 w-1 h-8 bg-gray-700 rounded-l-full" />
                 </div>
-
-                {/* Label + Ver completo */}
                 <div className="text-center flex flex-col items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand/15 text-brand text-[10px] font-black">{num}</span>
@@ -247,20 +310,109 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
           </div>
         </section>
 
-        {/* Pricing */}
-        <section className="py-14 px-4 bg-gray-50" id="planos">
+        {/* Personalização */}
+        <section className="py-14 px-4 bg-gray-900">
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="text-brand text-sm font-bold uppercase tracking-widest mb-4">100% personalizado</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-5">
+              Estes são modelos de referência.<br />
+              O <span className="text-brand">SEU</span> site será único.
+            </h2>
+            <p className="text-gray-400 text-base max-w-xl mx-auto mb-8">
+              Após a contratação, montamos o site com a identidade da sua empresa: sua logo, suas cores, seus textos, suas fotos e seus dados de contato. Você aprova antes de ir ao ar.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+              {[
+                { icon: '🎨', label: 'Cores e tipografia', desc: 'Adaptadas à identidade visual da sua marca' },
+                { icon: '✏️', label: 'Textos e conteúdo', desc: 'Escritos para apresentar bem o seu negócio' },
+                { icon: '📸', label: 'Fotos e imagens', desc: 'Suas fotos ou banco de imagens profissional' },
+              ].map(({ icon, label, desc }) => (
+                <div key={label} className="bg-white/5 border border-white/10 rounded-xl p-4">
+                  <span className="text-2xl mb-2 block">{icon}</span>
+                  <p className="text-white font-semibold text-sm mb-1">{label}</p>
+                  <p className="text-gray-400 text-xs leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Cases */}
+        <section className="py-14 px-4 bg-white">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-10">
-              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Como você quer ter o seu site?</h2>
+              <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-2">Clientes reais</p>
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Sites que já entregamos</h2>
+              <p className="text-gray-500">Cada um personalizado para o segmento e identidade do cliente.</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {CASES.map((c) => (
+                <div key={c.domain} className="border border-gray-100 rounded-2xl p-5 flex flex-col gap-3 hover:border-gray-200 hover:shadow-sm transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden shrink-0">
+                      <Image src={c.favicon} alt={c.name} width={28} height={28} className="w-7 h-7 object-contain" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-900 leading-tight">{c.name}</p>
+                      <p className="text-xs text-gray-400">{c.segment}</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 leading-relaxed flex-1">{c.desc}</p>
+                  <a
+                    href={`https://${c.domain}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
+                  >
+                    Ver site ao vivo ↗
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SEO */}
+        <section className="py-14 px-4 bg-gray-50">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <p className="text-sm font-semibold text-brand uppercase tracking-widest mb-2">Visibilidade no Google</p>
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3">
+                Seu negócio vai aparecer<br className="hidden sm:block" /> quando seus clientes procurarem por você
+              </h2>
+              <p className="text-gray-500 max-w-xl mx-auto">
+                Não basta ter um site bonito — ele precisa ser encontrado. Por isso, cada site que entregamos já vem preparado para o Google.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {SEO_ITEMS.map(({ icon, title, desc }) => (
+                <div key={title} className="bg-white rounded-2xl p-5 border border-gray-100">
+                  <span className="text-2xl mb-3 block">{icon}</span>
+                  <p className="text-sm font-bold text-gray-900 mb-1">{title}</p>
+                  <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-xs text-gray-400 mt-6">
+              Não prometemos a primeira posição — isso depende de tempo e competição no seu segmento. O que garantimos é que o site vai estar <strong>preparado e visível</strong> para quem busca pelo seu negócio.
+            </p>
+          </div>
+        </section>
+
+        {/* Pricing */}
+        <section className="py-14 px-4 bg-white" id="planos">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3">Como você quer ter o seu site?</h2>
               <p className="text-gray-500 max-w-lg mx-auto">
-                O site custa <strong className="text-gray-700">R$ 97 uma única vez</strong>. A hospedagem mensal é opcional — você escolhe se quer que a gente cuide de tudo ou se prefere hospedar por conta própria.
+                O site custa <strong className="text-gray-700">R$ 97 uma única vez</strong>. A hospedagem mensal é opcional — você escolhe se quer que a gente cuide de tudo ou prefere hospedar por conta própria.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {PLANS.map((plan) => (
                 <div
                   key={plan.id}
-                  className={`relative rounded-2xl p-6 flex flex-col gap-4 transition-all cursor-pointer border-2 ${
+                  className={`relative rounded-2xl p-6 flex flex-col gap-4 cursor-pointer border-2 transition-all ${
                     selectedPlan === plan.id
                       ? 'border-brand bg-white shadow-lg shadow-brand/10'
                       : plan.highlight
@@ -285,8 +437,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
                   <ul className="space-y-1.5 flex-1">
                     {plan.features.map((f) => (
                       <li key={f} className="flex items-start gap-2 text-sm text-gray-600">
-                        <span className="text-brand mt-0.5 shrink-0">✓</span>
-                        {f}
+                        <span className="text-brand mt-0.5 shrink-0">✓</span>{f}
                       </li>
                     ))}
                   </ul>
@@ -294,9 +445,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
                     type="button"
                     onClick={(e) => { e.stopPropagation(); choosePlan(plan.id) }}
                     className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                      selectedPlan === plan.id
-                        ? 'bg-brand text-brand-dark'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      selectedPlan === plan.id ? 'bg-brand text-brand-dark' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
                     {selectedPlan === plan.id ? '✓ Selecionado' : 'Quero esta opção'}
@@ -307,87 +456,59 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
           </div>
         </section>
 
-        {/* Checkout form */}
-        <section className="py-14 px-4" id="checkout" ref={formRef}>
+        {/* Checkout */}
+        <section className="py-14 px-4 bg-gray-50" id="checkout" ref={formRef}>
           <div className="max-w-md mx-auto">
             <h2 className="text-xl font-black text-gray-900 mb-1 text-center">Finalizar contratação</h2>
             <p className="text-sm text-gray-500 text-center mb-8">
               {selectedPlan
-                ? `Plano ${PLANS.find((p) => p.id === selectedPlan)?.name} selecionado — preencha seus dados abaixo`
-                : 'Selecione um plano acima e preencha seus dados.'}
+                ? `${PLANS.find((p) => p.id === selectedPlan)?.name} selecionado — preencha seus dados abaixo`
+                : 'Selecione uma opção acima e preencha seus dados.'}
             </p>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleCheckout} className="space-y-4">
+              {[
+                { label: 'Seu nome *', type: 'text', value: name, onChange: (v: string) => setName(v), placeholder: 'Nome completo' },
+                { label: 'E-mail *', type: 'email', value: email, onChange: (v: string) => setEmail(v), placeholder: 'seu@email.com' },
+                { label: 'WhatsApp', type: 'tel', value: phone, onChange: (v: string) => setPhone(v), placeholder: '(11) 99999-9999' },
+              ].map(({ label, type, value, onChange, placeholder }) => (
+                <div key={label}>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                  <input
+                    type={type}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    placeholder={placeholder}
+                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-colors"
+                  />
+                </div>
+              ))}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Seu nome <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  placeholder="Nome completo"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand focus:bg-white transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  E-mail <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="seu@email.com"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand focus:bg-white transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp</label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="(11) 99999-9999"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand focus:bg-white transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  CPF ou CNPJ <span className="text-red-400">*</span>
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">CPF ou CNPJ *</label>
                 <input
                   type="text"
                   inputMode="numeric"
                   value={document}
                   onChange={handleDocumentChange}
-                  required
                   placeholder="000.000.000-00"
                   maxLength={18}
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand focus:bg-white transition-colors"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-colors"
                 />
                 <p className="text-[11px] text-gray-400 mt-1">Necessário para emissão do comprovante de pagamento.</p>
               </div>
 
-              {error && (
-                <p className="text-sm text-red-500 bg-red-50 border border-red-100 rounded-lg px-4 py-2">
-                  {error}
-                </p>
+              {checkoutError && (
+                <p className="text-sm text-red-500 bg-red-50 border border-red-100 rounded-lg px-4 py-2">{checkoutError}</p>
               )}
 
               <button
                 type="submit"
-                disabled={pending || !selectedPlan}
+                disabled={checkoutPending || !selectedPlan}
                 className="w-full bg-brand text-brand-dark font-bold py-4 rounded-xl text-sm hover:bg-brand/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {pending ? 'Aguarde...' : 'Ir para o pagamento →'}
+                {checkoutPending ? 'Aguarde...' : 'Ir para o pagamento →'}
               </button>
-
               <p className="text-xs text-gray-400 text-center">
-                Você será redirecionado para a página segura de pagamento.
-                Pix, boleto ou cartão de crédito.
+                Você será redirecionado para a página segura de pagamento. Pix, boleto ou cartão de crédito.
               </p>
             </form>
           </div>
@@ -395,9 +516,9 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
 
         {/* Footer */}
         <footer className="border-t border-gray-100 py-8 px-4">
-          <div className="max-w-5xl mx-auto text-center text-xs text-gray-400">
-            <Image src="/logo.png" alt="TOP SITE" width={100} height={30} className="h-6 w-auto mx-auto mb-2 opacity-50" />
-            <p>Sites profissionais para pequenos negócios.</p>
+          <div className="max-w-5xl mx-auto text-center">
+            <Image src="/logo.png" alt="TOP SITE" width={100} height={30} className="h-6 w-auto mx-auto mb-2 opacity-40" />
+            <p className="text-xs text-gray-400">Sites profissionais para pequenos negócios.</p>
           </div>
         </footer>
       </main>

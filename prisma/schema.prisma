@@ -708,6 +708,15 @@ enum TemplatePresentationStatus {
   cancelado
 }
 
+model SystemTemplate {
+  slot      Int      @id
+  name      String
+  html      String   @db.Text
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_templates")
+}
+
 model TemplatePresentation {
   id                  String                     @id @default(uuid())
   token               String                     @unique
@@ -715,10 +724,10 @@ model TemplatePresentation {
   leadPhone           String?                    @map("lead_phone")
   leadEmail           String?                    @map("lead_email")
   leadDocument        String?                    @map("lead_document")
-  template1Html       String                     @db.Text @map("template1_html")
-  template2Html       String                     @db.Text @map("template2_html")
-  template1Name       String                     @map("template1_name")
-  template2Name       String                     @map("template2_name")
+  template1Html       String?                    @db.Text @map("template1_html")
+  template2Html       String?                    @db.Text @map("template2_html")
+  template1Name       String?                    @map("template1_name")
+  template2Name       String?                    @map("template2_name")
   notes               String?                    @db.Text
   status              TemplatePresentationStatus @default(pendente)
   planChosen          String?                    @map("plan_chosen")

@@ -23,6 +23,7 @@ const navItems = [
   { href: '/admin/propostas-lp/leads', label: 'Leads LP', indent: true },
   { href: '/admin/orcamentos', label: 'Orçamentos' },
   { href: '/admin/apresentacoes', label: 'Apresentações' },
+  { href: '/admin/apresentacoes/templates', label: 'Templates', indent: true },
 ]
 
 interface AdminSidebarProps {
@@ -38,8 +39,8 @@ function NavLinks({ onNavigate, unreadCount }: { onNavigate?: () => void; unread
       {navItems.map(({ href, label, indent }) => {
         // Financeiro/custos is a sub-item of financeiro, so mark parent active too
         const active =
-          href === '/admin/financeiro'
-            ? pathname === '/admin/financeiro' || pathname === '/admin/financeiro/'
+          href === '/admin/financeiro' || href === '/admin/apresentacoes'
+            ? pathname === href || pathname === href + '/'
             : pathname === href || pathname.startsWith(href + '/')
 
         const isNotif = href === '/admin/notificacoes'
