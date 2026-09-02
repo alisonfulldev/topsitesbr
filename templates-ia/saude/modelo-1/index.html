@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{NOME_EMPRESA}}</title>
+  <meta name="description" content="{{SLOGAN}}">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+
+  <style>
+    /* ============================================================
+       RESET & TOKENS
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #0B2D4E;
+      --blue-700:  #1A5D9C;
+      --blue-500:  #2E86C1;
+      --blue-100:  #E8F4FB;
+      --blue-50:   #F3F9FD;
+      --teal:      #1FA87A;
+      --teal-100:  #E6F6F0;
+      --amber:     #F59E0B;
+      --gray-900:  #111827;
+      --gray-700:  #374151;
+      --gray-500:  #6B7280;
+      --gray-200:  #E5E7EB;
+      --gray-100:  #F9FAFB;
+      --white:     #FFFFFF;
+      --wa:        #25D366;
+
+      --ff-head: 'Playfair Display', Georgia, serif;
+      --ff-body: 'Inter', system-ui, sans-serif;
+
+      --shadow-xs: 0 1px 4px rgba(0,0,0,0.06);
+      --shadow-sm: 0 2px 10px rgba(0,0,0,0.07);
+      --shadow-md: 0 6px 24px rgba(0,0,0,0.09);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+      --shadow-blue: 0 8px 32px rgba(26,93,156,0.22);
+
+      --r:    10px;
+      --r-lg: 18px;
+      --tr:   0.3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ff-body);
+      color: var(--gray-700);
+      background: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    img  { display: block; max-width: 100%; height: auto; }
+    a    { text-decoration: none; color: inherit; }
+    ul   { list-style: none; }
+
+    /* ============================================================
+       SCROLL ANIMATIONS
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.from-left  { transform: translateX(-40px); }
+    .reveal.from-right { transform: translateX(40px); }
+    .reveal.visible    { opacity: 1; transform: translate(0,0); }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: var(--r);
+      font-family: var(--ff-body);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--tr);
+      white-space: nowrap;
+    }
+    .btn svg { flex-shrink: 0; }
+
+    .btn-primary {
+      background: var(--blue-700);
+      color: var(--white);
+      box-shadow: var(--shadow-blue);
+    }
+    .btn-primary:hover {
+      background: var(--navy);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(11,45,78,0.28);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--blue-700);
+      border-color: var(--blue-700);
+    }
+    .btn-outline:hover {
+      background: var(--blue-700);
+      color: var(--white);
+    }
+
+    .btn-wa {
+      background: var(--wa);
+      color: var(--white);
+      box-shadow: 0 6px 20px rgba(37,211,102,0.30);
+    }
+    .btn-wa:hover {
+      background: #1ebb58;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(37,211,102,0.38);
+    }
+
+    /* ============================================================
+       LAYOUT HELPERS
+    ============================================================ */
+    .container {
+      max-width: 1120px;
+      margin-inline: auto;
+      padding-inline: 24px;
+    }
+
+    .section { padding: 56px 0; }
+    .section-alt  { background: var(--blue-50); }
+    .section-dark { background: var(--navy); }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--blue-500);
+      margin-bottom: 10px;
+    }
+    .section-dark .section-tag { color: rgba(255,255,255,0.55); }
+
+    .section-title {
+      font-family: var(--ff-head);
+      font-size: clamp(1.75rem, 4vw, 2.6rem);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+      margin-bottom: 14px;
+    }
+    .section-dark .section-title { color: var(--white); }
+
+    .section-sub {
+      font-size: 1.0625rem;
+      color: var(--gray-500);
+      max-width: 560px;
+      line-height: 1.75;
+    }
+    .section-dark .section-sub { color: rgba(255,255,255,0.60); }
+
+    .sh { margin-bottom: 52px; }
+    .sh.center { text-align: center; }
+    .sh.center .section-sub { margin-inline: auto; }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .header {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline: 0;
+      z-index: 900;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-inline: 24px;
+      background: rgba(255,255,255,0.93);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(229,231,235,0.5);
+      transition: box-shadow var(--tr);
+    }
+    .header.scrolled { box-shadow: var(--shadow-md); }
+
+    /* ============================================================
+       SISTEMA DE LOGO
+       SEM logotipo → .logo-wrap sem classe extra  → exibe texto
+       COM logotipo → .logo-wrap.has-logo          → exibe imagem
+       A IA deve adicionar "has-logo" ao .logo-wrap quando {{LOGO}} tiver valor.
+    ============================================================ */
+    .logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    /* Imagem: oculta por padrão (fallback = texto) */
+    .logo-img {
+      display: none;
+      height: 40px;
+      width: auto;
+      max-width: 160px;
+      object-fit: contain;
+      object-position: left center;
+    }
+
+    /* Ativa imagem e oculta texto quando classe "has-logo" está presente */
+    .logo-wrap.has-logo .logo-img  { display: block; }
+    .logo-wrap.has-logo .logo-text { display: none;  }
+
+    /* Texto estilizado (fallback sem logo) */
+    .logo-text {
+      font-family: var(--ff-head);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.2px;
+    }
+    .logo-text em { font-style: normal; color: var(--teal); }
+
+    .nav {
+      display: none;
+      align-items: center;
+      gap: 28px;
+    }
+    .nav a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gray-700);
+      transition: color var(--tr);
+    }
+    .nav a:hover { color: var(--blue-500); }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--gray-900);
+      border-radius: 2px;
+      transition: all var(--tr);
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 70px;
+      inset-inline: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-md);
+      padding: 20px 24px;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 899;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      padding: 12px 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--gray-700);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .mobile-nav a:last-child { border-bottom: none; padding-top: 16px; }
+
+    /* ============================================================
+       HERO — full-bleed foto + overlay direcional
+    ============================================================ */
+    .hero {
+      margin-top: 70px;
+      min-height: calc(100svh - 70px);
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--navy);
+    }
+
+    /* Camada 1: fotografia de fundo */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1600&h=1000&q=90&auto=format&fit=crop&crop=center');
+      background-size: cover;
+      background-position: center 20%;
+      transform: scale(1.02);
+      transition: transform 8s ease;
+    }
+    .hero:hover .hero-bg { transform: scale(1.0); }
+
+    /* Camada 2: gradiente direcional esquerda → direita */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        rgba(11,45,78,0.95) 0%,
+        rgba(11,45,78,0.88) 28%,
+        rgba(11,45,78,0.55) 58%,
+        rgba(11,45,78,0.18) 100%
+      );
+    }
+    /* Mobile: overlay mais fechado para leitura */
+    @media (max-width: 767px) {
+      .hero-overlay { background: rgba(11,45,78,0.86); }
+    }
+
+    .hero-body {
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      padding: 64px 0 72px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      width: fit-content;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.12;
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.20);
+    }
+    .hero h1 .accent { color: #7EC8E3; }
+
+    .hero-slogan {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      color: rgba(255,255,255,0.80);
+      max-width: 480px;
+      line-height: 1.80;
+      margin-bottom: 36px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 44px;
+    }
+
+    /* Botão fantasma para hero escuro */
+    .btn-ghost {
+      background: rgba(255,255,255,0.10);
+      color: var(--white);
+      border-color: rgba(255,255,255,0.42);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.20);
+      border-color: rgba(255,255,255,0.85);
+    }
+
+    .hero-social-proof {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .proof-avatars { display: flex; }
+    .proof-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2.5px solid rgba(255,255,255,0.50);
+      overflow: hidden;
+      margin-left: -10px;
+    }
+    .proof-avatar:first-child { margin-left: 0; }
+    .proof-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .proof-text {
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.45;
+    }
+    .proof-text strong { color: var(--white); display: block; }
+
+    /* Card flutuante de avaliação */
+    .hero-float {
+      position: absolute;
+      bottom: 36px;
+      right: 36px;
+      z-index: 2;
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: floatUp 0.9s 0.5s cubic-bezier(.22,.9,.32,1.1) both;
+    }
+    @keyframes floatUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
+    .hero-float-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue-100);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-700);
+      flex-shrink: 0;
+    }
+    .hero-float-text { font-size: 0.8125rem; }
+    .hero-float-text b { display: block; font-size: 1.2rem; font-weight: 700; color: var(--gray-900); line-height: 1.1; }
+    .hero-float-text span { color: var(--gray-500); font-size: 0.75rem; }
+
+    /* Wave divider */
+    .wave-divider {
+      line-height: 0;
+      background: var(--white);
+    }
+    .wave-divider svg { display: block; width: 100%; }
+
+    /* ============================================================
+       SOBRE
+    ============================================================ */
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .sobre-photo {
+      position: relative;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .sobre-photo img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+    }
+
+    /* Floating badge inside photo */
+    .sobre-badge {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sobre-badge-icon {
+      width: 38px;
+      height: 38px;
+      background: var(--teal-100);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal);
+      flex-shrink: 0;
+    }
+    .sobre-badge-text b { display: block; font-size: 0.875rem; font-weight: 700; color: var(--gray-900); }
+    .sobre-badge-text span { font-size: 0.75rem; color: var(--gray-500); }
+
+    .sobre-text {
+      font-size: 1.0625rem;
+      color: var(--gray-500);
+      line-height: 1.8;
+      margin-bottom: 28px;
+    }
+
+    .sobre-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 36px;
+    }
+    .stat {
+      background: var(--blue-50);
+      border-radius: var(--r);
+      padding: 20px 12px;
+      text-align: center;
+      border: 1px solid var(--blue-100);
+    }
+    .stat b {
+      display: block;
+      font-family: var(--ff-head);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--blue-700);
+      line-height: 1.1;
+    }
+    .stat span { font-size: 0.75rem; color: var(--gray-500); margin-top: 4px; display: block; }
+
+    /* ============================================================
+       SERVIÇOS
+       INSTRUÇÃO: Repita o bloco .service-card para SERVICO_1..6.
+       Remova cards de serviços não utilizados.
+       Ícones sugeridos (Lucide): stethoscope, heart-pulse, brain,
+       baby, eye, bone, pill, thermometer, activity, shield-plus,
+       microscope, syringe, bandage, dna, scan-heart
+    ============================================================ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r);
+      padding: 26px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      transition: box-shadow var(--tr), transform var(--tr), border-color var(--tr);
+    }
+    .service-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: var(--blue-100);
+    }
+
+    .service-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--blue-100);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-700);
+      flex-shrink: 0;
+      transition: background var(--tr);
+    }
+    .service-card:hover .service-icon { background: var(--blue-700); color: var(--white); }
+
+    .service-card h3 {
+      font-family: var(--ff-head);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .service-card p { font-size: 0.9375rem; color: var(--gray-500); line-height: 1.65; }
+
+    /* ============================================================
+       DIFERENCIAIS
+    ============================================================ */
+    .diffs-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .diff-card {
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      border-radius: var(--r);
+      padding: 34px 28px;
+      transition: background var(--tr);
+      position: relative;
+      overflow: hidden;
+    }
+    .diff-card::before {
+      content: '';
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--teal);
+      opacity: 0;
+      transition: opacity var(--tr);
+    }
+    .diff-card:hover { background: rgba(255,255,255,0.09); }
+    .diff-card:hover::before { opacity: 1; }
+
+    .diff-num {
+      font-family: var(--ff-head);
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1;
+      color: rgba(255,255,255,0.08);
+      margin-bottom: 18px;
+      user-select: none;
+    }
+
+    .diff-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(255,255,255,0.10);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      margin-bottom: 18px;
+    }
+
+    .diff-card h3 {
+      font-family: var(--ff-head);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .diff-card p { font-size: 0.9375rem; color: rgba(255,255,255,0.65); line-height: 1.7; }
+
+    /* ============================================================
+       DEPOIMENTOS
+       INSTRUÇÃO: Remova o bloco .testi-card do DEPOIMENTO_3
+       se houver apenas 2 depoimentos.
+    ============================================================ */
+    .testi-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .testi-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-lg);
+      padding: 30px;
+      position: relative;
+      transition: box-shadow var(--tr);
+    }
+    .testi-card:hover { box-shadow: var(--shadow-md); }
+
+    .testi-quote-icon {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      color: var(--blue-100);
+    }
+
+    .testi-stars {
+      display: flex;
+      gap: 3px;
+      color: var(--amber);
+      margin-bottom: 16px;
+    }
+
+    .testi-text {
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--gray-700);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testi-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--blue-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blue-700);
+      flex-shrink: 0;
+    }
+    .testi-name { font-size: 0.9375rem; font-weight: 600; color: var(--gray-900); }
+    .testi-role { font-size: 0.8125rem; color: var(--gray-500); }
+
+    /* ============================================================
+       CONTATO
+    ============================================================ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .contact-list { display: flex; flex-direction: column; gap: 20px; }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .contact-item-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--blue-100);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-700);
+      flex-shrink: 0;
+    }
+    .contact-item-icon.teal { background: var(--teal-100); color: var(--teal); }
+    .contact-item-text b { display: block; font-size: 0.875rem; font-weight: 600; color: var(--gray-900); margin-bottom: 2px; }
+    .contact-item-text span, .contact-item-text a { font-size: 0.9375rem; color: var(--gray-500); }
+    .contact-item-text a:hover { color: var(--blue-500); }
+
+    .map-box {
+      margin-top: 24px;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r);
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--gray-500);
+    }
+    .map-box p { font-size: 0.875rem; text-align: center; padding-inline: 16px; }
+
+    .contact-cta-box {
+      background: var(--white);
+      border: 1px solid var(--blue-100);
+      border-radius: var(--r-lg);
+      padding: 36px 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .contact-cta-box h3 {
+      font-family: var(--ff-head);
+      font-size: 1.4rem;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .contact-cta-box p { color: var(--gray-500); line-height: 1.7; margin-bottom: 24px; }
+    .cta-buttons { display: flex; flex-direction: column; gap: 10px; }
+
+    .social-row {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--gray-200);
+    }
+    .social-row p { font-size: 0.8125rem; color: var(--gray-500); margin-bottom: 12px; }
+    .social-links { display: flex; gap: 10px; flex-wrap: wrap; }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--blue-50);
+      color: var(--blue-700);
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      transition: background var(--tr), color var(--tr);
+    }
+    .social-link:hover { background: var(--blue-700); color: var(--white); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer {
+      background: var(--gray-900);
+      color: rgba(255,255,255,0.65);
+      padding: 56px 0 28px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+      margin-bottom: 44px;
+    }
+
+    /* Logo no rodapé (contexto escuro) */
+    .footer-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    /* Tamanho menor no rodapé; versão clara do logo recomendada para fundo escuro */
+    .footer-logo-wrap .logo-img {
+      height: 34px;
+      max-width: 140px;
+    }
+    .footer-logo {
+      font-family: var(--ff-head);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .footer-logo em { font-style: normal; color: var(--teal); }
+
+    .footer-tagline {
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      max-width: 300px;
+      margin-bottom: 20px;
+    }
+
+    .footer-social { display: flex; gap: 10px; }
+    .footer-social a {
+      width: 38px;
+      height: 38px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.65);
+      transition: background var(--tr), color var(--tr);
+    }
+    .footer-social a:hover { background: var(--blue-700); color: var(--white); }
+
+    .footer-col h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
+    }
+    .footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li a {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.55);
+      transition: color var(--tr);
+    }
+    .footer-col ul li a:hover { color: var(--white); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 24px;
+      font-size: 0.8125rem;
+      text-align: center;
+    }
+
+    /* ============================================================
+       FLOATING WHATSAPP BUTTON
+    ============================================================ */
+    .wa-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 800;
+      width: 56px;
+      height: 56px;
+      background: var(--wa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      box-shadow: 0 6px 24px rgba(37,211,102,0.40);
+      transition: transform var(--tr), box-shadow var(--tr);
+    }
+    .wa-float:hover {
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 10px 32px rgba(37,211,102,0.50);
+    }
+    .wa-float-pulse {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--wa);
+      animation: pulse 2.5s ease-out infinite;
+    }
+    @keyframes pulse {
+      0%   { transform: scale(1);   opacity: 0.6; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+
+    /* ============================================================
+       RESPONSIVE — MOBILE PEQUENO ≤ 480px
+    ============================================================ */
+    @media (max-width: 480px) {
+      .hero-ctas { flex-direction: column; }
+      .hero-ctas .btn { width: 100%; justify-content: center; }
+      .hero-float { bottom: 16px; right: 14px; padding: 10px 14px; gap: 8px; }
+      .hero-float-text b { font-size: 1rem; }
+      .sobre-stats { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ============================================================
+       RESPONSIVE — TABLET ≥ 768px
+    ============================================================ */
+    @media (min-width: 768px) {
+      .section { padding: 88px 0; }
+      .header { padding-inline: 40px; }
+      .hamburger { display: none; }
+      .nav { display: flex; }
+
+      .sobre-grid { grid-template-columns: 1fr 1fr; }
+      .sobre-photo img { height: 420px; }
+
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .diffs-grid { grid-template-columns: repeat(3, 1fr); }
+
+      .testi-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+      .cta-buttons { flex-direction: row; flex-wrap: wrap; }
+
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr; }
+      .footer-bottom { display: flex; justify-content: space-between; align-items: center; text-align: left; }
+    }
+
+    /* ============================================================
+       RESPONSIVE — DESKTOP ≥ 1024px
+    ============================================================ */
+    @media (min-width: 1024px) {
+      .section { padding: 110px 0; }
+      .header { padding-inline: 60px; }
+
+      .services-grid { grid-template-columns: repeat(3, 1fr); }
+      .testi-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="header" id="header">
+    <!--
+      LOGO: sem logotipo → deixe como está (exibe texto).
+            com logotipo → adicione class "has-logo" ao elemento abaixo.
+      Adicione "has-logo" TAMBÉM ao .footer-logo-wrap no rodapé.
+    -->
+    <a href="#" class="logo-wrap">
+      <img class="logo-img" src="{{LOGO}}" alt="{{NOME_EMPRESA}}" loading="eager">
+      <span class="logo-text">{{NOME_EMPRESA}}</span>
+    </a>
+
+    <nav class="nav">
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#depoimentos">Depoimentos</a>
+      <a href="#contato">Contato</a>
+      <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-primary" target="_blank" rel="noopener" style="padding:10px 20px;font-size:0.875rem;">
+        <i data-lucide="calendar" style="width:15px;height:15px;"></i>
+        Agendar Consulta
+      </a>
+    </nav>
+
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#sobre"        onclick="toggleMenu()">Sobre</a>
+    <a href="#servicos"     onclick="toggleMenu()">Serviços</a>
+    <a href="#depoimentos"  onclick="toggleMenu()">Depoimentos</a>
+    <a href="#contato"      onclick="toggleMenu()">Contato</a>
+    <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-wa" target="_blank" rel="noopener" style="justify-content:center;margin-top:4px;">
+      <i data-lucide="message-circle" style="width:17px;height:17px;"></i>
+      Agendar pelo WhatsApp
+    </a>
+  </nav>
+
+
+  <!-- ============================================================
+       HERO — foto full-bleed + overlay direcional
+  ============================================================ -->
+  <section class="hero" id="inicio">
+
+    <!-- Foto de fundo: profissional de saúde sorrindo, ambiente luminoso e acolhedor -->
+    <div class="hero-bg" role="presentation"></div>
+    <!-- Overlay: denso à esquerda (leitura) → transparente à direita (foto aparece) -->
+    <div class="hero-overlay"></div>
+
+    <div class="container" style="position:relative;z-index:1;width:100%;">
+      <div class="hero-body reveal from-left">
+
+        <div class="hero-badge">
+          <i data-lucide="shield-check" style="width:13px;height:13px;"></i>
+          Profissional especializado
+        </div>
+
+        <h1>{{NOME_EMPRESA}}</h1>
+
+        <p class="hero-slogan">{{SLOGAN}}</p>
+
+        <div class="hero-ctas">
+          <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-wa" target="_blank" rel="noopener">
+            <i data-lucide="message-circle" style="width:18px;height:18px;"></i>
+            Agendar pelo WhatsApp
+          </a>
+          <a href="#servicos" class="btn btn-ghost">
+            Ver Serviços
+          </a>
+        </div>
+
+        <div class="hero-social-proof">
+          <div class="proof-avatars">
+            <div class="proof-avatar">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=72&h=72&q=80&auto=format&fit=crop&crop=face" alt="">
+            </div>
+            <div class="proof-avatar">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=72&h=72&q=80&auto=format&fit=crop&crop=face" alt="">
+            </div>
+            <div class="proof-avatar">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=72&h=72&q=80&auto=format&fit=crop&crop=face" alt="">
+            </div>
+          </div>
+          <p class="proof-text">
+            <strong>+200 pacientes atendidos</strong>
+            com cuidado e excelência
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Card flutuante de avaliação — visível sobre a área da foto -->
+    <div class="hero-float">
+      <div class="hero-float-icon">
+        <i data-lucide="star" style="width:20px;height:20px;"></i>
+      </div>
+      <div class="hero-float-text">
+        <b>4,9</b>
+        <span>Avaliação média</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Wave divider: hero escuro → seção clara -->
+  <div class="wave-divider" style="background:var(--navy);">
+    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:60px;">
+      <path d="M0,40 C360,80 1080,0 1440,40 L1440,0 L0,0 Z" fill="var(--blue-50)"/>
+    </svg>
+  </div>
+
+
+  <!-- ============================================================
+       SOBRE
+  ============================================================ -->
+  <section class="section section-alt" id="sobre">
+    <div class="container">
+      <div class="sobre-grid">
+
+        <div class="sobre-photo reveal from-left">
+          <img
+            src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&h=700&q=88&auto=format&fit=crop&crop=center"
+            alt="Sobre — {{NOME_EMPRESA}}"
+            loading="lazy"
+          >
+          <div class="sobre-badge">
+            <div class="sobre-badge-icon">
+              <i data-lucide="heart-handshake" style="width:18px;height:18px;"></i>
+            </div>
+            <div class="sobre-badge-text">
+              <b>Atendimento humanizado</b>
+              <span>Você em primeiro lugar</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal from-right">
+          <div class="section-tag">
+            <i data-lucide="info" style="width:12px;height:12px;"></i>
+            Quem somos
+          </div>
+          <h2 class="section-title">Nossa história</h2>
+
+          <p class="sobre-text">{{SOBRE_TEXTO}}</p>
+
+          <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-primary" target="_blank" rel="noopener">
+            <i data-lucide="calendar" style="width:16px;height:16px;"></i>
+            Agendar Consulta
+          </a>
+
+          <div class="sobre-stats">
+            <div class="stat">
+              <b>200+</b>
+              <span>Pacientes atendidos</span>
+            </div>
+            <div class="stat">
+              <b>5★</b>
+              <span>Google Meu Negócio</span>
+            </div>
+            <div class="stat">
+              <b>98%</b>
+              <span>Satisfação</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Wave divider -->
+  <div class="wave-divider" style="background:white;">
+    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:60px;">
+      <path d="M0,20 C480,70 960,0 1440,30 L1440,60 L0,60 Z" fill="var(--blue-50)"/>
+    </svg>
+  </div>
+
+
+  <!-- ============================================================
+       SERVIÇOS
+       Bloco repetível: copie/cole .service-card para cada serviço.
+       Ícone: troque data-lucide conforme o serviço do cliente.
+  ============================================================ -->
+  <section class="section" id="servicos">
+    <div class="container">
+
+      <div class="sh center reveal">
+        <div class="section-tag">
+          <i data-lucide="clipboard-list" style="width:12px;height:12px;"></i>
+          O que oferecemos
+        </div>
+        <h2 class="section-title">Nossos Serviços</h2>
+        <p class="section-sub">Cuidado integral para o seu bem-estar, com profissionais qualificados e atenção personalizada.</p>
+      </div>
+
+      <div class="services-grid">
+
+        <!-- SERVIÇO 1 -->
+        <div class="service-card reveal">
+          <div class="service-icon">
+            <i data-lucide="stethoscope" style="width:22px;height:22px;"></i>
+          </div>
+          <div>
+            <h3>{{SERVICO_1}}</h3>
+            <p>{{SERVICO_1_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 2 -->
+        <div class="service-card reveal">
+          <div class="service-icon">
+            <i data-lucide="heart-pulse" style="width:22px;height:22px;"></i>
+          </div>
+          <div>
+            <h3>{{SERVICO_2}}</h3>
+            <p>{{SERVICO_2_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 3 -->
+        <div class="service-card reveal">
+          <div class="service-icon">
+            <i data-lucide="brain" style="width:22px;height:22px;"></i>
+          </div>
+          <div>
+            <h3>{{SERVICO_3}}</h3>
+            <p>{{SERVICO_3_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 4 — Remova este bloco se não houver serviço 4 -->
+        <div class="service-card reveal">
+          <div class="service-icon">
+            <i data-lucide="shield-plus" style="width:22px;height:22px;"></i>
+          </div>
+          <div>
+            <h3>{{SERVICO_4}}</h3>
+            <p>{{SERVICO_4_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 5 — Remova este bloco se não houver serviço 5 -->
+        <div class="service-card reveal">
+          <div class="service-icon">
+            <i data-lucide="activity" style="width:22px;height:22px;"></i>
+          </div>
+          <div>
+            <h3>{{SERVICO_5}}</h3>
+            <p>{{SERVICO_5_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 6 — Remova este bloco se não houver serviço 6 -->
+        <div class="service-card reveal">
+          <div class="service-icon">
+            <i data-lucide="pill" style="width:22px;height:22px;"></i>
+          </div>
+          <div>
+            <h3>{{SERVICO_6}}</h3>
+            <p>{{SERVICO_6_DESC}}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       DIFERENCIAIS
+  ============================================================ -->
+  <section class="section section-dark" id="diferenciais">
+    <div class="container">
+
+      <div class="sh center reveal">
+        <div class="section-tag">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>
+          Por que nos escolher
+        </div>
+        <h2 class="section-title">Nossos Diferenciais</h2>
+        <p class="section-sub">Comprometidos com excelência em cada detalhe do seu atendimento.</p>
+      </div>
+
+      <div class="diffs-grid">
+
+        <!-- DIFERENCIAL 1 -->
+        <div class="diff-card reveal">
+          <div class="diff-num">01</div>
+          <div class="diff-icon">
+            <i data-lucide="award" style="width:22px;height:22px;"></i>
+          </div>
+          <h3>{{DIFERENCIAL_1}}</h3>
+          <p>{{DIFERENCIAL_1_DESC}}</p>
+        </div>
+
+        <!-- DIFERENCIAL 2 -->
+        <div class="diff-card reveal">
+          <div class="diff-num">02</div>
+          <div class="diff-icon">
+            <i data-lucide="clock" style="width:22px;height:22px;"></i>
+          </div>
+          <h3>{{DIFERENCIAL_2}}</h3>
+          <p>{{DIFERENCIAL_2_DESC}}</p>
+        </div>
+
+        <!-- DIFERENCIAL 3 -->
+        <div class="diff-card reveal">
+          <div class="diff-num">03</div>
+          <div class="diff-icon">
+            <i data-lucide="heart" style="width:22px;height:22px;"></i>
+          </div>
+          <h3>{{DIFERENCIAL_3}}</h3>
+          <p>{{DIFERENCIAL_3_DESC}}</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       DEPOIMENTOS
+       Remova o 3º .testi-card se houver apenas 2 depoimentos.
+  ============================================================ -->
+  <section class="section" id="depoimentos">
+    <div class="container">
+
+      <div class="sh center reveal">
+        <div class="section-tag">
+          <i data-lucide="message-square" style="width:12px;height:12px;"></i>
+          Quem já conhece
+        </div>
+        <h2 class="section-title">O que dizem nossos pacientes</h2>
+      </div>
+
+      <div class="testi-grid">
+
+        <!-- DEPOIMENTO 1 -->
+        <div class="testi-card reveal">
+          <div class="testi-quote-icon">
+            <i data-lucide="quote" style="width:36px;height:36px;"></i>
+          </div>
+          <div class="testi-stars">
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+          </div>
+          <p class="testi-text">{{DEPOIMENTO_1}}</p>
+          <div class="testi-author">
+            <div class="testi-avatar">{{DEPOIMENTO_1_AUTOR_INICIAL}}</div>
+            <div>
+              <div class="testi-name">{{DEPOIMENTO_1_AUTOR}}</div>
+              <div class="testi-role">Paciente</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEPOIMENTO 2 -->
+        <div class="testi-card reveal">
+          <div class="testi-quote-icon">
+            <i data-lucide="quote" style="width:36px;height:36px;"></i>
+          </div>
+          <div class="testi-stars">
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+          </div>
+          <p class="testi-text">{{DEPOIMENTO_2}}</p>
+          <div class="testi-author">
+            <div class="testi-avatar">{{DEPOIMENTO_2_AUTOR_INICIAL}}</div>
+            <div>
+              <div class="testi-name">{{DEPOIMENTO_2_AUTOR}}</div>
+              <div class="testi-role">Paciente</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEPOIMENTO 3 — Remova este bloco se não houver depoimento 3 -->
+        <div class="testi-card reveal">
+          <div class="testi-quote-icon">
+            <i data-lucide="quote" style="width:36px;height:36px;"></i>
+          </div>
+          <div class="testi-stars">
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+          </div>
+          <p class="testi-text">{{DEPOIMENTO_3}}</p>
+          <div class="testi-author">
+            <div class="testi-avatar">{{DEPOIMENTO_3_AUTOR_INICIAL}}</div>
+            <div>
+              <div class="testi-name">{{DEPOIMENTO_3_AUTOR}}</div>
+              <div class="testi-role">Paciente</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CONTATO
+  ============================================================ -->
+  <section class="section section-alt" id="contato">
+    <div class="container">
+
+      <div class="sh reveal">
+        <div class="section-tag">
+          <i data-lucide="map-pin" style="width:12px;height:12px;"></i>
+          Fale conosco
+        </div>
+        <h2 class="section-title">Entre em Contato</h2>
+        <p class="section-sub">Estamos prontos para atender você. Agende sua consulta ou tire suas dúvidas.</p>
+      </div>
+
+      <div class="contact-grid">
+
+        <div class="reveal from-left">
+          <div class="contact-list">
+
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <i data-lucide="phone" style="width:20px;height:20px;"></i>
+              </div>
+              <div class="contact-item-text">
+                <b>Telefone</b>
+                <a href="tel:{{TELEFONE}}">{{TELEFONE}}</a>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon teal">
+                <i data-lucide="message-circle" style="width:20px;height:20px;"></i>
+              </div>
+              <div class="contact-item-text">
+                <b>WhatsApp</b>
+                <a href="https://wa.me/55{{WHATSAPP}}" target="_blank" rel="noopener">{{WHATSAPP}}</a>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <i data-lucide="map-pin" style="width:20px;height:20px;"></i>
+              </div>
+              <div class="contact-item-text">
+                <b>Endereço</b>
+                <span>{{ENDERECO}}</span>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <i data-lucide="clock" style="width:20px;height:20px;"></i>
+              </div>
+              <div class="contact-item-text">
+                <b>Horário de Atendimento</b>
+                <span>{{HORARIO}}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Mapa placeholder — substitua por <iframe> do Google Maps -->
+          <div class="map-box">
+            <i data-lucide="map" style="width:28px;height:28px;opacity:0.4;"></i>
+            <p>{{ENDERECO}}</p>
+          </div>
+        </div>
+
+        <div class="contact-cta-box reveal from-right">
+          <h3>Pronto para cuidar de você?</h3>
+          <p>Agende sua consulta agora mesmo pelo WhatsApp ou ligue. Atendimento rápido, humanizado e sem espera.</p>
+          <div class="cta-buttons">
+            <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-wa" target="_blank" rel="noopener">
+              <i data-lucide="message-circle" style="width:18px;height:18px;"></i>
+              Agendar pelo WhatsApp
+            </a>
+            <a href="tel:{{TELEFONE}}" class="btn btn-outline">
+              <i data-lucide="phone" style="width:16px;height:16px;"></i>
+              Ligar agora
+            </a>
+          </div>
+
+          <!-- OPCIONAL: Remova este bloco inteiro se não houver redes sociais -->
+          <div class="social-row">
+            <p>Siga nas redes sociais:</p>
+            <div class="social-links">
+              <!-- OPCIONAL: Remova se não houver Instagram -->
+              <a href="https://instagram.com/{{INSTAGRAM}}" target="_blank" rel="noopener" class="social-link">
+                <i data-lucide="instagram" style="width:15px;height:15px;"></i>
+                Instagram
+              </a>
+              <!-- OPCIONAL: Remova se não houver Facebook -->
+              <a href="https://facebook.com/{{FACEBOOK}}" target="_blank" rel="noopener" class="social-link">
+                <i data-lucide="facebook" style="width:15px;height:15px;"></i>
+                Facebook
+              </a>
+            </div>
+          </div>
+          <!-- /OPCIONAL: redes sociais -->
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+
+        <div>
+          <!-- Adicione class "has-logo" aqui também quando o cliente tiver logotipo -->
+          <div class="logo-wrap footer-logo-wrap">
+            <img class="logo-img" src="{{LOGO}}" alt="{{NOME_EMPRESA}}" loading="lazy">
+            <span class="logo-text footer-logo">{{NOME_EMPRESA}}</span>
+          </div>
+          <p class="footer-tagline">{{SLOGAN}}</p>
+          <div class="footer-social">
+            <!-- OPCIONAL: Remova se não houver Instagram -->
+            <a href="https://instagram.com/{{INSTAGRAM}}" target="_blank" rel="noopener" aria-label="Instagram">
+              <i data-lucide="instagram" style="width:17px;height:17px;"></i>
+            </a>
+            <!-- OPCIONAL: Remova se não houver Facebook -->
+            <a href="https://facebook.com/{{FACEBOOK}}" target="_blank" rel="noopener" aria-label="Facebook">
+              <i data-lucide="facebook" style="width:17px;height:17px;"></i>
+            </a>
+            <a href="https://wa.me/55{{WHATSAPP}}" target="_blank" rel="noopener" aria-label="WhatsApp">
+              <i data-lucide="message-circle" style="width:17px;height:17px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Serviços</h4>
+          <ul>
+            <li><a href="#servicos">{{SERVICO_1}}</a></li>
+            <li><a href="#servicos">{{SERVICO_2}}</a></li>
+            <li><a href="#servicos">{{SERVICO_3}}</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contato</h4>
+          <ul>
+            <li><a href="tel:{{TELEFONE}}">{{TELEFONE}}</a></li>
+            <li><a href="https://wa.me/55{{WHATSAPP}}" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="#contato">{{HORARIO}}</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 {{NOME_EMPRESA}}. Todos os direitos reservados.</p>
+        <p>Desenvolvido com cuidado e tecnologia</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       FLOATING WHATSAPP
+  ============================================================ -->
+  <a href="https://wa.me/55{{WHATSAPP}}" class="wa-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <div class="wa-float-pulse"></div>
+    <i data-lucide="message-circle" style="width:26px;height:26px;position:relative;z-index:1;"></i>
+  </a>
+
+
+  <!-- ============================================================
+       SCRIPTS
+  ============================================================ -->
+  <script>
+    // --- Lucide icons ---
+    document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+
+    // --- Header scroll shadow ---
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // --- Mobile menu ---
+    function toggleMenu() {
+      document.getElementById('mobileNav').classList.toggle('open');
+    }
+    window.addEventListener('scroll', () => {
+      document.getElementById('mobileNav').classList.remove('open');
+    }, { passive: true });
+
+    // --- Scroll animations ---
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+
+        const el = entry.target;
+        const siblings = Array.from(el.parentElement.children).filter(c =>
+          c.classList.contains('reveal')
+        );
+        const idx = siblings.indexOf(el);
+        const delay = idx * 90;   // stagger grid children
+
+        setTimeout(() => el.classList.add('visible'), delay);
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

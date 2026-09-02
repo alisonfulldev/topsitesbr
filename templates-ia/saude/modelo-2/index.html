@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{NOME_EMPRESA}}</title>
+  <meta name="description" content="{{SLOGAN}}">
+
+  <!-- Google Fonts: DM Serif Display (títulos) + Nunito (corpo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+
+  <style>
+    /* ============================================================
+       TOKENS
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --emerald:    #1A8C6A;
+      --emerald-d:  #136650;
+      --emerald-100:#E3F5EF;
+      --emerald-50: #F0FAF6;
+      --gold:       #C9A84C;
+      --gold-100:   #FDF6E3;
+      --navy:       #0E2A3A;
+      --slate:      #2D4A5A;
+      --gray-700:   #2E3D4A;
+      --gray-500:   #4A6070;
+      --gray-200:   #E2E8EC;
+      --gray-100:   #F5F7F9;
+      --off-white:  #FAFBFC;
+      --white:      #FFFFFF;
+      --wa:         #25D366;
+
+      --ff-head: 'DM Serif Display', Georgia, serif;
+      --ff-body: 'Nunito', system-ui, sans-serif;
+
+      --shadow-xs: 0 1px 4px rgba(14,42,58,0.06);
+      --shadow-sm: 0 2px 12px rgba(14,42,58,0.08);
+      --shadow-md: 0 6px 28px rgba(14,42,58,0.10);
+      --shadow-lg: 0 14px 56px rgba(14,42,58,0.13);
+      --shadow-em: 0 8px 32px rgba(26,140,106,0.22);
+
+      --r:    12px;
+      --r-lg: 24px;
+      --r-xl: 36px;
+      --tr:   0.3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ff-body);
+      color: var(--gray-700);
+      background: var(--off-white);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    img  { display: block; max-width: 100%; height: auto; }
+    a    { text-decoration: none; color: inherit; }
+    ul   { list-style: none; }
+
+    /* ============================================================
+       SCROLL ANIMATIONS
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.from-left  { transform: translateX(-36px); }
+    .reveal.from-right { transform: translateX(36px); }
+    .reveal.visible    { opacity: 1 !important; transform: translate(0,0) !important; }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--r);
+      font-family: var(--ff-body);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--tr);
+      white-space: nowrap;
+    }
+
+    .btn-em {
+      background: var(--emerald);
+      color: var(--white);
+      box-shadow: var(--shadow-em);
+    }
+    .btn-em:hover {
+      background: var(--emerald-d);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(26,140,106,0.32);
+    }
+
+    .btn-outline-em {
+      background: transparent;
+      color: var(--emerald);
+      border-color: var(--emerald);
+    }
+    .btn-outline-em:hover {
+      background: var(--emerald);
+      color: var(--white);
+    }
+
+    .btn-wa {
+      background: var(--wa);
+      color: var(--white);
+      box-shadow: 0 6px 20px rgba(37,211,102,0.28);
+    }
+    .btn-wa:hover {
+      background: #1ebb58;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(37,211,102,0.38);
+    }
+
+    /* ============================================================
+       LAYOUT
+    ============================================================ */
+    .container {
+      max-width: 1100px;
+      margin-inline: auto;
+      padding-inline: 24px;
+    }
+
+    .section { padding: 56px 0; }
+    .section-warm { background: var(--emerald-50); }
+    .section-stone { background: var(--gray-100); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--emerald-100);
+      color: var(--emerald);
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      color: var(--navy);
+      line-height: 1.18;
+      margin-bottom: 16px;
+    }
+    .h2 em { font-style: italic; color: var(--emerald); }
+
+    .lead {
+      font-size: 1.0625rem;
+      color: var(--slate);
+      max-width: 540px;
+      line-height: 1.80;
+    }
+
+    .sh { margin-bottom: 56px; }
+    .sh.center { text-align: center; }
+    .sh.center .lead { margin-inline: auto; }
+
+    /* Linha decorativa dourada */
+    .gold-line {
+      display: block;
+      width: 44px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+    .sh.center .gold-line { margin-inline: auto; }
+
+    /* ============================================================
+       SISTEMA DE LOGO (igual ao Modelo 1 — mesma API)
+       SEM logo → .logo-wrap sem "has-logo" → exibe texto
+       COM logo → .logo-wrap.has-logo        → exibe imagem
+    ============================================================ */
+    .logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo-img {
+      display: none;
+      height: 40px;
+      width: auto;
+      max-width: 160px;
+      object-fit: contain;
+      object-position: left center;
+    }
+    .logo-wrap.has-logo .logo-img  { display: block; }
+    .logo-wrap.has-logo .logo-text { display: none;  }
+    .logo-text {
+      font-family: var(--ff-head);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--navy);
+      letter-spacing: -0.2px;
+    }
+    .logo-text em { font-style: normal; color: var(--emerald); }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .header {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline: 0;
+      z-index: 900;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-inline: 24px;
+      background: rgba(250,251,252,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(226,232,236,0.70);
+      transition: box-shadow var(--tr);
+    }
+    .header.scrolled { box-shadow: var(--shadow-md); }
+
+    .nav {
+      display: none;
+      align-items: center;
+      gap: 32px;
+    }
+    .nav a {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      transition: color var(--tr);
+    }
+    .nav a:hover { color: var(--emerald); }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--navy);
+      border-radius: 2px;
+      transition: all var(--tr);
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 68px;
+      inset-inline: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-md);
+      padding: 20px 24px;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 899;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      padding: 12px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .mobile-nav a:last-child { border-bottom: none; padding-top: 16px; }
+
+    /* ============================================================
+       HERO — split com moldura de foto elegante
+    ============================================================ */
+    .hero {
+      margin-top: 68px;
+      min-height: calc(100svh - 68px);
+      background: var(--off-white);
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      overflow: hidden;
+    }
+
+    /* Padrão pontilhado sutil no fundo */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(var(--gray-200) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 24px 36px;
+      position: relative;
+      z-index: 1;
+      order: 1; /* TEXTO PRIMEIRO em mobile */
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--emerald);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: var(--emerald);
+      border-radius: 2px;
+    }
+
+    .hero h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(2.2rem, 6vw, 3.9rem);
+      color: var(--navy);
+      line-height: 1.10;
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--emerald);
+    }
+
+    .hero-desc {
+      font-size: clamp(1rem, 2vw, 1.125rem);
+      color: var(--slate);
+      max-width: 460px;
+      line-height: 1.80;
+      margin-bottom: 38px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    /* Indicadores de confiança em linha */
+    .hero-trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--slate);
+      font-weight: 500;
+    }
+    .trust-item .ti-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--emerald-100);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--emerald);
+      flex-shrink: 0;
+    }
+    .trust-item strong { color: var(--navy); }
+
+    /* Frame da imagem do hero */
+    .hero-visual {
+      position: relative;
+      order: 2; /* IMAGEM ABAIXO em mobile */
+      min-height: 400px;
+    }
+
+    .hero-frame {
+      position: absolute;
+      inset: 24px 24px 24px 24px;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .hero-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 15%;
+    }
+    /* Gradiente suave na base da imagem */
+    .hero-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 55%,
+        rgba(14,42,58,0.30) 100%
+      );
+    }
+
+    /* Borda decorativa deslocada (efeito moldura dupla) */
+    .hero-frame-border {
+      position: absolute;
+      inset: 16px 16px 32px 32px;
+      border: 2px solid var(--emerald);
+      border-radius: var(--r-lg);
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Card de destaques flutuante */
+    .hero-stat-card {
+      position: absolute;
+      z-index: 3;
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: cardIn 0.9s 0.6s cubic-bezier(.22,.9,.32,1.1) both;
+    }
+    .hero-stat-card.card-a {
+      bottom: 36px;
+      left: 8px;
+    }
+    .hero-stat-card.card-b {
+      top: 36px;
+      right: 8px;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: scale(0.88) translateY(10px); }
+      to   { opacity: 1; transform: scale(1)    translateY(0); }
+    }
+    .sc-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sc-icon.em  { background: var(--emerald-100); color: var(--emerald); }
+    .sc-icon.gold { background: var(--gold-100); color: var(--gold); }
+    .sc-text b { display: block; font-size: 1.15rem; font-weight: 800; color: var(--navy); line-height: 1.1; font-family: var(--ff-body); }
+    .sc-text span { font-size: 0.75rem; color: var(--gray-500); }
+
+    /* ============================================================
+       STRIP DE CREDENCIAIS
+    ============================================================ */
+    .cred-strip {
+      background: var(--navy);
+      padding: 20px 0;
+    }
+    .cred-strip-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px 40px;
+      justify-content: center;
+      align-items: center;
+    }
+    .cred-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .cred-item svg { color: var(--emerald); flex-shrink: 0; }
+
+    /* ============================================================
+       SOBRE
+    ============================================================ */
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .sobre-photo-wrap {
+      position: relative;
+    }
+
+    .sobre-photo-frame {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .sobre-photo-frame img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+
+    /* Blocos decorativos de canto */
+    .sobre-deco-tl {
+      position: absolute;
+      top: -16px;
+      left: -16px;
+      width: 80px;
+      height: 80px;
+      border: 3px solid var(--emerald);
+      border-radius: 14px;
+      opacity: 0.18;
+    }
+    .sobre-deco-br {
+      position: absolute;
+      bottom: -16px;
+      right: -16px;
+      width: 64px;
+      height: 64px;
+      background: var(--gold);
+      border-radius: 10px;
+      opacity: 0.14;
+    }
+
+    /* Badge no canto da foto */
+    .sobre-badge {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 3px solid var(--emerald);
+    }
+    .sobre-badge-ic {
+      width: 36px;
+      height: 36px;
+      background: var(--emerald-100);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--emerald);
+      flex-shrink: 0;
+    }
+    .sobre-badge-txt b { display: block; font-size: 0.875rem; font-weight: 700; color: var(--navy); }
+    .sobre-badge-txt span { font-size: 0.75rem; color: var(--gray-500); }
+
+    .sobre-body p {
+      font-size: 1.0625rem;
+      color: var(--slate);
+      line-height: 1.85;
+      margin-bottom: 28px;
+    }
+
+    .sobre-check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .sobre-check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9375rem;
+      color: var(--gray-700);
+    }
+    .sobre-check-item .check-ic {
+      width: 22px;
+      height: 22px;
+      background: var(--emerald-100);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--emerald);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ============================================================
+       SERVIÇOS — cards numerados verticais
+       INSTRUÇÃO: Repita .srv-card para SERVICO_1..6.
+       Remova cards não utilizados.
+    ============================================================ */
+    .srv-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .srv-card {
+      background: var(--white);
+      border-radius: var(--r);
+      border: 1px solid var(--gray-200);
+      padding: 24px 24px 24px 20px;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 16px;
+      align-items: start;
+      transition: box-shadow var(--tr), transform var(--tr), border-color var(--tr);
+      position: relative;
+      overflow: hidden;
+    }
+    .srv-card::before {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      left: 0;
+      width: 3px;
+      background: var(--emerald);
+      opacity: 0;
+      transition: opacity var(--tr);
+    }
+    .srv-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateX(4px);
+      border-color: var(--emerald-100);
+    }
+    .srv-card:hover::before { opacity: 1; }
+
+    .srv-num {
+      font-family: var(--ff-head);
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--emerald-100);
+      line-height: 1;
+      margin-top: 2px;
+      transition: color var(--tr);
+    }
+    .srv-card:hover .srv-num { color: var(--emerald); }
+
+    .srv-body h3 {
+      font-family: var(--ff-head);
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .srv-body p { font-size: 0.9375rem; color: var(--gray-500); line-height: 1.65; }
+
+    /* ============================================================
+       DIFERENCIAIS — linha horizontal com ícone grande
+    ============================================================ */
+    .diff-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+
+    .diff-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .diff-item:first-child { padding-top: 0; }
+    .diff-item:last-child  { border-bottom: none; padding-bottom: 0; }
+
+    .diff-icon-wrap {
+      width: 64px;
+      height: 64px;
+      background: var(--emerald-100);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--emerald);
+      flex-shrink: 0;
+      transition: background var(--tr), color var(--tr);
+    }
+    .diff-item:hover .diff-icon-wrap {
+      background: var(--emerald);
+      color: var(--white);
+    }
+
+    .diff-text { flex: 1; }
+    .diff-text h3 {
+      font-family: var(--ff-head);
+      font-size: 1.2rem;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .diff-text p { font-size: 0.9375rem; color: var(--gray-500); line-height: 1.70; }
+
+    .diff-arrow {
+      color: var(--gray-200);
+      transition: color var(--tr), transform var(--tr);
+      align-self: center;
+      flex-shrink: 0;
+    }
+    .diff-item:hover .diff-arrow {
+      color: var(--emerald);
+      transform: translateX(4px);
+    }
+
+    /* ============================================================
+       DEPOIMENTOS — linha compacta com avatar e aspas
+       Remova o 3º .testi-item se houver apenas 2 depoimentos.
+    ============================================================ */
+    .testi-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .testi-item {
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 28px;
+      border: 1px solid var(--gray-200);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      transition: box-shadow var(--tr);
+      position: relative;
+    }
+    .testi-item:hover { box-shadow: var(--shadow-md); }
+
+    .testi-item::before {
+      content: '\201C';
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-family: var(--ff-head);
+      font-size: 5rem;
+      line-height: 1;
+      color: var(--emerald-100);
+    }
+
+    .testi-stars {
+      display: flex;
+      gap: 3px;
+      color: var(--gold);
+    }
+
+    .testi-quote {
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--gray-700);
+      line-height: 1.78;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--gray-200);
+    }
+    .testi-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--emerald-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-head);
+      font-size: 1rem;
+      color: var(--emerald);
+      flex-shrink: 0;
+      border: 2px solid var(--emerald-100);
+    }
+    .testi-name { font-size: 0.9375rem; font-weight: 700; color: var(--navy); }
+    .testi-role { font-size: 0.8125rem; color: var(--gray-500); }
+
+    /* Coluna de imagem junto ao painel de depoimentos */
+    .testi-photo {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      min-height: 300px;
+      position: relative;
+    }
+    .testi-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      min-height: 300px;
+    }
+    .testi-photo-badge {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 12px 18px;
+      box-shadow: var(--shadow-md);
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .testi-photo-badge span { color: var(--emerald); font-size: 1.3rem; font-family: var(--ff-head); }
+
+    .testi-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ============================================================
+       CONTATO
+    ============================================================ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .contact-card {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      padding: 40px 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+    }
+
+    .contact-card h3 {
+      font-family: var(--ff-head);
+      font-size: 1.6rem;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .contact-card .lead-sm {
+      font-size: 0.9375rem;
+      color: var(--gray-500);
+      margin-bottom: 28px;
+      line-height: 1.70;
+    }
+
+    .contact-info { display: flex; flex-direction: column; gap: 18px; }
+
+    .ci {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .ci-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--emerald-100);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--emerald);
+      flex-shrink: 0;
+    }
+    .ci-txt b { display: block; font-size: 0.8125rem; font-weight: 700; color: var(--gray-700); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .ci-txt span, .ci-txt a { font-size: 0.9375rem; color: var(--gray-500); }
+    .ci-txt a:hover { color: var(--emerald); }
+
+    .contact-divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin: 24px 0;
+    }
+
+    .contact-cta-box {
+      background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-d) 100%);
+      border-radius: var(--r-lg);
+      padding: 36px 28px;
+      color: var(--white);
+      text-align: center;
+    }
+    .contact-cta-box h3 {
+      font-family: var(--ff-head);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .contact-cta-box p {
+      color: rgba(255,255,255,0.82);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+    .contact-cta-box .btn-wa {
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .contact-cta-box .btn-glass {
+      width: 100%;
+      justify-content: center;
+      background: rgba(255,255,255,0.12);
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,0.35);
+      backdrop-filter: blur(4px);
+    }
+    .contact-cta-box .btn-glass:hover {
+      background: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.70);
+    }
+
+    .map-stub {
+      margin-top: 20px;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r);
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--gray-500);
+    }
+    .map-stub p { font-size: 0.8125rem; text-align: center; padding-inline: 16px; }
+
+    /* Redes sociais */
+    .social-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--emerald-50);
+      color: var(--emerald);
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      transition: background var(--tr), color var(--tr);
+    }
+    .social-btn:hover { background: var(--emerald); color: var(--white); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer {
+      background: var(--navy);
+      color: rgba(255,255,255,0.60);
+      padding: 60px 0 28px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+
+    /* Sistema de logo no rodapé */
+    .footer-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .footer-logo-wrap .logo-img { height: 34px; max-width: 140px; }
+    .footer-logo {
+      font-family: var(--ff-head);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--white);
+    }
+    .footer-logo em { font-style: normal; color: var(--emerald); }
+
+    .footer-tagline {
+      font-size: 0.9375rem;
+      line-height: 1.75;
+      max-width: 300px;
+      margin-bottom: 20px;
+    }
+
+    .footer-social { display: flex; gap: 10px; }
+    .footer-social a {
+      width: 38px;
+      height: 38px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.55);
+      transition: background var(--tr), color var(--tr);
+    }
+    .footer-social a:hover { background: var(--emerald); color: var(--white); }
+
+    .footer-col h4 {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+    }
+    .footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul li a {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.50);
+      transition: color var(--tr);
+    }
+    .footer-col ul li a:hover { color: var(--white); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 24px;
+      font-size: 0.8125rem;
+      text-align: center;
+      color: rgba(255,255,255,0.40);
+    }
+
+    /* Gold accent line no footer */
+    .footer-gold-bar {
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold) 0%, transparent 60%);
+      margin-bottom: 40px;
+      opacity: 0.40;
+    }
+
+    /* ============================================================
+       FLOATING WHATSAPP
+    ============================================================ */
+    .wa-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 800;
+      width: 56px;
+      height: 56px;
+      background: var(--wa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      box-shadow: 0 6px 24px rgba(37,211,102,0.40);
+      transition: transform var(--tr), box-shadow var(--tr);
+    }
+    .wa-float:hover {
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 10px 32px rgba(37,211,102,0.50);
+    }
+    .wa-pulse {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--wa);
+      animation: pulse 2.5s ease-out infinite;
+    }
+    @keyframes pulse {
+      0%   { transform: scale(1);   opacity: 0.55; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+
+    /* ============================================================
+       RESPONSIVE — MOBILE PEQUENO ≤ 480px
+    ============================================================ */
+    @media (max-width: 480px) {
+      /* Botões CTA do hero: coluna única, toque fácil */
+      .hero-ctas { flex-direction: column; }
+      .hero-ctas .btn { width: 100%; justify-content: center; }
+
+      /* Indicadores de confiança: coluna no celular estreito */
+      .hero-trust { flex-direction: column; gap: 12px; }
+
+      /* Cards flutuantes: compactos em telas pequenas */
+      .hero-stat-card { padding: 10px 14px; gap: 8px; }
+      .sc-text b { font-size: 1rem; }
+      .hero-stat-card.card-b { display: none; } /* oculta 2º card em tela muito estreita */
+
+      /* Strip de credenciais: centraliza e reduz gap */
+      .cred-strip-inner { gap: 16px 24px; }
+
+      /* Sobre: stats em 2 colunas em vez de 3 — evita texto muito espremido */
+      /* (mantém 3 colunas pois os valores são curtos: 200+, 5★, 98%) */
+
+      /* Frame da imagem: inset menor para aproveitar mais espaço */
+      .hero-frame { inset: 16px; }
+      .hero-frame-border { display: none; } /* oculta borda dupla em mobile estreito */
+    }
+
+    /* ============================================================
+       RESPONSIVE — TABLET ≥ 768px
+    ============================================================ */
+    @media (min-width: 768px) {
+      .section { padding: 88px 0; }
+      .header { padding-inline: 40px; }
+      .hamburger { display: none; }
+      .nav { display: flex; }
+
+      /* Hero: layout lado a lado (texto esq | imagem dir) */
+      .hero {
+        grid-template-columns: 1fr 1fr;
+        min-height: calc(100svh - 68px);
+      }
+      /* Padding ampliado na versão desktop — ordens já corretas no base */
+      .hero-content { padding: 72px 48px 72px; }
+      .hero-visual  { min-height: auto; }
+      .hero-frame { inset: 32px 24px 32px 0; }
+      .hero-frame-border { display: block; inset: 24px 16px 40px 8px; }
+      .hero-stat-card.card-b { display: flex; } /* re-exibe card oculto no mobile */
+
+      .sobre-grid { grid-template-columns: 1fr 1fr; }
+      .sobre-photo-frame img { height: 460px; }
+
+      .srv-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .testi-grid { grid-template-columns: 1fr 1fr; }
+
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr; }
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    /* ============================================================
+       RESPONSIVE — DESKTOP ≥ 1024px
+    ============================================================ */
+    @media (min-width: 1024px) {
+      .section { padding: 112px 0; }
+      .header { padding-inline: 60px; }
+      .hero-content { padding: 96px 64px 96px; }
+
+      .srv-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="header" id="header">
+    <!--
+      LOGO: sem logotipo → deixe como está (exibe texto).
+            com logotipo → adicione class "has-logo" ao elemento abaixo.
+      Adicione "has-logo" TAMBÉM ao .footer-logo-wrap no rodapé.
+    -->
+    <a href="#" class="logo-wrap">
+      <img class="logo-img" src="{{LOGO}}" alt="{{NOME_EMPRESA}}" loading="eager">
+      <span class="logo-text">{{NOME_EMPRESA}}</span>
+    </a>
+
+    <nav class="nav">
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#diferenciais">Diferenciais</a>
+      <a href="#contato">Contato</a>
+      <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-em" style="padding:10px 20px;font-size:0.875rem;" target="_blank" rel="noopener">
+        <i data-lucide="calendar" style="width:15px;height:15px;"></i>
+        Agendar
+      </a>
+    </nav>
+
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#sobre"          onclick="toggleMenu()">Sobre</a>
+    <a href="#servicos"       onclick="toggleMenu()">Serviços</a>
+    <a href="#diferenciais"   onclick="toggleMenu()">Diferenciais</a>
+    <a href="#contato"        onclick="toggleMenu()">Contato</a>
+    <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-wa" target="_blank" rel="noopener" style="justify-content:center;margin-top:4px;">
+      <i data-lucide="message-circle" style="width:17px;height:17px;"></i>
+      Agendar pelo WhatsApp
+    </a>
+  </nav>
+
+
+  <!-- ============================================================
+       HERO — split com frame fotográfico elegante
+  ============================================================ -->
+  <section class="hero" id="inicio">
+
+    <!-- Conteúdo textual -->
+    <div class="hero-content">
+
+      <div class="hero-eyebrow reveal">
+        Cuidado que transforma
+      </div>
+
+      <h1 class="reveal">{{NOME_EMPRESA}}</h1>
+
+      <p class="hero-desc reveal">{{SLOGAN}}</p>
+
+      <div class="hero-ctas reveal">
+        <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-em" target="_blank" rel="noopener">
+          <i data-lucide="calendar" style="width:17px;height:17px;"></i>
+          Agendar Consulta
+        </a>
+        <a href="#servicos" class="btn btn-outline-em">
+          Nossos Serviços
+        </a>
+      </div>
+
+      <div class="hero-trust reveal">
+        <div class="trust-item">
+          <div class="ti-icon">
+            <i data-lucide="shield-check" style="width:16px;height:16px;"></i>
+          </div>
+          <span><strong>Atendimento</strong> humanizado</span>
+        </div>
+        <div class="trust-item">
+          <div class="ti-icon">
+            <i data-lucide="clock" style="width:16px;height:16px;"></i>
+          </div>
+          <span><strong>Agendamento</strong> rápido</span>
+        </div>
+        <div class="trust-item">
+          <div class="ti-icon">
+            <i data-lucide="star" style="width:16px;height:16px;"></i>
+          </div>
+          <span><strong>Nota 4,9</strong> no Google</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Frame fotográfico -->
+    <div class="hero-visual reveal from-right">
+
+      <!-- Borda decorativa deslocada -->
+      <div class="hero-frame-border"></div>
+
+      <!-- Foto principal com moldura arredondada -->
+      <div class="hero-frame">
+        <img
+          src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=900&h=1100&q=90&auto=format&fit=crop&crop=center"
+          alt="{{NOME_EMPRESA}} — atendimento com cuidado e empatia"
+          loading="eager"
+        >
+      </div>
+
+      <!-- Card A: experiência -->
+      <div class="hero-stat-card card-a">
+        <div class="sc-icon em">
+          <i data-lucide="heart-handshake" style="width:18px;height:18px;"></i>
+        </div>
+        <div class="sc-text">
+          <b>+200</b>
+          <span>Pacientes satisfeitos</span>
+        </div>
+      </div>
+
+      <!-- Card B: avaliação -->
+      <div class="hero-stat-card card-b">
+        <div class="sc-icon gold">
+          <i data-lucide="star" style="width:18px;height:18px;"></i>
+        </div>
+        <div class="sc-text">
+          <b>4,9 ★</b>
+          <span>Avaliação média</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- Strip de credenciais -->
+  <div class="cred-strip">
+    <div class="container">
+      <div class="cred-strip-inner">
+        <div class="cred-item">
+          <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
+          Profissionais certificados
+        </div>
+        <div class="cred-item">
+          <i data-lucide="award" style="width:18px;height:18px;"></i>
+          Atendimento humanizado
+        </div>
+        <div class="cred-item">
+          <i data-lucide="clock" style="width:18px;height:18px;"></i>
+          Agenda flexível
+        </div>
+        <div class="cred-item">
+          <i data-lucide="map-pin" style="width:18px;height:18px;"></i>
+          {{ENDERECO}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       SOBRE
+  ============================================================ -->
+  <section class="section" id="sobre">
+    <div class="container">
+      <div class="sobre-grid">
+
+        <!-- Texto à esquerda neste modelo (invertido em relação ao Modelo 1) -->
+        <div class="sobre-body reveal from-left">
+          <span class="gold-line"></span>
+          <div class="pill">
+            <i data-lucide="info" style="width:11px;height:11px;"></i>
+            Quem somos
+          </div>
+          <h2 class="h2">Nossa missão é <em>cuidar de você</em></h2>
+
+          <p>{{SOBRE_TEXTO}}</p>
+
+          <ul class="sobre-check-list">
+            <li class="sobre-check-item">
+              <div class="check-ic">
+                <i data-lucide="check" style="width:13px;height:13px;"></i>
+              </div>
+              Atendimento personalizado para cada paciente
+            </li>
+            <li class="sobre-check-item">
+              <div class="check-ic">
+                <i data-lucide="check" style="width:13px;height:13px;"></i>
+              </div>
+              Equipe capacitada com atualização contínua
+            </li>
+            <li class="sobre-check-item">
+              <div class="check-ic">
+                <i data-lucide="check" style="width:13px;height:13px;"></i>
+              </div>
+              Ambiente acolhedor e estrutura moderna
+            </li>
+          </ul>
+
+          <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-em" target="_blank" rel="noopener">
+            <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+            Falar com a equipe
+          </a>
+        </div>
+
+        <!-- Foto à direita -->
+        <div class="sobre-photo-wrap reveal from-right">
+          <div class="sobre-deco-tl"></div>
+          <div class="sobre-deco-br"></div>
+
+          <div class="sobre-photo-frame">
+            <img
+              src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&h=700&q=88&auto=format&fit=crop&crop=top"
+              alt="Equipe {{NOME_EMPRESA}}"
+              loading="lazy"
+            >
+          </div>
+
+          <div class="sobre-badge">
+            <div class="sobre-badge-ic">
+              <i data-lucide="users" style="width:17px;height:17px;"></i>
+            </div>
+            <div class="sobre-badge-txt">
+              <b>Equipe especializada</b>
+              <span>Sempre ao seu lado</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SERVIÇOS — cards com número decorativo
+       INSTRUÇÃO: Copie/cole .srv-card para cada serviço (1 a 6).
+       Remova os blocos de serviços não utilizados.
+  ============================================================ -->
+  <section class="section section-warm" id="servicos">
+    <div class="container">
+
+      <div class="sh center reveal">
+        <span class="gold-line"></span>
+        <div class="pill">
+          <i data-lucide="clipboard-list" style="width:11px;height:11px;"></i>
+          O que fazemos
+        </div>
+        <h2 class="h2">Nossos <em>Serviços</em></h2>
+        <p class="lead">Soluções completas para o seu bem-estar, com profissionais dedicados e atenção a cada detalhe.</p>
+      </div>
+
+      <div class="srv-grid">
+
+        <!-- SERVIÇO 1 -->
+        <div class="srv-card reveal">
+          <div class="srv-num">01</div>
+          <div class="srv-body">
+            <h3>{{SERVICO_1}}</h3>
+            <p>{{SERVICO_1_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 2 -->
+        <div class="srv-card reveal">
+          <div class="srv-num">02</div>
+          <div class="srv-body">
+            <h3>{{SERVICO_2}}</h3>
+            <p>{{SERVICO_2_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 3 -->
+        <div class="srv-card reveal">
+          <div class="srv-num">03</div>
+          <div class="srv-body">
+            <h3>{{SERVICO_3}}</h3>
+            <p>{{SERVICO_3_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 4 — Remova este bloco se não houver serviço 4 -->
+        <div class="srv-card reveal">
+          <div class="srv-num">04</div>
+          <div class="srv-body">
+            <h3>{{SERVICO_4}}</h3>
+            <p>{{SERVICO_4_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 5 — Remova este bloco se não houver serviço 5 -->
+        <div class="srv-card reveal">
+          <div class="srv-num">05</div>
+          <div class="srv-body">
+            <h3>{{SERVICO_5}}</h3>
+            <p>{{SERVICO_5_DESC}}</p>
+          </div>
+        </div>
+
+        <!-- SERVIÇO 6 — Remova este bloco se não houver serviço 6 -->
+        <div class="srv-card reveal">
+          <div class="srv-num">06</div>
+          <div class="srv-body">
+            <h3>{{SERVICO_6}}</h3>
+            <p>{{SERVICO_6_DESC}}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       DIFERENCIAIS — lista horizontal com ícone grande
+  ============================================================ -->
+  <section class="section" id="diferenciais">
+    <div class="container">
+
+      <div class="sh reveal">
+        <span class="gold-line"></span>
+        <div class="pill">
+          <i data-lucide="zap" style="width:11px;height:11px;"></i>
+          Por que escolher
+        </div>
+        <h2 class="h2">O que nos <em>diferencia</em></h2>
+        <p class="lead">Cada detalhe do nosso atendimento é pensado para oferecer a melhor experiência em saúde.</p>
+      </div>
+
+      <div class="diff-row">
+
+        <!-- DIFERENCIAL 1 -->
+        <div class="diff-item reveal">
+          <div class="diff-icon-wrap">
+            <i data-lucide="award" style="width:26px;height:26px;"></i>
+          </div>
+          <div class="diff-text">
+            <h3>{{DIFERENCIAL_1}}</h3>
+            <p>{{DIFERENCIAL_1_DESC}}</p>
+          </div>
+          <div class="diff-arrow">
+            <i data-lucide="arrow-right" style="width:20px;height:20px;"></i>
+          </div>
+        </div>
+
+        <!-- DIFERENCIAL 2 -->
+        <div class="diff-item reveal">
+          <div class="diff-icon-wrap">
+            <i data-lucide="heart-pulse" style="width:26px;height:26px;"></i>
+          </div>
+          <div class="diff-text">
+            <h3>{{DIFERENCIAL_2}}</h3>
+            <p>{{DIFERENCIAL_2_DESC}}</p>
+          </div>
+          <div class="diff-arrow">
+            <i data-lucide="arrow-right" style="width:20px;height:20px;"></i>
+          </div>
+        </div>
+
+        <!-- DIFERENCIAL 3 -->
+        <div class="diff-item reveal">
+          <div class="diff-icon-wrap">
+            <i data-lucide="clock" style="width:26px;height:26px;"></i>
+          </div>
+          <div class="diff-text">
+            <h3>{{DIFERENCIAL_3}}</h3>
+            <p>{{DIFERENCIAL_3_DESC}}</p>
+          </div>
+          <div class="diff-arrow">
+            <i data-lucide="arrow-right" style="width:20px;height:20px;"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       DEPOIMENTOS — lista compacta + foto lateral
+       Remova o 3º .testi-item se houver apenas 2 depoimentos.
+  ============================================================ -->
+  <section class="section section-stone" id="depoimentos">
+    <div class="container">
+
+      <div class="sh center reveal">
+        <span class="gold-line"></span>
+        <div class="pill">
+          <i data-lucide="message-square" style="width:11px;height:11px;"></i>
+          Pacientes
+        </div>
+        <h2 class="h2">O que dizem sobre <em>nós</em></h2>
+      </div>
+
+      <div class="testi-grid">
+
+        <!-- Lista de depoimentos -->
+        <div class="testi-stack">
+
+          <!-- DEPOIMENTO 1 -->
+          <div class="testi-item reveal">
+            <div class="testi-stars">
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            </div>
+            <p class="testi-quote">{{DEPOIMENTO_1}}</p>
+            <div class="testi-author">
+              <div class="testi-avatar">{{DEPOIMENTO_1_AUTOR_INICIAL}}</div>
+              <div>
+                <div class="testi-name">{{DEPOIMENTO_1_AUTOR}}</div>
+                <div class="testi-role">Paciente</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DEPOIMENTO 2 -->
+          <div class="testi-item reveal">
+            <div class="testi-stars">
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            </div>
+            <p class="testi-quote">{{DEPOIMENTO_2}}</p>
+            <div class="testi-author">
+              <div class="testi-avatar">{{DEPOIMENTO_2_AUTOR_INICIAL}}</div>
+              <div>
+                <div class="testi-name">{{DEPOIMENTO_2_AUTOR}}</div>
+                <div class="testi-role">Paciente</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DEPOIMENTO 3 — Remova se não houver -->
+          <div class="testi-item reveal">
+            <div class="testi-stars">
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+              <i data-lucide="star" style="width:15px;height:15px;fill:currentColor;"></i>
+            </div>
+            <p class="testi-quote">{{DEPOIMENTO_3}}</p>
+            <div class="testi-author">
+              <div class="testi-avatar">{{DEPOIMENTO_3_AUTOR_INICIAL}}</div>
+              <div>
+                <div class="testi-name">{{DEPOIMENTO_3_AUTOR}}</div>
+                <div class="testi-role">Paciente</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Foto complementar com badge -->
+        <div class="testi-photo reveal from-right">
+          <img
+            src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=700&h=900&q=88&auto=format&fit=crop&crop=center"
+            alt="Atendimento {{NOME_EMPRESA}}"
+            loading="lazy"
+          >
+          <div class="testi-photo-badge">
+            <i data-lucide="heart" style="width:16px;height:16px;color:#1A8C6A;"></i>
+            <span>98%</span> de satisfação
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CONTATO
+  ============================================================ -->
+  <section class="section" id="contato">
+    <div class="container">
+
+      <div class="sh reveal">
+        <span class="gold-line"></span>
+        <div class="pill">
+          <i data-lucide="map-pin" style="width:11px;height:11px;"></i>
+          Fale conosco
+        </div>
+        <h2 class="h2">Onde <em>encontrar</em> a gente</h2>
+        <p class="lead">Agende sua consulta ou tire suas dúvidas — respondemos rapidamente.</p>
+      </div>
+
+      <div class="contact-grid">
+
+        <!-- Informações de contato -->
+        <div class="contact-card reveal from-left">
+          <h3>Informações</h3>
+          <p class="lead-sm">Estamos prontos para atender você com toda atenção que você merece.</p>
+
+          <div class="contact-info">
+
+            <div class="ci">
+              <div class="ci-icon">
+                <i data-lucide="phone" style="width:20px;height:20px;"></i>
+              </div>
+              <div class="ci-txt">
+                <b>Telefone</b>
+                <a href="tel:{{TELEFONE}}">{{TELEFONE}}</a>
+              </div>
+            </div>
+
+            <div class="ci">
+              <div class="ci-icon" style="background:rgba(37,211,102,0.12);color:var(--wa);">
+                <i data-lucide="message-circle" style="width:20px;height:20px;"></i>
+              </div>
+              <div class="ci-txt">
+                <b>WhatsApp</b>
+                <a href="https://wa.me/55{{WHATSAPP}}" target="_blank" rel="noopener">{{WHATSAPP}}</a>
+              </div>
+            </div>
+
+            <div class="ci">
+              <div class="ci-icon">
+                <i data-lucide="map-pin" style="width:20px;height:20px;"></i>
+              </div>
+              <div class="ci-txt">
+                <b>Endereço</b>
+                <span>{{ENDERECO}}</span>
+              </div>
+            </div>
+
+            <div class="ci">
+              <div class="ci-icon">
+                <i data-lucide="clock" style="width:20px;height:20px;"></i>
+              </div>
+              <div class="ci-txt">
+                <b>Horário</b>
+                <span>{{HORARIO}}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="contact-divider"></div>
+
+          <!-- OPCIONAL: Remova este bloco se não houver redes sociais -->
+          <div>
+            <p style="font-size:0.8125rem;color:var(--gray-500);margin-bottom:10px;">Siga nas redes sociais</p>
+            <div class="social-row">
+              <!-- OPCIONAL: Remova se não houver Instagram -->
+              <a href="https://instagram.com/{{INSTAGRAM}}" target="_blank" rel="noopener" class="social-btn">
+                <i data-lucide="instagram" style="width:14px;height:14px;"></i>
+                Instagram
+              </a>
+              <!-- OPCIONAL: Remova se não houver Facebook -->
+              <a href="https://facebook.com/{{FACEBOOK}}" target="_blank" rel="noopener" class="social-btn">
+                <i data-lucide="facebook" style="width:14px;height:14px;"></i>
+                Facebook
+              </a>
+            </div>
+          </div>
+          <!-- /OPCIONAL: redes sociais -->
+
+          <!-- Mapa placeholder -->
+          <div class="map-stub">
+            <i data-lucide="map" style="width:26px;height:26px;opacity:0.35;"></i>
+            <p>{{ENDERECO}}</p>
+          </div>
+        </div>
+
+        <!-- CTA de agendamento -->
+        <div class="reveal from-right">
+          <div class="contact-cta-box">
+            <i data-lucide="calendar-heart" style="width:40px;height:40px;margin-bottom:16px;opacity:0.80;"></i>
+            <h3>Agende sua consulta agora</h3>
+            <p>Sem burocracia. Em poucos segundos você fala diretamente com a nossa equipe pelo WhatsApp.</p>
+            <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-wa" target="_blank" rel="noopener">
+              <i data-lucide="message-circle" style="width:18px;height:18px;"></i>
+              Agendar pelo WhatsApp
+            </a>
+            <a href="tel:{{TELEFONE}}" class="btn btn-glass">
+              <i data-lucide="phone" style="width:16px;height:16px;"></i>
+              Ligar agora
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="footer">
+    <div class="container">
+
+      <div class="footer-gold-bar"></div>
+
+      <div class="footer-grid">
+
+        <div>
+          <!-- Adicione class "has-logo" aqui também quando o cliente tiver logotipo -->
+          <div class="logo-wrap footer-logo-wrap">
+            <img class="logo-img" src="{{LOGO}}" alt="{{NOME_EMPRESA}}" loading="lazy">
+            <span class="logo-text footer-logo">{{NOME_EMPRESA}}</span>
+          </div>
+          <p class="footer-tagline">{{SLOGAN}}</p>
+          <div class="footer-social">
+            <!-- OPCIONAL: Remova se não houver Instagram -->
+            <a href="https://instagram.com/{{INSTAGRAM}}" target="_blank" rel="noopener" aria-label="Instagram">
+              <i data-lucide="instagram" style="width:16px;height:16px;"></i>
+            </a>
+            <!-- OPCIONAL: Remova se não houver Facebook -->
+            <a href="https://facebook.com/{{FACEBOOK}}" target="_blank" rel="noopener" aria-label="Facebook">
+              <i data-lucide="facebook" style="width:16px;height:16px;"></i>
+            </a>
+            <a href="https://wa.me/55{{WHATSAPP}}" target="_blank" rel="noopener" aria-label="WhatsApp">
+              <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Serviços</h4>
+          <ul>
+            <li><a href="#servicos">{{SERVICO_1}}</a></li>
+            <li><a href="#servicos">{{SERVICO_2}}</a></li>
+            <li><a href="#servicos">{{SERVICO_3}}</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contato</h4>
+          <ul>
+            <li><a href="tel:{{TELEFONE}}">{{TELEFONE}}</a></li>
+            <li><a href="https://wa.me/55{{WHATSAPP}}" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="#contato">{{HORARIO}}</a></li>
+            <li><a href="#contato">{{ENDERECO}}</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 {{NOME_EMPRESA}}. Todos os direitos reservados.</p>
+        <p>Desenvolvido com cuidado e tecnologia</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- Botão WhatsApp flutuante -->
+  <a href="https://wa.me/55{{WHATSAPP}}" class="wa-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <div class="wa-pulse"></div>
+    <i data-lucide="message-circle" style="width:26px;height:26px;position:relative;z-index:1;"></i>
+  </a>
+
+
+  <!-- ============================================================
+       SCRIPTS
+  ============================================================ -->
+  <script>
+    // Init icons
+    document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+
+    // Header scroll
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // Mobile menu
+    function toggleMenu() {
+      document.getElementById('mobileNav').classList.toggle('open');
+    }
+    window.addEventListener('scroll', () => {
+      document.getElementById('mobileNav').classList.remove('open');
+    }, { passive: true });
+
+    // Scroll animations com stagger por grupo
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const siblings = Array.from(el.parentElement.children).filter(c => c.classList.contains('reveal'));
+        const idx = siblings.indexOf(el);
+        const delay = idx * 85;
+        setTimeout(() => el.classList.add('visible'), delay);
+        obs.unobserve(el);
+      });
+    }, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+
+</body>
+</html>

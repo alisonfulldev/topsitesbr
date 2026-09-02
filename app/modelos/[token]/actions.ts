@@ -127,3 +127,18 @@ export async function checkoutAction(
 
   return { paymentUrl }
 }
+
+export async function chooseTemplateAction(
+  token: string,
+  templateNum: number,
+): Promise<{ ok?: boolean; error?: string }> {
+  const presentation = await prisma.templatePresentation.findUnique({ where: { token } })
+  if (!presentation || presentation.status === 'cancelado') return { error: 'Link inválido.' }
+
+  await prisma.templatePresentation.update({
+    where: { id: presentation.id },
+    data: { chosenTemplate: templateNum },
+  })
+
+  return { ok: true }
+}

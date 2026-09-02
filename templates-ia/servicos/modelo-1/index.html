@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{NOME_EMPRESA}}</title>
+  <meta name="description" content="{{SLOGAN}}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+
+  <style>
+    /* ============================================================
+       RESET & TOKENS
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:      #0D9488;
+      --teal-600:  #0F766E;
+      --teal-100:  #CCFBF1;
+      --teal-50:   #F0FDFA;
+      --dark:      #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50:  #F8FAFC;
+      --white:     #FFFFFF;
+      --wa:        #25D366;
+
+      --ff-head: 'DM Sans', system-ui, sans-serif;
+      --ff-body: 'Inter', system-ui, sans-serif;
+
+      --shadow-sm: 0 1px 8px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.11);
+      --shadow-teal: 0 6px 24px rgba(13,148,136,0.22);
+
+      --r:    10px;
+      --r-lg: 18px;
+      --tr:   0.26s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ff-body);
+      color: var(--slate-700);
+      background: var(--white);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+    a   { text-decoration: none; color: inherit; }
+    ul  { list-style: none; }
+
+    /* ============================================================
+       SCROLL ANIMATIONS
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.from-left  { transform: translateX(-28px); }
+    .reveal.from-right { transform: translateX(28px); }
+    .reveal.visible    { opacity: 1; transform: none; }
+
+    /* ============================================================
+       BOTÕES
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 24px;
+      border-radius: var(--r);
+      font-family: var(--ff-head);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--tr);
+      white-space: nowrap;
+    }
+
+    .btn-teal {
+      background: var(--teal);
+      color: var(--white);
+      box-shadow: var(--shadow-teal);
+    }
+    .btn-teal:hover {
+      background: var(--teal-600);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(13,148,136,0.30);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--teal);
+      border-color: var(--teal);
+    }
+    .btn-outline:hover { background: var(--teal); color: var(--white); }
+
+    .btn-dark {
+      background: var(--dark);
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(15,23,42,0.20);
+    }
+    .btn-dark:hover { background: var(--slate-700); transform: translateY(-1px); }
+
+    .btn-outline-white {
+      background: transparent;
+      color: var(--white);
+      border-color: rgba(255,255,255,0.50);
+    }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.12); border-color: var(--white); }
+
+    .btn-wa {
+      background: var(--wa);
+      color: var(--white);
+      box-shadow: 0 4px 16px rgba(37,211,102,0.28);
+    }
+    .btn-wa:hover { background: #1ebb58; transform: translateY(-1px); }
+
+    /* ============================================================
+       LAYOUT
+    ============================================================ */
+    .container {
+      max-width: 1120px;
+      margin-inline: auto;
+      padding-inline: 24px;
+    }
+
+    .section      { padding: 64px 0; }
+    .section-alt  { background: var(--slate-50); }
+    .section-dark { background: var(--dark); }
+    .section-teal { background: var(--teal); }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--ff-head);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+    .section-dark .chip { color: rgba(255,255,255,0.55); }
+    .section-teal .chip { color: rgba(255,255,255,0.80); }
+
+    .h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.75rem, 4vw, 2.6rem);
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.18;
+      letter-spacing: -0.4px;
+      margin-bottom: 14px;
+    }
+    .section-dark .h2 { color: var(--white); }
+    .section-teal .h2 { color: var(--white); }
+
+    .sub {
+      font-size: 1rem;
+      color: var(--slate-500);
+      max-width: 540px;
+      line-height: 1.8;
+    }
+    .section-dark .sub { color: rgba(255,255,255,0.55); }
+    .section-teal .sub { color: rgba(255,255,255,0.80); }
+
+    .sh { margin-bottom: 44px; }
+    .sh.center { text-align: center; }
+    .sh.center .sub { margin-inline: auto; }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .header {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline: 0;
+      z-index: 900;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-inline: 24px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--slate-200);
+      transition: box-shadow var(--tr);
+    }
+    .header.scrolled { box-shadow: var(--shadow-md); }
+
+    /* ============================================================
+       LOGO — CSS puro, sem JS
+    ============================================================ */
+    .logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .logo-img {
+      display: none;
+      height: 38px;
+      width: auto;
+      max-width: 150px;
+      object-fit: contain;
+    }
+    .logo-wrap.has-logo .logo-img  { display: block; }
+    .logo-wrap.has-logo .logo-text { display: none; }
+
+    .logo-text {
+      font-family: var(--ff-head);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .logo-text em { font-style: normal; color: var(--teal); }
+
+    .nav {
+      display: none;
+      align-items: center;
+      gap: 28px;
+    }
+    .nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--slate-700);
+      transition: color var(--tr);
+    }
+    .nav a:hover { color: var(--teal); }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--dark);
+      border-radius: 2px;
+      transition: transform 0.26s ease, opacity 0.26s ease;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 68px;
+      inset-inline: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-md);
+      padding: 16px 24px 24px;
+      flex-direction: column;
+      gap: 0;
+      z-index: 899;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      padding: 13px 0;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--slate-700);
+      border-bottom: 1px solid var(--slate-200);
+      transition: color var(--tr);
+    }
+    .mobile-nav a:hover { color: var(--teal); }
+    .mobile-nav a:last-of-type { border-bottom: none; }
+    .mobile-nav .btn {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    /* ============================================================
+       HERO — split: conteúdo esquerda | foto direita
+       Mobile: texto em cima, foto embaixo
+    ============================================================ */
+    .hero {
+      margin-top: 68px;
+      background: var(--white);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: calc(100svh - 68px);
+    }
+
+    .hero-content {
+      order: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 52px 24px 40px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--teal-50);
+      border: 1px solid var(--teal-100);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-family: var(--ff-head);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+      width: fit-content;
+    }
+
+    .hero-h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(2.2rem, 7vw, 4rem);
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.1;
+      letter-spacing: -0.6px;
+      margin-bottom: 16px;
+    }
+    .hero-h1 span { color: var(--teal); }
+
+    .hero-slogan {
+      font-size: clamp(1rem, 2vw, 1.125rem);
+      color: var(--slate-500);
+      line-height: 1.8;
+      max-width: 480px;
+      margin-bottom: 32px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    /* Linha de prova social no hero */
+    .hero-proof {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .hero-proof-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.8125rem;
+      color: var(--slate-500);
+      font-weight: 500;
+    }
+    .hero-proof-item svg { color: var(--teal); flex-shrink: 0; }
+
+    /* Coluna visual */
+    .hero-visual {
+      order: 2;
+      position: relative;
+      min-height: 280px;
+      overflow: hidden;
+      background: var(--slate-100);
+    }
+
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* Badge flutuante sobre a foto — oculto em mobile */
+    .hero-badge-float {
+      display: none;
+      position: absolute;
+      bottom: 28px;
+      left: 28px;
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-lg);
+      border-left: 4px solid var(--teal);
+    }
+    .hero-badge-float strong {
+      display: block;
+      font-family: var(--ff-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1;
+    }
+    .hero-badge-float span {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--slate-500);
+      margin-top: 3px;
+    }
+
+    /* ============================================================
+       FAIXA DE STATS
+    ============================================================ */
+    .stats-strip {
+      background: var(--dark);
+      padding: 20px 0;
+    }
+    .stats-strip-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px 48px;
+    }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .stat-item-num {
+      font-family: var(--ff-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-item-label {
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.50);
+      line-height: 1.3;
+    }
+    .stat-divider {
+      width: 1px;
+      height: 32px;
+      background: rgba(255,255,255,0.10);
+    }
+
+    /* ============================================================
+       SOBRE
+    ============================================================ */
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .sobre-photo {
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .sobre-photo img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .sobre-text {
+      font-size: 1rem;
+      color: var(--slate-500);
+      line-height: 1.85;
+      margin-bottom: 28px;
+    }
+
+    /* ============================================================
+       SERVIÇOS
+       Bloco repetível: copie/cole .srv-card para cada serviço.
+       Remova cards não utilizados.
+       Ícones sugeridos: wrench, tool, zap, star, check-circle,
+       package, truck, phone, monitor, users, scissors, paw-print
+    ============================================================ */
+    .srv-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .srv-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--r-lg);
+      padding: 28px 24px;
+      transition: box-shadow var(--tr), border-color var(--tr), transform var(--tr);
+    }
+    .srv-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--teal-100);
+      transform: translateY(-3px);
+    }
+
+    .srv-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--teal-50);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal);
+      margin-bottom: 18px;
+      transition: background var(--tr);
+    }
+    .srv-card:hover .srv-icon { background: var(--teal); color: var(--white); }
+
+    .srv-card h3 {
+      font-family: var(--ff-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .srv-card p {
+      font-size: 0.875rem;
+      color: var(--slate-500);
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       DIFERENCIAIS
+    ============================================================ */
+    .diffs-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .diff-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: var(--r-lg);
+      padding: 28px 24px;
+      transition: background var(--tr), border-color var(--tr);
+    }
+    .diff-card:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(13,148,136,0.40);
+    }
+
+    .diff-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(13,148,136,0.12);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2DD4BF;
+      margin-bottom: 18px;
+    }
+
+    .diff-card h3 {
+      font-family: var(--ff-head);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .diff-card p { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.75; }
+
+    /* ============================================================
+       DEPOIMENTOS
+       Remova o 3º .testi-card se houver apenas 2 depoimentos.
+    ============================================================ */
+    .testi-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .testi-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--r-lg);
+      padding: 28px;
+      transition: box-shadow var(--tr);
+    }
+    .testi-card:hover { box-shadow: var(--shadow-md); }
+
+    .testi-stars {
+      display: flex;
+      gap: 3px;
+      color: #F59E0B;
+      margin-bottom: 16px;
+    }
+
+    .testi-text {
+      font-size: 0.9375rem;
+      font-style: italic;
+      color: var(--slate-700);
+      line-height: 1.78;
+      margin-bottom: 20px;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--slate-200);
+    }
+    .testi-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .testi-name { font-size: 0.875rem; font-weight: 700; color: var(--dark); }
+    .testi-role { font-size: 0.75rem; color: var(--slate-500); margin-top: 2px; }
+
+    /* ============================================================
+       BANNER CTA
+    ============================================================ */
+    .cta-banner {
+      background: var(--teal);
+      padding: 56px 0;
+    }
+    .cta-banner-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .cta-banner h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .cta-banner p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.75;
+      max-width: 500px;
+    }
+    .cta-banner-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* ============================================================
+       CONTATO
+    ============================================================ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+
+    .contact-list { display: flex; flex-direction: column; gap: 18px; }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .contact-item-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--teal-50);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal);
+      flex-shrink: 0;
+    }
+    .contact-item strong {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--dark);
+      margin-bottom: 3px;
+    }
+    .contact-item span,
+    .contact-item a { font-size: 0.9375rem; color: var(--slate-500); }
+    .contact-item a:hover { color: var(--teal); }
+
+    .map-box {
+      margin-top: 20px;
+      height: 160px;
+      background: var(--slate-100);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--r);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: var(--slate-500);
+    }
+    .map-box p { font-size: 0.8125rem; text-align: center; padding-inline: 16px; }
+
+    .contact-cta-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--r-lg);
+      padding: 32px 28px;
+    }
+    .contact-cta-box h3 {
+      font-family: var(--ff-head);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .contact-cta-box p {
+      font-size: 0.9375rem;
+      color: var(--slate-500);
+      line-height: 1.75;
+      margin-bottom: 22px;
+    }
+    .contact-cta-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .social-block {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--slate-200);
+    }
+    .social-block p {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--slate-500);
+      margin-bottom: 10px;
+    }
+    .social-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--slate-700);
+      transition: background var(--tr), color var(--tr), border-color var(--tr);
+    }
+    .social-link:hover { background: var(--teal); color: var(--white); border-color: var(--teal); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.45);
+      padding: 52px 0 24px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+
+    .footer-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .footer-logo-wrap .logo-img { height: 32px; max-width: 130px; }
+
+    .footer-logo-text {
+      font-family: var(--ff-head);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .footer-logo-text em { font-style: normal; color: var(--teal); }
+
+    .footer-tagline {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.40);
+      line-height: 1.7;
+      max-width: 270px;
+      margin-bottom: 18px;
+    }
+
+    .footer-socials { display: flex; gap: 8px; }
+    .footer-socials a {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.45);
+      transition: background var(--tr), color var(--tr), border-color var(--tr);
+    }
+    .footer-socials a:hover { background: var(--teal); color: var(--white); border-color: var(--teal); }
+
+    .footer-col h4 {
+      font-family: var(--ff-head);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .footer-col li + li { margin-top: 8px; }
+    .footer-col a {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.40);
+      transition: color var(--tr);
+    }
+    .footer-col a:hover { color: var(--teal); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 20px;
+      font-size: 0.75rem;
+      text-align: center;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ============================================================
+       FLOATING WHATSAPP
+    ============================================================ */
+    .wa-float {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 800;
+      width: 54px; height: 54px;
+      background: var(--wa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      box-shadow: 0 4px 20px rgba(37,211,102,0.40);
+      transition: transform var(--tr), box-shadow var(--tr);
+    }
+    .wa-float:hover { transform: scale(1.08); box-shadow: 0 8px 28px rgba(37,211,102,0.50); }
+    .wa-pulse {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: var(--wa);
+      animation: waPulse 2.4s ease-out infinite;
+    }
+    @keyframes waPulse {
+      0%   { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.85); opacity: 0; }
+    }
+
+    /* ============================================================
+       RESPONSIVE ≤ 480px
+    ============================================================ */
+    @media (max-width: 480px) {
+      .section { padding: 52px 0; }
+      .sh { margin-bottom: 32px; }
+
+      .hero-content { padding: 40px 24px 32px; }
+      .hero-h1 { font-size: 2rem; }
+      .hero-slogan { margin-bottom: 24px; font-size: 0.9375rem; }
+      .hero-ctas { flex-direction: column; margin-bottom: 28px; }
+      .hero-ctas .btn { width: 100%; justify-content: center; }
+      .hero-proof { gap: 12px; }
+
+      .sobre-photo img { height: 220px; }
+
+      .testi-card { padding: 20px 16px; }
+
+      .contact-cta-box { padding: 24px 18px; }
+      .cta-banner { padding: 44px 0; }
+    }
+
+    /* ============================================================
+       RESPONSIVE ≥ 768px
+    ============================================================ */
+    @media (min-width: 768px) {
+      .section { padding: 88px 0; }
+      .sh { margin-bottom: 52px; }
+
+      .header { padding-inline: 40px; }
+      .hamburger { display: none; }
+      .nav { display: flex; }
+
+      /* Hero */
+      .hero-grid { grid-template-columns: 1fr 1fr; }
+      .hero-content { order: 1; padding: 64px 48px 64px 0; }
+      .hero-visual { order: 2; min-height: auto; }
+      .hero-badge-float { display: block; }
+
+      /* Sobre */
+      .sobre-grid { grid-template-columns: 1fr 1fr; }
+      .sobre-photo img { height: 420px; }
+
+      /* Serviços */
+      .srv-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* Diferenciais */
+      .diffs-grid { grid-template-columns: repeat(3, 1fr); }
+
+      /* Depoimentos */
+      .testi-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* Banner CTA */
+      .cta-banner-inner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .cta-banner-inner > div:first-child { flex: 1; }
+
+      /* Contato */
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+      .contact-cta-btns { flex-direction: row; flex-wrap: wrap; }
+
+      /* Footer */
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr; }
+      .footer-bottom { display: flex; justify-content: space-between; text-align: left; }
+
+      /* Stats strip */
+      .stat-divider { display: block; }
+    }
+
+    /* ============================================================
+       RESPONSIVE ≥ 1024px
+    ============================================================ */
+    @media (min-width: 1024px) {
+      .section { padding: 110px 0; }
+      .header { padding-inline: 60px; }
+
+      .hero-grid { grid-template-columns: 55fr 45fr; }
+      .hero-content { padding: 80px 64px 80px 0; }
+
+      .srv-grid { grid-template-columns: repeat(3, 1fr); }
+      .testi-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="header" id="header">
+    <!--
+      SEM logotipo → deixe como está (exibe texto).
+      COM logotipo → adicione class "has-logo" ao .logo-wrap abaixo
+      E ao .footer-logo-wrap no rodapé.
+    -->
+    <a href="#" class="logo-wrap">
+      <img class="logo-img" src="{{LOGO}}" alt="{{NOME_EMPRESA}}" loading="eager">
+      <span class="logo-text">{{NOME_EMPRESA}}</span>
+    </a>
+
+    <nav class="nav">
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#depoimentos">Avaliações</a>
+      <a href="#contato">Contato</a>
+      <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-teal" target="_blank" rel="noopener"
+         style="padding:9px 20px;font-size:0.875rem;">
+        <i data-lucide="message-circle" style="width:15px;height:15px;"></i>
+        WhatsApp
+      </a>
+    </nav>
+
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#sobre"        onclick="toggleMenu()">Sobre</a>
+    <a href="#servicos"     onclick="toggleMenu()">Serviços</a>
+    <a href="#depoimentos"  onclick="toggleMenu()">Avaliações</a>
+    <a href="#contato"      onclick="toggleMenu()">Contato</a>
+    <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-teal" target="_blank" rel="noopener" onclick="toggleMenu()">
+      <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+      Falar no WhatsApp
+    </a>
+  </nav>
+
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section class="hero" id="inicio">
+    <div class="container">
+      <div class="hero-grid">
+
+        <!-- Conteúdo -->
+        <div class="hero-content reveal from-left">
+          <div class="hero-eyebrow">
+            <i data-lucide="zap" style="width:12px;height:12px;"></i>
+            {{AREA_ATUACAO}}
+          </div>
+
+          <h1 class="hero-h1">{{NOME_EMPRESA}}</h1>
+          <p class="hero-slogan">{{SLOGAN}}</p>
+
+          <div class="hero-ctas">
+            <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-teal" target="_blank" rel="noopener">
+              <i data-lucide="message-circle" style="width:17px;height:17px;"></i>
+              Falar no WhatsApp
+            </a>
+            <a href="#servicos" class="btn btn-outline">
+              Nossos Serviços
+            </a>
+          </div>
+
+          <div class="hero-proof">
+            <div class="hero-proof-item">
+              <i data-lucide="check-circle" style="width:16px;height:16px;"></i>
+              {{CREDENCIAL_1}}
+            </div>
+            <div class="hero-proof-item">
+              <i data-lucide="shield-check" style="width:16px;height:16px;"></i>
+              {{CREDENCIAL_2}}
+            </div>
+            <div class="hero-proof-item">
+              <i data-lucide="clock" style="width:16px;height:16px;"></i>
+              {{CREDENCIAL_3}}
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual -->
+        <div class="hero-visual">
+          <img
+            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=900&h=1000&q=88&auto=format&fit=crop&crop=center"
+            alt="{{NOME_EMPRESA}}"
+            loading="eager"
+          >
+          <div class="hero-badge-float">
+            <strong>{{ANOS_EXPERIENCIA}}+</strong>
+            <span>anos de experiência</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FAIXA DE STATS
+  ============================================================ -->
+  <div class="stats-strip">
+    <div class="container">
+      <div class="stats-strip-inner reveal">
+        <div class="stat-item">
+          <div>
+            <div class="stat-item-num">{{ANOS_EXPERIENCIA}}+</div>
+            <div class="stat-item-label">Anos de experiência</div>
+          </div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div>
+            <div class="stat-item-num">{{CASOS_ATENDIDOS}}+</div>
+            <div class="stat-item-label">Clientes atendidos</div>
+          </div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div>
+            <div class="stat-item-num">{{TAXA_SUCESSO}}%</div>
+            <div class="stat-item-label">Satisfação</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       SOBRE
+  ============================================================ -->
+  <section class="section" id="sobre">
+    <div class="container">
+      <div class="sobre-grid">
+
+        <div class="sobre-photo reveal from-left">
+          <img
+            src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=700&q=88&auto=format&fit=crop&crop=center"
+            alt="Sobre — {{NOME_EMPRESA}}"
+            loading="lazy"
+          >
+        </div>
+
+        <div class="reveal from-right">
+          <div class="chip">
+            <i data-lucide="info" style="width:11px;height:11px;"></i>
+            Sobre nós
+          </div>
+          <h2 class="h2">Quem somos</h2>
+          <p class="sobre-text">{{SOBRE_TEXTO}}</p>
+          <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-teal" target="_blank" rel="noopener">
+            <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+            Falar conosco
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SERVIÇOS
+       Bloco repetível: copie/cole .srv-card para cada serviço.
+       Ícones sugeridos (Lucide): wrench, tool, zap, star, package,
+       truck, phone, monitor, users, scissors, paw-print, home,
+       settings, cpu, wifi, heart, briefcase, check-circle
+  ============================================================ -->
+  <section class="section section-alt" id="servicos">
+    <div class="container">
+
+      <div class="sh center reveal">
+        <div class="chip">
+          <i data-lucide="grid" style="width:11px;height:11px;"></i>
+          O que fazemos
+        </div>
+        <h2 class="h2">Nossos Serviços</h2>
+        <p class="sub">Soluções completas para você e seu negócio, com qualidade e agilidade.</p>
+      </div>
+
+      <div class="srv-grid">
+
+        <!-- SERVIÇO 1 -->
+        <div class="srv-card reveal">
+          <div class="srv-icon">
+            <i data-lucide="zap" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>{{SERVICO_1}}</h3>
+          <p>{{SERVICO_1_DESC}}</p>
+        </div>
+
+        <!-- SERVIÇO 2 -->
+        <div class="srv-card reveal">
+          <div class="srv-icon">
+            <i data-lucide="settings" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>{{SERVICO_2}}</h3>
+          <p>{{SERVICO_2_DESC}}</p>
+        </div>
+
+        <!-- SERVIÇO 3 -->
+        <div class="srv-card reveal">
+          <div class="srv-icon">
+            <i data-lucide="package" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>{{SERVICO_3}}</h3>
+          <p>{{SERVICO_3_DESC}}</p>
+        </div>
+
+        <!-- SERVIÇO 4 — Remova se não houver -->
+        <div class="srv-card reveal">
+          <div class="srv-icon">
+            <i data-lucide="users" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>{{SERVICO_4}}</h3>
+          <p>{{SERVICO_4_DESC}}</p>
+        </div>
+
+        <!-- SERVIÇO 5 — Remova se não houver -->
+        <div class="srv-card reveal">
+          <div class="srv-icon">
+            <i data-lucide="star" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>{{SERVICO_5}}</h3>
+          <p>{{SERVICO_5_DESC}}</p>
+        </div>
+
+        <!-- SERVIÇO 6 — Remova se não houver -->
+        <div class="srv-card reveal">
+          <div class="srv-icon">
+            <i data-lucide="check-circle" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>{{SERVICO_6}}</h3>
+          <p>{{SERVICO_6_DESC}}</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       DIFERENCIAIS
+  ============================================================ -->
+  <section class="section section-dark" id="diferenciais">
+    <div class="container">
+
+      <div class="sh center reveal">
+        <div class="chip">
+          <i data-lucide="award" style="width:11px;height:11px;"></i>
+          Por que escolher
+        </div>
+        <h2 class="h2">Nossos Diferenciais</h2>
+        <p class="sub">O que nos torna a melhor escolha para você.</p>
+      </div>
+
+      <div class="diffs-grid">
+
+        <div class="diff-card reveal">
+          <div class="diff-icon">
+            <i data-lucide="award" style="width:22px;height:22px;"></i>
+          </div>
+          <h3>{{DIFERENCIAL_1}}</h3>
+          <p>{{DIFERENCIAL_1_DESC}}</p>
+        </div>
+
+        <div class="diff-card reveal">
+          <div class="diff-icon">
+            <i data-lucide="clock" style="width:22px;height:22px;"></i>
+          </div>
+          <h3>{{DIFERENCIAL_2}}</h3>
+          <p>{{DIFERENCIAL_2_DESC}}</p>
+        </div>
+
+        <div class="diff-card reveal">
+          <div class="diff-icon">
+            <i data-lucide="shield-check" style="width:22px;height:22px;"></i>
+          </div>
+          <h3>{{DIFERENCIAL_3}}</h3>
+          <p>{{DIFERENCIAL_3_DESC}}</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       DEPOIMENTOS
+       Remova o 3º .testi-card se houver apenas 2 depoimentos.
+  ============================================================ -->
+  <section class="section" id="depoimentos">
+    <div class="container">
+
+      <div class="sh center reveal">
+        <div class="chip">
+          <i data-lucide="heart" style="width:11px;height:11px;"></i>
+          Avaliações
+        </div>
+        <h2 class="h2">O que dizem nossos clientes</h2>
+      </div>
+
+      <div class="testi-grid">
+
+        <!-- DEPOIMENTO 1 -->
+        <div class="testi-card reveal">
+          <div class="testi-stars">
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+          </div>
+          <p class="testi-text">{{DEPOIMENTO_1}}</p>
+          <div class="testi-author">
+            <div class="testi-avatar">{{DEPOIMENTO_1_AUTOR_INICIAL}}</div>
+            <div>
+              <div class="testi-name">{{DEPOIMENTO_1_AUTOR}}</div>
+              <div class="testi-role">Cliente</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEPOIMENTO 2 -->
+        <div class="testi-card reveal">
+          <div class="testi-stars">
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+          </div>
+          <p class="testi-text">{{DEPOIMENTO_2}}</p>
+          <div class="testi-author">
+            <div class="testi-avatar">{{DEPOIMENTO_2_AUTOR_INICIAL}}</div>
+            <div>
+              <div class="testi-name">{{DEPOIMENTO_2_AUTOR}}</div>
+              <div class="testi-role">Cliente</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEPOIMENTO 3 — Remova se não houver -->
+        <div class="testi-card reveal">
+          <div class="testi-stars">
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+            <i data-lucide="star" style="width:14px;height:14px;fill:currentColor;"></i>
+          </div>
+          <p class="testi-text">{{DEPOIMENTO_3}}</p>
+          <div class="testi-author">
+            <div class="testi-avatar">{{DEPOIMENTO_3_AUTOR_INICIAL}}</div>
+            <div>
+              <div class="testi-name">{{DEPOIMENTO_3_AUTOR}}</div>
+              <div class="testi-role">Cliente</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       BANNER CTA
+  ============================================================ -->
+  <section class="cta-banner">
+    <div class="container">
+      <div class="cta-banner-inner reveal">
+        <div>
+          <h2>Pronto para começar?</h2>
+          <p>Entre em contato agora e descubra como podemos te ajudar. Atendimento rápido e sem burocracia.</p>
+        </div>
+        <div class="cta-banner-btns">
+          <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-wa" target="_blank" rel="noopener">
+            <i data-lucide="message-circle" style="width:18px;height:18px;"></i>
+            Falar no WhatsApp
+          </a>
+          <a href="tel:{{TELEFONE}}" class="btn btn-outline-white">
+            <i data-lucide="phone" style="width:16px;height:16px;"></i>
+            Ligar agora
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CONTATO
+  ============================================================ -->
+  <section class="section" id="contato">
+    <div class="container">
+
+      <div class="sh reveal">
+        <div class="chip">
+          <i data-lucide="map-pin" style="width:11px;height:11px;"></i>
+          Fale conosco
+        </div>
+        <h2 class="h2">Entre em Contato</h2>
+        <p class="sub">Estamos prontos para atender você com agilidade e qualidade.</p>
+      </div>
+
+      <div class="contact-grid">
+
+        <div class="reveal from-left">
+          <div class="contact-list">
+
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <i data-lucide="phone" style="width:18px;height:18px;"></i>
+              </div>
+              <div>
+                <strong>Telefone</strong>
+                <a href="tel:{{TELEFONE}}">{{TELEFONE}}</a>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <i data-lucide="message-circle" style="width:18px;height:18px;"></i>
+              </div>
+              <div>
+                <strong>WhatsApp</strong>
+                <a href="https://wa.me/55{{WHATSAPP}}" target="_blank" rel="noopener">{{WHATSAPP}}</a>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <i data-lucide="map-pin" style="width:18px;height:18px;"></i>
+              </div>
+              <div>
+                <strong>Endereço</strong>
+                <span>{{ENDERECO}}</span>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <i data-lucide="clock" style="width:18px;height:18px;"></i>
+              </div>
+              <div>
+                <strong>Horário</strong>
+                <span>{{HORARIO}}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="map-box">
+            <i data-lucide="map" style="width:26px;height:26px;opacity:0.4;"></i>
+            <p>{{ENDERECO}}</p>
+          </div>
+        </div>
+
+        <div class="contact-cta-box reveal from-right">
+          <h3>Vamos conversar?</h3>
+          <p>Fale com a gente agora pelo WhatsApp ou ligue. Retornamos rapidinho.</p>
+          <div class="contact-cta-btns">
+            <a href="https://wa.me/55{{WHATSAPP}}" class="btn btn-teal" target="_blank" rel="noopener">
+              <i data-lucide="message-circle" style="width:17px;height:17px;"></i>
+              Falar no WhatsApp
+            </a>
+            <a href="tel:{{TELEFONE}}" class="btn btn-outline">
+              <i data-lucide="phone" style="width:15px;height:15px;"></i>
+              Ligar agora
+            </a>
+          </div>
+
+          <!-- OPCIONAL: remova se não houver redes sociais -->
+          <div class="social-block">
+            <p>Nos siga nas redes</p>
+            <div class="social-links">
+              <!-- OPCIONAL: remova se não houver Instagram -->
+              <a href="https://instagram.com/{{INSTAGRAM}}" target="_blank" rel="noopener" class="social-link">
+                <i data-lucide="instagram" style="width:13px;height:13px;"></i>
+                Instagram
+              </a>
+              <!-- OPCIONAL: remova se não houver Facebook -->
+              <a href="https://facebook.com/{{FACEBOOK}}" target="_blank" rel="noopener" class="social-link">
+                <i data-lucide="facebook" style="width:13px;height:13px;"></i>
+                Facebook
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+
+        <div>
+          <!-- Adicione "has-logo" aqui quando houver logotipo -->
+          <div class="logo-wrap footer-logo-wrap">
+            <img class="logo-img" src="{{LOGO}}" alt="{{NOME_EMPRESA}}" loading="lazy">
+            <span class="footer-logo-text">{{NOME_EMPRESA}}</span>
+          </div>
+          <p class="footer-tagline">{{SLOGAN}}</p>
+          <div class="footer-socials">
+            <!-- OPCIONAL: remova se não houver Instagram -->
+            <a href="https://instagram.com/{{INSTAGRAM}}" target="_blank" rel="noopener" aria-label="Instagram">
+              <i data-lucide="instagram" style="width:15px;height:15px;"></i>
+            </a>
+            <!-- OPCIONAL: remova se não houver Facebook -->
+            <a href="https://facebook.com/{{FACEBOOK}}" target="_blank" rel="noopener" aria-label="Facebook">
+              <i data-lucide="facebook" style="width:15px;height:15px;"></i>
+            </a>
+            <a href="https://wa.me/55{{WHATSAPP}}" target="_blank" rel="noopener" aria-label="WhatsApp">
+              <i data-lucide="message-circle" style="width:15px;height:15px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Serviços</h4>
+          <ul>
+            <li><a href="#servicos">{{SERVICO_1}}</a></li>
+            <li><a href="#servicos">{{SERVICO_2}}</a></li>
+            <li><a href="#servicos">{{SERVICO_3}}</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contato</h4>
+          <ul>
+            <li><a href="tel:{{TELEFONE}}">{{TELEFONE}}</a></li>
+            <li><a href="https://wa.me/55{{WHATSAPP}}" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="#contato">{{HORARIO}}</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2025 {{NOME_EMPRESA}}. Todos os direitos reservados.</span>
+        <span>Desenvolvido com tecnologia</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       FLOATING WHATSAPP
+  ============================================================ -->
+  <a href="https://wa.me/55{{WHATSAPP}}" class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <div class="wa-pulse"></div>
+    <i data-lucide="message-circle" style="width:24px;height:24px;position:relative;z-index:1;"></i>
+  </a>
+
+
+  <!-- ============================================================
+       SCRIPTS
+  ============================================================ -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+
+    const header    = document.getElementById('header');
+    const mobileNav = document.getElementById('mobileNav');
+    const hamburger = document.getElementById('hamburger');
+
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+      if (mobileNav.classList.contains('open')) {
+        mobileNav.classList.remove('open');
+        hamburger.classList.remove('open');
+      }
+    }, { passive: true });
+
+    function toggleMenu() {
+      mobileNav.classList.toggle('open');
+      hamburger.classList.toggle('open');
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const siblings = Array.from(entry.target.parentElement.children)
+          .filter(c => c.classList.contains('reveal'));
+        const idx = siblings.indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('visible'), idx * 80);
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.10, rootMargin: '0px 0px -36px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

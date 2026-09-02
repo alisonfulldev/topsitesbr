@@ -13,13 +13,6 @@ export async function GET(
 ) {
   const slot = params.num === '2' ? 2 : 1
 
-  // Global template takes priority
-  const sysTemplate = await prisma.systemTemplate.findUnique({ where: { slot } })
-  if (sysTemplate) {
-    return new NextResponse(sysTemplate.html, { headers: HEADERS })
-  }
-
-  // Fallback: per-presentation HTML (legacy records)
   const presentation = await prisma.templatePresentation.findUnique({
     where: { token: params.token },
     select: { template1Html: true, template2Html: true, status: true },

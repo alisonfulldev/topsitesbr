@@ -708,15 +708,6 @@ enum TemplatePresentationStatus {
   cancelado
 }
 
-model SystemTemplate {
-  slot      Int      @id
-  name      String
-  html      String   @db.Text
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("system_templates")
-}
-
 model TemplatePresentation {
   id                  String                     @id @default(uuid())
   token               String                     @unique
@@ -737,6 +728,7 @@ model TemplatePresentation {
   subdomain           String?
   paymentUrl          String?                    @map("payment_url")
   paidAt              DateTime?                  @map("paid_at")
+  chosenTemplate      Int?                       @map("chosen_template")
   createdAt           DateTime                   @default(now()) @map("created_at")
   updatedAt           DateTime                   @updatedAt @map("updated_at")
 

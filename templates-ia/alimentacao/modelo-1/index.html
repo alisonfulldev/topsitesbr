@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{EMPRESA_NOME}} — {{AREA_ATUACAO}}</title>
+  <meta name="description" content="{{EMPRESA_SUBTITULO}}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --crimson:      #9B1C1C;
+      --crimson-dark: #7F1D1D;
+      --crimson-bg:   #FEF2F2;
+      --amber:        #D97706;
+      --amber-dark:   #B45309;
+      --amber-bg:     #FFFBEB;
+      --espresso:     #1C0900;
+      --espresso2:    #2D1600;
+      --espresso3:    #3D2010;
+      --warm-gray:    #78716C;
+      --cream:        #FFFBF5;
+      --cream2:       #FEF3E8;
+      --border:       #E8DDD5;
+      --white:        #FFFFFF;
+
+      --ff-head: 'Playfair Display', Georgia, serif;
+      --ff-body: 'Inter', sans-serif;
+
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 20px;
+
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+      --shadow-md: 0 4px 20px rgba(0,0,0,.10);
+      --shadow-lg: 0 12px 40px rgba(28,9,0,.18);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--ff-body); color: var(--espresso);
+      background: var(--cream); line-height: 1.6; overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    .container { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 20px; }
+    .section { padding: 72px 0; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: var(--r-md);
+      font-family: var(--ff-body); font-size: .9375rem; font-weight: 600;
+      cursor: pointer; border: none; transition: all .2s; white-space: nowrap;
+    }
+    .btn-crimson { background: var(--crimson); color: #fff; }
+    .btn-crimson:hover { background: var(--crimson-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(155,28,28,.4); }
+    .btn-amber { background: var(--amber); color: #fff; }
+    .btn-amber:hover { background: var(--amber-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(217,119,6,.4); }
+    .btn-white { background: #fff; color: var(--crimson); }
+    .btn-white:hover { background: var(--crimson-bg); transform: translateY(-1px); }
+    .btn-outline-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; border-radius: var(--r-md);
+      font-family: var(--ff-body); font-size: .9375rem; font-weight: 600;
+      border: 1.5px solid rgba(255,255,255,.55); color: #fff;
+      background: transparent; cursor: pointer; transition: all .2s;
+    }
+    .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+    .btn-outline-dark {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; border-radius: var(--r-md);
+      font-family: var(--ff-body); font-size: .9375rem; font-weight: 600;
+      border: 1.5px solid var(--border); color: var(--espresso);
+      background: transparent; cursor: pointer; transition: border-color .2s;
+    }
+    .btn-outline-dark:hover { border-color: var(--espresso); }
+    .btn-ghost-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; border-radius: var(--r-md);
+      font-family: var(--ff-body); font-size: .9375rem; font-weight: 600;
+      border: 1.5px solid rgba(255,255,255,.45); color: #fff;
+      background: transparent; cursor: pointer; transition: all .2s;
+    }
+    .btn-ghost-white:hover { border-color: #fff; background: rgba(255,255,255,.08); }
+
+    /* ── Labels e headings ── */
+    .sec-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--ff-body); font-size: .75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--crimson); margin-bottom: 10px;
+    }
+    .sec-label-amber { color: var(--amber); }
+    .sec-label-white { color: rgba(255,255,255,.6); }
+    .sec-h2 {
+      font-family: var(--ff-head); font-size: 2.125rem; font-weight: 700;
+      line-height: 1.18; color: var(--espresso); margin-bottom: 16px;
+      overflow-wrap: anywhere;
+    }
+    .sec-h2-white { color: #fff; }
+    .sec-lead {
+      color: var(--warm-gray); font-size: 1.0625rem; line-height: 1.75;
+      max-width: 560px; overflow-wrap: anywhere;
+    }
+    .sec-lead-white { color: rgba(255,255,255,.7); }
+
+    /* ──────────────────────
+       HEADER
+    ────────────────────── */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--espresso);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      transition: box-shadow .25s;
+    }
+    .header.scrolled { box-shadow: 0 4px 28px rgba(0,0,0,.4); }
+    .header-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+    }
+
+    /* Logo */
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .logo-wrap img { height: 38px; width: auto; }
+    .logo-text {
+      font-family: var(--ff-head); font-weight: 700; font-size: 1.25rem;
+      color: #fff; letter-spacing: -.01em; overflow-wrap: anywhere;
+    }
+    .logo-text span { color: var(--amber); }
+    .logo-wrap.has-logo .logo-text { display: none; }
+    .logo-wrap:not(.has-logo) img { display: none; }
+
+    .nav { display: none; }
+    .nav-list { display: flex; gap: 28px; }
+    .nav-link {
+      font-family: var(--ff-body); font-size: .875rem; font-weight: 500;
+      color: rgba(255,255,255,.55); transition: color .2s;
+    }
+    .nav-link:hover { color: var(--amber); }
+    .header-cta { display: none; }
+
+    /* Hamburger */
+    .hamburger {
+      display: flex; flex-direction: column; justify-content: center;
+      gap: 5px; width: 36px; height: 36px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; height: 2px; background: rgba(255,255,255,.8);
+      border-radius: 2px; transition: all .25s; transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile overlay */
+    .nav-overlay {
+      display: none; position: fixed;
+      inset: 68px 0 0 0; z-index: 99;
+      background: var(--espresso2);
+      flex-direction: column; padding: 28px 24px; gap: 4px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .nav-overlay.open { display: flex; }
+    .nav-overlay .nav-link {
+      font-size: 1.0625rem; padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      color: rgba(255,255,255,.75);
+    }
+    .nav-overlay .btn-amber { margin-top: 16px; align-self: flex-start; }
+
+    /* ──────────────────────
+       HERO — full-bleed foto
+    ────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100svh; padding-top: 68px;
+      display: flex; flex-direction: column;
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+      background-color: var(--espresso); /* fallback enquanto a foto não carrega */
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(28,9,0,.38) 0%,
+        rgba(28,9,0,.65) 50%,
+        rgba(28,9,0,.88) 100%
+      );
+    }
+    .hero-body {
+      position: relative; z-index: 1;
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 52px 20px 60px;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(217,119,6,.2); border: 1px solid rgba(217,119,6,.45);
+      border-radius: 999px; padding: 5px 16px;
+      font-family: var(--ff-body); font-size: .75rem; font-weight: 600;
+      color: #FCD34D; text-transform: uppercase; letter-spacing: .1em;
+      margin-bottom: 20px;
+    }
+    .hero-h1 {
+      font-family: var(--ff-head); font-size: 2.5rem; font-weight: 800;
+      line-height: 1.1; color: #fff; max-width: 720px;
+      margin-bottom: 16px; overflow-wrap: anywhere;
+      text-shadow: 0 2px 16px rgba(0,0,0,.35);
+    }
+    .hero-h1 em { font-style: italic; color: #FCD34D; }
+    .hero-sub {
+      color: rgba(255,255,255,.72); font-size: 1.0625rem;
+      line-height: 1.7; max-width: 520px; margin-bottom: 36px;
+      overflow-wrap: anywhere;
+    }
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+    /* ── Stats bar ── */
+    .hero-stats {
+      position: relative; z-index: 1;
+      background: rgba(28,9,0,.75); backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .hero-stats-inner {
+      display: flex; flex-direction: column; /* mobile: coluna — BOAS-PRATICAS §3 */
+    }
+    .h-stat {
+      padding: 18px 24px;
+      display: flex; flex-direction: column; gap: 3px; /* valor em cima, label embaixo */
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .h-stat:last-child { border-bottom: none; }
+    .h-stat-val {
+      font-family: var(--ff-head); font-size: 1.875rem; font-weight: 800;
+      color: var(--amber); line-height: 1;
+      overflow-wrap: anywhere; /* placeholder longo não escapa */
+    }
+    .h-stat-label {
+      font-size: .75rem; color: rgba(255,255,255,.5);
+      text-transform: uppercase; letter-spacing: .07em;
+    }
+
+    /* ──────────────────────
+       FEATURES STRIP
+    ────────────────────── */
+    .features { background: var(--espresso2); padding: 0; }
+    .features-grid {
+      display: flex; flex-direction: column;
+    }
+    .feat-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 24px 0; border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .feat-item:last-child { border-bottom: none; }
+    .feat-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: rgba(217,119,6,.15); border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--amber);
+    }
+    .feat-title {
+      font-family: var(--ff-head); font-size: 1rem; font-weight: 700;
+      color: #fff; margin-bottom: 4px; overflow-wrap: anywhere;
+    }
+    .feat-desc {
+      font-size: .9rem; color: rgba(255,255,255,.5);
+      line-height: 1.6; overflow-wrap: anywhere;
+    }
+
+    /* ──────────────────────
+       SOBRE
+    ────────────────────── */
+    .sobre { background: var(--cream); }
+    .sobre-grid {
+      display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center;
+    }
+    .sobre-grid > * { min-width: 0; }
+    .sobre-visual { position: relative; }
+    .sobre-photo {
+      width: 100%; height: 320px; object-fit: cover;
+      border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+    }
+    .sobre-badge {
+      position: absolute; bottom: 16px; right: 16px;
+      background: var(--crimson); color: #fff;
+      border-radius: var(--r-md); padding: 12px 18px;
+      font-family: var(--ff-head); text-align: center;
+      box-shadow: 0 8px 28px rgba(155,28,28,.4);
+    }
+    .sobre-badge b { display: block; font-size: 1.625rem; font-weight: 800; }
+    .sobre-badge span { font-size: .75rem; opacity: .9; }
+    .sobre-body {
+      color: var(--warm-gray); font-size: .9375rem; line-height: 1.8;
+      margin-bottom: 24px; overflow-wrap: anywhere;
+    }
+    .sobre-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+    .sobre-check { display: flex; align-items: flex-start; gap: 10px; }
+    .check-dot {
+      flex-shrink: 0; width: 22px; height: 22px;
+      background: var(--crimson-bg); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--crimson); margin-top: 1px;
+    }
+    .check-label {
+      font-size: .9375rem; color: var(--warm-gray);
+      line-height: 1.6; overflow-wrap: anywhere;
+    }
+    .check-label strong { color: var(--espresso); }
+    .sobre-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ──────────────────────
+       CARDÁPIO
+    ────────────────────── */
+    .cardapio { background: var(--espresso); }
+    .cardapio-head { text-align: center; margin-bottom: 48px; }
+    .cardapio-head .sec-lead-white { margin: 0 auto; }
+    .pratos-grid {
+      display: grid; grid-template-columns: 1fr; gap: 20px;
+    }
+    .pratos-grid > * { min-width: 0; }
+    .prato-card {
+      background: var(--espresso2);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--r-lg); overflow: hidden;
+      transition: transform .22s, box-shadow .22s;
+    }
+    .prato-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.4); }
+    .prato-photo-wrap { position: relative; overflow: hidden; }
+    .prato-photo {
+      width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block;
+      transition: transform .45s;
+    }
+    .prato-card:hover .prato-photo { transform: scale(1.05); }
+    .prato-tag {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--amber); color: #fff;
+      border-radius: 999px; padding: 3px 10px;
+      font-size: .7rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .prato-body { padding: 18px 20px 20px; }
+    .prato-nome {
+      font-family: var(--ff-head); font-size: 1.0625rem; font-weight: 700;
+      color: #fff; margin-bottom: 6px; overflow-wrap: anywhere;
+    }
+    .prato-desc {
+      font-size: .875rem; color: rgba(255,255,255,.5);
+      line-height: 1.6; margin-bottom: 14px; overflow-wrap: anywhere;
+    }
+    .prato-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .prato-preco {
+      font-family: var(--ff-head); font-size: 1.25rem; font-weight: 700;
+      color: var(--amber);
+    }
+    .prato-pedir {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(217,119,6,.15); color: var(--amber);
+      border-radius: var(--r-sm); padding: 6px 12px;
+      font-size: .8125rem; font-weight: 600; transition: background .2s;
+    }
+    .prato-pedir:hover { background: rgba(217,119,6,.3); }
+
+    /* ──────────────────────
+       AMBIENTE — galeria
+    ────────────────────── */
+    .ambiente { background: var(--cream2); }
+    .ambiente-head { text-align: center; margin-bottom: 40px; }
+    .ambiente-grid {
+      display: grid; grid-template-columns: 1fr; gap: 16px;
+    }
+    .amb-photo {
+      width: 100%; height: 240px; object-fit: cover;
+      border-radius: var(--r-lg); display: block;
+      transition: transform .35s;
+    }
+    .amb-photo:hover { transform: scale(1.02); }
+
+    /* ──────────────────────
+       DEPOIMENTOS
+    ────────────────────── */
+    .depoimentos { background: var(--cream); }
+    .depo-head { text-align: center; margin-bottom: 40px; }
+    .depo-grid {
+      display: grid; grid-template-columns: 1fr; gap: 20px;
+    }
+    .depo-grid > * { min-width: 0; }
+    .depo-card {
+      background: #fff; border-radius: var(--r-lg);
+      padding: 28px 24px; border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm); position: relative;
+    }
+    .depo-card::before {
+      content: '"';
+      position: absolute; top: 10px; right: 18px;
+      font-family: Georgia, serif; font-size: 5rem; line-height: 1;
+      color: var(--crimson); opacity: .07;
+    }
+    .depo-stars {
+      display: flex; gap: 2px; margin-bottom: 14px;
+      color: var(--amber); font-size: 1rem;
+    }
+    .depo-text {
+      font-size: .9375rem; color: var(--warm-gray);
+      line-height: 1.75; font-style: italic; margin-bottom: 20px;
+      overflow-wrap: anywhere;
+    }
+    .depo-author { display: flex; align-items: center; gap: 12px; }
+    .depo-avatar {
+      width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+      background: var(--crimson); color: #fff;
+      font-family: var(--ff-head); font-size: 1.125rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; /* placeholder de inicial não escapa — BOAS-PRATICAS §2 */
+    }
+    .depo-name {
+      font-size: .9375rem; font-weight: 600;
+      color: var(--espresso); overflow-wrap: anywhere;
+    }
+    .depo-role { font-size: .8125rem; color: var(--warm-gray); }
+
+    /* ──────────────────────
+       CTA RESERVA
+    ────────────────────── */
+    .cta-section { background: var(--crimson); padding: 80px 0; text-align: center; }
+    .cta-section .sec-h2 { color: #fff; }
+    .cta-section .sec-lead { color: rgba(255,255,255,.8); margin: 0 auto 36px; }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* ──────────────────────
+       CONTATO / HORÁRIOS
+    ────────────────────── */
+    .contato { background: var(--cream); }
+    .contato-grid { display: grid; grid-template-columns: 1fr; gap: 48px; }
+    .contato-grid > * { min-width: 0; }
+
+    .horarios { margin-top: 20px; }
+    .horario-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 11px 0; border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .horario-row:last-child { border-bottom: none; }
+    .horario-dia { font-weight: 600; color: var(--espresso); font-size: .9375rem; }
+    .horario-hora { color: var(--warm-gray); font-size: .9375rem; text-align: right; }
+    .horario-fechado { color: var(--crimson); }
+
+    .contato-items { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+    .contato-item { display: flex; gap: 14px; align-items: flex-start; }
+    .contato-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: var(--crimson-bg); border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--crimson);
+    }
+    .contato-label {
+      font-size: .75rem; font-weight: 600; color: var(--warm-gray);
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px;
+    }
+    .contato-val {
+      font-size: .9375rem; color: var(--espresso); font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+    .contato-social { display: flex; gap: 10px; margin-top: 20px; }
+    .social-btn {
+      width: 40px; height: 40px; border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--warm-gray); transition: all .2s;
+    }
+    .social-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+
+    /* Box CTA contato */
+    .contato-cta-box {
+      background: var(--espresso); border-radius: var(--r-lg);
+      padding: 36px 28px; text-align: center;
+      display: flex; flex-direction: column; gap: 16px; align-items: center;
+    }
+    .contato-cta-box h3 {
+      font-family: var(--ff-head); font-size: 1.5rem; font-weight: 700;
+      color: #fff; overflow-wrap: anywhere;
+    }
+    .contato-cta-box p {
+      color: rgba(255,255,255,.58); font-size: .9375rem;
+      line-height: 1.7; overflow-wrap: anywhere;
+    }
+    .contato-cta-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .contato-cta-btns .btn-amber { justify-content: center; }
+    .contato-cta-btns .btn-ghost-white { justify-content: center; }
+
+    /* ──────────────────────
+       FOOTER
+    ────────────────────── */
+    .footer { background: var(--espresso); padding: 52px 0 28px; }
+    .footer-top {
+      display: grid; grid-template-columns: 1fr; gap: 32px;
+      padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .footer-top > * { min-width: 0; }
+    .footer-brand-name {
+      font-family: var(--ff-head); font-size: 1.25rem; font-weight: 700;
+      color: #fff; margin-bottom: 8px; overflow-wrap: anywhere;
+    }
+    .footer-brand-name span { color: var(--amber); }
+    .footer-tagline {
+      color: rgba(255,255,255,.38); font-size: .875rem;
+      line-height: 1.6; overflow-wrap: anywhere;
+    }
+    .footer-col h4 {
+      font-family: var(--ff-body); font-size: .73rem; font-weight: 600;
+      color: rgba(255,255,255,.38); text-transform: uppercase; letter-spacing: .09em;
+      margin-bottom: 14px;
+    }
+    .footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+    .footer-col li a {
+      color: rgba(255,255,255,.52); font-size: .875rem; transition: color .2s;
+    }
+    .footer-col li a:hover { color: var(--amber); }
+    .footer-bottom {
+      padding-top: 24px; display: flex; flex-direction: column;
+      gap: 6px; align-items: center; text-align: center;
+    }
+    .footer-copy { color: rgba(255,255,255,.28); font-size: .8125rem; overflow-wrap: anywhere; }
+
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s, transform .5s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ══════════════════════════════
+       RESPONSIVO — Mobile-first
+    ══════════════════════════════ */
+
+    /* ── ≤ 480px — telefones pequenos ── */
+    @media (max-width: 480px) {
+      .section { padding: 52px 0; }
+
+      /* Hero */
+      .hero-body { padding: 44px 20px 52px; }
+      .hero-eyebrow { font-size: .7rem; }
+      .hero-h1 { font-size: 2rem; }
+      .hero-sub { font-size: 1rem; }
+      .hero-ctas { flex-direction: column; width: 100%; }
+      .hero-ctas .btn-amber,
+      .hero-ctas .btn-outline-white { width: 100%; justify-content: center; }
+
+      /* Stats */
+      .h-stat { padding: 14px 20px; }
+      .h-stat-val { font-size: 1.5rem; }
+
+      /* Features */
+      .feat-item { padding: 20px 0; gap: 12px; }
+      .feat-icon { width: 42px; height: 42px; }
+
+      /* Sobre */
+      .sobre-photo { height: 260px; }
+      .sobre-badge { padding: 10px 14px; }
+      .sobre-badge b { font-size: 1.375rem; }
+      .sobre-ctas { flex-direction: column; }
+      .sobre-ctas .btn-crimson,
+      .sobre-ctas .btn-outline-dark { width: 100%; justify-content: center; }
+
+      /* CTA */
+      .cta-section { padding: 52px 0; }
+      .cta-btns { flex-direction: column; align-items: stretch; }
+      .cta-btns .btn-white,
+      .cta-btns .btn-ghost-white { display: flex; width: 100%; justify-content: center; }
+
+      /* Contato */
+      .contato-cta-box { padding: 28px 20px; }
+    }
+
+    /* ── ≥ 768px — tablet ── */
+    @media (min-width: 768px) {
+      .section { padding: 90px 0; }
+
+      /* Header */
+      .nav { display: flex; }
+      .header-cta { display: flex; }
+      .hamburger { display: none; }
+
+      /* Hero */
+      .hero-h1 { font-size: 3.5rem; }
+      /* Stats: linha horizontal — BOAS-PRATICAS §3 */
+      .hero-stats-inner { flex-direction: row; }
+      .h-stat {
+        flex: 1; flex-direction: column; align-items: center; text-align: center;
+        gap: 4px; padding: 24px 16px;
+        border-bottom: none; border-right: 1px solid rgba(255,255,255,.08);
+      }
+      .h-stat:last-child { border-right: none; }
+      .h-stat-val { font-size: 2rem; }
+
+      /* Features: 3 colunas */
+      .features-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+      }
+      .feat-item {
+        flex-direction: column; padding: 36px 28px;
+        border-bottom: none; border-right: 1px solid rgba(255,255,255,.06);
+      }
+      .feat-item:last-child { border-right: none; }
+      .feat-icon { margin-bottom: 12px; width: 52px; height: 52px; }
+
+      /* Sobre */
+      .sobre-grid { grid-template-columns: 1fr 1fr; }
+      .sobre-photo { height: 440px; }
+
+      /* Cardápio */
+      .pratos-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* Ambiente */
+      .ambiente-grid { grid-template-columns: repeat(3, 1fr); }
+      .amb-photo { height: 280px; }
+
+      /* Depoimentos */
+      .depo-grid { grid-template-columns: repeat(3, 1fr); }
+
+      /* Contato */
+      .contato-grid { grid-template-columns: 1fr 1fr; }
+      .contato-cta-btns { flex-direction: row; }
+
+      /* Footer */
+      .footer-top { grid-template-columns: 2fr 1fr 1fr; }
+      .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; }
+    }
+
+    /* ── ≥ 1024px — desktop ── */
+    @media (min-width: 1024px) {
+      .section { padding: 110px 0; }
+      .hero-h1 { font-size: 4.25rem; }
+      .pratos-grid { grid-template-columns: repeat(3, 1fr); }
+      .sobre-photo { height: 500px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ HEADER ══ -->
+  <header class="header" id="header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="#" class="logo-wrap" id="logoWrap">
+          <img src="{{LOGO_URL}}" alt="{{LOGO_ALT}}" id="logoImg" />
+          <span class="logo-text">{{EMPRESA_NOME}}<span>.</span></span>
+        </a>
+        <nav class="nav">
+          <ul class="nav-list">
+            <li><a href="#sobre"       class="nav-link">Nossa História</a></li>
+            <li><a href="#cardapio"    class="nav-link">Cardápio</a></li>
+            <li><a href="#ambiente"    class="nav-link">Ambiente</a></li>
+            <li><a href="#depoimentos" class="nav-link">Avaliações</a></li>
+            <li><a href="#contato"     class="nav-link">Contato</a></li>
+          </ul>
+        </nav>
+        <a href="{{WHATSAPP_LINK}}" class="btn btn-amber header-cta" target="_blank" rel="noopener">
+          <i data-lucide="message-circle" style="width:15px;height:15px"></i>
+          Fazer Pedido
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ MOBILE NAV ══ -->
+  <div class="nav-overlay" id="navOverlay">
+    <a href="#sobre"       class="nav-link">Nossa História</a>
+    <a href="#cardapio"    class="nav-link">Cardápio</a>
+    <a href="#ambiente"    class="nav-link">Ambiente</a>
+    <a href="#depoimentos" class="nav-link">Avaliações</a>
+    <a href="#contato"     class="nav-link">Contato</a>
+    <a href="{{WHATSAPP_LINK}}" class="btn btn-amber" target="_blank" rel="noopener">Fazer Pedido</a>
+  </div>
+
+  <!-- ══ HERO — foto de fundo preenchível ══ -->
+  <section class="hero" id="hero" style="background-image: url('{{HERO_FOTO_URL}}')">
+    <div class="hero-body">
+      <div class="hero-eyebrow">
+        <i data-lucide="utensils" style="width:11px;height:11px"></i>
+        {{AREA_ATUACAO}}
+      </div>
+      <h1 class="hero-h1">{{EMPRESA_SLOGAN}}</h1>
+      <p class="hero-sub">{{EMPRESA_SUBTITULO}}</p>
+      <div class="hero-ctas">
+        <a href="#cardapio" class="btn btn-amber">
+          <i data-lucide="book-open" style="width:16px;height:16px"></i>
+          {{HERO_CTA_PRIMARIO}}
+        </a>
+        <a href="{{WHATSAPP_LINK}}" class="btn-outline-white" target="_blank" rel="noopener">
+          <i data-lucide="message-circle" style="width:16px;height:16px"></i>
+          Fazer Pedido
+        </a>
+      </div>
+    </div>
+    <!-- Stats bar — coluna no mobile, linha no desktop -->
+    <div class="hero-stats">
+      <div class="container">
+        <div class="hero-stats-inner">
+          <div class="h-stat">
+            <span class="h-stat-val">{{ANOS_EXPERIENCIA}}+</span>
+            <span class="h-stat-label">Anos de Experiência</span>
+          </div>
+          <div class="h-stat">
+            <span class="h-stat-val">{{PRATOS_SERVIDOS}}+</span>
+            <span class="h-stat-label">Pratos por Mês</span>
+          </div>
+          <div class="h-stat">
+            <span class="h-stat-val">{{AVALIACAO}}</span>
+            <span class="h-stat-label">Avaliação Google</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FEATURES STRIP ══ -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feat-item reveal">
+          <div class="feat-icon"><i data-lucide="{{FEAT_1_ICONE}}" style="width:22px;height:22px"></i></div>
+          <div>
+            <h3 class="feat-title">{{FEAT_1_TITULO}}</h3>
+            <p class="feat-desc">{{FEAT_1_DESC}}</p>
+          </div>
+        </div>
+        <div class="feat-item reveal">
+          <div class="feat-icon"><i data-lucide="{{FEAT_2_ICONE}}" style="width:22px;height:22px"></i></div>
+          <div>
+            <h3 class="feat-title">{{FEAT_2_TITULO}}</h3>
+            <p class="feat-desc">{{FEAT_2_DESC}}</p>
+          </div>
+        </div>
+        <div class="feat-item reveal">
+          <div class="feat-icon"><i data-lucide="{{FEAT_3_ICONE}}" style="width:22px;height:22px"></i></div>
+          <div>
+            <h3 class="feat-title">{{FEAT_3_TITULO}}</h3>
+            <p class="feat-desc">{{FEAT_3_DESC}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SOBRE ══ -->
+  <section class="section sobre" id="sobre">
+    <div class="container">
+      <div class="sobre-grid">
+        <!-- Foto -->
+        <div class="sobre-visual reveal">
+          <img class="sobre-photo" src="{{SOBRE_FOTO_URL}}" alt="{{SOBRE_FOTO_ALT}}" />
+          <div class="sobre-badge">
+            <b>{{ANOS_EXPERIENCIA}}+</b>
+            <span>Anos servindo</span>
+          </div>
+        </div>
+        <!-- Texto -->
+        <div class="reveal">
+          <span class="sec-label">
+            <i data-lucide="heart" style="width:13px;height:13px"></i>
+            Nossa História
+          </span>
+          <h2 class="sec-h2">{{SOBRE_TITULO}}</h2>
+          <p class="sobre-body">{{SOBRE_TEXTO}}</p>
+          <ul class="sobre-list">
+            <li class="sobre-check">
+              <div class="check-dot"><i data-lucide="check" style="width:12px;height:12px"></i></div>
+              <p class="check-label"><strong>{{DIFERENCIAL_1_TITULO}}:</strong> {{DIFERENCIAL_1_DESC}}</p>
+            </li>
+            <li class="sobre-check">
+              <div class="check-dot"><i data-lucide="check" style="width:12px;height:12px"></i></div>
+              <p class="check-label"><strong>{{DIFERENCIAL_2_TITULO}}:</strong> {{DIFERENCIAL_2_DESC}}</p>
+            </li>
+            <li class="sobre-check">
+              <div class="check-dot"><i data-lucide="check" style="width:12px;height:12px"></i></div>
+              <p class="check-label"><strong>{{DIFERENCIAL_3_TITULO}}:</strong> {{DIFERENCIAL_3_DESC}}</p>
+            </li>
+          </ul>
+          <div class="sobre-ctas">
+            <a href="#cardapio" class="btn btn-crimson">Ver Cardápio</a>
+            <a href="{{WHATSAPP_LINK}}" class="btn-outline-dark" target="_blank" rel="noopener">
+              <i data-lucide="message-circle" style="width:16px;height:16px"></i>
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CARDÁPIO ══ -->
+  <section class="section cardapio" id="cardapio">
+    <div class="container">
+      <div class="cardapio-head reveal">
+        <span class="sec-label sec-label-amber">
+          <i data-lucide="utensils" style="width:13px;height:13px"></i>
+          Cardápio
+        </span>
+        <h2 class="sec-h2 sec-h2-white">{{CARDAPIO_TITULO}}</h2>
+        <p class="sec-lead sec-lead-white">{{CARDAPIO_SUBTITULO}}</p>
+      </div>
+      <ul class="pratos-grid">
+
+        <li class="prato-card reveal">
+          <div class="prato-photo-wrap">
+            <img class="prato-photo" src="{{PRATO_1_FOTO}}" alt="{{PRATO_1_NOME}}" />
+            <span class="prato-tag">{{PRATO_1_TAG}}</span>
+          </div>
+          <div class="prato-body">
+            <h3 class="prato-nome">{{PRATO_1_NOME}}</h3>
+            <p class="prato-desc">{{PRATO_1_DESC}}</p>
+            <div class="prato-footer">
+              <span class="prato-preco">{{PRATO_1_PRECO}}</span>
+              <a href="{{WHATSAPP_LINK}}" class="prato-pedir" target="_blank" rel="noopener">
+                <i data-lucide="shopping-bag" style="width:13px;height:13px"></i>Pedir
+              </a>
+            </div>
+          </div>
+        </li>
+
+        <li class="prato-card reveal">
+          <div class="prato-photo-wrap">
+            <img class="prato-photo" src="{{PRATO_2_FOTO}}" alt="{{PRATO_2_NOME}}" />
+            <span class="prato-tag">{{PRATO_2_TAG}}</span>
+          </div>
+          <div class="prato-body">
+            <h3 class="prato-nome">{{PRATO_2_NOME}}</h3>
+            <p class="prato-desc">{{PRATO_2_DESC}}</p>
+            <div class="prato-footer">
+              <span class="prato-preco">{{PRATO_2_PRECO}}</span>
+              <a href="{{WHATSAPP_LINK}}" class="prato-pedir" target="_blank" rel="noopener">
+                <i data-lucide="shopping-bag" style="width:13px;height:13px"></i>Pedir
+              </a>
+            </div>
+          </div>
+        </li>
+
+        <li class="prato-card reveal">
+          <div class="prato-photo-wrap">
+            <img class="prato-photo" src="{{PRATO_3_FOTO}}" alt="{{PRATO_3_NOME}}" />
+            <span class="prato-tag">{{PRATO_3_TAG}}</span>
+          </div>
+          <div class="prato-body">
+            <h3 class="prato-nome">{{PRATO_3_NOME}}</h3>
+            <p class="prato-desc">{{PRATO_3_DESC}}</p>
+            <div class="prato-footer">
+              <span class="prato-preco">{{PRATO_3_PRECO}}</span>
+              <a href="{{WHATSAPP_LINK}}" class="prato-pedir" target="_blank" rel="noopener">
+                <i data-lucide="shopping-bag" style="width:13px;height:13px"></i>Pedir
+              </a>
+            </div>
+          </div>
+        </li>
+
+        <li class="prato-card reveal">
+          <div class="prato-photo-wrap">
+            <img class="prato-photo" src="{{PRATO_4_FOTO}}" alt="{{PRATO_4_NOME}}" />
+            <span class="prato-tag">{{PRATO_4_TAG}}</span>
+          </div>
+          <div class="prato-body">
+            <h3 class="prato-nome">{{PRATO_4_NOME}}</h3>
+            <p class="prato-desc">{{PRATO_4_DESC}}</p>
+            <div class="prato-footer">
+              <span class="prato-preco">{{PRATO_4_PRECO}}</span>
+              <a href="{{WHATSAPP_LINK}}" class="prato-pedir" target="_blank" rel="noopener">
+                <i data-lucide="shopping-bag" style="width:13px;height:13px"></i>Pedir
+              </a>
+            </div>
+          </div>
+        </li>
+
+        <li class="prato-card reveal">
+          <div class="prato-photo-wrap">
+            <img class="prato-photo" src="{{PRATO_5_FOTO}}" alt="{{PRATO_5_NOME}}" />
+            <span class="prato-tag">{{PRATO_5_TAG}}</span>
+          </div>
+          <div class="prato-body">
+            <h3 class="prato-nome">{{PRATO_5_NOME}}</h3>
+            <p class="prato-desc">{{PRATO_5_DESC}}</p>
+            <div class="prato-footer">
+              <span class="prato-preco">{{PRATO_5_PRECO}}</span>
+              <a href="{{WHATSAPP_LINK}}" class="prato-pedir" target="_blank" rel="noopener">
+                <i data-lucide="shopping-bag" style="width:13px;height:13px"></i>Pedir
+              </a>
+            </div>
+          </div>
+        </li>
+
+        <li class="prato-card reveal">
+          <div class="prato-photo-wrap">
+            <img class="prato-photo" src="{{PRATO_6_FOTO}}" alt="{{PRATO_6_NOME}}" />
+            <span class="prato-tag">{{PRATO_6_TAG}}</span>
+          </div>
+          <div class="prato-body">
+            <h3 class="prato-nome">{{PRATO_6_NOME}}</h3>
+            <p class="prato-desc">{{PRATO_6_DESC}}</p>
+            <div class="prato-footer">
+              <span class="prato-preco">{{PRATO_6_PRECO}}</span>
+              <a href="{{WHATSAPP_LINK}}" class="prato-pedir" target="_blank" rel="noopener">
+                <i data-lucide="shopping-bag" style="width:13px;height:13px"></i>Pedir
+              </a>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══ AMBIENTE ══ -->
+  <section class="section ambiente" id="ambiente">
+    <div class="container">
+      <div class="ambiente-head reveal">
+        <span class="sec-label">
+          <i data-lucide="camera" style="width:13px;height:13px"></i>
+          Nosso Espaço
+        </span>
+        <h2 class="sec-h2">{{AMBIENTE_TITULO}}</h2>
+      </div>
+      <div class="ambiente-grid">
+        <img class="amb-photo reveal" src="{{AMBIENTE_1_FOTO}}" alt="{{AMBIENTE_1_ALT}}" />
+        <img class="amb-photo reveal" src="{{AMBIENTE_2_FOTO}}" alt="{{AMBIENTE_2_ALT}}" />
+        <img class="amb-photo reveal" src="{{AMBIENTE_3_FOTO}}" alt="{{AMBIENTE_3_ALT}}" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ DEPOIMENTOS ══ -->
+  <section class="section depoimentos" id="depoimentos">
+    <div class="container">
+      <div class="depo-head reveal">
+        <span class="sec-label">
+          <i data-lucide="star" style="width:13px;height:13px"></i>
+          Avaliações
+        </span>
+        <h2 class="sec-h2">{{DEPOIMENTOS_TITULO}}</h2>
+        <p class="sec-lead" style="margin: 0 auto">{{DEPOIMENTOS_SUBTITULO}}</p>
+      </div>
+      <div class="depo-grid">
+        <div class="depo-card reveal">
+          <div class="depo-stars">★★★★★</div>
+          <p class="depo-text">{{DEPOIMENTO_1_TEXTO}}</p>
+          <div class="depo-author">
+            <div class="depo-avatar">{{DEPOIMENTO_1_AUTOR_INICIAL}}</div>
+            <div>
+              <p class="depo-name">{{DEPOIMENTO_1_AUTOR}}</p>
+              <p class="depo-role">{{DEPOIMENTO_1_CARGO}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="depo-card reveal">
+          <div class="depo-stars">★★★★★</div>
+          <p class="depo-text">{{DEPOIMENTO_2_TEXTO}}</p>
+          <div class="depo-author">
+            <div class="depo-avatar">{{DEPOIMENTO_2_AUTOR_INICIAL}}</div>
+            <div>
+              <p class="depo-name">{{DEPOIMENTO_2_AUTOR}}</p>
+              <p class="depo-role">{{DEPOIMENTO_2_CARGO}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="depo-card reveal">
+          <div class="depo-stars">★★★★★</div>
+          <p class="depo-text">{{DEPOIMENTO_3_TEXTO}}</p>
+          <div class="depo-author">
+            <div class="depo-avatar">{{DEPOIMENTO_3_AUTOR_INICIAL}}</div>
+            <div>
+              <p class="depo-name">{{DEPOIMENTO_3_AUTOR}}</p>
+              <p class="depo-role">{{DEPOIMENTO_3_CARGO}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA ══ -->
+  <section class="cta-section">
+    <div class="container">
+      <h2 class="sec-h2">{{CTA_TITULO}}</h2>
+      <p class="sec-lead">{{CTA_SUBTITULO}}</p>
+      <div class="cta-btns">
+        <a href="{{WHATSAPP_LINK}}" class="btn btn-white" target="_blank" rel="noopener">
+          <i data-lucide="message-circle" style="width:16px;height:16px"></i>
+          {{CTA_BTN_PRIMARIO}}
+        </a>
+        <a href="#contato" class="btn-ghost-white">
+          <i data-lucide="map-pin" style="width:16px;height:16px"></i>
+          Como Chegar
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CONTATO / HORÁRIOS ══ -->
+  <section class="section contato" id="contato">
+    <div class="container">
+      <div class="contato-grid">
+
+        <!-- Informações + horários -->
+        <div class="reveal">
+          <span class="sec-label">
+            <i data-lucide="map-pin" style="width:13px;height:13px"></i>
+            Onde Estamos
+          </span>
+          <h2 class="sec-h2">{{CONTATO_TITULO}}</h2>
+          <div class="horarios">
+            <div class="horario-row">
+              <span class="horario-dia">Segunda a Sexta</span>
+              <span class="horario-hora">{{HORARIO_SEG_SEX}}</span>
+            </div>
+            <div class="horario-row">
+              <span class="horario-dia">Sábado</span>
+              <span class="horario-hora">{{HORARIO_SAB}}</span>
+            </div>
+            <div class="horario-row">
+              <span class="horario-dia">Domingo</span>
+              <span class="horario-hora">{{HORARIO_DOM}}</span>
+            </div>
+          </div>
+          <div class="contato-items">
+            <div class="contato-item">
+              <div class="contato-icon"><i data-lucide="phone" style="width:18px;height:18px"></i></div>
+              <div>
+                <p class="contato-label">Telefone / WhatsApp</p>
+                <p class="contato-val">{{EMPRESA_TELEFONE}}</p>
+              </div>
+            </div>
+            <div class="contato-item">
+              <div class="contato-icon"><i data-lucide="map-pin" style="width:18px;height:18px"></i></div>
+              <div>
+                <p class="contato-label">Endereço</p>
+                <p class="contato-val">{{EMPRESA_ENDERECO}}</p>
+              </div>
+            </div>
+            <div class="contato-item">
+              <div class="contato-icon"><i data-lucide="mail" style="width:18px;height:18px"></i></div>
+              <div>
+                <p class="contato-label">E-mail</p>
+                <p class="contato-val">{{EMPRESA_EMAIL}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="contato-social">
+            <a href="{{WHATSAPP_LINK}}" class="social-btn" target="_blank" rel="noopener" aria-label="WhatsApp">
+              <i data-lucide="message-circle" style="width:18px;height:18px"></i>
+            </a>
+            <a href="{{INSTAGRAM_LINK}}" class="social-btn" target="_blank" rel="noopener" aria-label="Instagram">
+              <i data-lucide="instagram" style="width:18px;height:18px"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Box de ação -->
+        <div class="reveal">
+          <div class="contato-cta-box">
+            <i data-lucide="utensils-crossed" style="width:44px;height:44px;color:#D97706"></i>
+            <h3>{{CTA_BOX_TITULO}}</h3>
+            <p>{{CTA_BOX_DESC}}</p>
+            <div class="contato-cta-btns">
+              <a href="{{WHATSAPP_LINK}}" class="btn btn-amber" target="_blank" rel="noopener">
+                <i data-lucide="message-circle" style="width:16px;height:16px"></i>
+                Pedir pelo WhatsApp
+              </a>
+              <a href="tel:{{EMPRESA_TELEFONE_RAW}}" class="btn-ghost-white">
+                <i data-lucide="phone" style="width:16px;height:16px"></i>
+                Ligar Agora
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <p class="footer-brand-name">{{EMPRESA_NOME}}<span>.</span></p>
+          <p class="footer-tagline">{{EMPRESA_SLOGAN_CURTO}}</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navegação</h4>
+          <ul>
+            <li><a href="#sobre">Nossa História</a></li>
+            <li><a href="#cardapio">Cardápio</a></li>
+            <li><a href="#ambiente">Ambiente</a></li>
+            <li><a href="#depoimentos">Avaliações</a></li>
+            <li><a href="#contato">Localização</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contato</h4>
+          <ul>
+            <li><a href="tel:{{EMPRESA_TELEFONE_RAW}}">{{EMPRESA_TELEFONE}}</a></li>
+            <li><a href="{{WHATSAPP_LINK}}" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="{{INSTAGRAM_LINK}}" target="_blank" rel="noopener">Instagram</a></li>
+            <li><a href="mailto:{{EMPRESA_EMAIL}}">{{EMPRESA_EMAIL}}</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© {{ANO_ATUAL}} {{EMPRESA_NOME}}. Todos os direitos reservados.</p>
+        <p class="footer-copy">{{EMPRESA_ENDERECO}}</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Logo fallback
+    const logoImg  = document.getElementById('logoImg');
+    const logoWrap = document.getElementById('logoWrap');
+    if (logoImg && logoImg.src && !logoImg.src.includes('{{')) {
+      logoWrap.classList.add('has-logo');
+    }
+    logoImg.addEventListener('error', () => logoWrap.classList.remove('has-logo'));
+
+    // Header scroll shadow
+    window.addEventListener('scroll', () => {
+      document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    // Hamburger
+    const hamburger  = document.getElementById('hamburger');
+    const navOverlay = document.getElementById('navOverlay');
+    hamburger.addEventListener('click', () => {
+      const open = hamburger.classList.toggle('open');
+      navOverlay.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    navOverlay.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      navOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }));
+
+    // Lucide icons
+    lucide.createIcons();
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.07, rootMargin: '0px 0px -32px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

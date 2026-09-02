@@ -1,0 +1,355 @@
+{
+  "setor": "saude",
+  "label": "Saúde & Bem-estar",
+  "versao": "1.1",
+  "descricao": "Schema compartilhado pelos modelos 1 e 2 do setor Saúde & Bem-estar. Cobre clínicas, consultórios, dentistas, psicólogos, nutricionistas, estética, spa e terapias.",
+  "modelos": ["modelo-1", "modelo-2"],
+
+  "campos": [
+
+    {
+      "nome": "NOME_EMPRESA",
+      "label": "Nome da empresa ou profissional",
+      "descricao": "Nome do negócio ou do profissional. Aparece no cabeçalho, hero, rodapé e título da página.",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "60 caracteres",
+      "exemplo": "Clínica Bem Viver"
+    },
+
+    {
+      "nome": "LOGO",
+      "label": "Logotipo do cliente",
+      "descricao": "URL ou caminho da imagem do logotipo. Se fornecido, o template exibe a imagem no cabeçalho e rodapé em vez do nome em texto. Se vazio/ausente, exibe {{NOME_EMPRESA}} como texto estilizado (fallback automático via CSS).",
+      "obrigatorio": false,
+      "tipo": "imagem",
+      "formatos_aceitos": ["PNG", "SVG", "WEBP", "JPG"],
+      "recomendacao": "Prefira PNG ou SVG com fundo transparente. Para o rodapé (fundo escuro), forneça versão clara/branca do logo se disponível.",
+      "dimensoes": "Altura exibida: 40px no cabeçalho, 34px no rodapé. Largura máxima: 160px. Proporção preservada automaticamente.",
+      "instrucao_ativacao": "Quando LOGO tiver valor: adicione a classe CSS 'has-logo' ao .logo-wrap no cabeçalho E ao .footer-logo-wrap no rodapé. Sem a classe, o template usa automaticamente o texto {{NOME_EMPRESA}} como fallback — nenhuma outra alteração necessária."
+    },
+
+    {
+      "nome": "SLOGAN",
+      "label": "Slogan / tagline",
+      "descricao": "Frase curta que resume a proposta de valor. Aparece abaixo do nome no hero e no rodapé.",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "120 caracteres",
+      "exemplo": "Cuidado integral com você e sua família, do jeito que merece."
+    },
+
+    {
+      "nome": "SOBRE_TEXTO",
+      "label": "Texto de apresentação",
+      "descricao": "Texto da seção 'Sobre nós' — história, missão, experiência e valores do negócio.",
+      "obrigatorio": true,
+      "tipo": "texto_longo",
+      "limite": "500 caracteres",
+      "exemplo": "Há mais de 10 anos cuidando da saúde das famílias de São Paulo..."
+    },
+
+    {
+      "nome": "SERVICO_1",
+      "label": "Nome do Serviço 1",
+      "descricao": "Título curto do primeiro serviço oferecido.",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "50 caracteres"
+    },
+    {
+      "nome": "SERVICO_1_DESC",
+      "label": "Descrição do Serviço 1",
+      "descricao": "Descrição breve do primeiro serviço.",
+      "obrigatorio": true,
+      "tipo": "texto_medio",
+      "limite": "130 caracteres"
+    },
+
+    {
+      "nome": "SERVICO_2",
+      "label": "Nome do Serviço 2",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "50 caracteres"
+    },
+    {
+      "nome": "SERVICO_2_DESC",
+      "label": "Descrição do Serviço 2",
+      "obrigatorio": true,
+      "tipo": "texto_medio",
+      "limite": "130 caracteres"
+    },
+
+    {
+      "nome": "SERVICO_3",
+      "label": "Nome do Serviço 3",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "50 caracteres"
+    },
+    {
+      "nome": "SERVICO_3_DESC",
+      "label": "Descrição do Serviço 3",
+      "obrigatorio": true,
+      "tipo": "texto_medio",
+      "limite": "130 caracteres"
+    },
+
+    {
+      "nome": "SERVICO_4",
+      "label": "Nome do Serviço 4",
+      "obrigatorio": false,
+      "tipo": "texto_curto",
+      "limite": "50 caracteres",
+      "instrucao_ausencia": "Se não houver, remova o 4º bloco .service-card do HTML."
+    },
+    {
+      "nome": "SERVICO_4_DESC",
+      "label": "Descrição do Serviço 4",
+      "obrigatorio": false,
+      "tipo": "texto_medio",
+      "limite": "130 caracteres"
+    },
+
+    {
+      "nome": "SERVICO_5",
+      "label": "Nome do Serviço 5",
+      "obrigatorio": false,
+      "tipo": "texto_curto",
+      "limite": "50 caracteres",
+      "instrucao_ausencia": "Se não houver, remova o 5º bloco .service-card do HTML."
+    },
+    {
+      "nome": "SERVICO_5_DESC",
+      "label": "Descrição do Serviço 5",
+      "obrigatorio": false,
+      "tipo": "texto_medio",
+      "limite": "130 caracteres"
+    },
+
+    {
+      "nome": "SERVICO_6",
+      "label": "Nome do Serviço 6",
+      "obrigatorio": false,
+      "tipo": "texto_curto",
+      "limite": "50 caracteres",
+      "instrucao_ausencia": "Se não houver, remova o 6º bloco .service-card do HTML."
+    },
+    {
+      "nome": "SERVICO_6_DESC",
+      "label": "Descrição do Serviço 6",
+      "obrigatorio": false,
+      "tipo": "texto_medio",
+      "limite": "130 caracteres"
+    },
+
+    {
+      "nome": "DIFERENCIAL_1",
+      "label": "Título do Diferencial 1",
+      "descricao": "Título curto do primeiro diferencial competitivo.",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "60 caracteres",
+      "exemplo": "Profissionais Especializados"
+    },
+    {
+      "nome": "DIFERENCIAL_1_DESC",
+      "label": "Descrição do Diferencial 1",
+      "descricao": "Explicação breve do diferencial. Campo estendido além do spec base.",
+      "obrigatorio": true,
+      "tipo": "texto_medio",
+      "limite": "160 caracteres"
+    },
+
+    {
+      "nome": "DIFERENCIAL_2",
+      "label": "Título do Diferencial 2",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "60 caracteres"
+    },
+    {
+      "nome": "DIFERENCIAL_2_DESC",
+      "label": "Descrição do Diferencial 2",
+      "obrigatorio": true,
+      "tipo": "texto_medio",
+      "limite": "160 caracteres"
+    },
+
+    {
+      "nome": "DIFERENCIAL_3",
+      "label": "Título do Diferencial 3",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "60 caracteres"
+    },
+    {
+      "nome": "DIFERENCIAL_3_DESC",
+      "label": "Descrição do Diferencial 3",
+      "obrigatorio": true,
+      "tipo": "texto_medio",
+      "limite": "160 caracteres"
+    },
+
+    {
+      "nome": "DEPOIMENTO_1",
+      "label": "Texto do Depoimento 1",
+      "descricao": "Relato do paciente sobre a experiência. Use aspas no texto gerado pela IA para soar autêntico.",
+      "obrigatorio": true,
+      "tipo": "texto_longo",
+      "limite": "220 caracteres"
+    },
+    {
+      "nome": "DEPOIMENTO_1_AUTOR",
+      "label": "Nome do autor do Depoimento 1",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "40 caracteres"
+    },
+    {
+      "nome": "DEPOIMENTO_1_AUTOR_INICIAL",
+      "label": "Inicial do autor do Depoimento 1",
+      "descricao": "Primeira letra do nome do autor, usada no avatar circular. Campo derivado: gere automaticamente a partir de DEPOIMENTO_1_AUTOR[0].toUpperCase().",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "1 caractere",
+      "derivado": true
+    },
+
+    {
+      "nome": "DEPOIMENTO_2",
+      "label": "Texto do Depoimento 2",
+      "obrigatorio": true,
+      "tipo": "texto_longo",
+      "limite": "220 caracteres"
+    },
+    {
+      "nome": "DEPOIMENTO_2_AUTOR",
+      "label": "Nome do autor do Depoimento 2",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "40 caracteres"
+    },
+    {
+      "nome": "DEPOIMENTO_2_AUTOR_INICIAL",
+      "label": "Inicial do autor do Depoimento 2",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "1 caractere",
+      "derivado": true
+    },
+
+    {
+      "nome": "DEPOIMENTO_3",
+      "label": "Texto do Depoimento 3",
+      "obrigatorio": false,
+      "tipo": "texto_longo",
+      "limite": "220 caracteres",
+      "instrucao_ausencia": "Se não houver, remova o 3º bloco .testi-card do HTML."
+    },
+    {
+      "nome": "DEPOIMENTO_3_AUTOR",
+      "label": "Nome do autor do Depoimento 3",
+      "obrigatorio": false,
+      "tipo": "texto_curto",
+      "limite": "40 caracteres"
+    },
+    {
+      "nome": "DEPOIMENTO_3_AUTOR_INICIAL",
+      "label": "Inicial do autor do Depoimento 3",
+      "obrigatorio": false,
+      "tipo": "texto_curto",
+      "limite": "1 caractere",
+      "derivado": true
+    },
+
+    {
+      "nome": "TELEFONE",
+      "label": "Telefone de contato",
+      "descricao": "Número formatado para exibição.",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "20 caracteres",
+      "formato": "(XX) XXXXX-XXXX",
+      "exemplo": "(11) 99999-8888"
+    },
+
+    {
+      "nome": "WHATSAPP",
+      "label": "Número do WhatsApp (só dígitos)",
+      "descricao": "Usado nos links wa.me/55{{WHATSAPP}}. Apenas dígitos, sem formatação.",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "11 dígitos",
+      "formato": "DDD + número sem espaços",
+      "exemplo": "11999998888"
+    },
+
+    {
+      "nome": "ENDERECO",
+      "label": "Endereço completo",
+      "descricao": "Endereço do estabelecimento, incluindo cidade.",
+      "obrigatorio": true,
+      "tipo": "texto_medio",
+      "limite": "140 caracteres",
+      "exemplo": "Rua das Flores, 123 — Jardim América, São Paulo/SP"
+    },
+
+    {
+      "nome": "HORARIO",
+      "label": "Horário de funcionamento",
+      "descricao": "Horário de atendimento completo.",
+      "obrigatorio": true,
+      "tipo": "texto_curto",
+      "limite": "90 caracteres",
+      "exemplo": "Seg–Sex: 8h–18h | Sáb: 8h–12h"
+    },
+
+    {
+      "nome": "INSTAGRAM",
+      "label": "@ do Instagram",
+      "descricao": "Apenas o username, sem '@' e sem URL completa.",
+      "obrigatorio": false,
+      "tipo": "texto_curto",
+      "limite": "30 caracteres",
+      "exemplo": "clinicabemviver",
+      "instrucao_ausencia": "Se não houver, remova todos os blocos marcados como 'OPCIONAL: Instagram' no HTML."
+    },
+
+    {
+      "nome": "FACEBOOK",
+      "label": "Página do Facebook",
+      "descricao": "Slug/nome da página no Facebook (parte final da URL).",
+      "obrigatorio": false,
+      "tipo": "texto_curto",
+      "limite": "60 caracteres",
+      "exemplo": "clinicabemviver",
+      "instrucao_ausencia": "Se não houver, remova todos os blocos marcados como 'OPCIONAL: Facebook' no HTML."
+    }
+
+  ],
+
+  "regras_servicos": {
+    "minimo": 3,
+    "maximo": 6,
+    "instrucao": "Preencha SERVICO_1 até SERVICO_6 com os dados coletados. Para cada serviço não utilizado (ex: cliente com 4 serviços → SERVICO_5 e SERVICO_6 não existem), REMOVA o bloco .service-card correspondente do HTML. O grid se ajusta automaticamente ao número de cards restantes."
+  },
+
+  "regras_depoimentos": {
+    "minimo": 2,
+    "maximo": 3,
+    "instrucao": "Se o cliente tiver apenas 2 depoimentos, remova o 3º bloco .testi-card do HTML."
+  },
+
+  "icones_sugeridos_servicos": {
+    "fonte": "Lucide Icons (CDN já incluso no template)",
+    "lista": [
+      "stethoscope", "heart-pulse", "brain", "baby", "eye", "bone",
+      "pill", "thermometer", "activity", "shield-plus", "microscope",
+      "syringe", "bandage", "dna", "scan-heart", "scissors", "droplets",
+      "user-check", "smile", "zap"
+    ],
+    "instrucao": "Troque o atributo data-lucide nos .service-icon conforme o tipo de serviço coletado."
+  }
+}
