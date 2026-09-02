@@ -35,7 +35,7 @@ function NavLinks({ onNavigate, unreadCount }: { onNavigate?: () => void; unread
   const pathname = usePathname()
 
   return (
-    <nav className="flex-1 p-3 space-y-0.5 text-sm">
+    <nav className="flex-1 p-3 space-y-0.5 text-sm overflow-y-auto min-h-0">
       {navItems.map(({ href, label, indent }) => {
         // Financeiro/custos is a sub-item of financeiro, so mark parent active too
         const active =
