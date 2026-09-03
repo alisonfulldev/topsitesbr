@@ -11,7 +11,8 @@ export default async function ModelosTokenPage({ params }: { params: { token: st
 
   if (!p || p.status === 'cancelado') notFound()
 
-  const contractHtml = getTermsSnapshot('apresentacao-1.0')
+  const contractName = p.leadPersonName?.trim() || p.leadName.trim()
+  const contractHtml = getTermsSnapshot('apresentacao-1.0').replace('{{NOME}}', contractName)
 
   return (
     <LeadPage

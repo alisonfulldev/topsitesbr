@@ -7,52 +7,29 @@ import { TERMS_VERSION } from '@/lib/config'
 
 const TERMS_SNAPSHOTS: Record<string, string> = {
   'apresentacao-1.0': `
-<p style="color:#6b7280;font-size:13px;margin:0 0 24px;"><strong>Contrato de Prestação de Serviços de Criação de Site — Última atualização:</strong> setembro de 2026</p>
+<p style="font-weight:700;font-size:15px;margin:0 0 20px;">Contrato de Prestação de Serviço de Desenvolvimento de Site</p>
 
-<h3>1. Partes</h3>
-<p><strong>Prestadora:</strong> TOP SITE, CNPJ 22.556.759/0001-98 ("TOP SITE").<br>
-<strong>Contratante:</strong> pessoa identificada no formulário de contratação ("Cliente").</p>
+<p><strong>1. Partes:</strong> TOP SITE, CNPJ 22.556.759/0001-98 (Contratada) e {{NOME}} (Contratante).</p>
 
-<h3>2. O que está sendo contratado</h3>
-<p>Este contrato tem como objeto exclusivo a <strong>CRIAÇÃO DO SITE</strong> do Cliente, pelo valor de <strong>R$ 97,00 (noventa e sete reais), pagamento único e sem recorrência.</strong></p>
-<p>O serviço de criação compreende:</p>
-<ul>
-  <li>Desenvolvimento do site personalizado com a identidade visual do Cliente (logo, cores, textos e fotos fornecidos)</li>
-  <li>1 (uma) rodada de revisão após apresentação do layout</li>
-  <li>Entrega dos arquivos finais do site (HTML, CSS e JavaScript) via painel ou e-mail, de propriedade plena do Cliente</li>
-</ul>
+<p><strong>2. Objeto:</strong> desenvolvimento de um site conforme o escopo da proposta aprovada e do briefing acordado.</p>
 
-<h3>3. O que NÃO está incluso neste contrato</h3>
-<p style="background:#fef2f2;border-left:3px solid #dc2626;padding:12px 14px;border-radius:4px;"><strong>O valor de R$ 97,00 NÃO inclui hospedagem, publicação na internet, domínio, SSL ou qualquer serviço de manutenção.</strong> São serviços distintos, não contratados aqui.</p>
-<ul>
-  <li><strong>Hospedagem:</strong> o serviço de colocar o site acessível na internet e no Google não faz parte deste contrato. Sem hospedagem, os arquivos funcionam no computador do Cliente, mas não ficam disponíveis publicamente online.</li>
-  <li><strong>Domínio (.com.br ou .com):</strong> não incluso. O Cliente pode usar um domínio próprio ou um subdomínio gratuito fornecido pela TOP SITE, caso contrate o plano de hospedagem separadamente.</li>
-  <li><strong>Suporte contínuo e manutenção:</strong> não incluso. O Cliente recebe os arquivos e pode gerenciá-los como preferir.</li>
-</ul>
+<p><strong>3. Valor e pagamento:</strong> o valor refere-se EXCLUSIVAMENTE ao desenvolvimento (criação) do site, no valor de R$ 97,00. Pagamento único via Asaas; a confirmação inicia a produção.</p>
 
-<h3>4. Hospedagem — serviço separado e opcional</h3>
-<p>Para que o site fique acessível na internet é necessário um serviço de hospedagem. A TOP SITE oferece um plano de hospedagem mensal (<strong>R$ 19,00/mês</strong>, 1.º mês gratuito, sem fidelidade, cancelável a qualquer momento) que pode ser contratado de forma independente após a entrega dos arquivos. O Cliente pode também optar por contratar hospedagem de outro fornecedor de sua escolha — sem nenhuma obrigação com a TOP SITE além do presente contrato de criação.</p>
+<p><strong>4. O que está incluído:</strong> os itens listados como inclusos na proposta.</p>
 
-<h3>5. Propriedade dos arquivos</h3>
-<p>Os arquivos do site desenvolvido pertencem ao Cliente. A TOP SITE não retém, não revende e não restringe o uso dos arquivos entregues. Após o recebimento, o Cliente tem liberdade total para hospedar, modificar ou distribuir o site como desejar.</p>
+<p><strong>5. Revisão:</strong> 1 (uma) rodada de ajustes dentro do escopo do briefing; alterações fora do escopo são orçadas à parte.</p>
 
-<h3>6. Prazo de entrega</h3>
-<p>Até <strong>7 (sete) dias úteis</strong> após a confirmação do pagamento e o recebimento dos materiais necessários (logo, textos e fotos). O prazo é suspenso enquanto os materiais não forem enviados pelo Cliente.</p>
+<p><strong>6. Prazo de entrega:</strong> o site será entregue em até 7 (sete) dias úteis, contados a partir da confirmação do pagamento e do envio, pelo Contratante, de todo o conteúdo necessário para a produção.</p>
 
-<h3>7. Direito de Arrependimento</h3>
-<p>Conforme o art. 49 do Código de Defesa do Consumidor, o Cliente pode cancelar esta contratação em até <strong>7 (sete) dias corridos</strong> da confirmação do pagamento, com devolução integral do valor pago, desde que a entrega dos arquivos ainda não tenha ocorrido. Após a entrega, aplica-se o disposto no art. 53 do CDC (serviço já prestado). Para exercer o direito: contato@topsite.com.br ou WhatsApp +55 18 99674-2364.</p>
+<p><strong>7. Propriedade:</strong> os arquivos do site pertencem ao Contratante, que pode recebê-los mediante solicitação.</p>
 
-<h3>8. Responsabilidades do Cliente</h3>
-<p>O Cliente declara que todos os conteúdos fornecidos (textos, imagens, marca, logo) são de sua titularidade ou têm autorização de uso, não violam direitos de terceiros e não são difamatórios, ilegais ou enganosos. Qualquer responsabilidade decorrente do conteúdo publicado é exclusiva do Cliente.</p>
+<p><strong>8. Responsabilidades do Contratante:</strong> veracidade e legalidade do conteúdo, e titularidade/licença de textos e imagens enviados.</p>
 
-<h3>9. Privacidade e LGPD</h3>
-<p>Os dados pessoais fornecidos pelo Cliente (nome, e-mail, CPF/CNPJ) são usados exclusivamente para execução deste contrato, emissão de documentos fiscais e comunicações relacionadas ao serviço. A TOP SITE não compartilha dados com terceiros para fins comerciais. Conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018), o Cliente pode solicitar acesso, correção ou exclusão de seus dados a qualquer momento pelo e-mail contato@topsite.com.br.</p>
+<p><strong>9. Serviços não incluídos:</strong> publicação, hospedagem, SSL, monitoramento, manutenção, correções e alterações posteriores à entrega, e registro de domínio próprio. Tais serviços podem ser contratados separadamente.</p>
 
-<h3>10. Lei Aplicável e Foro</h3>
-<p>Este contrato é regido pelas leis da República Federativa do Brasil. As partes elegem o foro da Comarca de São Paulo/SP para dirimir eventuais controvérsias, sem prejuízo de outros meios de resolução.</p>
+<p><strong>10. Direito de arrependimento:</strong> por se tratar de contratação fora de estabelecimento físico, o Contratante poderá desistir em até 7 dias corridos, desde que a produção não tenha sido iniciada. Uma vez iniciada, por ser serviço personalizado e sob encomenda, o valor correspondente ao desenvolvimento já realizado não será restituído.</p>
 
-<h3>11. Contato</h3>
-<p>contato@topsite.com.br · WhatsApp: +55 18 99674-2364</p>
+<p><strong>11. Aceite:</strong> ao marcar a caixa e confirmar, o Contratante declara ter lido e concordado, manifestando vontade eletrônica com validade jurídica nos termos da legislação brasileira. Versão do contrato: 2026-07.</p>
 `,
   '1.1': `
 <p style="color:#6b7280;font-size:13px;margin:0 0 24px;"><strong>Última atualização:</strong> setembro de 2026</p>
