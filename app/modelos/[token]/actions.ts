@@ -23,9 +23,9 @@ function slugify(name: string): string {
 
 const PLAN_PRICES: Record<string, number> = { plano1: 97, plano2: 97, plano3: 188 }
 const PLAN_LABELS: Record<string, string> = {
-  plano1: 'Site — Arquivos HTML',
-  plano2: 'Site Essencial — Hospedagem inclusa',
-  plano3: 'Site Completo — Hospedagem + Domínio',
+  plano1: 'Criação de Site (Arquivos HTML)',
+  plano2: 'Criação de Site + Plano no Ar',
+  plano3: 'Criação de Site + Domínio Próprio',
 }
 
 export async function captureEmailAction(
@@ -59,6 +59,7 @@ export async function captureEmailAction(
 
 export async function checkoutAction(
   token: string,
+  planId: 'plano1' | 'plano2' | 'plano3',
   name: string,
   email: string,
   phone: string,
@@ -109,8 +110,8 @@ export async function checkoutAction(
   try {
     const charge = await provider.createSingleCharge({
       customerId,
-      description: PLAN_LABELS['plano1'],
-      price: PLAN_PRICES['plano1'],
+      description: PLAN_LABELS[planId] ?? PLAN_LABELS['plano1'],
+      price: PLAN_PRICES[planId] ?? PLAN_PRICES['plano1'],
       successUrl,
     })
     chargeId = charge.chargeId
@@ -122,7 +123,7 @@ export async function checkoutAction(
   await prisma.templatePresentation.update({
     where: { id: presentation.id },
     data: {
-      planChosen: 'plano1',
+      planChosen: planId,
       asaasCustomerId: customerId,
       asaasChargeId: chargeId,
       paymentUrl,

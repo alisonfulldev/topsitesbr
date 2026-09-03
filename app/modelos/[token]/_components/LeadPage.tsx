@@ -25,6 +25,80 @@ function toSlug(s: string) {
     .slice(0, 22)
 }
 
+type PlanId = 'plano1' | 'plano2' | 'plano3'
+
+const PLAN_DATA: Array<{
+  id: PlanId
+  name: string
+  price: string
+  priceNote: string
+  monthly: string | null
+  description: string
+  note: string | null
+  badge: string | null
+  highlight: boolean
+  features: string[]
+}> = [
+  {
+    id: 'plano1',
+    name: 'Criação do Site',
+    price: 'R$ 97',
+    priceNote: 'pagamento único',
+    monthly: null,
+    description: 'Site profissional criado, personalizado e pronto para usar. Pagamento único.',
+    note: 'Só a criação — sem hospedagem.',
+    badge: null,
+    highlight: false,
+    features: [
+      'Site profissional completo — design moderno e exclusivo',
+      'Responsivo — perfeito no celular, tablet e computador',
+      'Personalizado com sua logo, cores, textos e fotos',
+      'Código limpo e otimizado — carrega rápido',
+      'Você recebe os arquivos para hospedar onde quiser',
+    ],
+  },
+  {
+    id: 'plano2',
+    name: 'Site + Plano no Ar',
+    price: 'R$ 97',
+    priceNote: 'criação (pagamento único)',
+    monthly: 'R$ 19/mês',
+    description: 'Tudo da criação, e cuidamos de deixar seu site no ar e aparecendo no Google.',
+    note: null,
+    badge: '⭐ mais escolhido',
+    highlight: true,
+    features: [
+      'Site no ar 24h — hospedagem, sempre acessível',
+      'Aparecer no Google — meta tags, Schema, URLs amigáveis, dados estruturados',
+      'Sitemap enviado ao Google — indexação de todas as páginas (essencial pra aparecer nas buscas)',
+      'Integração com Google Search Console',
+      'SSL (segurança) — o Google prioriza sites seguros',
+      'Velocidade otimizada',
+      'Painel de métricas — visitantes, origem, desempenho',
+      'Suporte contínuo — sem você mexer em nada técnico',
+    ],
+  },
+  {
+    id: 'plano3',
+    name: 'Site + Plano no Ar + Domínio',
+    price: 'R$ 188',
+    priceNote: 'criação + domínio (único)',
+    monthly: 'R$ 19/mês',
+    description: 'Tudo do Plano no Ar, MAIS seu endereço profissional exclusivo.',
+    note: 'Renovação do domínio: R$91/ano',
+    badge: null,
+    highlight: false,
+    features: [
+      'Domínio próprio (ex: seunegocio.com.br) — sem "topsitebr" no meio',
+      'Muito mais credibilidade — endereço próprio passa seriedade e confiança',
+      'Mais forte no Google — domínio próprio ajuda a ser reconhecido e ranquear melhor',
+      'E-mail profissional possível — ex: contato@seunegocio.com.br',
+      'Você é dono do seu endereço — sua marca, seu domínio registrado',
+      'Configuramos tudo — registro e configuração por nossa conta',
+    ],
+  },
+]
+
 function GoogleSerpMockup({ businessName }: { businessName: string }) {
   const domain = `${toSlug(businessName)}.com.br`
   const query = businessName
@@ -156,6 +230,14 @@ export default function LeadPage({ token, leadName, leadPersonName, template1Nam
     setTimeout(() => window.document.getElementById('checkout')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80)
   }
 
+  // Plan selection
+  const [selectedPlan, setSelectedPlan] = useState<PlanId>('plano2')
+
+  function handleSelectPlan(planId: PlanId) {
+    setSelectedPlan(planId)
+    setTimeout(() => window.document.getElementById('checkout-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80)
+  }
+
   // Checkout
   const [name, setName] = useState(leadPersonName ?? '')
   const [email, setEmail] = useState('')
@@ -179,7 +261,7 @@ export default function LeadPage({ token, leadName, leadPersonName, template1Nam
     if (!termsAccepted) { setCheckoutError('Você precisa aceitar os Termos de Uso para continuar.'); return }
     setCheckoutError('')
     startCheckoutTransition(async () => {
-      const res = await checkoutAction(token, name, email, phone, document, termsAccepted)
+      const res = await checkoutAction(token, selectedPlan, name, email, phone, document, termsAccepted)
       if (res.error) { setCheckoutError(res.error); return }
       if (res.paymentUrl) window.location.href = res.paymentUrl
     })
@@ -234,6 +316,8 @@ export default function LeadPage({ token, leadName, leadPersonName, template1Nam
       </main>
     )
   }
+
+  const activePlan = PLAN_DATA.find((p) => p.id === selectedPlan)!
 
   // ── Página principal ──────────────────────────────────────────────────────
   return (
@@ -356,24 +440,107 @@ export default function LeadPage({ token, leadName, leadPersonName, template1Nam
           </div>
         </section>
 
-        {/* Checkout */}
-        <section className="py-14 px-4 bg-gray-50" id="checkout" ref={formRef}>
-          <div className="max-w-md mx-auto">
-            <h2 className="text-xl font-black text-gray-900 mb-1 text-center">Finalizar contratação</h2>
-            <p className="text-sm text-gray-500 text-center mb-6">Preencha seus dados e vá para o pagamento.</p>
+        {/* Planos */}
+        <section className="py-16 px-4 bg-gray-50" id="checkout" ref={formRef}>
+          {/* Seleção de plano */}
+          <div className="max-w-4xl mx-auto mb-14">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Escolha seu plano</h2>
+              <p className="text-gray-500 text-sm max-w-md mx-auto">
+                A criação do site é a mesma em todos os planos. A diferença está no que acontece depois.
+              </p>
+            </div>
 
-            {/* Price card */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-6 flex items-center justify-between">
-              <div>
-                <p className="text-sm font-bold text-gray-900">Criação do Site</p>
-                <p className="text-xs text-gray-400 mt-0.5">Design exclusivo · personalizado para você</p>
-                {selectedTemplate && (
-                  <p className="text-xs text-brand font-semibold mt-1">Modelo {selectedTemplate} — {templateNames[selectedTemplate]}</p>
-                )}
-              </div>
-              <div className="text-right shrink-0 ml-4">
-                <p className="text-2xl font-black text-gray-900">R$ 97</p>
-                <p className="text-xs text-gray-400">pagamento único</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {PLAN_DATA.map((plan) => {
+                const isSelected = selectedPlan === plan.id
+                return (
+                  <div
+                    key={plan.id}
+                    onClick={() => handleSelectPlan(plan.id)}
+                    className={`relative bg-white rounded-2xl border-2 p-6 cursor-pointer transition-all duration-200 flex flex-col ${
+                      isSelected
+                        ? 'border-brand shadow-xl shadow-brand/10'
+                        : plan.highlight
+                          ? 'border-brand/30 shadow-md'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                    }`}
+                  >
+                    {plan.badge && (
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brand text-brand-dark text-[11px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm">
+                        {plan.badge}
+                      </div>
+                    )}
+
+                    <div className="mb-4">
+                      <p className="font-black text-gray-900 text-[15px] leading-tight">{plan.name}</p>
+                    </div>
+
+                    <div className="mb-4">
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-3xl font-black text-gray-900">{plan.price}</span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-0.5">{plan.priceNote}</p>
+                      {plan.monthly && (
+                        <p className="text-sm font-semibold text-brand mt-1.5">+ {plan.monthly} hospedagem</p>
+                      )}
+                    </div>
+
+                    <p className="text-sm text-gray-600 leading-relaxed mb-4">{plan.description}</p>
+
+                    {plan.features.length > 0 && (
+                      <ul className="space-y-2 mb-4 flex-1">
+                        {plan.features.map((f) => (
+                          <li key={f} className="flex items-start gap-2 text-sm text-gray-600">
+                            <span className="text-green-500 font-bold shrink-0 mt-0.5 text-base leading-none">✓</span>
+                            <span className="leading-snug">{f}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {plan.note && (
+                      <p className="text-xs text-gray-400 mb-4">{plan.note}</p>
+                    )}
+
+                    <div className="mt-auto">
+                      <button
+                        type="button"
+                        className={`w-full py-2.5 rounded-xl text-sm font-bold transition-all ${
+                          isSelected ? 'bg-brand text-brand-dark' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        {isSelected ? '✓ Selecionado' : 'Selecionar'}
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Formulário */}
+          <div className="max-w-md mx-auto" id="checkout-form">
+            <h2 className="text-xl font-black text-gray-900 mb-1 text-center">Seus dados</h2>
+            <p className="text-sm text-gray-500 text-center mb-6">Preencha e vá para o pagamento.</p>
+
+            {/* Resumo do plano selecionado */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-4 mb-6">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-gray-900">{activePlan.name}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">Design exclusivo · personalizado para você</p>
+                  {selectedTemplate && (
+                    <p className="text-xs text-brand font-semibold mt-1">Modelo {selectedTemplate} — {templateNames[selectedTemplate]}</p>
+                  )}
+                  {activePlan.monthly && (
+                    <p className="text-xs text-gray-500 mt-1">+ {activePlan.monthly} hospedagem (após ativação)</p>
+                  )}
+                </div>
+                <div className="text-right shrink-0 ml-4">
+                  <p className="text-2xl font-black text-gray-900">{activePlan.price}</p>
+                  <p className="text-xs text-gray-400">{activePlan.priceNote}</p>
+                </div>
               </div>
             </div>
 
@@ -436,7 +603,7 @@ export default function LeadPage({ token, leadName, leadPersonName, template1Nam
                 disabled={checkoutPending || !termsAccepted}
                 className="w-full bg-brand text-brand-dark font-bold py-4 rounded-xl text-sm hover:bg-brand/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {checkoutPending ? 'Aguarde...' : 'Ir para o pagamento →'}
+                {checkoutPending ? 'Aguarde...' : `Pagar ${activePlan.price} →`}
               </button>
               <p className="text-xs text-gray-400 text-center">
                 Pix, boleto ou cartão. Página segura processada pelo Asaas.
