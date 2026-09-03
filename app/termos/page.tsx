@@ -234,20 +234,7 @@ export default function TermosPage() {
           </section>
         </div>
 
-        <div className="mt-8 p-5 rounded-xl bg-amber-50 border border-amber-200 text-sm text-amber-900">
-          <p className="font-semibold mb-1">Nota — oferta de criação de site (R$ 97)</p>
-          <p>
-            Se você chegou aqui a partir da nossa oferta de criação de site, saiba que o
-            pagamento de <strong>R$ 97,00 é exclusivamente pela criação do site</strong> —
-            você recebe os arquivos finais e eles são seus, sem qualquer cobrança recorrente.
-            Os planos de hospedagem descritos acima são um serviço <strong>separado e
-            opcional</strong>: para deixar o site acessível na internet é necessário contratar
-            um plano de hospedagem (a partir de R$ 19/mês, sem fidelidade). Sem a hospedagem,
-            você recebe os arquivos e pode hospedá-los onde preferir.
-          </p>
-        </div>
-
-        <div className="mt-6 pt-6 border-t border-gray-100 flex flex-wrap gap-4 items-center justify-between">
+        <div className="mt-10 pt-6 border-t border-gray-100 flex flex-wrap gap-4 items-center justify-between">
           <Link href="/privacidade" className="text-sm text-brand-text hover:underline">
             Política de Privacidade →
           </Link>
