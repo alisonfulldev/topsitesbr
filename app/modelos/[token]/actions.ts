@@ -21,7 +21,8 @@ function slugify(name: string): string {
   return `${base}-${Math.random().toString(36).substring(2, 6)}`
 }
 
-const PLAN_PRICES: Record<string, number> = { plano1: 97, plano2: 97, plano3: 188 }
+// ⚠️ VALOR DE TESTE — REVERTER PARA 97 DEPOIS DO TESTE
+const PLAN_PRICES: Record<string, number> = { plano1: 5, plano2: 5, plano3: 188 }
 const PLAN_LABELS: Record<string, string> = {
   plano1: 'Site — Arquivos HTML',
   plano2: 'Site Essencial — Hospedagem inclusa',
