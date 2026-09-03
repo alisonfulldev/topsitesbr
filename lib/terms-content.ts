@@ -54,6 +54,83 @@ const TERMS_SNAPSHOTS: Record<string, string> = {
 <h3>11. Contato</h3>
 <p>contato@topsite.com.br · WhatsApp: +55 18 99674-2364</p>
 `,
+  '1.1': `
+<p style="color:#6b7280;font-size:13px;margin:0 0 24px;"><strong>Última atualização:</strong> setembro de 2026</p>
+
+<h3>1. Objeto e Partes</h3>
+<p>Estes Termos de Uso regulam a prestação de serviços de hospedagem, manutenção e suporte de sites oferecidos por <strong>TOP SITE</strong>, CNPJ 22.556.759/0001-98, ao cliente que contratou os serviços por meio do painel de gestão ou por contato direto via WhatsApp. Ao ativar sua assinatura e marcar o aceite neste instrumento, o cliente concorda integralmente com todas as disposições abaixo.</p>
+
+<h3>2. Planos e Assinatura</h3>
+<p>A TOP SITE oferece dois planos de hospedagem mensal, sem contrato de fidelidade:</p>
+<table style="width:100%;border-collapse:collapse;font-size:13px;margin:12px 0;">
+  <thead>
+    <tr style="background:#f3f4f6;">
+      <th style="text-align:left;padding:8px 10px;border:1px solid #e5e7eb;">Benefício</th>
+      <th style="text-align:center;padding:8px 10px;border:1px solid #e5e7eb;">Básico — R$ 17/mês</th>
+      <th style="text-align:center;padding:8px 10px;border:1px solid #e5e7eb;">Plus — R$ 29/mês</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Site no ar + SSL + monitoramento</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td></tr>
+    <tr style="background:#f9fafb;"><td style="padding:7px 10px;border:1px solid #e5e7eb;">Alterações de conteúdo incluídas/mês</td><td style="text-align:center;border:1px solid #e5e7eb;">0</td><td style="text-align:center;border:1px solid #e5e7eb;">1 (texto OU imagem)</td></tr>
+    <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Prazo de execução de alterações</td><td style="text-align:center;border:1px solid #e5e7eb;">até 15 dias úteis</td><td style="text-align:center;border:1px solid #e5e7eb;">até 7 dias úteis</td></tr>
+    <tr style="background:#f9fafb;"><td style="padding:7px 10px;border:1px solid #e5e7eb;">Correções ilimitadas e gratuitas</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td></tr>
+    <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Relatório de visitas</td><td style="text-align:center;border:1px solid #e5e7eb;">—</td><td style="text-align:center;border:1px solid #e5e7eb;">✓ completo</td></tr>
+    <tr style="background:#f9fafb;"><td style="padding:7px 10px;border:1px solid #e5e7eb;">Suporte via WhatsApp direto</td><td style="text-align:center;border:1px solid #e5e7eb;">—</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td></tr>
+    <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Desconto em serviços avulsos e upsells</td><td style="text-align:center;border:1px solid #e5e7eb;">—</td><td style="text-align:center;border:1px solid #e5e7eb;">10%</td></tr>
+  </tbody>
+</table>
+<p>Primeiro mês gratuito para novos clientes. Cobranças mensais automáticas via Pix, boleto ou cartão de crédito, processadas pelo Asaas. Renovação automática até cancelamento.</p>
+
+<h3>3. Correções × Alterações de Conteúdo</h3>
+<p><strong>Correção</strong>: ajuste de erro pré-existente — texto errado, link quebrado, dado desatualizado. Ilimitada e gratuita em qualquer plano, não consome o limite mensal.</p>
+<p><strong>Alteração de conteúdo</strong>: substituição intencional de texto ou imagem por novo conteúdo escolhido pelo cliente. Consome o limite mensal do plano Plus. Clientes do Básico e alterações além do limite são cobrados avulso:</p>
+<ul>
+  <li>Alteração de Texto: R$ 20,00</li>
+  <li>Alteração de Imagem: R$ 40,00</li>
+  <li>Alteração de Texto e Imagem: R$ 60,00 (sempre avulsa, em qualquer plano)</li>
+  <li>Nova Seção: R$ 40,00</li>
+  <li>Nova Página: R$ 70,00</li>
+</ul>
+<p>Assinantes do Plus têm 10% de desconto nos serviços avulsos acima.</p>
+
+<h3>4. Inadimplência</h3>
+<p>Em caso de atraso, a TOP SITE notificará o cliente por e-mail e pelo painel:</p>
+<ul>
+  <li><strong>Dia 0:</strong> aviso amigável com link para pagamento</li>
+  <li><strong>Dia 5:</strong> alerta de despublicação em 5 dias</li>
+  <li><strong>Dia 10:</strong> site despublicado</li>
+</ul>
+<p>Após regularização, o site é republicado sem taxa de reativação. Os arquivos ficam disponíveis para download mesmo durante a inadimplência.</p>
+
+<h3>5. Propriedade do Site</h3>
+<p>Os arquivos do site pertencem ao cliente. A TOP SITE não retém nem revende o site. Os arquivos ficam disponíveis para download no painel a qualquer momento.</p>
+
+<h3>6. Cancelamento</h3>
+<p>O cliente pode cancelar a assinatura a qualquer momento pelo WhatsApp ou pelo painel. Não há multa ou taxa. Valores já pagos não são reembolsados, exceto nos casos previstos em lei.</p>
+
+<h3>7. Direito de Arrependimento</h3>
+<p>Conforme o Código de Defesa do Consumidor (art. 49), o cliente pode cancelar em até 7 dias corridos da contratação, com devolução integral dos valores pagos. Para exercer esse direito: contato@topsite.com.br ou pelo WhatsApp.</p>
+
+<h3>8. Disponibilidade</h3>
+<p>A TOP SITE envidará seus melhores esforços para manter o site online de forma contínua. Eventuais indisponibilidades técnicas não gerarão direito a desconto ou reembolso, salvo comprovada negligência do prestador.</p>
+
+<h3>9. Responsabilidades do Cliente</h3>
+<ul>
+  <li>Manter dados cadastrais atualizados (CPF/CNPJ, e-mail, telefone)</li>
+  <li>Garantir que os conteúdos enviados não violam direitos de terceiros e não são difamatórios ou ilegais</li>
+  <li>Manter a senha de acesso ao painel em sigilo</li>
+</ul>
+
+<h3>10. Alteração dos Termos</h3>
+<p>A TOP SITE pode atualizar estes Termos a qualquer momento. O cliente será notificado por e-mail e no painel. O uso continuado dos serviços após a comunicação implica aceite das novas condições.</p>
+
+<h3>11. Lei Aplicável e Foro</h3>
+<p>Estes Termos são regidos pelas leis da República Federativa do Brasil. Foro eleito: Comarca de São Paulo/SP.</p>
+
+<h3>12. Contato</h3>
+<p>contato@topsite.com.br | WhatsApp: +55 18 99674-2364</p>
+`,
   '1.0': `
 <p style="color:#6b7280;font-size:13px;margin:0 0 24px;"><strong>Última atualização:</strong> 23 de julho de 2026</p>
 
