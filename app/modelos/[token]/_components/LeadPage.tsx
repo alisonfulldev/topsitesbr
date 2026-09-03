@@ -9,6 +9,7 @@ import { validateDocument, formatDocument } from '@/lib/cpf'
 interface Props {
   token: string
   leadName: string
+  leadPersonName: string | null
   template1Name: string
   template2Name: string
   alreadyPaid: boolean
@@ -112,8 +113,8 @@ function GoogleSerpMockup({ businessName }: { businessName: string }) {
   )
 }
 
-export default function LeadPage({ token, leadName, template1Name, template2Name, alreadyPaid, contractHtml }: Props) {
-  const firstName = leadName.split(' ')[0]
+export default function LeadPage({ token, leadName, leadPersonName, template1Name, template2Name, alreadyPaid, contractHtml }: Props) {
+  const firstName = leadPersonName ? leadPersonName.split(' ')[0] : null
   const templateNames = { '1': template1Name, '2': template2Name } as const
 
   // Gate
@@ -156,7 +157,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
   }
 
   // Checkout
-  const [name, setName] = useState(leadName)
+  const [name, setName] = useState(leadPersonName ?? '')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [document, setDocument] = useState('')
@@ -208,7 +209,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
             <Image src="/logo.png" alt="TOP SITE" width={120} height={36} className="h-9 w-auto mx-auto mb-6" priority />
-            <h1 className="text-2xl font-black text-white mb-2">Olá, {firstName}! Seu site está pronto.</h1>
+            <h1 className="text-2xl font-black text-white mb-2">{firstName ? `Olá, ${firstName}! Seu site está pronto.` : 'Seu site está pronto!'}</h1>
             <p className="text-gray-400 text-sm leading-relaxed">
               Preparamos modelos exclusivos para o seu negócio.<br />
               Informe seu e-mail para visualizar.
@@ -288,7 +289,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
         <section className="bg-gray-950 py-16 sm:py-20 px-4">
           <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="text-brand text-sm font-bold uppercase tracking-widest mb-4">Criado para você, {firstName}</p>
+              <p className="text-brand text-sm font-bold uppercase tracking-widest mb-4">{firstName ? `Criado para você, ${firstName}` : 'Criado especialmente para você'}</p>
               <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-5">
                 Seu negócio aparecendo<br className="hidden sm:block" /> no Google — assim:
               </h1>
@@ -308,7 +309,7 @@ export default function LeadPage({ token, leadName, template1Name, template2Name
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3">
-                Escolha o modelo do seu site, {firstName}
+                {firstName ? `Escolha o modelo do seu site, ${firstName}` : 'Escolha o modelo do seu site'}
               </h2>
               <p className="text-gray-500 max-w-lg mx-auto">
                 Após escolher, personalizamos tudo com a sua identidade: sua logo, cores, textos e fotos.

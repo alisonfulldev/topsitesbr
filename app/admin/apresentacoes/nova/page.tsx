@@ -22,17 +22,33 @@ export default async function NovaApresentacaoPage() {
       </div>
 
       <form action={createPresentation} className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Nome do Lead <span className="text-red-500">*</span>
-          </label>
-          <input
-            name="leadName"
-            type="text"
-            required
-            placeholder="Ex: João da Barbearia"
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nome da pessoa (lead) <span className="text-red-500">*</span>
+            </label>
+            <input
+              name="leadPersonName"
+              type="text"
+              required
+              placeholder="Ex: João Silva"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
+            />
+            <p className="text-xs text-gray-400 mt-1">Usado na saudação "Olá, João!"</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nome da empresa / negócio <span className="text-red-500">*</span>
+            </label>
+            <input
+              name="leadName"
+              type="text"
+              required
+              placeholder="Ex: Barbearia do João"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
+            />
+            <p className="text-xs text-gray-400 mt-1">Aparece no mockup do Google</p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

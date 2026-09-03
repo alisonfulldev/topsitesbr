@@ -712,6 +712,7 @@ model TemplatePresentation {
   id                  String                     @id @default(uuid())
   token               String                     @unique
   leadName            String                     @map("lead_name")
+  leadPersonName      String?                    @map("lead_person_name")
   leadPhone           String?                    @map("lead_phone")
   leadEmail           String?                    @map("lead_email")
   leadDocument        String?                    @map("lead_document")

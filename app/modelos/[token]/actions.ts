@@ -51,7 +51,7 @@ export async function captureEmailAction(
   sendPresentationGateEmail(
     normalEmail,
     `${APP_URL}/modelos/${token}`,
-    presentation.leadName,
+    presentation.leadPersonName ?? presentation.leadName,
   ).catch((err) => console.error('[gate-email] FALHA:', err))
 
   return { ok: true }

@@ -12,6 +12,7 @@ export async function createPresentation(formData: FormData) {
   if (!session || session.user.role !== 'admin') throw new Error('Não autorizado')
 
   const leadName = (formData.get('leadName') as string)?.trim()
+  const leadPersonName = (formData.get('leadPersonName') as string)?.trim() || null
   const leadPhone = (formData.get('leadPhone') as string)?.trim() || null
   const leadEmail = (formData.get('leadEmail') as string)?.trim() || null
   const template1Name = (formData.get('template1Name') as string)?.trim()
@@ -34,6 +35,7 @@ export async function createPresentation(formData: FormData) {
     data: {
       token,
       leadName,
+      leadPersonName,
       leadPhone,
       leadEmail,
       template1Name,
