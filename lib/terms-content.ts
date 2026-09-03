@@ -130,6 +130,11 @@ const TERMS_SNAPSHOTS: Record<string, string> = {
 
 <h3>12. Contato</h3>
 <p>contato@topsite.com.br | WhatsApp: +55 18 99674-2364</p>
+
+<div style="margin-top:20px;padding:14px 16px;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;font-size:13px;color:#78350f;">
+  <strong>Nota — oferta de criação de site (R$ 97)</strong><br>
+  Se você chegou aqui a partir da nossa oferta de criação de site, saiba que o pagamento de <strong>R$ 97,00 é exclusivamente pela criação do site</strong> — você recebe os arquivos finais e eles são seus, sem qualquer cobrança recorrente. Os planos de hospedagem descritos acima são um serviço <strong>separado e opcional</strong>: para deixar o site acessível na internet é necessário contratar hospedagem (a partir de R$ 19/mês, sem fidelidade). Sem hospedagem, você recebe os arquivos e pode hospedá-los onde preferir.
+</div>
 `,
   '1.0': `
 <p style="color:#6b7280;font-size:13px;margin:0 0 24px;"><strong>Última atualização:</strong> 23 de julho de 2026</p>
