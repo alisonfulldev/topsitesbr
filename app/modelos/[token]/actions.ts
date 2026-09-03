@@ -127,6 +127,7 @@ export async function checkoutAction(
       asaasCustomerId: customerId,
       asaasChargeId: chargeId,
       paymentUrl,
+      leadPersonName: name.trim(),
       leadEmail: email.trim().toLowerCase(),
       leadPhone: phone.trim() || presentation.leadPhone,
       leadDocument: docClean,

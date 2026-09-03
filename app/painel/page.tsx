@@ -93,7 +93,7 @@ export default async function PainelPage({
   const hasPriorSubscription = !!priorSubRow
 
   // ── Fluxo proposta ────────────────────────────────────────────────────────────
-  if (client.entryFlow === 'proposta' && !hasActiveSubscription) {
+  if ((client.entryFlow === 'proposta' || client.entryFlow === 'apresentacao') && !hasActiveSubscription) {
     const proposal = await prisma.proposal.findFirst({
       where: { clientId },
       select: { id: true, status: true, siteApprovedAt: true, siteId: true },

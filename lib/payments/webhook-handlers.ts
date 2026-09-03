@@ -10,8 +10,18 @@ import {
   sendProposalPaymentConfirmedEmail,
   sendContractCopyToClient,
   sendContractSignedToAdmin,
+  sendSiteInDevelopmentEmail,
 } from '@/lib/emails/proposal'
 import { asaasFetch } from '@/lib/integrations/asaas'
+import { hashPassword } from '@/lib/password'
+import { generateReferralCode } from '@/lib/referral'
+
+const TEMP_PASSWORD_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
+function generateTempPassword(): string {
+  return Array.from({ length: 12 }, () =>
+    TEMP_PASSWORD_CHARS[Math.floor(Math.random() * TEMP_PASSWORD_CHARS.length)],
+  ).join('')
+}
 
 interface AsaasPaymentStatus {
   id: string
@@ -424,67 +434,114 @@ async function handlePresentationPayment(chargeId: string): Promise<{ ok: boolea
     data: { status: 'pago', paidAt: new Date() },
   })
 
-  const planLabels: Record<string, string> = {
-    plano1: 'Site (R$97 — arquivos)',
-    plano2: 'Essencial (R$97 + R$19/mês)',
-    plano3: 'Completo (R$188 + R$19/mês)',
+  const clientName = presentation.leadPersonName?.trim() || presentation.leadName
+  const clientEmail = presentation.leadEmail
+
+  if (!clientEmail) {
+    await sendNotification(
+      null,
+      `Apresentação paga — sem e-mail (${presentation.leadName})`,
+      `Pagamento confirmado mas sem e-mail cadastrado. Crie o cliente manualmente e entre em contato com o lead.`,
+    )
+    return { ok: true, message: `Apresentação de ${presentation.leadName} paga — sem e-mail para criar cliente.` }
   }
-  const planLabel = presentation.planChosen ? (planLabels[presentation.planChosen] ?? presentation.planChosen) : 'desconhecido'
 
-  const subdomainInfo = presentation.subdomain ? ` Subdomínio: ${presentation.subdomain}.` : ''
+  // ── Idempotência: cliente já existe ──────────────────────────────────────────
+  const existingClient = await prisma.client.findFirst({ where: { email: clientEmail } })
+  if (existingClient) {
+    await sendNotification(
+      null,
+      `Apresentação paga — ${presentation.leadName}`,
+      `Pagamento confirmado. Cliente ${clientName} (${clientEmail}) já existe no sistema (id: ${existingClient.id}). Crie a proposta manualmente e inicie o desenvolvimento.`,
+    )
+    return { ok: true, message: `Apresentação de ${presentation.leadName} paga — cliente já existia.` }
+  }
 
+  // ── Cria Client ───────────────────────────────────────────────────────────────
+  const tempPassword = generateTempPassword()
+  const passwordHash = await hashPassword(tempPassword)
+
+  const client = await prisma.client.create({
+    data: {
+      name: clientName,
+      email: clientEmail,
+      phone: presentation.leadPhone || null,
+      document: presentation.leadDocument || null,
+      referralCode: generateReferralCode(clientName),
+      entryFlow: 'apresentacao',
+      activationFlow: 'quente',
+      siteEntryFee: 97,
+    },
+  })
+
+  // ── Cria User (login) ─────────────────────────────────────────────────────────
+  await prisma.user.create({
+    data: {
+      name: clientName,
+      email: clientEmail,
+      passwordHash,
+      role: 'client',
+      clientId: client.id,
+      mustChangePassword: true,
+    },
+  })
+
+  // ── Cria Produto + Order (rastreamento financeiro) ────────────────────────────
+  let product = await prisma.product.findFirst({
+    where: { name: 'Criação de Site (Apresentação)' },
+  })
+  if (!product) {
+    product = await prisma.product.create({
+      data: { name: 'Criação de Site (Apresentação)', price: 97, type: 'service' },
+    })
+  }
+
+  const order = await prisma.order.create({
+    data: {
+      clientId: client.id,
+      productId: product.id,
+      amount: 97,
+      status: 'paid',
+      asaasChargeId: chargeId,
+    },
+  })
+
+  // ── Cria Proposal (acesso ao fluxo "Meu Projeto" no painel) ──────────────────
+  const templateNum = presentation.chosenTemplate ?? 1
+  const templateName = templateNum === 2
+    ? (presentation.template2Name ?? 'Modelo 2')
+    : (presentation.template1Name ?? 'Modelo 1')
+
+  await prisma.proposal.create({
+    data: {
+      clientId: client.id,
+      title: `Site de ${presentation.leadName} — ${templateName}`,
+      creationPrice: 97,
+      status: 'em_desenvolvimento',
+      paidAt: new Date(),
+      orderId: order.id,
+      asaasChargeId: chargeId,
+    },
+  })
+
+  // ── E-mail com credenciais de acesso ─────────────────────────────────────────
+  sendSiteInDevelopmentEmail({
+    to: clientEmail,
+    clientName,
+    loginEmail: clientEmail,
+    loginPassword: tempPassword,
+  }).catch((err) => console.error('[apresentacao-email] FALHA:', err))
+
+  // ── Notificação interna para o admin ─────────────────────────────────────────
   await sendNotification(
     null,
-    `Apresentação paga — ${presentation.leadName}`,
-    `O lead ${presentation.leadName} pagou o plano "${planLabel}" via apresentação de templates.${subdomainInfo} Suba os arquivos e ative o site.`,
+    `Iniciar desenvolvimento — ${presentation.leadName}`,
+    `${clientName} (${clientEmail}) pagou a criação do site e escolheu o ${templateName}. O acesso ao painel foi criado e enviado por e-mail. Inicie o desenvolvimento e atualize o status da proposta conforme o andamento.`,
   )
-
-  // Para planos 2 e 3: cria assinatura recorrente de R$19/mês
-  if (
-    (presentation.planChosen === 'plano2' || presentation.planChosen === 'plano3') &&
-    presentation.asaasCustomerId
-  ) {
-    if (process.env.PAYMENT_DRIVER !== 'asaas') {
-      console.log(`[MOCK] Assinatura R$19/mês criada para apresentação de ${presentation.leadName}`)
-    } else {
-      try {
-        const today = new Date()
-        const nextDue = new Date(today)
-        nextDue.setDate(today.getDate() + 30)
-        const yyyy = nextDue.getFullYear()
-        const mm = String(nextDue.getMonth() + 1).padStart(2, '0')
-        const dd = String(nextDue.getDate()).padStart(2, '0')
-
-        const sub = await asaasFetch<{ id: string }>('/subscriptions', {
-          method: 'POST',
-          body: JSON.stringify({
-            customer: presentation.asaasCustomerId,
-            billingType: 'UNDEFINED',
-            value: 19,
-            nextDueDate: `${yyyy}-${mm}-${dd}`,
-            cycle: 'MONTHLY',
-            description: `Site no Ar — ${presentation.leadName}`,
-          }),
-        })
-
-        await prisma.templatePresentation.update({
-          where: { id: presentation.id },
-          data: { asaasSubscriptionId: sub.id },
-        })
-      } catch (err) {
-        const errMsg = err instanceof Error ? err.message : String(err)
-        await sendNotification(
-          null,
-          `Erro ao criar assinatura — ${presentation.leadName}`,
-          `Pagamento confirmado, mas a assinatura R$19/mês não foi criada automaticamente. Erro: ${errMsg}. Crie manualmente no Asaas (customerId: ${presentation.asaasCustomerId}).`,
-        )
-      }
-    }
-  }
 
   return {
     ok: true,
-    message: `Apresentação de ${presentation.leadName} — pagamento confirmado (${planLabel}).`,
+    message: `Apresentação de ${presentation.leadName} paga — cliente, usuário e proposta criados.`,
   }
 }
 
