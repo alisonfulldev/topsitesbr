@@ -90,11 +90,12 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
   })
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  const subscriptionPrice = client.entryFlow === 'apresentacao' ? 19 : Number(plan.price)
   const { subscriptionId, chargeId, nextDueDate, paymentUrl } =
     await provider.createSubscription({
       customerId,
       planName: plan.name,
-      price: Number(plan.price),
+      price: subscriptionPrice,
       successUrl: `${appUrl}/painel?ativado=1`,
       freeMonth,
     })
@@ -134,7 +135,7 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
     await sendNotification(
       clientId,
       'Assinatura ativada com 1 mês grátis!',
-      `Seu plano ${plan.name} foi ativado. O primeiro mês é grátis — sua primeira cobrança de R$${Number(plan.price).toFixed(2).replace('.', ',')} será em ${nextDueDate ? nextDueDate.toLocaleDateString('pt-BR') : '30 dias'}.`,
+      `Seu plano ${plan.name} foi ativado. O primeiro mês é grátis — sua primeira cobrança de R$${subscriptionPrice.toFixed(2).replace('.', ',')} será em ${nextDueDate ? nextDueDate.toLocaleDateString('pt-BR') : '30 dias'}.`,
       'painel',
       'payment-confirmed',
     )

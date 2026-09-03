@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { getTermsSnapshot } from '@/lib/terms-content'
 import LeadPage from './_components/LeadPage'
 
 export default async function ModelosTokenPage({ params }: { params: { token: string } }) {
@@ -10,6 +11,8 @@ export default async function ModelosTokenPage({ params }: { params: { token: st
 
   if (!p || p.status === 'cancelado') notFound()
 
+  const contractHtml = getTermsSnapshot('apresentacao-1.0')
+
   return (
     <LeadPage
       token={p.token}
@@ -17,6 +20,7 @@ export default async function ModelosTokenPage({ params }: { params: { token: st
       template1Name={p.template1Name ?? 'Modelo 1'}
       template2Name={p.template2Name ?? 'Modelo 2'}
       alreadyPaid={p.status === 'pago'}
+      contractHtml={contractHtml}
     />
   )
 }

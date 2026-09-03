@@ -141,6 +141,7 @@ export default async function PainelPage({
             clientName={client.name}
             clientEmail={client.email}
             activationFlow={(client.activationFlow as 'quente' | 'frio') ?? 'frio'}
+            monthlyPrice={29}
           />
         )
       }

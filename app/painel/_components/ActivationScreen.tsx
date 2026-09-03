@@ -16,6 +16,7 @@ type Props = {
   clientName: string
   clientEmail: string
   activationFlow: 'quente' | 'frio'
+  monthlyPrice?: number
 }
 
 type RetentionStep = 'retention' | 'reason' | 'counterargument'
@@ -176,7 +177,7 @@ export function RegularizationScreen({
 
 // ─── Warm flow (quente) ──────────────────────────────────────────────────────
 
-function WarmActivationScreen({ pendingPayment }: { pendingPayment?: boolean }) {
+function WarmActivationScreen({ pendingPayment, monthlyPrice = 29 }: { pendingPayment?: boolean; monthlyPrice?: number }) {
   const [error, setError] = useState<string | null>(null)
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -230,7 +231,7 @@ function WarmActivationScreen({ pendingPayment }: { pendingPayment?: boolean }) 
         </ul>
 
         <p className="text-xs text-gray-400 mb-4">
-          Após o período gratuito: R$29/mês, sem contrato. Cancele quando quiser.
+          Após o período gratuito: R${monthlyPrice}/mês, sem contrato. Cancele quando quiser.
         </p>
 
         <label className="flex items-start gap-3 mb-4 cursor-pointer">
@@ -252,7 +253,7 @@ function WarmActivationScreen({ pendingPayment }: { pendingPayment?: boolean }) 
             <Link href="/privacidade" target="_blank" className="text-brand-text hover:underline">
               Política de Privacidade
             </Link>
-            , incluindo a renovação automática mensal de R$29 após o primeiro mês gratuito.
+            , incluindo a renovação automática mensal de R${monthlyPrice} após o primeiro mês gratuito.
           </span>
         </label>
 
@@ -286,9 +287,9 @@ function WarmActivationScreen({ pendingPayment }: { pendingPayment?: boolean }) 
 
 // ─── Cold flow (frio) ────────────────────────────────────────────────────────
 
-export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, clientName, clientEmail, activationFlow }: Props) {
+export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, clientName, clientEmail, activationFlow, monthlyPrice = 29 }: Props) {
   if (activationFlow === 'quente') {
-    return <WarmActivationScreen pendingPayment={pendingPayment} />
+    return <WarmActivationScreen pendingPayment={pendingPayment} monthlyPrice={monthlyPrice} />
   }
   const [showRetention, setShowRetention] = useState(false)
   const [retentionStep, setRetentionStep] = useState<RetentionStep>('retention')
@@ -544,7 +545,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, clientNa
             <span className="text-green-400 text-sm font-bold">Primeiro mês grátis</span>
           </div>
           <p className="text-gray-400 text-sm max-w-xs mx-auto leading-relaxed">
-            Depois R$29/mês, sem contrato. Cancele quando quiser.
+            Depois R${monthlyPrice}/mês, sem contrato. Cancele quando quiser.
           </p>
         </div>
 
@@ -594,7 +595,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, clientNa
               <Link href="/privacidade" target="_blank" className="text-brand-text hover:underline">
                 Política de Privacidade
               </Link>
-              , incluindo a renovação automática mensal de R$29 após o primeiro mês gratuito.
+              , incluindo a renovação automática mensal de R${monthlyPrice} após o primeiro mês gratuito.
             </span>
           </label>
 

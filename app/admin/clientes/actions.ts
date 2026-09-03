@@ -50,7 +50,7 @@ export async function createClient(data: {
   createUserPassword?: string
   siteEntryFee?: number
   activationFlow?: 'quente' | 'frio'
-  entryFlow?: 'whatsapp' | 'proposta'
+  entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao'
   proposalTitle?: string
   proposalDescription?: string
   proposalIncludedItems?: string
@@ -260,7 +260,7 @@ export async function createClient(data: {
 
 export async function updateClient(
   id: string,
-  data: { name: string; email: string; phone?: string; document?: string; siteEntryFee?: number; activationFlow?: 'quente' | 'frio'; entryFlow?: 'whatsapp' | 'proposta' }
+  data: { name: string; email: string; phone?: string; document?: string; siteEntryFee?: number; activationFlow?: 'quente' | 'frio'; entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao' }
 ): Promise<{ error?: string; success?: boolean }> {
   const parsed = clientSchema.safeParse(data)
   if (!parsed.success) {

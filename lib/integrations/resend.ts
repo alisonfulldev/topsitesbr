@@ -29,7 +29,8 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
 
   if (!res.ok) {
     const text = await res.text().catch(() => '')
-    // Loga mas não lança — falha de e-mail não deve quebrar a notificação
-    console.error('[Resend] Falha ao enviar e-mail:', res.status, text)
+    const msg = `[Resend] Falha ${res.status}: ${text}`
+    console.error(msg)
+    throw new Error(msg)
   }
 }

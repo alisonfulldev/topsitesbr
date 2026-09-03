@@ -6,6 +6,41 @@ import { TERMS_VERSION } from '@/lib/config'
 // a nova chave aqui. O conteúdo gravado aqui é o que o cliente efetivamente leu.
 
 const TERMS_SNAPSHOTS: Record<string, string> = {
+  'apresentacao-1.0': `
+<p style="color:#6b7280;font-size:13px;margin:0 0 24px;"><strong>Última atualização:</strong> setembro de 2026</p>
+
+<h3>1. Partes</h3>
+<p><strong>TOP SITE</strong>, CNPJ 22.556.759/0001-98, e o cliente identificado no formulário de contratação.</p>
+
+<h3>2. Objeto — Criação do Site (R$ 97,00)</h3>
+<p>A contratação no valor de <strong>R$ 97,00 (noventa e sete reais)</strong> refere-se <strong>exclusivamente</strong> à criação e entrega dos arquivos do site (HTML, CSS e JavaScript), personalizado com a identidade visual do cliente (logo, cores, textos e fotos).</p>
+<p style="background:#fef9c3;border-left:3px solid #ca8a04;padding:10px 14px;border-radius:4px;font-size:13px;"><strong>Atenção:</strong> O valor de R$ 97,00 <strong>não inclui</strong> hospedagem, publicação na internet, domínio ou qualquer serviço recorrente. Para que o site fique acessível online é necessário um serviço de hospedagem, cobrado separadamente.</p>
+
+<h3>3. Hospedagem (opcional — R$ 19/mês)</h3>
+<p>A TOP SITE oferece o plano <strong>Site no Ar</strong> por <strong>R$ 19,00/mês</strong>, com o primeiro mês gratuito, sem contrato de fidelidade e com cancelamento a qualquer momento. O cliente pode optar por hospedar o site por conta própria usando os arquivos entregues — sem nenhuma obrigação adicional.</p>
+
+<h3>4. O que está incluído no R$ 97,00</h3>
+<ul>
+  <li>Criação do site personalizado com a identidade do cliente</li>
+  <li>1 (uma) rodada de revisão após a entrega</li>
+  <li>Entrega dos arquivos finais (HTML/CSS/JS) via painel ou e-mail</li>
+</ul>
+
+<h3>5. Prazo de entrega</h3>
+<p>Até 7 dias úteis após a confirmação do pagamento e envio das informações necessárias (logo, textos, fotos).</p>
+
+<h3>6. Direito de Arrependimento</h3>
+<p>Conforme o Código de Defesa do Consumidor (art. 49), o cliente pode cancelar a contratação em até 7 dias corridos da confirmação do pagamento, com devolução integral do valor pago. Para exercer esse direito: contato@topsite.com.br ou pelo WhatsApp.</p>
+
+<h3>7. Responsabilidade do Cliente</h3>
+<p>O cliente declara que os conteúdos fornecidos (textos, imagens) não violam direitos de terceiros, não são difamatórios nem enganosos.</p>
+
+<h3>8. Lei Aplicável</h3>
+<p>Estes Termos são regidos pelas leis da República Federativa do Brasil. Foro eleito: Comarca de São Paulo/SP.</p>
+
+<h3>9. Contato</h3>
+<p>contato@topsite.com.br · WhatsApp: +55 18 99674-2364</p>
+`,
   '1.0': `
 <p style="color:#6b7280;font-size:13px;margin:0 0 24px;"><strong>Última atualização:</strong> 23 de julho de 2026</p>
 

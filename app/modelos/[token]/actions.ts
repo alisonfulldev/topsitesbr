@@ -1,10 +1,14 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
 import { validateDocument } from '@/lib/cpf'
 import { sendPresentationGateEmail } from '@/lib/emails/presentation'
-import { APP_URL } from '@/lib/config'
+import { sendEmail } from '@/lib/integrations/resend'
+import { APP_URL, ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
+
+const PRESENTATION_TERMS_VERSION = 'apresentacao-1.0'
 
 function slugify(name: string): string {
   const base = name
@@ -43,29 +47,31 @@ export async function captureEmailAction(
   }
 
   // Fire-and-forget — email failure doesn't block the lead
+  console.log('[gate-email] disparando para', normalEmail)
   sendPresentationGateEmail(
     normalEmail,
     `${APP_URL}/modelos/${token}`,
     presentation.leadName,
-  ).catch((err) => console.error('[gate-email]', err))
+  ).catch((err) => console.error('[gate-email] FALHA:', err))
 
   return { ok: true }
 }
 
 export async function checkoutAction(
   token: string,
-  planChosen: string,
   name: string,
   email: string,
   phone: string,
   document: string,
+  termsAccepted: boolean,
 ): Promise<{ error?: string; paymentUrl?: string }> {
+  if (!termsAccepted) return { error: 'Você precisa aceitar os Termos de Uso para continuar.' }
+
   const presentation = await prisma.templatePresentation.findUnique({ where: { token } })
 
   if (!presentation) return { error: 'Link inválido ou expirado.' }
   if (presentation.status === 'cancelado') return { error: 'Esta apresentação foi cancelada.' }
   if (presentation.status === 'pago') return { error: 'Este site já foi adquirido.' }
-  if (!['plano1', 'plano2', 'plano3'].includes(planChosen)) return { error: 'Opção inválida.' }
   if (!name.trim()) return { error: 'Nome é obrigatório.' }
   if (!email.trim() || !email.includes('@')) return { error: 'E-mail inválido.' }
 
@@ -74,6 +80,13 @@ export async function checkoutAction(
     return { error: 'CPF ou CNPJ inválido. Verifique os dígitos informados.' }
   }
 
+  const hdrs = headers()
+  const ip =
+    hdrs.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    hdrs.get('x-real-ip') ??
+    'unknown'
+
+  const now = new Date()
   const provider = getPaymentProvider()
   const successUrl = `${APP_URL}/modelos/${token}/obrigado`
 
@@ -96,8 +109,8 @@ export async function checkoutAction(
   try {
     const charge = await provider.createSingleCharge({
       customerId,
-      description: PLAN_LABELS[planChosen],
-      price: PLAN_PRICES[planChosen],
+      description: PLAN_LABELS['plano1'],
+      price: PLAN_PRICES['plano1'],
       successUrl,
     })
     chargeId = charge.chargeId
@@ -106,24 +119,33 @@ export async function checkoutAction(
     return { error: err instanceof Error ? err.message : 'Erro ao gerar cobrança.' }
   }
 
-  const subdomain =
-    planChosen === 'plano2' || planChosen === 'plano3'
-      ? `${slugify(presentation.leadName)}.topsitebr.com.br`
-      : null
-
   await prisma.templatePresentation.update({
     where: { id: presentation.id },
     data: {
-      planChosen,
+      planChosen: 'plano1',
       asaasCustomerId: customerId,
       asaasChargeId: chargeId,
       paymentUrl,
-      subdomain,
       leadEmail: email.trim().toLowerCase(),
       leadPhone: phone.trim() || presentation.leadPhone,
       leadDocument: docClean,
+      termsAcceptedAt: now,
+      termsVersion: PRESENTATION_TERMS_VERSION,
+      termsAcceptedIp: ip,
     },
   })
+
+  // Notifica admin com prova de aceite — fire-and-forget
+  sendEmail({
+    to: ADMIN_NOTIFICATION_EMAIL,
+    subject: `[TopSite] Aceite de termos — ${name.trim()}`,
+    html: `<p><strong>Lead:</strong> ${name.trim()}<br>
+<strong>E-mail:</strong> ${email.trim().toLowerCase()}<br>
+<strong>Data/hora:</strong> ${now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}<br>
+<strong>IP:</strong> ${ip}<br>
+<strong>Versão dos termos:</strong> ${PRESENTATION_TERMS_VERSION}<br>
+<strong>Apresentação:</strong> ${token}</p>`,
+  }).catch((err) => console.error('[terms-email] FALHA:', err))
 
   return { paymentUrl }
 }

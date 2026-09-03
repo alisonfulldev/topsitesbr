@@ -19,7 +19,7 @@ type InitialData = {
   document: string
   siteEntryFee?: number | null
   activationFlow?: 'quente' | 'frio'
-  entryFlow?: 'whatsapp' | 'proposta'
+  entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao'
 }
 
 interface Props {
@@ -70,7 +70,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
   const [activationFlow, setActivationFlow] = useState<'quente' | 'frio'>(
     initialData?.activationFlow ?? 'frio'
   )
-  const [entryFlow, setEntryFlow] = useState<'whatsapp' | 'proposta'>(
+  const [entryFlow, setEntryFlow] = useState<'whatsapp' | 'proposta' | 'apresentacao'>(
     initialData?.entryFlow ?? 'whatsapp'
   )
 
@@ -254,6 +254,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
             {([
               { value: 'whatsapp', label: 'WhatsApp', desc: 'Chegou pelo WhatsApp / tráfego pago' },
               { value: 'proposta', label: 'Proposta', desc: 'Recebe link de proposta por e-mail' },
+              { value: 'apresentacao', label: 'Apresentação', desc: 'Comprou pelo link de apresentação (R$97)' },
             ] as const).map((opt) => (
               <label
                 key={opt.value}
