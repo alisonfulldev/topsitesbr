@@ -170,7 +170,7 @@ export default async function PainelLayout({ children }: { children: React.React
 
         {/* Footer with legal links */}
         <footer className="hidden md:flex items-center justify-center gap-4 py-3 border-t border-gray-100 text-xs text-gray-400">
-          <a href="/termos" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 hover:underline">
+          <a href="/termos/hospedagem" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 hover:underline">
             Termos de Uso
           </a>
           <span>·</span>

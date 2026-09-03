@@ -246,7 +246,7 @@ function WarmActivationScreen({ pendingPayment, monthlyPrice = 29 }: { pendingPa
           />
           <span className="text-xs text-gray-500 leading-relaxed">
             Li e concordo com os{' '}
-            <Link href="/termos" target="_blank" className="text-brand-text hover:underline">
+            <Link href="/termos/hospedagem" target="_blank" className="text-brand-text hover:underline">
               Termos de Uso
             </Link>{' '}
             e a{' '}
@@ -588,7 +588,7 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, clientNa
             />
             <span className="text-xs text-gray-500 leading-relaxed">
               Li e concordo com os{' '}
-              <Link href="/termos" target="_blank" className="text-brand-text hover:underline">
+              <Link href="/termos/hospedagem" target="_blank" className="text-brand-text hover:underline">
                 Termos de Uso
               </Link>{' '}
               e a{' '}

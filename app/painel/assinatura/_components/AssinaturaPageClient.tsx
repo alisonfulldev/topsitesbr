@@ -126,7 +126,7 @@ export function AssinaturaPageClient({
 
       <p className="text-xs text-gray-400 text-center">
         Para cancelar ou alterar sua assinatura, entre em contato pelo WhatsApp ou acesse{' '}
-        <Link href="/termos" className="hover:underline">Termos de Uso</Link>.
+        <Link href="/termos/hospedagem" className="hover:underline">Termos de Uso</Link>.
       </p>
     </div>
   )
