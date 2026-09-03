@@ -38,8 +38,8 @@ const STEPS = [
   },
   {
     key: 'aguardando_info',
-    label: 'Informações do Site',
-    description: 'Preencha as informações do seu site para iniciarmos o desenvolvimento.',
+    label: 'Revisão',
+    description: 'Nossa equipe está analisando as informações e preparando o desenvolvimento.',
   },
   {
     key: 'em_desenvolvimento',
