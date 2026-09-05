@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { COMPANY_NAME, COMPANY_EMAIL, COMPANY_WHATSAPP, COMPANY_CNPJ } from '@/lib/config'
 
-const LAST_UPDATE = 'setembro de 2026'
+const LAST_UPDATE = 'outubro de 2026'
 
 export const metadata = {
   title: `Termos de Hospedagem — ${COMPANY_NAME}`,
@@ -58,11 +58,6 @@ export default function TermosHospedagemPage() {
                     <td className="text-center px-3 py-2 border border-gray-200">✓</td>
                     <td className="text-center px-3 py-2 border border-gray-200">✓</td>
                   </tr>
-                  <tr className="bg-gray-50">
-                    <td className="px-3 py-2 border border-gray-200">Alterações de conteúdo incluídas/mês</td>
-                    <td className="text-center px-3 py-2 border border-gray-200">0</td>
-                    <td className="text-center px-3 py-2 border border-gray-200">1 (texto OU imagem)</td>
-                  </tr>
                   <tr>
                     <td className="px-3 py-2 border border-gray-200">Prazo de execução de alterações</td>
                     <td className="text-center px-3 py-2 border border-gray-200">até 15 dias úteis</td>
@@ -106,12 +101,12 @@ export default function TermosHospedagemPage() {
             <p>
               <strong>Correção</strong>: ajuste de erro pré-existente no site — texto errado,
               link quebrado, dado desatualizado. Ilimitada e gratuita em qualquer plano, não
-              consome o limite mensal.
+              consome nenhum limite.
             </p>
             <p className="mt-2">
               <strong>Alteração de conteúdo</strong>: substituição intencional de texto ou
-              imagem por novo conteúdo escolhido pelo cliente. Consome o limite mensal do
-              plano Plus. Clientes do Básico e alterações além do limite são cobrados avulso:
+              imagem por novo conteúdo escolhido pelo cliente. Todas as alterações de conteúdo
+              são cobradas avulso, independentemente do plano:
             </p>
             <ul className="list-disc pl-6 space-y-1 mt-2">
               <li>Alteração de Texto: R$ 20,00</li>

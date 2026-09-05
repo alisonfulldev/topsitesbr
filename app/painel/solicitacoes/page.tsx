@@ -24,7 +24,7 @@ export default async function SolicitacoesPage() {
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
-  const [subscription, sites, monthlyUsed] = await Promise.all([
+  const [subscription, sites, monthlyUsed, clientData] = await Promise.all([
     prisma.subscription.findFirst({
       where: { clientId, status: { not: 'canceled' } },
       include: { plan: true },
@@ -42,6 +42,10 @@ export default async function SolicitacoesPage() {
         createdAt: { gte: startOfMonth },
       },
     }),
+    prisma.client.findUnique({
+      where: { id: clientId },
+      select: { termsVersion: true },
+    }),
   ])
 
   if (!subscription) {
@@ -56,6 +60,10 @@ export default async function SolicitacoesPage() {
   }
 
   const { plan } = subscription
+  const effectiveMonthlyChanges =
+    clientData?.termsVersion && clientData.termsVersion >= '1.2'
+      ? 0
+      : plan.monthlyChangesIncluded
 
   return (
     <div className="max-w-2xl">
@@ -78,7 +86,7 @@ export default async function SolicitacoesPage() {
           plan={{
             name: plan.name,
             allowedChangeTypes: plan.allowedChangeTypes,
-            monthlyChangesIncluded: plan.monthlyChangesIncluded,
+            monthlyChangesIncluded: effectiveMonthlyChanges,
             changeDeadlineDays: plan.changeDeadlineDays,
             discountPercent: plan.discountPercent,
           }}

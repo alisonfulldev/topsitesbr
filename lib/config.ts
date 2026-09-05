@@ -11,4 +11,4 @@ export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000
 // ── Terms version ─────────────────────────────────────────────────────────────
 // Bump this string whenever the Terms of Service or Privacy Policy changes,
 // so we can track which version each client accepted.
-export const TERMS_VERSION = '1.1'
+export const TERMS_VERSION = '1.2'

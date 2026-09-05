@@ -374,6 +374,21 @@ function VisitsInfoCard({
 }
 
 function ChangesInfoCard({ plan, used }: { plan: PlanFeatures; used: number }) {
+  if (plan.monthlyChangesIncluded === 0) {
+    return (
+      <Card className="flex flex-col justify-between">
+        <CardTitle>Alterações de Conteúdo</CardTitle>
+        <div className="flex-1 py-3">
+          <p className="text-sm text-gray-700 leading-relaxed">Todas as alterações são cobradas avulso.</p>
+          <p className="text-xs text-gray-400 mt-2">Correções de erros são sempre gratuitas.</p>
+          <Link href="/painel/solicitacoes" className="mt-3 inline-block text-xs font-semibold text-brand-text hover:underline">
+            Solicitar alteração →
+          </Link>
+        </div>
+      </Card>
+    )
+  }
+
   const remaining = Math.max(0, plan.monthlyChangesIncluded - used)
   const pct = Math.min(100, (used / plan.monthlyChangesIncluded) * 100)
   const isOver = pct >= 100

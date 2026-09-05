@@ -290,6 +290,11 @@ export default async function PainelPage({
       : null,
   }))
 
+  const effectiveMonthlyChanges =
+    client.termsVersion && client.termsVersion >= '1.2'
+      ? 0
+      : subscription?.plan.monthlyChangesIncluded ?? 0
+
   const subData = subscription
     ? {
         planName: subscription.plan.name,
@@ -298,7 +303,7 @@ export default async function PainelPage({
         nextDueDate: subscription.nextDueDate?.toISOString() ?? null,
         planActivatedAt: subscription.planActivatedAt.toISOString(),
         plan: {
-          monthlyChangesIncluded: subscription.plan.monthlyChangesIncluded,
+          monthlyChangesIncluded: effectiveMonthlyChanges,
           allowedChangeTypes: subscription.plan.allowedChangeTypes,
           changeDeadlineDays: subscription.plan.changeDeadlineDays,
           discountPercent: subscription.plan.discountPercent,

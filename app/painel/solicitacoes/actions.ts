@@ -122,12 +122,18 @@ export async function createTicket(
   })
   if (!site) return { error: 'Site não encontrado.' }
 
-  // ── 3. Get active subscription + plan ───────────────────────────────────
-  const subscription = await prisma.subscription.findFirst({
-    where: { clientId, status: { not: 'canceled' } },
-    include: { plan: true },
-    orderBy: { createdAt: 'desc' },
-  })
+  // ── 3. Get active subscription + plan + client termsVersion ────────────
+  const [subscription, clientData] = await Promise.all([
+    prisma.subscription.findFirst({
+      where: { clientId, status: { not: 'canceled' } },
+      include: { plan: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.client.findUnique({
+      where: { id: clientId },
+      select: { name: true, email: true, document: true, phone: true, termsVersion: true },
+    }),
+  ])
 
   if (!subscription) return { error: 'Você não possui uma assinatura ativa.' }
 
@@ -176,8 +182,13 @@ export async function createTicket(
       },
     })
 
+    // Clientes que aceitaram termos v1.2+ não têm alterações grátis incluídas
+    const effectiveMonthlyChanges =
+      clientData?.termsVersion && clientData.termsVersion >= '1.2'
+        ? 0
+        : plan.monthlyChangesIncluded
     const typeIsAllowed = allowedTypes.includes(changeType)
-    isExtraPaid = !typeIsAllowed || monthlyUsed >= plan.monthlyChangesIncluded
+    isExtraPaid = !typeIsAllowed || monthlyUsed >= effectiveMonthlyChanges
     if (isExtraPaid) productName = PRODUCT_NAME[changeType]
   }
 
@@ -213,14 +224,13 @@ export async function createTicket(
       },
     })
 
-    const client = await prisma.client.findUnique({ where: { id: clientId } })
-    if (client) {
+    if (clientData) {
       const provider = getPaymentProvider()
       const { customerId } = await provider.createCustomer({
-        name: client.name,
-        email: client.email,
-        document: client.document,
-        phone: client.phone,
+        name: clientData.name,
+        email: clientData.email,
+        document: clientData.document,
+        phone: clientData.phone,
       })
       await provider.createSingleCharge({
         customerId,
