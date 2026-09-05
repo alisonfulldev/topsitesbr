@@ -128,6 +128,37 @@ export default async function NovaApresentacaoPage() {
           </div>
         </div>
 
+        <hr className="border-gray-100" />
+
+        <div>
+          <p className="text-sm font-medium text-gray-700 mb-3">Preços</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { name: 'pricePlano1', label: 'Plano 1 (criação)', defaultValue: 97 },
+              { name: 'pricePlano2', label: 'Plano 2 (criação)', defaultValue: 97 },
+              { name: 'pricePlano3', label: 'Plano 3 (criação)', defaultValue: 188 },
+              { name: 'priceMonthly', label: 'Mensalidade', defaultValue: 19 },
+            ].map(({ name, label, defaultValue }) => (
+              <div key={name}>
+                <label className="block text-xs font-medium text-gray-600 mb-1">{label}</label>
+                <div className="relative">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-gray-400">R$</span>
+                  <input
+                    name={name}
+                    type="number"
+                    min={1}
+                    step={1}
+                    defaultValue={defaultValue}
+                    required
+                    className="w-full rounded-md border border-gray-300 pl-7 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-400 mt-2">Plano 1 = só os arquivos, Plano 2 = hospedagem, Plano 3 = hospedagem + domínio.</p>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Observações internas</label>
           <textarea

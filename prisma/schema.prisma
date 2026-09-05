@@ -733,6 +733,10 @@ model TemplatePresentation {
   termsAcceptedAt     DateTime?                  @map("terms_accepted_at")
   termsVersion        String?                    @map("terms_version")
   termsAcceptedIp     String?                    @map("terms_accepted_ip")
+  pricePlano1         Decimal                    @default(97)  @map("price_plano1")
+  pricePlano2         Decimal                    @default(97)  @map("price_plano2")
+  pricePlano3         Decimal                    @default(188) @map("price_plano3")
+  priceMonthly        Decimal                    @default(19)  @map("price_monthly")
   createdAt           DateTime                   @default(now()) @map("created_at")
   updatedAt           DateTime                   @updatedAt @map("updated_at")
 

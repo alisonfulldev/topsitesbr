@@ -18,6 +18,10 @@ export async function createPresentation(formData: FormData) {
   const template1Name = (formData.get('template1Name') as string)?.trim()
   const template2Name = (formData.get('template2Name') as string)?.trim()
   const notes = (formData.get('notes') as string)?.trim() || null
+  const pricePlano1 = Number(formData.get('pricePlano1')) || 97
+  const pricePlano2 = Number(formData.get('pricePlano2')) || 97
+  const pricePlano3 = Number(formData.get('pricePlano3')) || 188
+  const priceMonthly = Number(formData.get('priceMonthly')) || 19
 
   const t1File = formData.get('template1') as File | null
   const t2File = formData.get('template2') as File | null
@@ -43,6 +47,10 @@ export async function createPresentation(formData: FormData) {
       template1Html,
       template2Html,
       notes,
+      pricePlano1,
+      pricePlano2,
+      pricePlano3,
+      priceMonthly,
     },
   })
 

@@ -6,7 +6,7 @@ import LeadPage from './_components/LeadPage'
 export default async function ModelosTokenPage({ params }: { params: { token: string } }) {
   const p = await prisma.templatePresentation.findUnique({
     where: { token: params.token },
-    select: { token: true, leadName: true, leadPersonName: true, template1Name: true, template2Name: true, status: true },
+    select: { token: true, leadName: true, leadPersonName: true, template1Name: true, template2Name: true, status: true, pricePlano1: true, pricePlano2: true, pricePlano3: true, priceMonthly: true },
   })
 
   if (!p || p.status === 'cancelado') notFound()
@@ -23,6 +23,10 @@ export default async function ModelosTokenPage({ params }: { params: { token: st
       template2Name={p.template2Name ?? 'Modelo 2'}
       alreadyPaid={p.status === 'pago'}
       contractHtml={contractHtml}
+      pricePlano1={Number(p.pricePlano1)}
+      pricePlano2={Number(p.pricePlano2)}
+      pricePlano3={Number(p.pricePlano3)}
+      priceMonthly={Number(p.priceMonthly)}
     />
   )
 }

@@ -14,6 +14,10 @@ interface Props {
   template2Name: string
   alreadyPaid: boolean
   contractHtml: string
+  pricePlano1: number
+  pricePlano2: number
+  pricePlano3: number
+  priceMonthly: number
 }
 
 function toSlug(s: string) {
@@ -27,77 +31,73 @@ function toSlug(s: string) {
 
 type PlanId = 'plano1' | 'plano2' | 'plano3'
 
-const PLAN_DATA: Array<{
-  id: PlanId
-  name: string
-  price: string
-  priceNote: string
-  monthly: string | null
-  description: string
-  note: string | null
-  badge: string | null
-  highlight: boolean
-  features: string[]
-}> = [
-  {
-    id: 'plano1',
-    name: 'Criação do Site',
-    price: 'R$ 97',
-    priceNote: 'pagamento único',
-    monthly: null,
-    description: 'Site profissional criado, personalizado e pronto para usar. Pagamento único.',
-    note: 'Só a criação — sem hospedagem.',
-    badge: null,
-    highlight: false,
-    features: [
-      'Site profissional completo — design moderno e exclusivo',
-      'Responsivo — perfeito no celular, tablet e computador',
-      'Personalizado com sua logo, cores, textos e fotos',
-      'Código limpo e otimizado — carrega rápido',
-      'Você recebe os arquivos para hospedar onde quiser',
-    ],
-  },
-  {
-    id: 'plano2',
-    name: 'Site + Plano no Ar',
-    price: 'R$ 97',
-    priceNote: 'criação (pagamento único)',
-    monthly: 'R$ 19/mês',
-    description: 'Tudo da criação, e cuidamos de deixar seu site no ar e aparecendo no Google.',
-    note: null,
-    badge: '⭐ mais escolhido',
-    highlight: true,
-    features: [
-      'Site no ar 24h — hospedagem, sempre acessível',
-      'Aparecer no Google — meta tags, Schema, URLs amigáveis, dados estruturados',
-      'Sitemap enviado ao Google — indexação de todas as páginas (essencial pra aparecer nas buscas)',
-      'Integração com Google Search Console',
-      'SSL (segurança) — o Google prioriza sites seguros',
-      'Velocidade otimizada',
-      'Painel de métricas — visitantes, origem, desempenho',
-      'Suporte contínuo — sem você mexer em nada técnico',
-    ],
-  },
-  {
-    id: 'plano3',
-    name: 'Site + Plano no Ar + Domínio',
-    price: 'R$ 188',
-    priceNote: 'criação + domínio (único)',
-    monthly: 'R$ 19/mês',
-    description: 'Tudo do Plano no Ar, MAIS seu endereço profissional exclusivo.',
-    note: 'Renovação do domínio: R$91/ano',
-    badge: null,
-    highlight: false,
-    features: [
-      'Domínio próprio (ex: seunegocio.com.br) — sem "topsitebr" no meio',
-      'Muito mais credibilidade — endereço próprio passa seriedade e confiança',
-      'Mais forte no Google — domínio próprio ajuda a ser reconhecido e ranquear melhor',
-      'E-mail profissional possível — ex: contato@seunegocio.com.br',
-      'Você é dono do seu endereço — sua marca, seu domínio registrado',
-      'Configuramos tudo — registro e configuração por nossa conta',
-    ],
-  },
-]
+function fmt(n: number) {
+  return `R$ ${n % 1 === 0 ? n : n.toFixed(2).replace('.', ',')}`
+}
+
+function buildPlanData(p1: number, p2: number, p3: number, monthly: number) {
+  const fMonthly = fmt(monthly)
+  return [
+    {
+      id: 'plano1' as PlanId,
+      name: 'Criação do Site',
+      price: fmt(p1),
+      priceNote: 'pagamento único',
+      monthly: null,
+      description: 'Site profissional criado, personalizado e pronto para usar. Pagamento único.',
+      note: 'Só a criação — sem hospedagem.',
+      badge: null,
+      highlight: false,
+      features: [
+        'Site profissional completo — design moderno e exclusivo',
+        'Responsivo — perfeito no celular, tablet e computador',
+        'Personalizado com sua logo, cores, textos e fotos',
+        'Código limpo e otimizado — carrega rápido',
+        'Você recebe os arquivos para hospedar onde quiser',
+      ],
+    },
+    {
+      id: 'plano2' as PlanId,
+      name: 'Site + Plano no Ar',
+      price: fmt(p2),
+      priceNote: 'criação (pagamento único)',
+      monthly: `${fMonthly}/mês`,
+      description: 'Tudo da criação, e cuidamos de deixar seu site no ar e aparecendo no Google.',
+      note: null,
+      badge: '⭐ mais escolhido',
+      highlight: true,
+      features: [
+        'Site no ar 24h — hospedagem, sempre acessível',
+        'Aparecer no Google — meta tags, Schema, URLs amigáveis, dados estruturados',
+        'Sitemap enviado ao Google — indexação de todas as páginas (essencial pra aparecer nas buscas)',
+        'Integração com Google Search Console',
+        'SSL (segurança) — o Google prioriza sites seguros',
+        'Velocidade otimizada',
+        'Painel de métricas — visitantes, origem, desempenho',
+        'Suporte contínuo — sem você mexer em nada técnico',
+      ],
+    },
+    {
+      id: 'plano3' as PlanId,
+      name: 'Site + Plano no Ar + Domínio',
+      price: fmt(p3),
+      priceNote: 'criação + domínio (único)',
+      monthly: `${fMonthly}/mês`,
+      description: 'Tudo do Plano no Ar, MAIS seu endereço profissional exclusivo.',
+      note: 'Renovação do domínio: R$91/ano',
+      badge: null,
+      highlight: false,
+      features: [
+        'Domínio próprio (ex: seunegocio.com.br) — sem "topsitebr" no meio',
+        'Muito mais credibilidade — endereço próprio passa seriedade e confiança',
+        'Mais forte no Google — domínio próprio ajuda a ser reconhecido e ranquear melhor',
+        'E-mail profissional possível — ex: contato@seunegocio.com.br',
+        'Você é dono do seu endereço — sua marca, seu domínio registrado',
+        'Configuramos tudo — registro e configuração por nossa conta',
+      ],
+    },
+  ]
+}
 
 function GoogleSerpMockup({ businessName }: { businessName: string }) {
   const domain = `${toSlug(businessName)}.com.br`
@@ -187,9 +187,10 @@ function GoogleSerpMockup({ businessName }: { businessName: string }) {
   )
 }
 
-export default function LeadPage({ token, leadName, leadPersonName, template1Name, template2Name, alreadyPaid, contractHtml }: Props) {
+export default function LeadPage({ token, leadName, leadPersonName, template1Name, template2Name, alreadyPaid, contractHtml, pricePlano1, pricePlano2, pricePlano3, priceMonthly }: Props) {
   const firstName = leadPersonName ? leadPersonName.split(' ')[0] : null
   const templateNames = { '1': template1Name, '2': template2Name } as const
+  const planData = buildPlanData(pricePlano1, pricePlano2, pricePlano3, priceMonthly)
 
   // Gate
   const [gateOpen, setGateOpen] = useState(true)
@@ -317,7 +318,7 @@ export default function LeadPage({ token, leadName, leadPersonName, template1Nam
     )
   }
 
-  const activePlan = PLAN_DATA.find((p) => p.id === selectedPlan)!
+  const activePlan = planData.find((p) => p.id === selectedPlan)!
 
   // ── Página principal ──────────────────────────────────────────────────────
   return (
@@ -356,7 +357,7 @@ export default function LeadPage({ token, leadName, leadPersonName, template1Nam
       <main className="min-h-screen bg-white">
         {/* Banner vermelho */}
         <div className="bg-red-600 text-white text-center py-2.5 px-4 text-sm font-semibold tracking-wide">
-          ⏰ Valor promocional por tempo limitado: <strong>R$97</strong>
+          ⏰ Valor promocional por tempo limitado: <strong>{fmt(pricePlano1)}</strong>
         </div>
 
         {/* Header */}
@@ -452,7 +453,7 @@ export default function LeadPage({ token, leadName, leadPersonName, template1Nam
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {PLAN_DATA.map((plan) => {
+              {planData.map((plan) => {
                 const isSelected = selectedPlan === plan.id
                 return (
                   <div

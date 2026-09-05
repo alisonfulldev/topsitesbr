@@ -21,7 +21,6 @@ function slugify(name: string): string {
   return `${base}-${Math.random().toString(36).substring(2, 6)}`
 }
 
-const PLAN_PRICES: Record<string, number> = { plano1: 97, plano2: 97, plano3: 188 }
 const PLAN_LABELS: Record<string, string> = {
   plano1: 'Criação de Site (Arquivos HTML)',
   plano2: 'Criação de Site + Plano no Ar',
@@ -68,11 +67,20 @@ export async function checkoutAction(
 ): Promise<{ error?: string; paymentUrl?: string }> {
   if (!termsAccepted) return { error: 'Você precisa aceitar os Termos de Uso para continuar.' }
 
-  const presentation = await prisma.templatePresentation.findUnique({ where: { token } })
+  const presentation = await prisma.templatePresentation.findUnique({
+    where: { token },
+    select: { id: true, status: true, leadEmail: true, leadPhone: true, token: true, pricePlano1: true, pricePlano2: true, pricePlano3: true },
+  })
 
   if (!presentation) return { error: 'Link inválido ou expirado.' }
   if (presentation.status === 'cancelado') return { error: 'Esta apresentação foi cancelada.' }
   if (presentation.status === 'pago') return { error: 'Este site já foi adquirido.' }
+
+  const priceMap: Record<string, number> = {
+    plano1: Number(presentation.pricePlano1),
+    plano2: Number(presentation.pricePlano2),
+    plano3: Number(presentation.pricePlano3),
+  }
   if (!name.trim()) return { error: 'Nome é obrigatório.' }
   if (!email.trim() || !email.includes('@')) return { error: 'E-mail inválido.' }
 
@@ -111,7 +119,7 @@ export async function checkoutAction(
     const charge = await provider.createSingleCharge({
       customerId,
       description: PLAN_LABELS[planId] ?? PLAN_LABELS['plano1'],
-      price: PLAN_PRICES[planId] ?? PLAN_PRICES['plano1'],
+      price: priceMap[planId] ?? Number(presentation.pricePlano1),
       successUrl,
     })
     chargeId = charge.chargeId
