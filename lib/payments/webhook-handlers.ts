@@ -10,18 +10,10 @@ import {
   sendProposalPaymentConfirmedEmail,
   sendContractCopyToClient,
   sendContractSignedToAdmin,
-  sendSiteInDevelopmentEmail,
 } from '@/lib/emails/proposal'
+import { sendEmail } from '@/lib/integrations/resend'
 import { asaasFetch } from '@/lib/integrations/asaas'
-import { hashPassword } from '@/lib/password'
-import { generateReferralCode } from '@/lib/referral'
-
-const TEMP_PASSWORD_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
-function generateTempPassword(): string {
-  return Array.from({ length: 12 }, () =>
-    TEMP_PASSWORD_CHARS[Math.floor(Math.random() * TEMP_PASSWORD_CHARS.length)],
-  ).join('')
-}
+import { ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
 
 interface AsaasPaymentStatus {
   id: string
@@ -435,113 +427,33 @@ async function handlePresentationPayment(chargeId: string): Promise<{ ok: boolea
   })
 
   const clientName = presentation.leadPersonName?.trim() || presentation.leadName
-  const clientEmail = presentation.leadEmail
-
-  if (!clientEmail) {
-    await sendNotification(
-      null,
-      `Apresentação paga — sem e-mail (${presentation.leadName})`,
-      `Pagamento confirmado mas sem e-mail cadastrado. Crie o cliente manualmente e entre em contato com o lead.`,
-    )
-    return { ok: true, message: `Apresentação de ${presentation.leadName} paga — sem e-mail para criar cliente.` }
+  const planLabel = presentation.planChosen ?? 'plano1'
+  const planNames: Record<string, string> = {
+    plano1: 'Criação do Site (R$ 97)',
+    plano2: 'Site + Plano no Ar (R$ 97 + R$ 19/mês)',
+    plano3: 'Site + Plano no Ar + Domínio (R$ 188 + R$ 19/mês)',
   }
+  const planDisplay = planNames[planLabel] ?? planLabel
 
-  // ── Idempotência: cliente já existe ──────────────────────────────────────────
-  const existingClient = await prisma.client.findFirst({ where: { email: clientEmail } })
-  if (existingClient) {
-    await sendNotification(
-      null,
-      `Apresentação paga — ${presentation.leadName}`,
-      `Pagamento confirmado. Cliente ${clientName} (${clientEmail}) já existe no sistema (id: ${existingClient.id}). Crie a proposta manualmente e inicie o desenvolvimento.`,
-    )
-    return { ok: true, message: `Apresentação de ${presentation.leadName} paga — cliente já existia.` }
-  }
-
-  // ── Cria Client ───────────────────────────────────────────────────────────────
-  const tempPassword = generateTempPassword()
-  const passwordHash = await hashPassword(tempPassword)
-
-  const client = await prisma.client.create({
-    data: {
-      name: clientName,
-      email: clientEmail,
-      phone: presentation.leadPhone || null,
-      document: presentation.leadDocument || null,
-      referralCode: generateReferralCode(clientName),
-      entryFlow: 'apresentacao',
-      activationFlow: 'quente',
-      siteEntryFee: 97,
-    },
-  })
-
-  // ── Cria User (login) ─────────────────────────────────────────────────────────
-  await prisma.user.create({
-    data: {
-      name: clientName,
-      email: clientEmail,
-      passwordHash,
-      role: 'client',
-      clientId: client.id,
-      mustChangePassword: true,
-    },
-  })
-
-  // ── Cria Produto + Order (rastreamento financeiro) ────────────────────────────
-  let product = await prisma.product.findFirst({
-    where: { name: 'Criação de Site (Apresentação)' },
-  })
-  if (!product) {
-    product = await prisma.product.create({
-      data: { name: 'Criação de Site (Apresentação)', price: 97, type: 'service' },
-    })
-  }
-
-  const order = await prisma.order.create({
-    data: {
-      clientId: client.id,
-      productId: product.id,
-      amount: 97,
-      status: 'paid',
-      asaasChargeId: chargeId,
-    },
-  })
-
-  // ── Cria Proposal (acesso ao fluxo "Meu Projeto" no painel) ──────────────────
-  const templateNum = presentation.chosenTemplate ?? 1
-  const templateName = templateNum === 2
-    ? (presentation.template2Name ?? 'Modelo 2')
-    : (presentation.template1Name ?? 'Modelo 1')
-
-  await prisma.proposal.create({
-    data: {
-      clientId: client.id,
-      title: `Site de ${presentation.leadName} — ${templateName}`,
-      creationPrice: 97,
-      status: 'em_desenvolvimento',
-      paidAt: new Date(),
-      orderId: order.id,
-      asaasChargeId: chargeId,
-    },
-  })
-
-  // ── E-mail com credenciais de acesso ─────────────────────────────────────────
-  sendSiteInDevelopmentEmail({
-    to: clientEmail,
-    clientName,
-    loginEmail: clientEmail,
-    loginPassword: tempPassword,
-  }).catch((err) => console.error('[apresentacao-email] FALHA:', err))
-
-  // ── Notificação interna para o admin ─────────────────────────────────────────
-  await sendNotification(
-    null,
-    `Iniciar desenvolvimento — ${presentation.leadName}`,
-    `${clientName} (${clientEmail}) pagou a criação do site e escolheu o ${templateName}. O acesso ao painel foi criado e enviado por e-mail. Inicie o desenvolvimento e atualize o status da proposta conforme o andamento.`,
-  )
+  // E-mail de aviso para o admin com dados do lead
+  sendEmail({
+    to: ADMIN_NOTIFICATION_EMAIL,
+    subject: `[TopSite] Novo pagamento — ${clientName}`,
+    html: `
+<p><strong>Novo pagamento recebido via Apresentação de Templates!</strong></p>
+<table style="font-size:14px;border-collapse:collapse;margin-top:12px;">
+  <tr><td style="padding:4px 12px 4px 0;color:#6b7280;">Nome</td><td><strong>${clientName}</strong></td></tr>
+  <tr><td style="padding:4px 12px 4px 0;color:#6b7280;">WhatsApp</td><td>${presentation.leadPhone || '—'}</td></tr>
+  <tr><td style="padding:4px 12px 4px 0;color:#6b7280;">E-mail</td><td>${presentation.leadEmail || '—'}</td></tr>
+  <tr><td style="padding:4px 12px 4px 0;color:#6b7280;">Plano</td><td>${planDisplay}</td></tr>
+  <tr><td style="padding:4px 12px 4px 0;color:#6b7280;">Modelo escolhido</td><td>${presentation.chosenTemplate === 2 ? (presentation.template2Name ?? 'Modelo 2') : (presentation.template1Name ?? 'Modelo 1')}</td></tr>
+</table>
+<p style="margin-top:16px;color:#6b7280;font-size:13px;">Entre em contato pelo WhatsApp para dar andamento ao site.</p>`,
+  }).catch((err) => console.error('[apresentacao-admin-email] FALHA:', err))
 
   return {
     ok: true,
-    message: `Apresentação de ${presentation.leadName} paga — cliente, usuário e proposta criados.`,
+    message: `Apresentação de ${presentation.leadName} paga. Admin notificado por e-mail.`,
   }
 }
 

@@ -8,12 +8,8 @@ export default function ObrigadoPage() {
           </svg>
         </div>
         <h1 className="text-2xl font-black text-gray-900 mb-3">Pagamento confirmado!</h1>
-        <p className="text-gray-500 text-sm leading-relaxed mb-6">
-          Recebemos seu pagamento. Nossa equipe irá construir seu site e em breve você
-          receberá uma confirmação no e-mail cadastrado.
-        </p>
-        <p className="text-xs text-gray-400">
-          Dúvidas? Fale conosco pelo WhatsApp.
+        <p className="text-gray-500 text-sm leading-relaxed">
+          Recebemos seu pedido. Em breve entramos em contato pelo WhatsApp para dar andamento ao seu site.
         </p>
       </div>
     </main>
