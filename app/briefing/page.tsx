@@ -5,15 +5,24 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { sendBriefing, type BriefingData } from './actions'
 
-const TOTAL_STEPS = 5
+const TOTAL_STEPS = 6
 
 const STEP_TITLES = [
+  'Seus Dados de Contato',
   'Informações da Empresa',
   'Objetivos do Site',
   'Conteúdo e Recursos',
   'Design e Referências',
   'Informações Técnicas',
 ]
+
+function formatPhone(v: string) {
+  const d = v.replace(/\D/g, '').slice(0, 11)
+  if (d.length <= 2) return d.length ? `(${d}` : ''
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`
+}
 
 function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
@@ -70,6 +79,7 @@ export default function BriefingPage() {
   const [pending, startTransition] = useTransition()
 
   const [form, setForm] = useState<BriefingData>({
+    nomeContato: '', emailContato: '', whatsappContato: '',
     nomeEmpresa: '', areaAtuacao: '', endereco: '', descricao: '',
     objetivo: '', publicoAlvo: '', mensagemPrincipal: '',
     produtosServicos: '', possuiFotos: '', depoimentos: '', redesSociais: '',
@@ -83,27 +93,32 @@ export default function BriefingPage() {
 
   function validateStep(): string | null {
     if (step === 1) {
+      if (!form.nomeContato.trim()) return 'Informe seu nome completo.'
+      if (!form.emailContato.trim() || !form.emailContato.includes('@') || !form.emailContato.includes('.')) return 'Informe um e-mail válido.'
+      if (form.whatsappContato.replace(/\D/g, '').length < 10) return 'Informe um WhatsApp válido com DDD (ex: (11) 99999-9999).'
+    }
+    if (step === 2) {
       if (!form.nomeEmpresa.trim()) return 'Informe o nome da empresa.'
       if (!form.areaAtuacao.trim()) return 'Informe a área de atuação.'
       if (!form.endereco.trim()) return 'Informe o endereço.'
       if (!form.descricao.trim()) return 'Descreva brevemente a empresa.'
     }
-    if (step === 2) {
+    if (step === 3) {
       if (!form.objetivo) return 'Selecione o principal objetivo.'
       if (!form.publicoAlvo.trim()) return 'Descreva o público-alvo.'
       if (!form.mensagemPrincipal.trim()) return 'Informe a mensagem principal.'
     }
-    if (step === 3) {
+    if (step === 4) {
       if (!form.produtosServicos.trim()) return 'Informe os produtos/serviços em destaque.'
       if (!form.possuiFotos) return 'Responda sobre fotos/imagens.'
       if (!form.depoimentos) return 'Responda sobre depoimentos/cases.'
       if (!form.redesSociais.trim()) return 'Informe suas redes sociais ou outros sites.'
     }
-    if (step === 4) {
+    if (step === 5) {
       if (!form.estiloDesign) return 'Selecione o estilo de design preferido.'
       if (!form.coresPrincipais.trim()) return 'Informe as cores principais.'
     }
-    if (step === 5) {
+    if (step === 6) {
       if (!form.formularioContato) return 'Responda sobre formulário de contato.'
       if (!form.integracaoWhatsapp) return 'Responda sobre integração com WhatsApp.'
       if (!form.observacoes.trim()) return 'Informe outras observações (ou escreva "Nenhuma").'
@@ -167,8 +182,40 @@ export default function BriefingPage() {
       <div className="max-w-xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
 
-          {/* ── Step 1 ── */}
+          {/* ── Step 1 — Dados de Contato ── */}
           {step === 1 && (
+            <>
+              <p className="text-sm text-gray-500 -mt-1">Precisamos dos seus dados para entrar em contato e dar andamento ao seu site.</p>
+              <div>
+                <Label required>Seu nome completo</Label>
+                <Input value={form.nomeContato} onChange={set('nomeContato')} placeholder="Ex: João Silva" />
+              </div>
+              <div>
+                <Label required>E-mail</Label>
+                <input
+                  type="email"
+                  value={form.emailContato}
+                  onChange={(e) => set('emailContato')(e.target.value)}
+                  placeholder="seu@email.com"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-colors"
+                />
+              </div>
+              <div>
+                <Label required>WhatsApp</Label>
+                <input
+                  type="tel"
+                  value={form.whatsappContato}
+                  onChange={(e) => set('whatsappContato')(formatPhone(e.target.value))}
+                  placeholder="(11) 99999-9999"
+                  maxLength={16}
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-colors"
+                />
+              </div>
+            </>
+          )}
+
+          {/* ── Step 2 — Informações da Empresa ── */}
+          {step === 2 && (
             <>
               <div>
                 <Label required>Nome da empresa</Label>
@@ -189,8 +236,8 @@ export default function BriefingPage() {
             </>
           )}
 
-          {/* ── Step 2 ── */}
-          {step === 2 && (
+          {/* ── Step 3 ── */}
+          {step === 3 && (
             <>
               <div>
                 <Label required>Principal objetivo do site</Label>
@@ -211,8 +258,8 @@ export default function BriefingPage() {
             </>
           )}
 
-          {/* ── Step 3 ── */}
-          {step === 3 && (
+          {/* ── Step 4 ── */}
+          {step === 4 && (
             <>
               <div>
                 <Label required>Produtos/Serviços que deseja destacar</Label>
@@ -241,8 +288,8 @@ export default function BriefingPage() {
             </>
           )}
 
-          {/* ── Step 4 ── */}
-          {step === 4 && (
+          {/* ── Step 5 ── */}
+          {step === 5 && (
             <>
               <div>
                 <Label required>Estilo de design preferido</Label>
@@ -263,8 +310,8 @@ export default function BriefingPage() {
             </>
           )}
 
-          {/* ── Step 5 ── */}
-          {step === 5 && (
+          {/* ── Step 6 ── */}
+          {step === 6 && (
             <>
               <div>
                 <Label required>Deseja formulário de contato no site?</Label>

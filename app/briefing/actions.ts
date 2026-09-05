@@ -4,25 +4,29 @@ import { sendEmail } from '@/lib/integrations/resend'
 import { ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
 
 export type BriefingData = {
-  // Seção 1
+  // Seção 1 — contato
+  nomeContato: string
+  emailContato: string
+  whatsappContato: string
+  // Seção 2
   nomeEmpresa: string
   areaAtuacao: string
   endereco: string
   descricao: string
-  // Seção 2
+  // Seção 3
   objetivo: string
   publicoAlvo: string
   mensagemPrincipal: string
-  // Seção 3
+  // Seção 4
   produtosServicos: string
   possuiFotos: string
   depoimentos: string
   redesSociais: string
-  // Seção 4
+  // Seção 5
   estiloDesign: string
   coresPrincipais: string
   exemplosSites: string
-  // Seção 5
+  // Seção 6
   formularioContato: string
   integracaoWhatsapp: string
   observacoes: string
@@ -47,6 +51,13 @@ export async function sendBriefing(data: BriefingData): Promise<{ ok: boolean; e
 <div style="font-family:sans-serif;max-width:680px;margin:0 auto;">
   <h2 style="margin:0 0 4px;font-size:20px;color:#111827;">Novo Briefing Recebido</h2>
   <p style="margin:0 0 20px;color:#6b7280;font-size:13px;">Enviado pelo cliente via /briefing</p>
+
+  <div style="background:#fffbeb;border:2px solid #fbbf24;border-radius:10px;padding:16px 20px;margin-bottom:24px;">
+    <p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#92400e;">Dados de contato</p>
+    <p style="margin:0 0 6px;font-size:20px;font-weight:700;color:#111827;">${data.nomeContato}</p>
+    <p style="margin:0 0 4px;font-size:14px;color:#374151;">📧 <a href="mailto:${data.emailContato}" style="color:#1d4ed8;">${data.emailContato}</a></p>
+    <p style="margin:0;font-size:14px;color:#374151;">📱 <a href="https://wa.me/55${data.whatsappContato.replace(/\D/g, '')}" style="color:#16a34a;">${data.whatsappContato}</a></p>
+  </div>
 
   ${section('1. Informações da Empresa', [
     row('Nome da empresa', data.nomeEmpresa),
@@ -83,7 +94,7 @@ export async function sendBriefing(data: BriefingData): Promise<{ ok: boolean; e
 
     await sendEmail({
       to: ADMIN_NOTIFICATION_EMAIL,
-      subject: `[TopSite] Briefing — ${data.nomeEmpresa}`,
+      subject: `[TopSite] Briefing — ${data.nomeContato} (${data.nomeEmpresa})`,
       html,
     })
 
