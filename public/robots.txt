@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Painéis privados e rotas de sistema
+Disallow: /admin/
+Disallow: /painel/
+Disallow: /api/
+Disallow: /dev/
+
+# Rotas com token dinâmico (sem valor de SEO)
+Disallow: /modelos/
+Disallow: /proposta/
+Disallow: /p/
+Disallow: /orcamento/
+
+# Páginas de conclusão (sem conteúdo de entrada)
+Disallow: /briefing/obrigado
+
+Sitemap: https://topsitebr.com.br/sitemap.xml

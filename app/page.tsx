@@ -10,6 +10,7 @@ function wa(msg: string) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 }
 const MSG_DOUBT = 'Olá! Tenho uma dúvida sobre os sites da TopSite. Pode me ajudar?'
+const MSG_SITE = 'Olá! Quero criar meu site profissional por R$197. Como funciona?'
 
 /* ─── SEO ────────────────────────────────────────────────────────────────── */
 
@@ -17,11 +18,11 @@ const BASE_URL = 'https://topsitebr.com.br'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: 'TOP SITE — Criação de Sites Profissionais com SEO | A partir de R$567',
+  title: 'TOP SITE — Criação de Sites Profissionais por R$197 | SEO Incluso',
   description:
-    'Criamos sites profissionais para pequenas empresas e autônomos com foco em SEO e conversão. Landing page, site institucional e loja virtual. Orçamento grátis em 24h.',
+    'Site profissional por apenas R$197. Criamos sites com SEO, design exclusivo e hospedagem para pequenas empresas e autônomos. Fale agora no WhatsApp.',
   keywords:
-    'criação de site profissional, site para empresa, site para pequenas empresas, criação de landing page, site para psicólogo, site para clínica, site para salão de beleza, site barato, desenvolvimento web, SEO para pequenas empresas',
+    'criação de site profissional, site por R$197, site barato para empresa, site para pequenas empresas, criação de landing page, site para psicólogo, site para clínica, site para salão de beleza, fazer site profissional, desenvolvimento web, SEO para pequenas empresas',
   authors: [{ name: 'TOP SITE' }],
   creator: 'TOP SITE',
   publisher: 'TOP SITE',
@@ -36,17 +37,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: BASE_URL,
-    title: 'TOP SITE — Sites Profissionais com SEO | A partir de R$567',
+    title: 'TOP SITE — Site Profissional por R$197 | SEO Incluso',
     description:
-      'Sites profissionais para pequenas empresas e autônomos. SEO, conversão e suporte inclusos. Orçamento grátis em 24h.',
+      'Site profissional por apenas R$197. Design exclusivo, SEO e suporte inclusos para pequenas empresas e autônomos.',
     siteName: 'TOP SITE',
     locale: 'pt_BR',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'TOP SITE — Criação de Sites Profissionais' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TOP SITE — Sites que Vendem | A partir de R$567',
-    description: 'Sites profissionais com SEO e conversão para pequenas empresas. Orçamento grátis em 24h.',
+    title: 'TOP SITE — Site Profissional por R$197 | Sites que Vendem',
+    description: 'Site profissional por R$197. SEO, design exclusivo e suporte para pequenas empresas. Fale no WhatsApp.',
     images: ['/og-image.png'],
   },
 }
@@ -80,21 +81,16 @@ const jsonLd = {
       '@id': `${BASE_URL}/#website`,
       url: BASE_URL,
       name: 'TOP SITE',
-      description: 'Sites profissionais com SEO e conversão para pequenas empresas. A partir de R$567.',
+      description: 'Site profissional por R$197 — SEO, design exclusivo e suporte para pequenas empresas.',
       publisher: { '@id': `${BASE_URL}/#organization` },
       inLanguage: 'pt-BR',
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: `${BASE_URL}/orcamento`,
-        'query-input': 'required name=search_term_string',
-      },
     },
     {
       '@type': 'Service',
       '@id': `${BASE_URL}/#service`,
       name: 'Criação de Site Profissional com SEO',
       description:
-        'Desenvolvemos sites profissionais personalizados para pequenas empresas e autônomos, com foco em SEO, conversão e design estratégico. Landing pages, sites institucionais e lojas virtuais.',
+        'Site profissional por R$197. Design exclusivo, SEO técnico e suporte para pequenas empresas e autônomos.',
       provider: { '@id': `${BASE_URL}/#organization` },
       serviceType: 'Criação de Sites Profissionais',
       areaServed: { '@type': 'Country', name: 'Brazil' },
@@ -104,22 +100,15 @@ const jsonLd = {
         itemListElement: [
           {
             '@type': 'Offer',
-            name: 'Landing Page',
-            price: '567',
+            name: 'Site Profissional (Criação)',
+            price: '197',
             priceCurrency: 'BRL',
             availability: 'https://schema.org/InStock',
           },
           {
             '@type': 'Offer',
-            name: 'Site Institucional',
-            price: '780',
-            priceCurrency: 'BRL',
-            availability: 'https://schema.org/InStock',
-          },
-          {
-            '@type': 'Offer',
-            name: 'Loja Virtual',
-            price: '1200',
+            name: 'Site + Hospedagem (mensal)',
+            price: '19',
             priceCurrency: 'BRL',
             availability: 'https://schema.org/InStock',
           },
@@ -130,6 +119,14 @@ const jsonLd = {
 }
 
 /* ─── Icons ──────────────────────────────────────────────────────────────── */
+
+function WAIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 shrink-0">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    </svg>
+  )
+}
 
 function CheckIcon() {
   return (
@@ -364,8 +361,9 @@ export default function HomePage() {
               >
                 Área do cliente
               </a>
-              <CTAPrimary href="/orcamento" className="!px-5 !py-2.5 !text-xs">
-                Orçamento grátis
+              <CTAPrimary href={wa(MSG_SITE)} external className="!px-5 !py-2.5 !text-xs">
+                <WAIcon />
+                WhatsApp
               </CTAPrimary>
             </div>
           </nav>
@@ -409,15 +407,27 @@ export default function HomePage() {
                   </span>
                 </h1>
 
-                <p className="text-lg text-white/75 leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
+                <p className="text-lg text-white/75 leading-relaxed mb-6 max-w-lg mx-auto lg:mx-0">
                   Desenvolvemos sites de alta performance com foco em conversão e SEO avançado.
                   Tecnologia de ponta, design estratégico e resultados reais para seu negócio.
                 </p>
 
+                {/* Price highlight */}
+                <div className="flex justify-center lg:justify-start mb-8">
+                  <div
+                    className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl"
+                    style={{ background: 'rgba(250,204,21,0.08)', border: '1px solid rgba(250,204,21,0.18)' }}
+                  >
+                    <span className="text-sm text-white/50">Seu site profissional por apenas</span>
+                    <span className="text-2xl font-black" style={{ color: '#facc15' }}>R$ 197</span>
+                    <span className="text-xs text-white/35 border-l border-white/10 pl-3">pagamento único</span>
+                  </div>
+                </div>
+
                 <div className="flex flex-wrap justify-center lg:justify-start items-center gap-4 mb-10">
-                  <CTAPrimary href="/orcamento" className="!px-8 !py-4 !text-base">
-                    Começar agora
-                    <ArrowIcon />
+                  <CTAPrimary href={wa(MSG_SITE)} external className="!px-8 !py-4 !text-base">
+                    <WAIcon />
+                    Criar meu site agora
                   </CTAPrimary>
                   <a
                     href="#tech"
@@ -824,9 +834,9 @@ export default function HomePage() {
                 border: '1px solid rgba(255,255,255,0.04)',
               }}
             >
-              <p className="text-sm text-white/55 mb-2">A partir de</p>
-              <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$567</p>
-              <p className="text-sm text-white/55 mt-2">em até 2× no cartão sem juros</p>
+              <p className="text-sm text-white/55 mb-2">Seu site profissional por apenas</p>
+              <p className="text-7xl font-bold" style={{ color: '#facc15' }}>R$197</p>
+              <p className="text-sm text-white/55 mt-2">pagamento único · hospedagem a partir de R$19/mês</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-10 text-left">
                 {[
@@ -846,11 +856,11 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <CTAPrimary href="/orcamento" className="!px-12 !py-4 !text-base">
-                Começar projeto
-                <ArrowIcon />
+              <CTAPrimary href={wa(MSG_SITE)} external className="!px-12 !py-4 !text-base">
+                <WAIcon />
+                Falar no WhatsApp
               </CTAPrimary>
-              <p className="text-center text-xs text-white/45 mt-3">Sem compromisso · Orçamento em 24h</p>
+              <p className="text-center text-xs text-white/45 mt-3">Sem compromisso · Atendimento pelo WhatsApp</p>
             </div>
           </div>
         </section>
@@ -909,19 +919,22 @@ export default function HomePage() {
                 que realmente vende?
               </span>
             </h2>
-            <p className="text-white/65 text-lg mb-10">
-              Comece agora. Orçamento gratuito em até 24h. Sem compromisso.
+            <p className="text-white/65 text-lg mb-4">
+              Comece agora. Atendimento rápido pelo WhatsApp. Sem compromisso.
+            </p>
+            <p className="text-white/45 text-base mb-10">
+              Site profissional por <strong className="text-white/70">R$197</strong> — pagamento único.
             </p>
 
-            <CTAPrimary href="/orcamento" className="!px-12 !py-5 !text-lg">
-              Quero meu orçamento
-              <ArrowIcon />
+            <CTAPrimary href={wa(MSG_SITE)} external className="!px-12 !py-5 !text-lg">
+              <WAIcon />
+              Criar meu site agora
             </CTAPrimary>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-white/45">
-              <span className="flex items-center gap-2">✓ Orçamento gratuito</span>
+              <span className="flex items-center gap-2">✓ Atendimento rápido</span>
               <span className="w-px h-4 bg-white/10" />
-              <span className="flex items-center gap-2">✓ 2× no cartão sem juros</span>
+              <span className="flex items-center gap-2">✓ Sem compromisso</span>
             </div>
           </div>
         </section>
