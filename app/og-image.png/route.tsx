@@ -12,11 +12,11 @@ export function GET() {
     }}>
       <div style={{ display: 'flex', fontSize: 30, letterSpacing: 6, color: '#facc15' }}>TOP SITE</div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', fontSize: 76, fontWeight: 700, lineHeight: 1.1 }}>Sites profissionais</div>
-        <div style={{ display: 'flex', fontSize: 76, fontWeight: 700, lineHeight: 1.1, color: '#facc15' }}>para o seu negócio.</div>
+        <div style={{ display: 'flex', fontSize: 72, fontWeight: 700, lineHeight: 1.15 }}>Sites profissionais</div>
+        <div style={{ display: 'flex', fontSize: 72, fontWeight: 700, lineHeight: 1.15, color: '#facc15' }}>e software sob medida.</div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 26, color: '#d4d4d4' }}>
-        <span>Design · SEO · Atendimento em todo o Brasil</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 25, color: '#d4d4d4' }}>
+        <span>Da presença digital à operação da sua empresa.</span>
         <span>topsitebr.com.br</span>
       </div>
     </div>,

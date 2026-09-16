@@ -1,149 +1,56 @@
 'use client'
 
 import { useState } from 'react'
+import { MarketingIcon } from './MarketingIcon'
 import Image from 'next/image'
 import Link from 'next/link'
-
-const WA_NUMBER = '5518996742364'
-const MSG_SITE = 'Olá! Quero criar meu site profissional por R$197. Como funciona?'
-function wa() { return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(MSG_SITE)}` }
-
-const SERVICES = [
-  { href: '/criacao-de-sites', label: 'Criação de Sites' },
-  { href: '/site-institucional', label: 'Site Institucional' },
-  { href: '/landing-page', label: 'Landing Page' },
-  { href: '/loja-virtual', label: 'Loja Virtual' },
-]
+import { marketingServices, projectContact } from '@/lib/marketing'
 
 export function MarketingHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [servicesOpen, setServicesOpen] = useState(false)
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl"
-      style={{ background: 'rgba(10,10,10,0.85)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}
-    >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
-
-        {/* Logo */}
-        <Link href="/" className="shrink-0">
-          <Image src="/logo.png" alt="TOP SITE" width={140} height={45} className="h-8 sm:h-9 w-auto" priority />
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0a0a0a]/95 text-white backdrop-blur-xl"
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          setMobileOpen(false)
+          event.currentTarget.querySelectorAll('details[open]').forEach((item) => item.removeAttribute('open'))
+        }
+      }}>
+      <a href="#conteudo-principal" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-yellow-400 focus:p-3 focus:text-black">Pular para o conteúdo</a>
+      <nav aria-label="Navegação principal" className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-8">
+        <Link href="/" aria-label="TopSite — início" className="flex shrink-0 items-center gap-3">
+          <Image src="/logo.png" alt="" width={40} height={40} className="h-10 w-10 object-contain" priority />
+          <span className="text-lg font-bold tracking-widest">TOP SITE</span>
         </Link>
-
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-1">
-          {/* Dropdown Serviços */}
-          <div className="relative group">
-            <button className="flex items-center gap-1 px-4 py-2 text-sm text-white/60 hover:text-white transition-colors rounded-lg hover:bg-white/5">
-              Serviços
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-            <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 pointer-events-none group-hover:pointer-events-auto">
-              <div
-                className="rounded-xl overflow-hidden py-1"
-                style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)', minWidth: 210, boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }}
-              >
-                {SERVICES.map((s) => (
-                  <Link
-                    key={s.href}
-                    href={s.href}
-                    className="block px-4 py-2.5 text-sm text-white/60 hover:text-white hover:bg-white/5 transition-colors"
-                  >
-                    {s.label}
-                  </Link>
-                ))}
-              </div>
+        <div className="hidden items-center gap-7 text-sm text-white/75 lg:flex">
+          <details className="group/menu relative">
+            <summary className="flex cursor-pointer list-none items-center gap-2 rounded-lg py-3 hover:text-yellow-400 [&::-webkit-details-marker]:hidden">Serviços<MarketingIcon name="chevron" className="h-4 w-4 transition-transform group-open/menu:rotate-180" /></summary>
+            <div className="absolute left-0 top-full min-w-64 rounded-xl border border-white/10 bg-[#111] p-2 shadow-xl">
+              {marketingServices.map(({ href, label }) => (
+                <Link key={href} href={href} onClick={(event) => event.currentTarget.closest('details')?.removeAttribute('open')} className="block rounded-lg px-4 py-3 hover:bg-white/5 hover:text-yellow-400">{label}</Link>
+              ))}
             </div>
-          </div>
-
-          <Link href="/portfolio" className="px-4 py-2 text-sm text-white/60 hover:text-white transition-colors rounded-lg hover:bg-white/5">
-            Portfólio
-          </Link>
-          <Link href="/login" className="px-4 py-2 text-sm text-white/60 hover:text-white transition-colors rounded-lg hover:bg-white/5">
-            Área do cliente
-          </Link>
+          </details>
+          <Link href="/portfolio" className="hover:text-yellow-400">Portfólio</Link>
+          <Link href="/login" className="hover:text-yellow-400">Área do cliente</Link>
         </div>
-
-        {/* CTA + hamburger */}
         <div className="flex items-center gap-3">
-          <a
-            href={wa()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-black rounded-xl transition-opacity hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)', boxShadow: '0 4px 16px rgba(250,204,21,0.25)' }}
-          >
-            💬 Criar meu site — R$197
-          </a>
-          <button
-            className="md:hidden p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Menu"
-          >
-            {mobileOpen ? (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
-                <path d="M3 12h18M3 6h18M3 18h18" />
-              </svg>
-            )}
+          <a href={projectContact()} target="_blank" rel="noopener noreferrer" className="hidden rounded-xl bg-yellow-400 px-5 py-3 text-sm font-semibold text-black transition-colors hover:bg-yellow-300 sm:inline-flex">Conversar sobre meu projeto</a>
+          <button type="button" aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={mobileOpen} aria-controls="marketing-mobile-menu" onClick={() => setMobileOpen(!mobileOpen)} className="rounded-lg border border-white/15 p-3 lg:hidden">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+              <path d={mobileOpen ? 'M6 6l12 12M6 18L18 6' : 'M3 6h18M3 12h18M3 18h18'} />
+            </svg>
           </button>
         </div>
       </nav>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div style={{ background: '#0d0d0d', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="max-w-7xl mx-auto px-4 py-3 space-y-0.5">
-            {/* Serviços accordion */}
-            <button
-              className="w-full flex items-center justify-between px-3 py-2.5 text-sm text-white/60 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
-              onClick={() => setServicesOpen(!servicesOpen)}
-            >
-              <span>Serviços</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={`w-3 h-3 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`}>
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-            {servicesOpen && (
-              <div className="pl-3 space-y-0.5">
-                {SERVICES.map((s) => (
-                  <Link
-                    key={s.href}
-                    href={s.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2.5 text-sm text-white/50 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
-                  >
-                    {s.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-            <Link href="/portfolio" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm text-white/60 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-              Portfólio
-            </Link>
-            <Link href="/login" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 text-sm text-white/60 hover:text-white rounded-lg hover:bg-white/5 transition-colors">
-              Área do cliente
-            </Link>
-            <div className="pt-2 pb-1">
-              <a
-                href={wa()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-center px-4 py-3 text-sm font-bold text-black rounded-xl"
-                style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)' }}
-              >
-                💬 Criar meu site — R$197
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      <nav id="marketing-mobile-menu" aria-label="Navegação no celular" hidden={!mobileOpen} className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-white/10 px-4 py-5 lg:hidden">
+        <p className="mb-2 px-3 text-xs uppercase tracking-widest text-white/50">Serviços</p>
+        {[...marketingServices, { href: '/portfolio', label: 'Portfólio' }, { href: '/login', label: 'Área do cliente' }].map(({ href, label }) => (
+          <Link key={href} href={href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-yellow-400">{label}</Link>
+        ))}
+        <a href={projectContact()} target="_blank" rel="noopener noreferrer" className="mt-4 block rounded-xl bg-yellow-400 px-4 py-3 text-center text-sm font-semibold text-black">Conversar sobre meu projeto</a>
+      </nav>
     </header>
   )
 }

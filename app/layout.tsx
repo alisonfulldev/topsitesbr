@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'TOP SITE',
-  description: 'Gerencie seu site, acompanhe o status e solicite manutenções',
+  description: 'Sites profissionais e software sob medida para empresas. Conheça a TopSite e converse sobre seu projeto.',
   manifest: '/manifest.json',
   icons: {
     icon: [

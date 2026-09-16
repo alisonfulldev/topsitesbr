@@ -1,76 +1,33 @@
-import Image from 'next/image'
 import Link from 'next/link'
-
-const WA_NUMBER = '5518996742364'
-const MSG_DOUBT = 'Olá! Tenho uma dúvida sobre os sites da TopSite. Pode me ajudar?'
-function wa() { return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(MSG_DOUBT)}` }
+import { MarketingIcon } from './MarketingIcon'
+import { marketingServices, projectContact } from '@/lib/marketing'
 
 export function MarketingFooter() {
   return (
-    <footer className="relative py-16" style={{ background: '#050505', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-12">
-          {/* Brand */}
-          <div className="sm:col-span-2">
-            <Link href="/">
-              <Image src="/logo.png" alt="TOP SITE" width={120} height={35} className="h-8 w-auto mb-4" />
-            </Link>
-            <p className="text-sm text-white/40 max-w-xs leading-relaxed">
-              Sites profissionais para pequenos negócios e autônomos. Atendemos todo o Brasil remotamente.
-            </p>
-          </div>
-
-          {/* Serviços */}
+    <footer className="border-t border-white/10 bg-[#060606] px-4 py-16 text-white sm:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr]">
           <div>
-            <p className="text-xs font-semibold text-white/25 uppercase tracking-wider mb-4">Serviços</p>
-            <ul className="space-y-2.5">
-              {[
-                ['/criacao-de-sites', 'Criação de Sites'],
-                ['/site-institucional', 'Site Institucional'],
-                ['/landing-page', 'Landing Page'],
-                ['/loja-virtual', 'Loja Virtual'],
-                ['/portfolio', 'Portfólio'],
-              ].map(([href, label]) => (
-                <li key={href}>
-                  <Link href={href} className="text-sm text-white/40 hover:text-white/70 transition-colors">
-                    {label}
-                  </Link>
-                </li>
-              ))}
+            <Link href="/" className="text-xl font-bold tracking-widest text-yellow-400">TOP SITE</Link>
+            <p className="mt-5 max-w-sm leading-relaxed text-white/65">Sites profissionais e software sob medida para empresas. Da presença digital aos processos da sua operação.</p>
+            <p className="mt-3 text-sm text-white/50">Atendimento remoto em todo o Brasil.</p>
+          </div>
+          <div>
+            <h2 className="mb-4 text-sm font-semibold">Serviços</h2>
+            <ul className="space-y-3">
+              {marketingServices.map(({ href, label }) => <li key={href}><Link href={href} className="text-sm text-white/65 hover:text-yellow-400">{label}</Link></li>)}
             </ul>
           </div>
-
-          {/* Links */}
           <div>
-            <p className="text-xs font-semibold text-white/25 uppercase tracking-wider mb-4">Links</p>
-            <ul className="space-y-2.5">
-              {[
-                ['/login', 'Área do cliente'],
-                ['/termos', 'Termos de Uso'],
-                ['/privacidade', 'Política de Privacidade'],
-              ].map(([href, label]) => (
-                <li key={href}>
-                  <Link href={href} className="text-sm text-white/40 hover:text-white/70 transition-colors">
-                    {label}
-                  </Link>
-                </li>
-              ))}
+            <h2 className="mb-4 text-sm font-semibold">TopSite</h2>
+            <ul className="space-y-3">
+              {[['/portfolio', 'Portfólio'], ['/login', 'Área do cliente'], ['/termos', 'Termos de uso'], ['/privacidade', 'Privacidade']].map(([href, label]) => <li key={href}><Link href={href} className="text-sm text-white/65 hover:text-yellow-400">{label}</Link></li>)}
             </ul>
           </div>
         </div>
-
-        <div className="border-t border-white/[0.04] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/25 text-center sm:text-left">
-            © {new Date().getFullYear()} TOP SITE · CNPJ 22.556.759/0001-98 · Atendemos todo o Brasil
-          </p>
-          <a
-            href={wa()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-white/40 hover:text-white/65 transition-colors"
-          >
-            💬 Falar no WhatsApp
-          </a>
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-white/50 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} TopSite · CNPJ 22.556.759/0001-98</p>
+          <a href={projectContact()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-yellow-400">Falar com a TopSite <MarketingIcon name="arrow" /></a>
         </div>
       </div>
     </footer>

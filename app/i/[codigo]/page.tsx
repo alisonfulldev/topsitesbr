@@ -18,7 +18,7 @@ export default async function ReferralRedirectPage({
   })
 
   const number = process.env.WHATSAPP_BUSINESS_NUMBER ?? ''
-  const base = 'Olá! Quero saber mais sobre o site de R$97'
+  const base = 'Olá! Quero conversar sobre um projeto com a TopSite.'
   const message = client ? `${base} (ref: ${codigo})` : base
   const waUrl = `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 
