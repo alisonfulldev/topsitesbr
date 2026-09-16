@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import Script from 'next/script'
+import { MarketingHeader } from '@/components/marketing/MarketingHeader'
+import { MarketingFooter } from '@/components/marketing/MarketingFooter'
 
 /* ─── Config ─────────────────────────────────────────────────────────────── */
 
@@ -73,7 +74,6 @@ const jsonLd = {
         contactType: 'customer service',
         telephone: '+55-18-99674-2364',
         availableLanguage: 'Portuguese',
-        contactOption: 'TollFree',
       },
     },
     {
@@ -316,7 +316,7 @@ const TESTIMONIALS = [
 ]
 
 const FAQS = [
-  { q: 'Quanto tempo leva para ficar pronto?', a: 'O prazo médio é de 15 a 30 dias, dependendo da complexidade do projeto.' },
+  { q: 'Quanto tempo leva para ficar pronto?', a: 'O prazo de entrega é de 7 dias úteis.' },
   { q: 'Preciso ter um domínio e hospedagem?', a: 'Não! Cuidamos de tudo: domínio, hospedagem, SSL, e-mail e monitoramento.' },
   { q: 'Vou conseguir administrar o site depois?', a: 'Sim! Entregamos com um painel fácil e damos todo o suporte necessário.' },
   { q: 'E se eu quiser mudar algo depois?', a: 'Suporte e ajustes finos estão inclusos. Mudanças maiores têm orçamento ágil.' },
@@ -341,33 +341,8 @@ export default function HomePage() {
 
       <div className="min-h-screen text-white antialiased" style={{ background: '#0a0a0a' }}>
 
-        {/* ─── NAV ────────────────────────────────────────────────────────── */}
-        <header
-          className="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl"
-          style={{
-            background: 'rgba(10,10,10,0.7)',
-            borderBottom: '1px solid rgba(255,255,255,0.04)',
-          }}
-        >
-          <nav className="max-w-7xl mx-auto px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
-            <a href="/" className="flex items-center gap-3">
-              <Image src="/logo.png" alt="TOP SITE" width={140} height={45} className="h-9 w-auto" priority />
-            </a>
-
-            <div className="flex items-center gap-4">
-              <a
-                href="/login"
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm text-white/65 hover:text-white/70 transition-colors duration-200 rounded-xl hover:bg-white/5"
-              >
-                Área do cliente
-              </a>
-              <CTAPrimary href={wa(MSG_SITE)} external className="!px-5 !py-2.5 !text-xs">
-                <WAIcon />
-                WhatsApp
-              </CTAPrimary>
-            </div>
-          </nav>
-        </header>
+        <MarketingHeader />
+        <main id="conteudo-principal">
 
         {/* ─── HERO ────────────────────────────────────────────────────────── */}
         <section className="relative min-h-screen flex items-center overflow-hidden pt-20">
@@ -401,15 +376,15 @@ export default function HomePage() {
                 </div>
 
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6">
-                  Sites que
+                  Criação de sites
                   <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b, #d97706)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                    vendem por você
+                    para pequenos negócios
                   </span>
                 </h1>
 
                 <p className="text-lg text-white/75 leading-relaxed mb-6 max-w-lg mx-auto lg:mx-0">
-                  Desenvolvemos sites de alta performance com foco em conversão e SEO avançado.
-                  Tecnologia de ponta, design estratégico e resultados reais para seu negócio.
+                  Criamos sites profissionais para pequenas empresas e autônomos, com foco em conversão e SEO.
+                  Apresente seus serviços, receba contatos pelo WhatsApp e tenha uma presença própria na internet.
                 </p>
 
                 {/* Price highlight */}
@@ -672,12 +647,12 @@ export default function HomePage() {
             <div className="text-center mb-16">
               <Badge className="mb-4">Sites entregues recentemente</Badge>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                Clientes reais no
+                Sites criados para
                 <span className="block" style={{ background: 'linear-gradient(135deg, #facc15, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                  topo do Google
+                  clientes reais
                 </span>
               </h2>
-              <p className="text-white/65 text-sm mt-2">Clique para visitar o site</p>
+              <p className="text-white/65 text-sm mt-2">Clique para visitar o site. As prévias de busca são ilustrativas e não representam posições verificadas no Google.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -939,32 +914,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ─── FOOTER ───────────────────────────────────────────────────────── */}
-        <footer className="relative py-12" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <a href="/">
-              <Image src="/logo.png" alt="TOP SITE" width={120} height={35} className="h-8 w-auto" />
-            </a>
-
-            <p className="text-xs text-white/45 text-center">
-              © {new Date().getFullYear()} TOP SITE ·{' '}
-              <a href="/termos" className="hover:text-white/65 transition-colors">Termos</a>
-              {' · '}
-              <a href="/privacidade" className="hover:text-white/65 transition-colors">Privacidade</a>
-              {' · '}
-              <a href="/login" className="hover:text-white/65 transition-colors">Área do cliente</a>
-            </p>
-
-            <a
-              href={wa(MSG_DOUBT)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-white/45 hover:text-white/65 transition-colors"
-            >
-              💬 Falar no WhatsApp
-            </a>
-          </div>
-        </footer>
+        </main>
+        <MarketingFooter />
 
       </div>
 
