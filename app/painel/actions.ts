@@ -61,12 +61,17 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
     await prisma.subscription.update({ where: { id: existing.id }, data: { status: 'canceled' } })
   }
 
-  // Verifica se é primeira ativação (mês grátis) ou reativação
+  // Primeira ativação ganha 30 dias; reativações cobram a partir de amanhã
   const hasPriorSubscription = await prisma.subscription.findFirst({
     where: { clientId },
     select: { id: true },
   })
-  const freeMonth = !hasPriorSubscription
+  const firstDueDays = hasPriorSubscription ? 1 : 30
+  const firstDueDate = (() => {
+    const d = new Date()
+    d.setDate(d.getDate() + firstDueDays)
+    return d.toISOString().split('T')[0]
+  })()
 
   const [client, plan] = await Promise.all([
     prisma.client.findUnique({ where: { id: clientId } }),
@@ -97,7 +102,7 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
       planName: plan.name,
       price: subscriptionPrice,
       successUrl: `${appUrl}/painel?ativado=1`,
-      freeMonth,
+      firstDueDate,
     })
 
   const now = new Date()
@@ -118,69 +123,18 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
   await sendTermsAcceptanceEmail(client.email, client.name, now, TERMS_VERSION)
   await sendTermsAcceptanceEmail(ADMIN_NOTIFICATION_EMAIL, client.name, now, TERMS_VERSION)
 
-  if (freeMonth) {
-    // Mês grátis: ativa direto sem cobrança imediata
-    await prisma.subscription.create({
-      data: {
-        clientId,
-        planId: plan.id,
-        status: 'active',
-        asaasSubscriptionId: subscriptionId,
-        nextDueDate,
-        planActivatedAt: now,
-      },
-    })
+  const isDeferred = !chargeId // primeira ativação sem cobrança imediata
 
-    // Notifica cliente
-    await sendNotification(
-      clientId,
-      'Assinatura ativada com 1 mês grátis!',
-      `Seu plano ${plan.name} foi ativado. O primeiro mês é grátis — sua primeira cobrança de R$${subscriptionPrice.toFixed(2).replace('.', ',')} será em ${nextDueDate ? nextDueDate.toLocaleDateString('pt-BR') : '30 dias'}.`,
-      'painel',
-      'payment-confirmed',
-    )
-
-    // Notifica admin para publicar o site
-    await sendNotification(
-      null,
-      `Publicar site de ${client.name}`,
-      `Cliente ${client.name} ativou o plano ${plan.name} (mês grátis). Suba o site e atualize o status para "online".`,
-    )
-
-    // E-mail de boas-vindas
-    await sendSubscriptionWelcome(client.email, client.name, nextDueDate)
-
-    // Verifica indicação
-    const referral = await prisma.referral.findFirst({
-      where: { referredClientId: clientId, status: 'confirmado' },
-      include: { referrerClient: { select: { id: true, name: true } } },
-    })
-    if (referral) {
-      await sendNotification(
-        null,
-        'Indicação: aplicar 1 mês grátis',
-        `Cliente ${client.name}, indicado por ${referral.referrerClient.name}, ativou o plano. Aplique 1 mês grátis para ${referral.referrerClient.name} no Asaas e marque a indicação como recompensada.`,
-      )
-    }
-
-    revalidatePath('/painel')
-    return { paymentUrl: '/painel?ativado=1' }
-  }
-
-  // Reativação normal (com cobrança)
   const subscription = await prisma.subscription.create({
     data: {
       clientId,
       planId: plan.id,
-      status: 'pending',
+      status: isDeferred ? 'active' : 'pending',
       asaasSubscriptionId: subscriptionId,
       nextDueDate,
       planActivatedAt: now,
     },
   })
-
-  const dueDate = new Date()
-  dueDate.setDate(dueDate.getDate() + 1)
 
   if (chargeId) {
     await prisma.invoice.create({
@@ -188,14 +142,47 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
         subscriptionId: subscription.id,
         amount: plan.price,
         status: 'pending',
-        dueDate,
+        dueDate: nextDueDate ?? new Date(),
         asaasChargeId: chargeId,
       },
     })
   }
 
+  if (isDeferred) {
+    await sendNotification(
+      clientId,
+      'Assinatura ativada com 1 mês grátis!',
+      `Seu plano ${plan.name} foi ativado. O primeiro mês é grátis — sua primeira cobrança de R$${subscriptionPrice.toFixed(2).replace('.', ',')} será em ${nextDueDate ? nextDueDate.toLocaleDateString('pt-BR') : '30 dias'}.`,
+      'painel',
+      'payment-confirmed',
+    )
+  }
+
+  // Notifica admin para publicar o site
+  await sendNotification(
+    null,
+    `Publicar site de ${client.name}`,
+    `Cliente ${client.name} ativou o plano ${plan.name}${isDeferred ? ' (mês grátis)' : ''}. Suba o site e atualize o status para "online".`,
+  )
+
+  // E-mail de boas-vindas
+  await sendSubscriptionWelcome(client.email, client.name, nextDueDate)
+
+  // Verifica indicação
+  const referral = await prisma.referral.findFirst({
+    where: { referredClientId: clientId, status: 'confirmado' },
+    include: { referrerClient: { select: { id: true, name: true } } },
+  })
+  if (referral) {
+    await sendNotification(
+      null,
+      'Indicação: aplicar 1 mês grátis',
+      `Cliente ${client.name}, indicado por ${referral.referrerClient.name}, ativou o plano. Aplique 1 mês grátis para ${referral.referrerClient.name} no Asaas e marque a indicação como recompensada.`,
+    )
+  }
+
   revalidatePath('/painel')
-  return { paymentUrl }
+  return { paymentUrl: isDeferred ? '/painel?ativado=1' : paymentUrl }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     console.error('[activatePlan]', msg)

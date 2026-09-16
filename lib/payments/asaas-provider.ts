@@ -73,8 +73,7 @@ export class AsaasPaymentProvider implements PaymentProvider {
     input: CreateSubscriptionInput,
   ): Promise<CreateSubscriptionResult> {
     try {
-      // Se freeMonth, a primeira cobrança só começa em 30 dias
-      const startDate = input.freeMonth ? daysFromNow(30) : daysFromNow(1)
+      const startDate = input.firstDueDate ?? daysFromNow(1)
 
       const sub = await asaasFetch<AsaasSubscription>('/subscriptions', {
         method: 'POST',
@@ -91,28 +90,33 @@ export class AsaasPaymentProvider implements PaymentProvider {
         }),
       })
 
-      if (input.freeMonth) {
-        // Sem cobrança imediata — ativa direto
+      // Usamos a data que enviamos ao Asaas (não sub.nextDueDate, pois o Asaas pode
+      // retornar a data do ciclo seguinte ao primeiro pagamento, gerando shift de 1 mês)
+      const nextDueDate = new Date(`${startDate}T12:00:00`)
+
+      // Se o vencimento é mais de 2 dias à frente, não há cobrança imediata a buscar
+      const twoDaysFromNow = new Date()
+      twoDaysFromNow.setDate(twoDaysFromNow.getDate() + 2)
+      if (nextDueDate > twoDaysFromNow) {
         return {
           subscriptionId: sub.id,
           chargeId: null,
-          nextDueDate: new Date(sub.nextDueDate),
-          paymentUrl: '/painel?ativado=1',
+          nextDueDate,
+          paymentUrl: input.successUrl ?? '/painel?ativado=1',
         }
       }
 
-      // Busca a primeira cobrança gerada pela assinatura
+      // Cobrança imediata — busca o link de pagamento gerado pela assinatura
       const list = await asaasFetch<AsaasPaymentList>(
         `/subscriptions/${sub.id}/payments?limit=1&offset=0`,
       )
-
       const first = list.data[0]
       if (!first) throw new Error('Nenhuma cobrança gerada pela assinatura.')
 
       return {
         subscriptionId: sub.id,
         chargeId: first.id,
-        nextDueDate: new Date(sub.nextDueDate),
+        nextDueDate,
         paymentUrl: first.invoiceUrl,
       }
     } catch (err) {

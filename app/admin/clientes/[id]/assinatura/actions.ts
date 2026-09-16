@@ -4,6 +4,12 @@ import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
 import { revalidatePath } from 'next/cache'
 
+function daysFromNowStr(days: number): string {
+  const d = new Date()
+  d.setDate(d.getDate() + days)
+  return d.toISOString().split('T')[0]
+}
+
 export async function resetSubscriptionStatus(
   clientId: string,
   subscriptionId: string,
@@ -24,7 +30,8 @@ export async function resetSubscriptionStatus(
 export async function activateSubscription(
   clientId: string,
   planId: string,
-  freeFirstMonth = true,
+  /** Data do primeiro vencimento no formato YYYY-MM-DD. Padrão: 30 dias a partir de hoje. */
+  firstDueDateStr?: string,
 ): Promise<{ error?: string; success?: boolean }> {
   const [client, plan] = await Promise.all([
     prisma.client.findUnique({ where: { id: clientId } }),
@@ -52,20 +59,21 @@ export async function activateSubscription(
     phone: client.phone,
   })
 
+  const firstDueDate = firstDueDateStr ?? daysFromNowStr(30)
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   const { subscriptionId, chargeId, nextDueDate } = await provider.createSubscription({
     customerId,
     planName: plan.name,
     price: Number(plan.price),
     successUrl: `${appUrl}/painel?ativado=1`,
-    freeMonth: freeFirstMonth,
+    firstDueDate,
   })
 
   const subscription = await prisma.subscription.create({
     data: {
       clientId,
       planId,
-      status: freeFirstMonth ? 'active' : chargeId ? 'pending' : 'active',
+      status: chargeId ? 'pending' : 'active',
       asaasSubscriptionId: subscriptionId,
       nextDueDate,
       planActivatedAt: new Date(),
@@ -73,15 +81,12 @@ export async function activateSubscription(
   })
 
   if (chargeId) {
-    const dueDate = new Date()
-    dueDate.setDate(dueDate.getDate() + 1)
-
     await prisma.invoice.create({
       data: {
         subscriptionId: subscription.id,
         amount: plan.price,
         status: 'pending',
-        dueDate,
+        dueDate: new Date(`${firstDueDate}T12:00:00`),
         asaasChargeId: chargeId,
       },
     })
@@ -89,6 +94,27 @@ export async function activateSubscription(
 
   revalidatePath(`/admin/clientes/${clientId}`)
   revalidatePath(`/admin/clientes/${clientId}/assinatura`)
+  return { success: true }
+}
+
+export async function updateSubscriptionDueDate(
+  subscriptionId: string,
+  clientId: string,
+  nextDueDateStr: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const sub = await prisma.subscription.findUnique({ where: { id: subscriptionId } })
+  if (!sub || sub.clientId !== clientId) return { error: 'Assinatura não encontrada.' }
+
+  const parsed = new Date(`${nextDueDateStr}T12:00:00`)
+  if (isNaN(parsed.getTime())) return { error: 'Data inválida.' }
+
+  await prisma.subscription.update({
+    where: { id: subscriptionId },
+    data: { nextDueDate: parsed },
+  })
+
+  revalidatePath(`/admin/clientes/${clientId}/assinatura`)
+  revalidatePath(`/painel/assinatura`)
   return { success: true }
 }
 

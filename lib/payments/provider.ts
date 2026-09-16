@@ -10,7 +10,8 @@ export interface CreateSubscriptionInput {
   planName: string
   price: number
   successUrl?: string
-  freeMonth?: boolean
+  /** Data do primeiro vencimento (YYYY-MM-DD). Se omitido, usa amanhã. */
+  firstDueDate?: string
 }
 
 export interface CreateSubscriptionResult {
@@ -68,19 +69,21 @@ const mockProvider: PaymentProvider = {
   },
 
   async createSubscription(input) {
-    console.log('[MOCK:createSubscription]', input.planName, `R$${input.price}`, input.freeMonth ? '(mês grátis)' : '')
-    if (input.freeMonth) {
+    const firstDue = input.firstDueDate ? new Date(`${input.firstDueDate}T12:00:00`) : addDays(1)
+    const daysUntil = Math.round((firstDue.getTime() - Date.now()) / 86_400_000)
+    console.log('[MOCK:createSubscription]', input.planName, `R$${input.price}`, `1ª cobrança em ${daysUntil}d`)
+    if (daysUntil > 2) {
       return {
         subscriptionId: mockId('sub'),
         chargeId: null,
-        nextDueDate: addDays(30),
+        nextDueDate: firstDue,
         paymentUrl: '/painel?ativado=1',
       }
     }
     return {
       subscriptionId: mockId('sub'),
       chargeId: mockId('chg'),
-      nextDueDate: addDays(30),
+      nextDueDate: firstDue,
       paymentUrl: '/dev/pagamento-simulado',
     }
   },

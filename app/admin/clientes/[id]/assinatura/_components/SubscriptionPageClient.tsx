@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { activateSubscription, changePlan, resetSubscriptionStatus } from '../actions'
+import { activateSubscription, changePlan, resetSubscriptionStatus, updateSubscriptionDueDate } from '../actions'
 
 type SubscriptionInfo = {
   id: string
@@ -32,6 +32,12 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('pt-BR')
 }
 
+function daysFromNowStr(days: number): string {
+  const d = new Date()
+  d.setDate(d.getDate() + days)
+  return d.toISOString().split('T')[0]
+}
+
 function formatPrice(price: number) {
   return `R$ ${price.toFixed(2).replace('.', ',')}`
 }
@@ -51,7 +57,13 @@ export function SubscriptionPageClient({
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
   const [selectedPlanId, setSelectedPlanId] = useState<string>(plans?.[0]?.id ?? '')
-  const [freeFirstMonth, setFreeFirstMonth] = useState(true)
+  const [firstDueDate, setFirstDueDate] = useState(daysFromNowStr(30))
+
+  const [editDueDate, setEditDueDate] = useState('')
+  const [showEditDue, setShowEditDue] = useState(false)
+  const [editDuePending, startEditDueTransition] = useTransition()
+  const [editDueError, setEditDueError] = useState<string | null>(null)
+  const [editDueSuccess, setEditDueSuccess] = useState<string | null>(null)
 
   const [changePlanId, setChangePlanId] = useState<string>('')
   const [changeError, setChangeError] = useState<string | null>(null)
@@ -97,11 +109,24 @@ export function SubscriptionPageClient({
         return
       }
       const selectedPlan = plans?.find((p) => p.id === selectedPlanId)
-      const result = await activateSubscription(clientId, selectedPlanId, freeFirstMonth)
+      const result = await activateSubscription(clientId, selectedPlanId, firstDueDate)
       if (result.error) {
         setError(result.error)
       } else {
         setSuccessMsg(`Assinatura "${selectedPlan?.name ?? 'Site no Ar'}" ativada com sucesso.`)
+      }
+    })
+  }
+
+  function handleEditDueDate() {
+    if (!subscription) return
+    setEditDueError(null)
+    startEditDueTransition(async () => {
+      const result = await updateSubscriptionDueDate(subscription.id, clientId, editDueDate)
+      if (result.error) setEditDueError(result.error)
+      else {
+        setEditDueSuccess('Data de vencimento corrigida.')
+        setShowEditDue(false)
       }
     })
   }
@@ -175,6 +200,50 @@ export function SubscriptionPageClient({
               </button>
             </div>
           )}
+
+          {/* Correção de data de vencimento */}
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            {editDueSuccess && (
+              <p className="text-xs text-green-700 mb-2">{editDueSuccess}</p>
+            )}
+            {!showEditDue ? (
+              <button
+                onClick={() => {
+                  setEditDueDate(subscription.nextDueDate?.split('T')[0] ?? daysFromNowStr(30))
+                  setShowEditDue(true)
+                }}
+                className="text-xs text-gray-400 hover:text-gray-600 underline"
+              >
+                Corrigir data de vencimento
+              </button>
+            ) : (
+              <div className="flex items-end gap-2 flex-wrap">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Nova data de vencimento</label>
+                  <input
+                    type="date"
+                    value={editDueDate}
+                    onChange={(e) => setEditDueDate(e.target.value)}
+                    className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand/40"
+                  />
+                </div>
+                <button
+                  onClick={handleEditDueDate}
+                  disabled={editDuePending || !editDueDate}
+                  className="px-3 py-1.5 rounded-lg bg-gray-800 text-white text-xs font-medium hover:bg-gray-700 disabled:opacity-50 transition-colors"
+                >
+                  {editDuePending ? 'Salvando…' : 'Salvar'}
+                </button>
+                <button
+                  onClick={() => setShowEditDue(false)}
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-gray-600"
+                >
+                  Cancelar
+                </button>
+                {editDueError && <p className="w-full text-xs text-red-600">{editDueError}</p>}
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
 
@@ -275,15 +344,21 @@ export function SubscriptionPageClient({
             </div>
           )}
 
-          <label className="flex items-center gap-2 mb-4 cursor-pointer select-none">
+          <div className="mb-4">
+            <label className="block text-xs font-medium text-gray-600 mb-1">
+              Primeira cobrança em
+            </label>
             <input
-              type="checkbox"
-              checked={freeFirstMonth}
-              onChange={(e) => setFreeFirstMonth(e.target.checked)}
-              className="accent-brand w-4 h-4"
+              type="date"
+              value={firstDueDate}
+              onChange={(e) => setFirstDueDate(e.target.value)}
+              min={daysFromNowStr(1)}
+              className="w-full sm:w-48 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand/40"
             />
-            <span className="text-sm text-gray-700">1º mês grátis <span className="text-gray-400">(primeira cobrança em 30 dias)</span></span>
-          </label>
+            <p className="text-xs text-gray-400 mt-1">
+              Padrão: 30 dias. Ajuste conforme o que foi combinado com o cliente.
+            </p>
+          </div>
 
           <button
             onClick={handleActivate}
