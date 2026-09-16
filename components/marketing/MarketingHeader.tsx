@@ -21,7 +21,6 @@ export function MarketingHeader() {
       <nav aria-label="Navegação principal" className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-8">
         <Link href="/" aria-label="TopSite — início" className="flex shrink-0 items-center gap-3">
           <Image src="/logo.png" alt="" width={40} height={40} className="h-10 w-10 object-contain" priority />
-          <span className="text-lg font-bold tracking-widest">TOP SITE</span>
         </Link>
         <div className="hidden items-center gap-7 text-sm text-white/75 lg:flex">
           <details className="group/menu relative">
