@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard' },
   { href: '/admin/clientes', label: 'Clientes' },
+  { href: '/admin/assinaturas', label: 'Assinaturas' },
   { href: '/admin/usuarios', label: 'Usuários' },
   { href: '/admin/solicitacoes', label: 'Solicitações' },
   { href: '/admin/pedidos', label: 'Pedidos' },
