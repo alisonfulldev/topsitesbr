@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { deleteSubscription } from '../actions'
+import { deleteSubscription, shiftDueDate, shiftAllDueDates } from '../actions'
 
 export type SubscriptionRow = {
   id: string
@@ -45,9 +45,32 @@ function formatPrice(price: number) {
   return `R$ ${price.toFixed(2).replace('.', ',')}`
 }
 
-function DeleteButton({ id, clientName, asaasId }: { id: string; clientName: string; asaasId: string | null }) {
+function RowActions({
+  id,
+  clientName,
+  asaasId,
+  nextDueDate,
+  onDateShifted,
+}: {
+  id: string
+  clientName: string
+  asaasId: string | null
+  nextDueDate: string | null
+  onDateShifted: (id: string, newDate: string) => void
+}) {
   const [pending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+
+  function handleShift() {
+    if (!nextDueDate) return
+    if (!confirm(`Subtrair 1 mês do vencimento de "${clientName}"?\n${formatDate(nextDueDate)} → ${formatDate(shiftMonth(nextDueDate, -1))}`)) return
+    setError(null)
+    startTransition(async () => {
+      const result = await shiftDueDate(id, -1)
+      if (result.error) setError(result.error)
+      else if (result.newDate) onDateShifted(id, result.newDate)
+    })
+  }
 
   function handleDelete() {
     const msg = asaasId
@@ -62,22 +85,71 @@ function DeleteButton({ id, clientName, asaasId }: { id: string; clientName: str
   }
 
   return (
-    <div>
+    <div className="flex items-center gap-1.5 flex-wrap">
+      {nextDueDate && (
+        <button
+          onClick={handleShift}
+          disabled={pending}
+          title="Subtrair 1 mês do vencimento"
+          className="px-2.5 py-1 rounded text-xs font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-50 transition-colors"
+        >
+          {pending ? '…' : '−1 mês'}
+        </button>
+      )}
       <button
         onClick={handleDelete}
         disabled={pending}
         className="px-2.5 py-1 rounded text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 disabled:opacity-50 transition-colors"
       >
-        {pending ? 'Excluindo…' : 'Excluir'}
+        {pending ? '…' : 'Excluir'}
       </button>
-      {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
+      {error && <p className="text-xs text-red-600 w-full">{error}</p>}
     </div>
   )
 }
 
-export function AssinaturasClient({ rows }: { rows: SubscriptionRow[] }) {
+function shiftMonth(iso: string, months: number): string {
+  const d = new Date(iso)
+  d.setMonth(d.getMonth() + months)
+  return d.toISOString()
+}
+
+function BulkShiftButton() {
+  const [pending, startTransition] = useTransition()
+  const [result, setResult] = useState<string | null>(null)
+
+  function handle() {
+    if (!confirm('Subtrair 1 mês de TODAS as assinaturas ativas e pendentes?\n\nUse isso apenas uma vez para corrigir registros que estavam com o vencimento 1 mês adiantado.')) return
+    setResult(null)
+    startTransition(async () => {
+      const res = await shiftAllDueDates(-1)
+      if (res.error) setResult(`Erro: ${res.error}`)
+      else setResult(`${res.count} assinatura(s) corrigida(s).`)
+    })
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <button
+        onClick={handle}
+        disabled={pending}
+        className="px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+      >
+        {pending ? 'Corrigindo…' : '−1 mês em todas as ativas/pendentes'}
+      </button>
+      {result && <span className="text-xs text-gray-600">{result}</span>}
+    </div>
+  )
+}
+
+export function AssinaturasClient({ rows: initialRows }: { rows: SubscriptionRow[] }) {
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
+  const [rows, setRows] = useState(initialRows)
+
+  function handleDateShifted(id: string, newDate: string) {
+    setRows((prev) => prev.map((r) => r.id === id ? { ...r, nextDueDate: newDate } : r))
+  }
 
   const filtered = rows.filter((r) => {
     if (filter !== 'all' && r.status !== filter) return false
@@ -94,6 +166,12 @@ export function AssinaturasClient({ rows }: { rows: SubscriptionRow[] }) {
 
   return (
     <div className="space-y-4">
+      {/* Bulk correction */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
+        <p className="text-xs text-blue-700 font-medium mb-2">Correção em lote — vencimentos adiantados em 1 mês</p>
+        <BulkShiftButton />
+      </div>
+
       {/* Search + filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <input
@@ -182,10 +260,12 @@ export function AssinaturasClient({ rows }: { rows: SubscriptionRow[] }) {
                 </td>
                 <td className="px-4 py-3 text-gray-400 text-xs">{formatDate(row.createdAt)}</td>
                 <td className="px-4 py-3">
-                  <DeleteButton
+                  <RowActions
                     id={row.id}
                     clientName={row.clientName}
                     asaasId={row.asaasSubscriptionId}
+                    nextDueDate={row.nextDueDate}
+                    onDateShifted={handleDateShifted}
                   />
                 </td>
               </tr>
