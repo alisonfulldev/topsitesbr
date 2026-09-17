@@ -143,6 +143,17 @@ export class AsaasPaymentProvider implements PaymentProvider {
     }
   }
 
+  async updatePendingCharge(chargeId: string, newPrice: number): Promise<void> {
+    try {
+      await asaasFetch(`/payments/${chargeId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ value: newPrice }),
+      })
+    } catch (err) {
+      asaasError('updatePendingCharge', err)
+    }
+  }
+
   async cancelSubscription(subscriptionId: string): Promise<void> {
     try {
       await asaasFetch(`/subscriptions/${subscriptionId}`, { method: 'DELETE' })

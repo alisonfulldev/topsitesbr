@@ -166,6 +166,25 @@ export async function changePlan(
     )
   }
 
+  // Corrige cobranças pendentes geradas antes da troca de plano
+  const pendingInvoices = await prisma.invoice.findMany({
+    where: { subscriptionId: subscription.id, status: 'pending' },
+    select: { id: true, asaasChargeId: true },
+  })
+
+  for (const inv of pendingInvoices) {
+    if (inv.asaasChargeId) {
+      // Atualiza o valor no Asaas — se falhar não bloqueia a troca de plano
+      await provider.updatePendingCharge(inv.asaasChargeId, newPrice).catch((err) => {
+        console.warn('[changePlan] Não foi possível atualizar cobrança pendente no Asaas:', inv.asaasChargeId, err)
+      })
+    }
+    await prisma.invoice.update({
+      where: { id: inv.id },
+      data: { amount: newPlan.price },
+    })
+  }
+
   const now = new Date()
 
   await prisma.$transaction([

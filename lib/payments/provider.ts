@@ -46,6 +46,8 @@ export interface PaymentProvider {
     newPrice: number,
     planName: string,
   ): Promise<UpdateSubscriptionResult>
+  /** Atualiza o valor de uma cobrança pendente específica */
+  updatePendingCharge(chargeId: string, newPrice: number): Promise<void>
   cancelSubscription(subscriptionId: string): Promise<void>
   createSingleCharge(input: CreateSingleChargeInput): Promise<CreateSingleChargeResult>
 }
@@ -91,6 +93,10 @@ const mockProvider: PaymentProvider = {
   async updateSubscription(subscriptionId, newPrice, planName) {
     console.log('[MOCK:updateSubscription]', subscriptionId, planName, `R$${newPrice}`)
     return { nextDueDate: addDays(30) }
+  },
+
+  async updatePendingCharge(chargeId, newPrice) {
+    console.log('[MOCK:updatePendingCharge]', chargeId, `R$${newPrice}`)
   },
 
   async cancelSubscription(subscriptionId) {
