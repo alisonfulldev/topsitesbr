@@ -48,6 +48,20 @@ export interface PaymentProvider {
   ): Promise<UpdateSubscriptionResult>
   /** Atualiza o valor de uma cobrança pendente específica */
   updatePendingCharge(chargeId: string, newPrice: number): Promise<void>
+  /**
+   * Para adiantamento de mensalidade: verifica se o Asaas já gerou uma
+   * cobrança pendente para o ciclo atual. Se não, avança o nextDueDate da
+   * assinatura (evita cobrança dupla) e cria uma cobrança avulsa.
+   * Retorna chargeId, paymentUrl e se a cobrança já existia (isExisting).
+   */
+  prepareAdvancePayment(
+    subscriptionId: string,
+    amount: number,
+    currentDueDateStr: string,
+    newNextDueDateStr: string,
+    description: string,
+    successUrl?: string,
+  ): Promise<{ chargeId: string; paymentUrl: string; isExisting: boolean }>
   cancelSubscription(subscriptionId: string): Promise<void>
   createSingleCharge(input: CreateSingleChargeInput): Promise<CreateSingleChargeResult>
 }
@@ -97,6 +111,11 @@ const mockProvider: PaymentProvider = {
 
   async updatePendingCharge(chargeId, newPrice) {
     console.log('[MOCK:updatePendingCharge]', chargeId, `R$${newPrice}`)
+  },
+
+  async prepareAdvancePayment(subscriptionId, amount, currentDueDateStr, newNextDueDateStr, description) {
+    console.log('[MOCK:prepareAdvancePayment]', subscriptionId, `R$${amount}`, currentDueDateStr, '→', newNextDueDateStr)
+    return { chargeId: mockId('chg'), paymentUrl: '/dev/pagamento-simulado', isExisting: false }
   },
 
   async cancelSubscription(subscriptionId) {

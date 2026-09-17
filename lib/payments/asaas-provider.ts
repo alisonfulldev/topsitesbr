@@ -29,6 +29,12 @@ interface AsaasPaymentList {
   data: AsaasPayment[]
 }
 
+interface AsaasSubscriptionDetail {
+  id: string
+  customer: string
+  nextDueDate: string
+}
+
 // ── Utilitários ───────────────────────────────────────────────────────────────
 
 function daysFromNow(days: number): string {
@@ -140,6 +146,52 @@ export class AsaasPaymentProvider implements PaymentProvider {
       return { nextDueDate: new Date(sub.nextDueDate) }
     } catch (err) {
       asaasError('updateSubscription', err)
+    }
+  }
+
+  async prepareAdvancePayment(
+    subscriptionId: string,
+    amount: number,
+    currentDueDateStr: string,
+    newNextDueDateStr: string,
+    description: string,
+    successUrl?: string,
+  ): Promise<{ chargeId: string; paymentUrl: string; isExisting: boolean }> {
+    try {
+      // 1. Verifica se o Asaas já gerou cobrança pendente para este ciclo
+      const pendingList = await asaasFetch<AsaasPaymentList>(
+        `/subscriptions/${subscriptionId}/payments?status=PENDING&limit=1`,
+      )
+      const existing = pendingList.data[0]
+      if (existing) {
+        return { chargeId: existing.id, paymentUrl: existing.invoiceUrl, isExisting: true }
+      }
+
+      // 2. Busca o customerId vinculado à assinatura
+      const sub = await asaasFetch<AsaasSubscriptionDetail>(`/subscriptions/${subscriptionId}`)
+
+      // 3. Avança o nextDueDate da assinatura para evitar cobrança dupla
+      await asaasFetch(`/subscriptions/${subscriptionId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ nextDueDate: newNextDueDateStr }),
+      })
+
+      // 4. Cria cobrança avulsa para o ciclo atual
+      const payment = await asaasFetch<AsaasPayment>('/payments', {
+        method: 'POST',
+        body: JSON.stringify({
+          customer: sub.customer,
+          billingType: 'UNDEFINED',
+          value: amount,
+          dueDate: currentDueDateStr,
+          description,
+          ...(successUrl && { callback: { successUrl, autoRedirect: true } }),
+        }),
+      })
+
+      return { chargeId: payment.id, paymentUrl: payment.invoiceUrl, isExisting: false }
+    } catch (err) {
+      asaasError('prepareAdvancePayment', err)
     }
   }
 

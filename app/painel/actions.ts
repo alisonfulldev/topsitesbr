@@ -305,6 +305,83 @@ function getReachedMilestone(visits: number): number {
   return reached
 }
 
+export async function payNextMonth(): Promise<{ error?: string; paymentUrl?: string }> {
+  const { assertNotImpersonating } = await import('@/lib/impersonation')
+  try { await assertNotImpersonating() } catch (e) {
+    return { error: (e as Error).message }
+  }
+
+  const clientId = await getClientId()
+  if (!clientId) return { error: 'Não autorizado.' }
+
+  const subscription = await prisma.subscription.findFirst({
+    where: { clientId, status: 'active' },
+    include: { plan: true },
+    orderBy: { createdAt: 'desc' },
+  })
+
+  if (!subscription) return { error: 'Nenhuma assinatura ativa encontrada.' }
+  if (!subscription.nextDueDate) return { error: 'Data de vencimento não encontrada.' }
+  if (!subscription.asaasSubscriptionId) {
+    return { error: 'Pagamento antecipado não disponível para esta assinatura. Entre em contato pelo suporte.' }
+  }
+
+  // Verifica se já há invoice pendente no nosso banco
+  const existingInvoice = await prisma.invoice.findFirst({
+    where: { subscriptionId: subscription.id, status: 'pending' },
+    orderBy: { dueDate: 'desc' },
+  })
+  if (existingInvoice?.asaasChargeId) {
+    const url = await getAsaasInvoiceUrl(existingInvoice.asaasChargeId)
+    if (url) return { paymentUrl: url }
+  }
+
+  const currentDueDate = new Date(subscription.nextDueDate)
+  const newNextDueDate = new Date(currentDueDate)
+  newNextDueDate.setMonth(newNextDueDate.getMonth() + 1)
+
+  const currentDueDateStr = currentDueDate.toISOString().split('T')[0]
+  const newNextDueDateStr = newNextDueDate.toISOString().split('T')[0]
+
+  const provider = getPaymentProvider()
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+
+  try {
+    const { chargeId, paymentUrl, isExisting } = await provider.prepareAdvancePayment(
+      subscription.asaasSubscriptionId,
+      Number(subscription.plan.price),
+      currentDueDateStr,
+      newNextDueDateStr,
+      `${subscription.plan.name} — adiantamento`,
+      `${appUrl}/painel/assinatura`,
+    )
+
+    if (!isExisting) {
+      // Cobrança nova: salva invoice e avança nextDueDate no banco
+      await prisma.$transaction([
+        prisma.invoice.create({
+          data: {
+            subscriptionId: subscription.id,
+            amount: subscription.plan.price,
+            status: 'pending',
+            dueDate: currentDueDate,
+            asaasChargeId: chargeId,
+          },
+        }),
+        prisma.subscription.update({
+          where: { id: subscription.id },
+          data: { nextDueDate: newNextDueDate },
+        }),
+      ])
+    }
+
+    return { paymentUrl }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return { error: `Erro ao gerar cobrança: ${msg}` }
+  }
+}
+
 export async function checkVisitMilestone(): Promise<void> {
   const clientId = await getClientId()
   if (!clientId) return

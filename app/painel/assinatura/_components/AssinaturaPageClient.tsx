@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
+import { payNextMonth } from '@/app/painel/actions'
 
 type SubscriptionInfo = {
   id: string
@@ -13,6 +14,7 @@ type SubscriptionInfo = {
   planPrice: number
   nextDueDate: string | null
   planActivatedAt: string
+  hasAsaasLink: boolean
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -44,10 +46,6 @@ const PLAN_BENEFITS = [
   '10% de desconto em serviços e upgrades',
 ]
 
-async function cancelSubscriptionAction() {
-  // Cancel is handled via WhatsApp contact
-}
-
 export function AssinaturaPageClient({
   subscription,
 }: {
@@ -55,6 +53,20 @@ export function AssinaturaPageClient({
   plans?: unknown[]
 }) {
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ''
+  const [advancePending, startAdvanceTransition] = useTransition()
+  const [advanceError, setAdvanceError] = useState<string | null>(null)
+
+  function handlePayInAdvance() {
+    setAdvanceError(null)
+    startAdvanceTransition(async () => {
+      const result = await payNextMonth()
+      if (result.error) {
+        setAdvanceError(result.error)
+      } else if (result.paymentUrl) {
+        window.location.href = result.paymentUrl
+      }
+    })
+  }
 
   const isActuallyOverdue =
     subscription.status === 'overdue' &&
@@ -95,6 +107,37 @@ export function AssinaturaPageClient({
           </div>
         </div>
       </Card>
+
+      {/* Pagamento antecipado — apenas para assinaturas ativas com link Asaas */}
+      {subscription.status === 'active' && subscription.hasAsaasLink && subscription.nextDueDate && (
+        <Card>
+          <CardTitle>Pagar próxima mensalidade</CardTitle>
+          <p className="mt-2 text-sm text-gray-500">
+            Vencimento em{' '}
+            <span className="font-medium text-gray-700">{formatDate(subscription.nextDueDate)}</span>
+            {' '}— R${subscription.planPrice.toFixed(2).replace('.', ',')}/mês.
+          </p>
+          {advanceError && (
+            <p className="mt-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              {advanceError}
+            </p>
+          )}
+          <div className="mt-4">
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handlePayInAdvance}
+              loading={advancePending}
+              loadingText="Gerando cobrança…"
+            >
+              Pagar agora — R${subscription.planPrice.toFixed(2).replace('.', ',')}
+            </Button>
+          </div>
+          <p className="mt-2 text-xs text-gray-400">
+            Pix, boleto ou cartão. Seu próximo vencimento avança automaticamente.
+          </p>
+        </Card>
+      )}
 
       {/* Plan benefits */}
       <Card>

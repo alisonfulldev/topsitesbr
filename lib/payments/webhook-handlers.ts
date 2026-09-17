@@ -95,7 +95,17 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
   const isFirstPayment = subscription.invoices.length === 0
   const wasOverdue = invoice.status === 'overdue'
 
-  // Apenas atualizações financeiras na transaction — notificações ficam fora
+  // Avança nextDueDate se o invoice pago corresponde ao ciclo atual
+  const advancedNextDueDate = (() => {
+    const subNextDue = subscription.nextDueDate
+    if (!subNextDue) return null
+    const diff = Math.abs(invoice.dueDate.getTime() - subNextDue.getTime())
+    if (diff > 4 * 24 * 60 * 60 * 1000) return null // não é o ciclo atual
+    const d = new Date(subNextDue)
+    d.setMonth(d.getMonth() + 1)
+    return d
+  })()
+
   await prisma.$transaction([
     prisma.invoice.update({
       where: { id: invoice.id },
@@ -103,7 +113,10 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
     }),
     prisma.subscription.update({
       where: { id: subscription.id },
-      data: { status: 'active' },
+      data: {
+        status: 'active',
+        ...(advancedNextDueDate ? { nextDueDate: advancedNextDueDate } : {}),
+      },
     }),
   ])
 

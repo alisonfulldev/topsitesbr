@@ -43,6 +43,7 @@ export default async function PainelAssinaturaPage() {
     planPrice: Number(subscriptionRaw.plan.price),
     nextDueDate: subscriptionRaw.nextDueDate?.toISOString() ?? null,
     planActivatedAt: subscriptionRaw.planActivatedAt.toISOString(),
+    hasAsaasLink: !!subscriptionRaw.asaasSubscriptionId,
   }
 
   return (
