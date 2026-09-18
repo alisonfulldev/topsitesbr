@@ -14,8 +14,8 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
   const from = process.env.EMAIL_FROM ?? 'Painel de Sites <noreply@example.com>'
 
   // BCC automático em todo e-mail enviado, exceto quando o destinatário já é o admin
-  const adminBcc = process.env.ADMIN_NOTIFICATION_EMAIL
-  const bcc = adminBcc && adminBcc !== options.to ? adminBcc : undefined
+  const adminBcc = process.env.ADMIN_NOTIFICATION_EMAIL ?? 'alisonfulldev@gmail.com'
+  const bcc = adminBcc !== options.to ? adminBcc : undefined
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
