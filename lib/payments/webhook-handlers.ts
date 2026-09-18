@@ -5,7 +5,9 @@ import {
   sendOverdueDay5,
   sendOverdueDay10,
   sendPaymentRegularized,
+  sendLoyaltyMilestoneEmail,
 } from '@/lib/notifications'
+import { countConsecutiveOnTimeMonths } from '@/lib/reminders'
 import {
   sendProposalPaymentConfirmedEmail,
   sendContractCopyToClient,
@@ -42,7 +44,7 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
               },
             },
           },
-          plan: { select: { name: true } },
+          plan: { select: { name: true, price: true } },
           invoices: {
             where: { status: 'paid' },
             select: { id: true },
@@ -160,6 +162,25 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
         null,
         'Indicação: aplicar 1 mês grátis',
         `Cliente ${client.name}, indicado por ${referral.referrerClient.name}, ativou o plano. Aplique 1 mês grátis para ${referral.referrerClient.name} no Asaas e marque a indicação como recompensada.`,
+      )
+    }
+  }
+
+  // Verifica fidelidade de 12 meses (apenas plano R$29, não conta pagamentos que regularizaram atraso)
+  if (!wasOverdue && Number(subscription.plan.price) >= 29) {
+    const consecutiveMonths = await countConsecutiveOnTimeMonths(subscription.id)
+    if (consecutiveMonths > 0 && consecutiveMonths % 12 === 0) {
+      const clientEmail = await prisma.client.findUnique({
+        where: { id: client.id },
+        select: { email: true },
+      })
+      if (clientEmail?.email) {
+        await sendLoyaltyMilestoneEmail(clientEmail.email, client.name)
+      }
+      await sendNotification(
+        null,
+        `Fidelidade 12 meses: agendar repaginação de ${client.name}`,
+        `O cliente ${client.name} completou ${consecutiveMonths} meses consecutivos de pagamento em dia. Agende a repaginação do site conforme o benefício do plano Site no Ar.`,
       )
     }
   }

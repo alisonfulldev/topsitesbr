@@ -19,6 +19,7 @@ export type EmailType =
   | 'promotion'
   | 'referral-reward'
   | 'weekly-report'
+  | 'loyalty-reminder'
   | 'password-reset-request'
   | 'proposal-sent'
   | 'proposal-approved'
@@ -40,6 +41,7 @@ const EMAIL_CONFIG: Record<EmailType, { color: string; icon: string; label: stri
   'promotion':                { color: '#f97316', icon: '🎁', label: 'Promoção especial' },
   'referral-reward':          { color: '#eab308', icon: '⭐', label: 'Recompensa de indicação' },
   'weekly-report':            { color: '#0ea5e9', icon: '📊', label: 'Relatório semanal' },
+  'loyalty-reminder':         { color: '#7c3aed', icon: '⭐', label: 'Benefício de fidelidade' },
   'password-reset-request':   { color: '#6366f1', icon: '🔐', label: 'Redefinição de senha' },
   'proposal-sent':            { color: '#0f172a', icon: '📋', label: 'Proposta de projeto' },
   'proposal-approved':        { color: '#22c55e', icon: '✅', label: 'Proposta aprovada' },
@@ -432,6 +434,78 @@ export async function sendWeeklyReportEmail(
     await sendEmail({ to: email, subject, html })
   } catch (err) {
     console.error('[sendWeeklyReportEmail] Falha:', err instanceof Error ? err.message : err)
+  }
+}
+
+// ── E-mails de fidelidade (lembrete pré-vencimento + conquista dos 12 meses) ──
+
+export async function sendLoyaltyReminderEmail(
+  email: string,
+  clientName: string,
+  dueDateStr: string,
+  monthsOnTime: number,
+): Promise<void> {
+  const displayMonths = monthsOnTime === 0 ? 0 : monthsOnTime % 12 === 0 ? 12 : monthsOnTime % 12
+  const remaining = 12 - displayMonths
+
+  const subject = `Plano Site no Ar vence em 2 dias · ${displayMonths} de 12 meses acumulados`
+  const firstName = clientName.split(' ')[0]
+  const message = `Olá, ${firstName}! Seu plano Site no Ar vence no dia ${dueDateStr}. Cada pagamento em dia vale — veja o que você está acumulando:`
+
+  const dots = Array.from({ length: 12 }, (_, i) =>
+    `<span style="display:inline-block;width:18px;height:18px;border-radius:50%;` +
+    `background:${i < displayMonths ? '#7c3aed' : '#e5e7eb'};margin:2px;vertical-align:middle;"></span>`,
+  ).join('')
+
+  const progressLabel = remaining > 0
+    ? `${displayMonths} de 12 meses · faltam <strong>${remaining}</strong> para sua repaginação gratuita`
+    : `12 de 12 meses · benefício conquistado! Nosso time vai entrar em contato.`
+
+  const extraHtml = `
+    <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:22px 24px;margin-bottom:24px;">
+      <p style="margin:0 0 4px;font-size:11px;font-weight:800;color:#6d28d9;
+                text-transform:uppercase;letter-spacing:1.2px;">🎁 Benefício exclusivo do plano</p>
+      <h2 style="margin:0 0 12px;font-size:17px;font-weight:700;color:#1e1b4b;line-height:1.3;">
+        Pague em dia e ganhe um site novo por ano, sem custo extra
+      </h2>
+      <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#374151;">
+        Assinantes que completam <strong>12 meses consecutivos sem atraso</strong> recebem
+        uma <strong>repaginação completa do site</strong>: novo visual, estrutura modernizada
+        e conteúdo revisado — incluso no plano, sem pagar nada a mais.
+      </p>
+      <p style="margin:0 0 10px;font-size:13px;color:#6d28d9;font-weight:600;">${progressLabel}</p>
+      <div style="line-height:1.6;">${dots}</div>
+    </div>
+  `
+
+  const html = buildHtml(subject, message, 'loyalty-reminder', extraHtml, APP_URL + '/painel/assinatura', 'Ver minha assinatura')
+  try {
+    await sendEmail({ to: email, subject, html })
+  } catch (err) {
+    console.error('[sendLoyaltyReminderEmail] Falha:', err instanceof Error ? err.message : err)
+  }
+}
+
+export async function sendLoyaltyMilestoneEmail(
+  email: string,
+  clientName: string,
+): Promise<void> {
+  const firstName = clientName.split(' ')[0]
+  const subject = `Parabéns, ${firstName}! Você ganhou uma repaginação do seu site`
+  const message = `${firstName}, você completou 12 meses consecutivos de pagamentos em dia — isso é incrível! Como prometido no plano Site no Ar, você ganhou uma repaginação completa do seu site: novo design, estrutura modernizada e conteúdo revisado, sem custo extra. Nossa equipe vai entrar em contato nos próximos dias para combinar os detalhes.`
+
+  const extraHtml = `
+    <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:22px 24px;margin-bottom:24px;text-align:center;">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px;">🏆</div>
+      <p style="margin:0;font-size:15px;font-weight:700;color:#6d28d9;">12 meses de fidelidade conquistados!</p>
+    </div>
+  `
+
+  const html = buildHtml(subject, message, 'loyalty-reminder', extraHtml, APP_URL + '/painel', 'Acessar o painel')
+  try {
+    await sendEmail({ to: email, subject, html })
+  } catch (err) {
+    console.error('[sendLoyaltyMilestoneEmail] Falha:', err instanceof Error ? err.message : err)
   }
 }
 
