@@ -131,7 +131,22 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </div>
         </div>
       </section>
-      <section className="px-4 py-20 sm:px-8">
+      <section className="px-4 py-16 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Por que a TopSite</p>
+            <h2 className="mb-4 max-w-2xl text-2xl font-semibold sm:text-3xl">
+              Se você nos encontrou buscando criação de sites em {city.name}, já viu o método funcionar.
+            </h2>
+            <p className="max-w-2xl leading-relaxed text-white/70">
+              Empresas em {city.name} que aparecem quando seus clientes buscam no Google não chegaram lá por acidente.
+              É o mesmo trabalho que fazemos pelo seu negócio — para que seus clientes te encontrem
+              da mesma forma que você nos encontrou. Não entregamos um site e sumimos: posicionamos sua empresa.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section className="border-t border-white/10 bg-[#101010] px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <h2 className="mb-10 text-3xl font-semibold sm:text-4xl">Como trabalhamos</h2>
           <ProcessSteps />
@@ -155,9 +170,9 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
       </section>
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Vamos criar o site da sua empresa em {city.name}?</h2>
-          <p className="mb-8 text-lg text-white/65">O primeiro passo é entender o que sua empresa precisa. Fale com a TopSite pelo WhatsApp.</p>
-          <ProjectCTA message={message} />
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para sua empresa em {city.name} ser encontrada por quem já busca?</h2>
+          <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer sua empresa aparecer para quem já procura em {city.name} e região.</p>
+          <ProjectCTA message={message} label="Agendar uma conversa" />
           <nav aria-label="Outros serviços" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
             {marketingServices.filter(({ href }) => href !== '/criacao-de-sites').map(({ href, label }) => (
               <Link key={href} href={href} className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">{label}</Link>

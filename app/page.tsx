@@ -1,18 +1,14 @@
 import Link from 'next/link'
-import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import Script from 'next/script'
-import { BRAND_DESCRIPTION, SITE_URL, marketingMetadata, organizationSchema, marketingServices } from '@/lib/marketing'
+import { MarketingIcon } from '@/components/marketing/MarketingIcon'
+import { BRAND_DESCRIPTION, SITE_URL, marketingMetadata, organizationSchema, marketingServices, projectContact } from '@/lib/marketing'
 import { MarketingLayout, ProjectCTA, ProcessSteps, ProjectGrid, ContactSection } from '@/components/marketing/MarketingSections'
 
-export const metadata = marketingMetadata('TopSite | Sites Profissionais e Software Sob Medida', BRAND_DESCRIPTION)
+export const metadata = marketingMetadata(
+  'TopSite | Sites que fazem sua empresa ser encontrada',
+  BRAND_DESCRIPTION,
+)
 
-const services = [
-  { href: '/criacao-de-sites', label: 'Criação de sites', text: 'Presença digital com identidade própria, navegação clara e caminhos para o cliente entrar em contato.' },
-  { href: '/site-institucional', label: 'Sites institucionais', text: 'Apresente sua empresa, equipe e serviços em uma estrutura que organiza as informações do negócio.' },
-  { href: '/landing-page', label: 'Landing pages', text: 'Páginas focadas em uma oferta, com conteúdo e chamadas para apoiar campanhas e captar interessados.' },
-  { href: '/loja-virtual', label: 'Lojas virtuais', text: 'Catálogos e experiências de compra planejados de acordo com os produtos e a operação da empresa.' },
-  { href: '/desenvolvimento-de-software', label: 'Software sob medida', text: 'Sistemas web, painéis, automações e integrações desenvolvidos a partir dos processos que sua empresa precisa organizar.' },
-]
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -22,92 +18,198 @@ const schema = {
   ],
 }
 
+const diferentials = [
+  {
+    title: 'Clientes que já estão procurando',
+    text: 'Diferente do anúncio que interrompe, um site bem trabalhado aparece para quem digitou exatamente o que você vende. Pessoas que já querem — não que precisam ser convencidas.',
+  },
+  {
+    title: 'Funciona sem você apertar botão',
+    text: 'Anúncio para quando o dinheiro para. Uma presença digital bem construída atrai visitantes dia e noite, sem depender de verba diária para funcionar.',
+  },
+  {
+    title: 'Em paralelo com o que você já faz',
+    text: 'Não substituímos seus anúncios nem seu WhatsApp. Adicionamos uma fonte de clientes qualificados que trabalha em paralelo — e que vem crescendo todo mês.',
+  },
+  {
+    title: 'Aplicamos em nós o que fazemos por você',
+    text: 'O maior case que temos somos nós mesmos. Você nos encontrou aqui — sem anúncio, sem indicação. É o método que entregamos para cada cliente.',
+  },
+]
+
 export default function HomePage() {
   return (
     <MarketingLayout>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" strategy="afterInteractive" />
-      <section className="relative overflow-hidden px-4 py-16 sm:px-8 sm:py-24 lg:py-28">
+
+      {/* ── 1. Hero — Gancho ─────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden px-4 py-16 sm:px-8 sm:py-24 lg:py-32">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "linear-gradient(#facc15 1px, transparent 1px), linear-gradient(90deg, #facc15 1px, transparent 1px)", backgroundSize: "64px 64px", maskImage: "linear-gradient(to bottom, black, transparent)" }} />
         <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-yellow-400/[0.04] blur-3xl" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.25fr_1fr]">
-          <div>
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400">Design e desenvolvimento para empresas</p>
+        <div className="relative mx-auto max-w-7xl">
+          <div className="mx-auto max-w-4xl">
+            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400">
+              Você nos encontrou pela internet. Não foi acidente.
+            </p>
             <h1 className="mb-7 text-[2.65rem] font-semibold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
-              Sites profissionais e <span className="text-yellow-400">software sob medida.</span>
+              E é exatamente assim que seus clientes <span className="text-yellow-400">vão te encontrar.</span>
             </h1>
-            <p className="mb-9 max-w-xl text-lg leading-relaxed text-white/70">
-              Desenvolvemos sites, lojas virtuais e sistemas personalizados para apresentar seu negócio, facilitar processos e atender melhor seus clientes.
+            <p className="mb-9 max-w-2xl text-lg leading-relaxed text-white/70">
+              A forma como chegou até nós é o nosso método funcionando. Aplicamos o mesmo em sites para
+              empresas — e elas passam a ser encontradas por quem já busca o que oferecem.
             </p>
             <div className="flex flex-wrap items-center gap-6">
-              <ProjectCTA />
-              <Link href="/portfolio" className="inline-flex items-center gap-2 py-3 text-sm font-semibold text-white/80 hover:text-yellow-400">Ver projetos <MarketingIcon name="arrow" /></Link>
+              <ProjectCTA label="Quero que me encontrem assim" />
+              <Link href="/portfolio" className="inline-flex items-center gap-2 py-3 text-sm font-semibold text-white/80 hover:text-yellow-400">
+                Ver projetos <MarketingIcon name="arrow" />
+              </Link>
             </div>
-            <p className="mt-7 text-sm text-white/50">Da presença digital à operação da sua empresa.</p>
-          </div>
-          <div className="rounded-3xl border border-white/10 bg-[#101010] p-6 sm:p-8">
-            <div className="mb-8 flex items-center justify-between gap-4 border-b border-white/10 pb-6">
-              <p className="text-sm font-medium text-white/70">O que você quer construir?</p>
-              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-yellow-400" />
-            </div>
-            <Link href="/criacao-de-sites" className="group mb-4 block rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-colors hover:border-yellow-400/40">
-              <div className="mb-6 flex justify-between text-yellow-400">
-                <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-8 w-8"><rect x="3" y="5" width="26" height="22" rx="3" /><path d="M3 12h26M8 8.5h1M12 8.5h1M8 17h8M8 21h13" /></svg>
-                <MarketingIcon name="arrow" />
-              </div>
-              <h2 className="mb-2 text-2xl font-semibold">Presença digital</h2>
-              <p className="text-sm leading-relaxed text-white/65">Sites, landing pages e lojas virtuais para apresentar sua empresa e conectar clientes.</p>
-            </Link>
-            <Link href="/desenvolvimento-de-software" className="group block rounded-2xl border border-yellow-400/25 bg-yellow-400/[0.05] p-6 transition-colors hover:border-yellow-400/60">
-              <div className="mb-6 flex justify-between text-yellow-400">
-                <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-8 w-8"><rect x="3" y="3" width="9" height="9" rx="2" /><rect x="20" y="20" width="9" height="9" rx="2" /><path d="M12 7.5h12.5V20M7.5 12v12.5H20" /></svg>
-                <MarketingIcon name="arrow" />
-              </div>
-              <h2 className="mb-2 text-2xl font-semibold">Software sob medida</h2>
-              <p className="text-sm leading-relaxed text-white/65">Sistemas e integrações para organizar informações e facilitar o trabalho da sua equipe.</p>
-            </Link>
+            <p className="mt-7 text-sm text-white/50">Atendimento consultivo · Proposta personalizada · Todo o Brasil</p>
           </div>
         </div>
       </section>
 
-      <section id="servicos" className="scroll-mt-24 border-y border-white/10 bg-[#101010] px-4 py-20 sm:px-8 sm:py-24">
+      {/* ── 2. O que muda com um site que funciona ───────────────────────── */}
+      <section className="border-y border-white/10 bg-[#101010] px-4 py-20 sm:px-8 sm:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-6 md:grid-cols-2 md:items-end">
-            <div><p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">O que fazemos</p><h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Cada necessidade,<br />um projeto bem definido.</h2></div>
-            <p className="max-w-lg leading-relaxed text-white/65">Escolha o serviço para conhecer as possibilidades. Definimos a solução, o investimento e o cronograma a partir dos objetivos da sua empresa.</p>
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">O que muda</p>
+              <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">
+                Um site que só existe<br />não faz nada.
+              </h2>
+            </div>
+            <p className="max-w-lg leading-relaxed text-white/65">
+              A maioria das empresas tem um site. Mas quase nenhuma tem um site que trabalha — que atrai
+              clientes que buscam ativamente o que a empresa vende. Essa diferença é enorme.
+            </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2">
-            {services.map(({ href, label, text }, index) => (
-              <Link key={href} href={href} className={'group rounded-2xl border p-7 transition-colors sm:p-8 ' + (index === 4 ? 'border-yellow-400/25 bg-yellow-400/[0.04] hover:border-yellow-400/60 md:col-span-2' : 'border-white/10 bg-white/[0.015] hover:border-white/30')}>
-                <div className="mb-5 flex items-center justify-between text-sm text-yellow-400"><span>0{index + 1}</span><MarketingIcon name="arrow" /></div>
-                <h3 className="mb-3 text-2xl font-semibold">{label}</h3>
-                <p className="max-w-2xl leading-relaxed text-white/65">{text}</p>
-                <span className="mt-6 inline-block text-sm font-semibold text-yellow-400">Conhecer o serviço</span>
-              </Link>
+            {diferentials.map(({ title, text }, index) => (
+              <article key={title} className="rounded-2xl border border-white/10 bg-white/[0.015] p-7 sm:p-8">
+                <span className="mb-5 block text-sm font-semibold text-yellow-400">0{index + 1}</span>
+                <h3 className="mb-3 text-xl font-semibold">{title}</h3>
+                <p className="leading-relaxed text-white/65">{text}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="px-4 py-20 sm:px-8 sm:py-24">
+      {/* ── 3. Serviços ──────────────────────────────────────────────────── */}
+      <section id="servicos" className="scroll-mt-24 px-4 py-20 sm:px-8 sm:py-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 grid gap-6 md:grid-cols-2 md:items-end">
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">O que entregamos</p>
+              <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">
+                Cada projeto tem<br />um objetivo claro.
+              </h2>
+            </div>
+            <p className="max-w-lg leading-relaxed text-white/65">
+              Desenvolvemos sites, landing pages e lojas virtuais pensados para que sua empresa seja encontrada
+              por quem já busca o que você vende. Escolha o formato que mais faz sentido para o seu negócio.
+            </p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            {marketingServices.map(({ href, label }, index) => {
+              const descriptions: Record<string, string> = {
+                '/criacao-de-sites': 'Presença digital completa, construída para que seus clientes te encontrem quando buscam no Google.',
+                '/site-institucional': 'Apresente sua empresa com credibilidade e apareça para quem procura o que você oferece.',
+                '/landing-page': 'Página focada em uma oferta específica — para converter quem já está procurando.',
+                '/loja-virtual': 'Catálogo e jornada de compra para quem quer vender para quem já busca o produto.',
+              }
+              return (
+                <Link key={href} href={href} className="group rounded-2xl border border-white/10 bg-white/[0.015] p-7 transition-colors hover:border-white/30 sm:p-8">
+                  <div className="mb-5 flex items-center justify-between text-sm text-yellow-400">
+                    <span>0{index + 1}</span>
+                    <MarketingIcon name="arrow" />
+                  </div>
+                  <h3 className="mb-3 text-2xl font-semibold">{label}</h3>
+                  <p className="max-w-2xl leading-relaxed text-white/65">{descriptions[href]}</p>
+                  <span className="mt-6 inline-block text-sm font-semibold text-yellow-400">Conhecer o serviço</span>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. Como trabalhamos ──────────────────────────────────────────── */}
+      <section className="border-y border-white/10 bg-[#101010] px-4 py-20 sm:px-8 sm:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-6 md:grid-cols-2">
-            <div><p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Como trabalhamos</p><h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Seu negócio orienta<br />o desenvolvimento.</h2></div>
-            <p className="max-w-lg leading-relaxed text-white/65">Um site precisa comunicar. Um sistema precisa funcionar na rotina. Em ambos, começamos entendendo quem vai usar e o que precisa ser resolvido.</p>
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Como trabalhamos</p>
+              <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">
+                Seu negócio orienta<br />cada decisão.
+              </h2>
+            </div>
+            <p className="max-w-lg leading-relaxed text-white/65">
+              Antes de escrever uma linha de código ou uma palavra de conteúdo, entendemos quem são seus
+              clientes, o que eles buscam e como sua empresa pode aparecer no caminho deles.
+            </p>
           </div>
           <ProcessSteps />
         </div>
       </section>
 
+      {/* ── 5. Nossa história — Prova reforçada ──────────────────────────── */}
+      <section className="px-4 py-20 sm:px-8 sm:py-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Por que confiar em nós</p>
+              <h2 className="mb-6 text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+                Há 5 anos, a TopSite surgiu do mesmo problema que você tem.
+              </h2>
+              <p className="mb-6 text-lg leading-relaxed text-white/70">
+                Precisávamos vender mais na internet. Desenvolvemos nosso próprio método, começamos a ser
+                encontrados por clientes reais — sem depender só de anúncios.
+              </p>
+              <p className="mb-8 leading-relaxed text-white/65">
+                O resultado foi tão bom que passamos a aplicar o mesmo em outras empresas. O que nos
+                trouxe até aqui é o que entregamos para cada cliente — e você já viu funcionar: chegou
+                até nós pela internet, sem que precisássemos pagar para te alcançar.
+              </p>
+              <Link href="/sobre" className="inline-flex items-center gap-2 text-sm font-semibold text-yellow-400 hover:underline">
+                Conhecer a história da TopSite <MarketingIcon name="arrow" />
+              </Link>
+            </div>
+            <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
+              <div className="mb-8 text-4xl text-yellow-400">"</div>
+              <blockquote className="mb-8 text-xl font-semibold leading-relaxed">
+                Nosso maior case somos nós mesmos. O que usamos para crescer e ser encontrados,
+                aplicamos no seu negócio. Não entregamos um site e sumimos.
+              </blockquote>
+              <div className="flex items-center gap-4 border-t border-yellow-400/20 pt-6">
+                <div>
+                  <p className="font-semibold">TopSite</p>
+                  <p className="text-sm text-white/55">Há 5 anos fazendo empresas serem encontradas</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. Portfólio ────────────────────────────────────────────────── */}
       <section className="border-t border-white/10 bg-[#101010] px-4 py-20 sm:px-8 sm:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-            <div><p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Trabalhos realizados</p><h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Projetos de sites.</h2></div>
-            <Link href="/portfolio" className="inline-flex items-center gap-2 text-sm font-semibold text-yellow-400 hover:underline">Conhecer o portfólio <MarketingIcon name="arrow" /></Link>
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Trabalhos realizados</p>
+              <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Projetos de sites.</h2>
+            </div>
+            <Link href="/portfolio" className="inline-flex items-center gap-2 text-sm font-semibold text-yellow-400 hover:underline">
+              Conhecer o portfólio <MarketingIcon name="arrow" />
+            </Link>
           </div>
           <ProjectGrid />
         </div>
       </section>
+
       <ContactSection />
     </MarketingLayout>
   )

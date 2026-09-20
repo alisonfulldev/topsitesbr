@@ -91,7 +91,22 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
           </div>
         </div>
       </section>
-      <section className="px-4 py-20 sm:px-8">
+      <section className="px-4 py-16 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Por que a TopSite</p>
+            <h2 className="mb-4 max-w-2xl text-2xl font-semibold sm:text-3xl">
+              {niche.plural} nos encontram pra criar sites que fazem seus clientes as encontrarem também.
+            </h2>
+            <p className="max-w-2xl leading-relaxed text-white/70">
+              Você buscou e chegou até aqui. Seus clientes fazem o mesmo quando procuram por {niche.name.toLowerCase()} —
+              e o nosso trabalho é garantir que sua empresa esteja no caminho deles nessa busca.
+              Não entregamos um site e sumimos: posicionamos seu negócio para ser encontrado.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section className="border-t border-white/10 bg-[#101010] px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <h2 className="mb-10 text-3xl font-semibold sm:text-4xl">Como trabalhamos</h2>
           <ProcessSteps />
@@ -115,9 +130,9 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
       </section>
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Vamos criar o site da sua {niche.name.toLowerCase()}?</h2>
-          <p className="mb-8 text-lg text-white/65">O primeiro passo é entender o que sua empresa precisa.</p>
-          <ProjectCTA message={niche.ctaMessage} />
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para sua {niche.name.toLowerCase()} ser encontrada por quem já busca?</h2>
+          <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer sua empresa aparecer para quem já procura o que você oferece.</p>
+          <ProjectCTA message={niche.ctaMessage} label="Agendar uma conversa" />
           <nav aria-label="Outros serviços" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
             {marketingServices.map(({ href, label }) => (
               <Link key={href} href={href} className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">{label}</Link>

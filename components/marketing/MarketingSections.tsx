@@ -18,7 +18,7 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
   )
 }
 
-export function ProjectCTA({ message, label = 'Conversar sobre meu projeto' }: { message?: string; label?: string }) {
+export function ProjectCTA({ message, label = 'Agendar uma conversa' }: { message?: string; label?: string }) {
   return <a href={projectContact(message)} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full items-center justify-center gap-3 rounded-xl bg-yellow-400 px-6 py-4 text-center text-sm font-semibold text-black transition-colors hover:bg-yellow-300 sm:text-base">{label}<MarketingIcon name="arrow" /></a>
 }
 
@@ -26,9 +26,9 @@ export function ProcessSteps() {
   return (
     <ol className="grid gap-8 md:grid-cols-3">
       {[
-        ['Entender antes de desenvolver', 'Conversamos sobre o negócio, as pessoas que vão usar a solução e o objetivo que precisa ser alcançado.'],
-        ['Definir escopo e construir', 'Apresentamos uma proposta com entregas, investimento e cronograma. O desenvolvimento segue as etapas acordadas.'],
-        ['Validar e colocar em uso', 'Revisamos os fluxos com você antes da publicação. Suporte, manutenção e evolução são definidos conforme o projeto.'],
+        ['Entendemos o seu negócio', 'Conversamos sobre quem são seus clientes, o que você oferece e qual resultado você quer alcançar. O site é planejado a partir disso.'],
+        ['Construímos para você ser encontrado', 'Desenvolvemos a estrutura e o conteúdo certos para que seus futuros clientes cheguem até você quando buscam o que você oferece.'],
+        ['Sua empresa começa a ser encontrada', 'O site vai ao ar posicionado para atrair quem já procura o que você vende — uma fonte de clientes que trabalha em paralelo com o que você já faz.'],
       ].map(([title, text], index) => (
         <li key={title} className="border-t border-white/15 pt-6">
           <span className="mb-5 block text-sm font-semibold text-yellow-400">0{index + 1}</span>
@@ -63,10 +63,10 @@ export function ContactSection() {
     <section className="border-t border-white/10 px-4 py-20 text-center sm:px-8 sm:py-28">
       <div className="mx-auto max-w-3xl">
         <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Vamos conversar</p>
-        <h2 className="mb-5 text-3xl font-semibold tracking-tight sm:text-5xl">Qual é o próximo passo da sua empresa?</h2>
-        <p className="mb-8 text-lg leading-relaxed text-white/65">Conte o que você precisa criar ou melhorar. Vamos entender a ideia e definir um caminho para o projeto.</p>
+        <h2 className="mb-5 text-3xl font-semibold tracking-tight sm:text-5xl">Sua empresa pode ser encontrada do mesmo jeito que você nos encontrou.</h2>
+        <p className="mb-8 text-lg leading-relaxed text-white/65">A conversa é o primeiro passo. Entendemos o seu negócio e mostramos como podemos fazer sua empresa aparecer para quem já busca o que você oferece.</p>
         <ProjectCTA />
-        <p className="mt-5 text-sm text-white/50">Escopo, investimento e prazo definidos na proposta.</p>
+        <p className="mt-5 text-sm text-white/50">Atendimento consultivo · Proposta personalizada · Todo o Brasil</p>
       </div>
     </section>
   )

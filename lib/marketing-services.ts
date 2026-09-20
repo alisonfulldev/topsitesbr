@@ -17,29 +17,29 @@ export const serviceContent = {
   "criacao-de-sites": {
     "slug": "criacao-de-sites",
     "label": "Criação de sites",
-    "title": "Criação de Sites Profissionais para Empresas | TopSite",
-    "eyebrow": "Presença digital",
-    "heading": "Sites profissionais que apresentam o valor da sua empresa.",
-    "description": "Criação de sites profissionais com design personalizado, navegação responsiva e SEO. Apresente sua empresa e facilite o contato. Conheça a TopSite.",
-    "intro": "Seu site deve explicar o que você faz, transmitir confiança e facilitar o contato. Desenvolvemos a estrutura e a apresentação a partir do seu negócio e dos objetivos do projeto.",
-    "focus": "Um site pensado para quem vai usar",
-    "audience": "Para empresas e profissionais que precisam apresentar serviços, organizar informações e transformar visitas em conversas.",
+    "title": "Criação de Sites | TopSite",
+    "eyebrow": "Presença que trabalha por você",
+    "heading": "Sites que fazem sua empresa ser encontrada por quem já procura o que você vende.",
+    "description": "Criamos sites profissionais para empresas serem encontradas por clientes reais. Design responsivo, estrutura pensada para buscadores e foco em resultado. Conheça a TopSite.",
+    "intro": "Seu site deve ser mais do que uma presença — deve ser o caminho pelo qual seus futuros clientes chegam até você. Construímos a estrutura e o conteúdo para que isso aconteça.",
+    "focus": "Um site que trabalha enquanto você trabalha",
+    "audience": "Para empresas e profissionais que querem ser encontrados por quem já procura o que oferecem, e transformar essas visitas em conversas reais.",
     "features": [
       {
-        "title": "Conteúdo com direção",
-        "text": "Organizamos serviços, diferenciais e informações de contato para que o visitante entenda a sua oferta e saiba como avançar."
+        "title": "Conteúdo que responde ao que buscam",
+        "text": "Organizamos serviços, diferenciais e informações de contato de forma que seus futuros clientes encontrem o que procuram — e entendam por que você é a resposta."
       },
       {
-        "title": "Design personalizado",
+        "title": "Design que transmite credibilidade",
         "text": "Cores, tipografia e composição alinhadas à sua identidade, com navegação adaptada a celulares, tablets e computadores."
       },
       {
-        "title": "Estrutura para o Google",
-        "text": "Títulos, descrições, URLs e links internos planejados para ajudar os buscadores a entender o conteúdo de cada página."
+        "title": "Estrutura para ser encontrado",
+        "text": "Organizamos títulos, endereços e conteúdo de cada página para que os buscadores entendam exatamente o que sua empresa oferece e apresentem você para quem procura."
       },
       {
-        "title": "Contato ao alcance",
-        "text": "WhatsApp, formulários e outros canais definidos conforme o atendimento da sua empresa e o escopo contratado."
+        "title": "Contato ao alcance de quem chegou",
+        "text": "WhatsApp, formulários e outros canais posicionados para que o visitante que encontrou sua empresa não precise procurar como entrar em contato."
       }
     ],
     "deliverables": [
@@ -51,15 +51,15 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa criar um site?",
-        "a": "O investimento depende da quantidade de páginas, conteúdo e funcionalidades. Após entender sua necessidade, apresentamos uma proposta com escopo, prazo e condições."
+        "a": "O investimento depende da quantidade de páginas, conteúdo e do que precisa ser feito para que sua empresa seja encontrada no seu segmento. Após entender sua necessidade, apresentamos uma proposta com escopo, prazo e condições."
       },
       {
-        "q": "Qual é a diferença entre site e landing page?",
-        "a": "Um site organiza diferentes informações sobre a empresa. Uma landing page concentra uma oferta e uma ação principal, como pedir um orçamento ou entrar em contato."
+        "q": "Em quanto tempo o site começa a trazer resultado?",
+        "a": "Depende do mercado e da concorrência, mas o caminho começa no lançamento. Construímos a estrutura correta desde o início para que a evolução aconteça de forma consistente."
       },
       {
-        "q": "O site vai aparecer em primeiro no Google?",
-        "a": "Preparamos a estrutura para rastreamento e compreensão do conteúdo. Posicionamento depende também da concorrência, relevância e outros fatores; não há garantia de uma posição específica."
+        "q": "Preciso continuar anunciando se tiver um site assim?",
+        "a": "Não substituímos os anúncios — adicionamos uma fonte de clientes que funciona em paralelo. Quem chega por busca já quer o que você oferece; é um lead mais qualificado do que o que viu um anúncio."
       }
     ]
   },
@@ -68,27 +68,27 @@ export const serviceContent = {
     "label": "Site institucional",
     "title": "Site Institucional para Empresas | TopSite",
     "eyebrow": "Sua empresa na internet",
-    "heading": "Um site institucional à altura da sua empresa.",
-    "description": "Desenvolvimento de sites institucionais para apresentar sua empresa, equipe e serviços. Design personalizado, conteúdo organizado e contato fácil com a TopSite.",
-    "intro": "Reúna a história da empresa, os serviços e os canais de atendimento em um endereço próprio. Criamos uma apresentação que ajuda clientes e parceiros a conhecer seu trabalho.",
-    "focus": "Credibilidade em cada página",
-    "audience": "Para empresas que precisam de uma apresentação completa, com espaço para explicar sua atuação e seus diferenciais.",
+    "heading": "Uma apresentação institucional que coloca sua empresa no caminho de quem a busca.",
+    "description": "Desenvolvimento de sites institucionais que apresentam sua empresa e a fazem ser encontrada por clientes reais. Design personalizado e estrutura pensada para resultado. Solicite uma proposta à TopSite.",
+    "intro": "Reúna a história da empresa, os serviços e os canais de atendimento em um endereço próprio. Criamos uma apresentação que ajuda clientes e parceiros a conhecer seu trabalho — e que faz você aparecer quando pesquisam pelo que sua empresa oferece.",
+    "focus": "Credibilidade que aparece quando precisam de você",
+    "audience": "Para empresas que precisam de uma apresentação completa, com espaço para explicar sua atuação, seus diferenciais e ser encontradas por quem procura o que oferecem.",
     "features": [
       {
         "title": "Sobre a empresa",
-        "text": "Apresente sua trajetória, equipe e forma de trabalhar com informações que ajudem o visitante a entender quem está por trás do negócio."
+        "text": "Apresente sua trajetória, equipe e forma de trabalhar com informações que ajudem o visitante a entender quem está por trás do negócio e por que confiar."
       },
       {
         "title": "Serviços bem explicados",
-        "text": "Páginas e seções próprias para descrever o que a empresa oferece, para quem e como funciona o atendimento."
+        "text": "Páginas e seções próprias para descrever o que a empresa oferece, para quem e como funciona o atendimento — respondendo antes que o cliente precise perguntar."
       },
       {
         "title": "Portfólio e referências",
-        "text": "Organize projetos, fotos e depoimentos autorizados que demonstrem o seu trabalho e sustentem sua apresentação."
+        "text": "Organize projetos, fotos e depoimentos autorizados que demonstrem o seu trabalho e sustentem a credibilidade da empresa."
       },
       {
         "title": "Canais de atendimento",
-        "text": "Facilite a localização de telefone, WhatsApp, formulário, endereço e horário, conforme a necessidade da empresa."
+        "text": "Facilite a localização de telefone, WhatsApp, formulário, endereço e horário — para que quem chegou ao site consiga dar o próximo passo."
       }
     ],
     "deliverables": [
@@ -108,28 +108,28 @@ export const serviceContent = {
       },
       {
         "q": "Posso ampliar o site depois?",
-        "a": "Novas páginas e funcionalidades podem ser avaliadas conforme a evolução do negócio. O escopo e o investimento dessa ampliação são combinados antes do desenvolvimento."
+        "a": "Novas páginas e seções podem ser avaliadas conforme a evolução do negócio. O escopo e o investimento dessa ampliação são combinados antes do desenvolvimento."
       }
     ]
   },
   "landing-page": {
     "slug": "landing-page",
     "label": "Landing pages",
-    "title": "Criação de Landing Pages para Campanhas | TopSite",
+    "title": "Criação de Landing Pages | TopSite",
     "eyebrow": "Uma oferta, um objetivo",
-    "heading": "Landing pages para transformar interesse em contato.",
-    "description": "Criação de landing pages para campanhas, serviços e lançamentos. Conteúdo focado na oferta, design responsivo e chamadas para contato. Conheça a TopSite.",
-    "intro": "Quando uma campanha tem um objetivo específico, a página precisa acompanhar essa intenção. Desenvolvemos landing pages com uma oferta clara e um caminho direto para a próxima ação.",
-    "focus": "A página acompanha sua campanha",
-    "audience": "Para divulgar um serviço, apresentar um lançamento ou captar interessados em uma oferta específica.",
+    "heading": "Landing pages que convertem quem já está procurando o que você oferece.",
+    "description": "Criamos landing pages para empresas que querem converter visitantes em contatos e clientes. Foco na oferta, design responsivo e estrutura pensada para resultado. Solicite uma proposta à TopSite.",
+    "intro": "Quando você tem uma oferta específica para apresentar, a página precisa acompanhar essa intenção — e aparecer para quem já procura por ela. Desenvolvemos landing pages com uma mensagem clara e um caminho direto para a próxima ação.",
+    "focus": "A página certa para quem chegou procurando",
+    "audience": "Para divulgar um serviço, apresentar um lançamento ou captar interessados em uma oferta específica — de forma orgânica ou com apoio de anúncios.",
     "features": [
       {
-        "title": "Mensagem alinhada ao anúncio",
-        "text": "Organizamos o título e a apresentação para dar continuidade ao que trouxe o visitante até a página."
+        "title": "Mensagem que responde à busca",
+        "text": "Organizamos o título e a apresentação para dar continuidade ao que trouxe o visitante até a página — seja uma busca no Google ou um anúncio."
       },
       {
         "title": "Oferta fácil de entender",
-        "text": "Benefícios, funcionamento e dúvidas frequentes ajudam o visitante a avaliar se a solução atende à sua necessidade."
+        "text": "Benefícios, funcionamento e dúvidas frequentes ajudam o visitante a avaliar se a solução atende à sua necessidade sem precisar entrar em contato para entender."
       },
       {
         "title": "Chamada para a próxima ação",
@@ -164,12 +164,12 @@ export const serviceContent = {
   "loja-virtual": {
     "slug": "loja-virtual",
     "label": "Lojas virtuais",
-    "title": "Criação de Lojas Virtuais para Empresas | TopSite",
+    "title": "Criação de Lojas Virtuais | TopSite",
     "eyebrow": "Seu catálogo na internet",
-    "heading": "Lojas virtuais conectadas à sua forma de vender.",
-    "description": "Criação de lojas virtuais e catálogos online. Planeje produtos, pedidos, pagamentos e integrações conforme sua operação. Solicite uma proposta à TopSite.",
-    "intro": "Uma loja virtual começa pelo entendimento da sua operação. Planejamos a apresentação dos produtos e o caminho da compra de acordo com seu catálogo, atendimento e processo de venda.",
-    "focus": "Do produto ao pedido",
+    "heading": "Lojas virtuais para quem quer vender para quem já busca o que você oferece.",
+    "description": "Criamos lojas virtuais e catálogos online para empresas que querem vender pela internet. Planejamento do catálogo, jornada de compra e integrações. Solicite uma proposta à TopSite.",
+    "intro": "Uma loja virtual começa pelo entendimento da sua operação e de como seus clientes pesquisam o que você vende. Planejamos a apresentação dos produtos e o caminho da compra para que quem chega já chegue pronto para comprar.",
+    "focus": "Do produto ao pedido — para quem já estava procurando",
     "audience": "Para negócios que querem apresentar um catálogo online ou estruturar vendas com carrinho, pagamento e acompanhamento de pedidos.",
     "features": [
       {
@@ -207,63 +207,6 @@ export const serviceContent = {
       {
         "q": "Qual é o prazo de entrega?",
         "a": "O cronograma é definido após avaliar os produtos, materiais e integrações. Você recebe essa previsão na proposta antes de iniciar o projeto."
-      }
-    ]
-  },
-  "desenvolvimento-de-software": {
-    "slug": "desenvolvimento-de-software",
-    "label": "Software sob medida",
-    "title": "Desenvolvimento de Software Sob Medida | TopSite",
-    "eyebrow": "Tecnologia para sua operação",
-    "heading": "Software sob medida para a forma como sua empresa trabalha.",
-    "description": "Desenvolvimento de software sob medida, sistemas web, painéis e integrações para empresas. Organize processos com uma solução personalizada da TopSite.",
-    "intro": "Quando planilhas e ferramentas isoladas deixam o trabalho mais difícil, um sistema próprio pode ajudar. Entendemos seu processo para desenvolver uma solução com funções e fluxos que façam sentido para a equipe.",
-    "focus": "O processo da empresa orienta o sistema",
-    "audience": "Para empresas que precisam organizar informações, acompanhar atividades ou conectar etapas que hoje dependem de trabalho manual.",
-    "features": [
-      {
-        "title": "Sistemas de gestão",
-        "text": "Planejamos cadastros, pedidos, atendimentos e outros fluxos conforme a rotina do negócio. As funções são definidas a partir do problema que você precisa resolver."
-      },
-      {
-        "title": "Painéis e relatórios",
-        "text": "Reúna informações importantes para acompanhar atividades e tomar decisões, com indicadores definidos junto à equipe que usará o sistema."
-      },
-      {
-        "title": "Automações e integrações",
-        "text": "Avaliamos conexões entre ferramentas e tarefas repetitivas que podem ser automatizadas, considerando as APIs e os acessos disponíveis."
-      },
-      {
-        "title": "Áreas de acesso",
-        "text": "Organize experiências para equipe, clientes ou parceiros, com perfis e permissões planejados conforme as responsabilidades de cada usuário."
-      }
-    ],
-    "deliverables": [
-      "Mapeamento dos processos e das prioridades",
-      "Escopo funcional e etapas de desenvolvimento",
-      "Validação dos fluxos com quem vai utilizar",
-      "Condições de implantação, suporte e evolução na proposta"
-    ],
-    "faqs": [
-      {
-        "q": "Como começa um projeto de software sob medida?",
-        "a": "Começamos entendendo quem vai usar, qual problema precisa ser resolvido e como o processo funciona hoje. Com essas informações, definimos prioridades e preparamos a proposta."
-      },
-      {
-        "q": "Quanto custa e quanto tempo leva?",
-        "a": "Investimento e cronograma dependem das funcionalidades, integrações, dados e etapas de validação. São definidos após o levantamento do escopo, sem uma promessa única para todos os sistemas."
-      },
-      {
-        "q": "É possível começar com uma versão menor?",
-        "a": "Sim. Podemos planejar uma primeira versão com as funções prioritárias e avaliar novas etapas a partir do uso. O que entra em cada versão fica definido na proposta."
-      },
-      {
-        "q": "Vocês integram com sistemas que já utilizo?",
-        "a": "Avaliamos essa possibilidade conforme a documentação, permissões e recursos de integração de cada ferramenta. Compatibilidade e dependências são verificadas durante o planejamento."
-      },
-      {
-        "q": "Como funcionam suporte e novas funcionalidades?",
-        "a": "As condições de suporte, manutenção e hospedagem são combinadas na proposta. Novas funcionalidades são avaliadas com escopo, prazo e investimento próprios."
       }
     ]
   }

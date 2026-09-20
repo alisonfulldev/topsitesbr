@@ -9,7 +9,7 @@ export function MarketingFooter() {
         <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr]">
           <div>
             <Link href="/" className="text-xl font-bold tracking-widest text-yellow-400">TOP SITE</Link>
-            <p className="mt-5 max-w-sm leading-relaxed text-white/65">Sites profissionais e software sob medida para empresas. Da presença digital aos processos da sua operação.</p>
+            <p className="mt-5 max-w-sm leading-relaxed text-white/65">Criamos sites que fazem empresas serem encontradas por clientes reais. Atendimento consultivo para todo o Brasil.</p>
             <p className="mt-3 text-sm text-white/50">Atendimento remoto em todo o Brasil.</p>
           </div>
           <div>

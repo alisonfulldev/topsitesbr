@@ -1,10 +1,5 @@
-import { marketingMetadata } from '@/lib/marketing'
-import { serviceContent } from '@/lib/marketing-services'
-import { ServicePage } from '@/components/marketing/ServicePage'
-
-const content = serviceContent['desenvolvimento-de-software']
-export const metadata = marketingMetadata(content.title, content.description, '/' + content.slug)
+import { redirect } from 'next/navigation'
 
 export default function Page() {
-  return <ServicePage content={content} />
+  redirect('/criacao-de-sites')
 }

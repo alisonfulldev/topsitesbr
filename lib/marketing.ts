@@ -1,14 +1,13 @@
 import type { Metadata } from 'next'
 
 export const SITE_URL = 'https://topsitebr.com.br'
-export const BRAND_DESCRIPTION = 'Sites profissionais, lojas virtuais e software sob medida para empresas. Conheça os serviços da TopSite e converse sobre seu projeto.'
+export const BRAND_DESCRIPTION = 'Criamos sites que fazem empresas serem encontradas por clientes reais. Se você chegou até aqui pela internet, já está vivendo nosso método.'
 
 export const marketingServices = [
   { href: '/criacao-de-sites', label: 'Criação de sites' },
   { href: '/site-institucional', label: 'Site institucional' },
   { href: '/landing-page', label: 'Landing pages' },
   { href: '/loja-virtual', label: 'Lojas virtuais' },
-  { href: '/desenvolvimento-de-software', label: 'Software sob medida' },
 ]
 
 export function projectContact(message = 'Olá! Quero conversar sobre um projeto com a TopSite.') {
@@ -24,7 +23,7 @@ export function marketingMetadata(title: string, description: string, path = '')
     openGraph: {
       type: 'website', title, description, url: SITE_URL + path,
       siteName: 'TopSite', locale: 'pt_BR',
-      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'TopSite — Sites profissionais e software sob medida' }],
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'TopSite — Sites que fazem empresas serem encontradas' }],
     },
     twitter: { card: 'summary_large_image', title, description, images: ['/og-image.png'] },
   }
