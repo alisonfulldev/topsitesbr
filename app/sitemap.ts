@@ -3,6 +3,8 @@ import { marketingServices, SITE_URL } from '@/lib/marketing'
 import { cities } from '@/lib/seo/cities'
 import { niches } from '@/lib/seo/niches'
 
+export const dynamic = 'force-static'
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...['', ...marketingServices.map(({ href }) => href), '/sobre', '/portfolio'].map((path) => ({
@@ -23,6 +25,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
+    ...niches.flatMap((niche) =>
+      cities.map((city) => ({
+        url: SITE_URL + '/site-para/' + niche.slug + '/' + city.slug,
+        lastModified: new Date('2026-09-20'),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      }))
+    ),
     ...['/termos', '/privacidade'].map((path) => ({
       url: SITE_URL + path,
       lastModified: new Date('2026-01-01'),
