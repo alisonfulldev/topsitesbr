@@ -108,7 +108,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
 
       <section className="border-y border-white/10 bg-[#101010] px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <h2 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">O que o site da sua {niche.name.toLowerCase()} em {city.name} pode ter</h2>
+          <h2 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">O que um site para {niche.name} em {city.name} pode ter</h2>
           <div className="grid gap-6 md:grid-cols-2">
             {niche.features.map(({ title, text }, index) => (
               <article key={title} className="rounded-2xl border border-white/10 p-7 sm:p-8">
@@ -130,8 +130,8 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
             </h2>
             <p className="max-w-2xl leading-relaxed text-white/70">
               {niche.plural} em {city.name} nos encontram da mesma forma que seus clientes vão te encontrar.
-              Não entregamos um site e sumimos: posicionamos sua {niche.name.toLowerCase()} para ser encontrada
-              por quem já busca o que você oferece em {city.name} e região.
+              Não entregamos um site e sumimos: posicionamos {niche.name} para aparecer
+              para quem já busca o que você oferece em {city.name} e região.
             </p>
           </div>
         </div>
@@ -163,8 +163,8 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
 
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para sua {niche.name.toLowerCase()} em {city.name} ser encontrada por quem já busca?</h2>
-          <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer sua {niche.name.toLowerCase()} aparecer para quem já procura em {city.name} e região.</p>
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para {niche.name} em {city.name} aparecer para quem já busca?</h2>
+          <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer {niche.name} aparecer para quem já procura em {city.name} e região.</p>
           <ProjectCTA message={ctaMessage} label="Agendar uma conversa" />
           <nav aria-label="Ver mais" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
             <Link href={`/site-para/${niche.slug}`} className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">Site para {niche.name} — Brasil</Link>

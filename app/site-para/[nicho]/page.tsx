@@ -79,7 +79,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
       </section>
       <section className="border-y border-white/10 bg-[#101010] px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <h2 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">O que o site da sua {niche.name.toLowerCase()} pode ter</h2>
+          <h2 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">O que um site para {niche.name} pode ter</h2>
           <div className="grid gap-6 md:grid-cols-2">
             {niche.features.map(({ title, text }, index) => (
               <article key={title} className="rounded-2xl border border-white/10 p-7 sm:p-8">
@@ -96,7 +96,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
           <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Por que a TopSite</p>
             <h2 className="mb-4 max-w-2xl text-2xl font-semibold sm:text-3xl">
-              {niche.plural} nos encontram pra criar sites que fazem seus clientes as encontrarem também.
+              Você nos encontrou da mesma forma que seus clientes vão te encontrar.
             </h2>
             <p className="max-w-2xl leading-relaxed text-white/70">
               Você buscou e chegou até aqui. Seus clientes fazem o mesmo quando procuram por {niche.name.toLowerCase()} —
@@ -130,7 +130,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
       </section>
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para sua {niche.name.toLowerCase()} ser encontrada por quem já busca?</h2>
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para {niche.name} aparecer para quem já busca?</h2>
           <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer sua empresa aparecer para quem já procura o que você oferece.</p>
           <ProjectCTA message={niche.ctaMessage} label="Agendar uma conversa" />
           <nav aria-label="Outros serviços" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
