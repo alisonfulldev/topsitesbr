@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import Script from 'next/script'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
-import { BRAND_DESCRIPTION, SITE_URL, marketingMetadata, organizationSchema, marketingServices, projectContact } from '@/lib/marketing'
+import { BRAND_DESCRIPTION, SITE_URL, marketingMetadata, organizationSchema, marketingServices } from '@/lib/marketing'
 import { MarketingLayout, ProjectCTA, ProcessSteps, ProjectGrid, ContactSection } from '@/components/marketing/MarketingSections'
+import { AnimatedHero } from '@/components/marketing/AnimatedHero'
 
 export const metadata = marketingMetadata(
   'TopSite | Sites que fazem sua empresa ser encontrada',
@@ -43,32 +44,8 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" strategy="afterInteractive" />
 
-      {/* ── 1. Hero — Gancho ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden px-4 py-16 sm:px-8 sm:py-24 lg:py-32">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "linear-gradient(#facc15 1px, transparent 1px), linear-gradient(90deg, #facc15 1px, transparent 1px)", backgroundSize: "64px 64px", maskImage: "linear-gradient(to bottom, black, transparent)" }} />
-        <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-yellow-400/[0.04] blur-3xl" />
-        <div className="relative mx-auto max-w-7xl">
-          <div className="mx-auto max-w-4xl">
-            <h1 className="mb-7 text-[2.65rem] font-semibold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
-              Você nos encontrou pela internet.<br /><span className="text-yellow-400">Não foi acidente.</span>
-            </h1>
-            <p className="mb-4 max-w-2xl text-xl font-semibold leading-snug sm:text-2xl">
-              E é exatamente assim que seus clientes vão te encontrar.
-            </p>
-            <p className="mb-9 max-w-2xl text-lg leading-relaxed text-white/70">
-              A forma como chegou até nós é o nosso método funcionando. Aplicamos o mesmo em sites para
-              empresas — e elas passam a ser encontradas por quem já busca o que oferecem.
-            </p>
-            <div className="flex flex-wrap items-center gap-6">
-              <ProjectCTA label="Quero que me encontrem assim" />
-              <Link href="/portfolio" className="inline-flex items-center gap-2 py-3 text-sm font-semibold text-white/80 hover:text-yellow-400">
-                Ver projetos <MarketingIcon name="arrow" />
-              </Link>
-            </div>
-            <p className="mt-7 text-sm text-white/50">Atendimento consultivo · Proposta personalizada · Todo o Brasil</p>
-          </div>
-        </div>
-      </section>
+      {/* ── 1. Hero — Animado ───────────────────────────────────────────── */}
+      <AnimatedHero />
 
       {/* ── 2. O que muda com um site que funciona ───────────────────────── */}
       <section className="border-y border-white/10 bg-[#101010] px-4 py-20 sm:px-8 sm:py-24">
