@@ -49,12 +49,12 @@ export default function HomePage() {
         <div aria-hidden="true" className="pointer-events-none absolute -right-40 -top-40 h-[600px] w-[600px] rounded-full bg-yellow-400/[0.04] blur-3xl" />
         <div className="relative mx-auto max-w-7xl">
           <div className="mx-auto max-w-4xl">
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-yellow-400">
-              Você nos encontrou pela internet. Não foi acidente.
-            </p>
             <h1 className="mb-7 text-[2.65rem] font-semibold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
-              E é exatamente assim que seus clientes <span className="text-yellow-400">vão te encontrar.</span>
+              Você nos encontrou pela internet.<br /><span className="text-yellow-400">Não foi acidente.</span>
             </h1>
+            <p className="mb-4 max-w-2xl text-xl font-semibold leading-snug sm:text-2xl">
+              E é exatamente assim que seus clientes vão te encontrar.
+            </p>
             <p className="mb-9 max-w-2xl text-lg leading-relaxed text-white/70">
               A forma como chegou até nós é o nosso método funcionando. Aplicamos o mesmo em sites para
               empresas — e elas passam a ser encontradas por quem já busca o que oferecem.
