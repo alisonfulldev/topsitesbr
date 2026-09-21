@@ -97,6 +97,69 @@ export async function activateSubscription(
   return { success: true }
 }
 
+export async function recreateAsaasSubscription(
+  clientId: string,
+  subscriptionId: string,
+  firstDueDateStr?: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const [client, subscription] = await Promise.all([
+    prisma.client.findUnique({ where: { id: clientId } }),
+    prisma.subscription.findUnique({ where: { id: subscriptionId }, include: { plan: true } }),
+  ])
+
+  if (!client || !subscription || subscription.clientId !== clientId) {
+    return { error: 'Dados não encontrados.' }
+  }
+
+  const docDigits = client.document?.replace(/\D/g, '') ?? ''
+  if (docDigits.length !== 11 && docDigits.length !== 14) {
+    return { error: 'CPF ou CNPJ do cliente inválido. Edite o cadastro e preencha o CPF/CNPJ antes de recriar.' }
+  }
+
+  const provider = getPaymentProvider()
+  const { customerId } = await provider.createCustomer({
+    name: client.name,
+    email: client.email,
+    document: client.document,
+    phone: client.phone,
+  })
+
+  const firstDueDate = firstDueDateStr ?? daysFromNowStr(0)
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  const { subscriptionId: newAsaasSubId, chargeId, nextDueDate } = await provider.createSubscription({
+    customerId,
+    planName: subscription.plan.name,
+    price: Number(subscription.plan.price),
+    successUrl: `${appUrl}/painel?ativado=1`,
+    firstDueDate,
+  })
+
+  await prisma.subscription.update({
+    where: { id: subscriptionId },
+    data: {
+      asaasSubscriptionId: newAsaasSubId,
+      nextDueDate,
+      status: chargeId ? 'pending' : 'active',
+    },
+  })
+
+  if (chargeId) {
+    await prisma.invoice.create({
+      data: {
+        subscriptionId,
+        amount: subscription.plan.price,
+        status: 'pending',
+        dueDate: new Date(`${firstDueDate}T12:00:00`),
+        asaasChargeId: chargeId,
+      },
+    })
+  }
+
+  revalidatePath(`/admin/clientes/${clientId}/assinatura`)
+  revalidatePath(`/painel/assinatura`)
+  return { success: true }
+}
+
 export async function updateSubscriptionDueDate(
   subscriptionId: string,
   clientId: string,

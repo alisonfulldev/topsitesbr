@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { activateSubscription, changePlan, resetSubscriptionStatus, updateSubscriptionDueDate } from '../actions'
+import { activateSubscription, changePlan, recreateAsaasSubscription, resetSubscriptionStatus, updateSubscriptionDueDate } from '../actions'
 
 type SubscriptionInfo = {
   id: string
@@ -65,6 +65,12 @@ export function SubscriptionPageClient({
   const [editDueError, setEditDueError] = useState<string | null>(null)
   const [editDueSuccess, setEditDueSuccess] = useState<string | null>(null)
 
+  const [showRecreate, setShowRecreate] = useState(false)
+  const [recreateDate, setRecreateDate] = useState(daysFromNowStr(0))
+  const [isRecreatePending, startRecreateTransition] = useTransition()
+  const [recreateError, setRecreateError] = useState<string | null>(null)
+  const [recreateSuccess, setRecreateSuccess] = useState<string | null>(null)
+
   const [changePlanId, setChangePlanId] = useState<string>('')
   const [changeError, setChangeError] = useState<string | null>(null)
   const [changeSuccess, setChangeSuccess] = useState<string | null>(null)
@@ -114,6 +120,19 @@ export function SubscriptionPageClient({
         setError(result.error)
       } else {
         setSuccessMsg(`Assinatura "${selectedPlan?.name ?? 'Site no Ar'}" ativada com sucesso.`)
+      }
+    })
+  }
+
+  function handleRecreate() {
+    if (!subscription) return
+    setRecreateError(null)
+    startRecreateTransition(async () => {
+      const result = await recreateAsaasSubscription(clientId, subscription.id, recreateDate)
+      if (result.error) setRecreateError(result.error)
+      else {
+        setRecreateSuccess('Assinatura recriada no Asaas com sucesso.')
+        setShowRecreate(false)
       }
     })
   }
@@ -241,6 +260,51 @@ export function SubscriptionPageClient({
                   Cancelar
                 </button>
                 {editDueError && <p className="w-full text-xs text-red-600">{editDueError}</p>}
+              </div>
+            )}
+          </div>
+          {/* Recriar assinatura no Asaas — para IDs inválidos / ambiente mock */}
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            {recreateSuccess && (
+              <p className="text-xs text-green-700 mb-2">{recreateSuccess}</p>
+            )}
+            {!showRecreate ? (
+              <button
+                onClick={() => { setRecreateDate(daysFromNowStr(0)); setShowRecreate(true) }}
+                className="text-xs text-gray-400 hover:text-gray-600 underline"
+              >
+                Recriar assinatura no Asaas
+              </button>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                  Use quando o ID Asaas for inválido (ex: cadastrado em modo de teste). Isso cria uma nova assinatura real no Asaas e vincula ao cliente.
+                </p>
+                <div className="flex items-end gap-2 flex-wrap">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Primeira cobrança em</label>
+                    <input
+                      type="date"
+                      value={recreateDate}
+                      onChange={(e) => setRecreateDate(e.target.value)}
+                      className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand/40"
+                    />
+                  </div>
+                  <button
+                    onClick={handleRecreate}
+                    disabled={isRecreatePending || !recreateDate}
+                    className="px-3 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-medium hover:bg-amber-700 disabled:opacity-50 transition-colors"
+                  >
+                    {isRecreatePending ? 'Criando…' : 'Confirmar'}
+                  </button>
+                  <button
+                    onClick={() => setShowRecreate(false)}
+                    className="px-3 py-1.5 text-xs text-gray-400 hover:text-gray-600"
+                  >
+                    Cancelar
+                  </button>
+                  {recreateError && <p className="w-full text-xs text-red-600">{recreateError}</p>}
+                </div>
               </div>
             )}
           </div>
