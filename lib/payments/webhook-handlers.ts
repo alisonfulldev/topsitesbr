@@ -25,6 +25,42 @@ interface AsaasPaymentList {
   data: AsaasPaymentStatus[]
 }
 
+// Quando o Asaas gera uma cobrança recorrente, o app não tem Invoice correspondente.
+// Essa função consulta o Asaas, encontra a assinatura local e cria o registro.
+async function resolveAsaasSubscriptionCharge(
+  chargeId: string,
+  status: 'pending' | 'overdue',
+) {
+  try {
+    const charge = await asaasFetch<{
+      id: string
+      subscription?: string
+      value: number
+      dueDate: string
+    }>(`/payments/${chargeId}`)
+
+    if (!charge.subscription) return null
+
+    const subscription = await prisma.subscription.findFirst({
+      where: { asaasSubscriptionId: charge.subscription },
+    })
+
+    if (!subscription) return null
+
+    return await prisma.invoice.create({
+      data: {
+        subscriptionId: subscription.id,
+        asaasChargeId: chargeId,
+        amount: charge.value,
+        dueDate: new Date(charge.dueDate + 'T12:00:00'),
+        status,
+      },
+    })
+  } catch {
+    return null
+  }
+}
+
 export async function handlePaymentReceived(chargeId: string): Promise<{
   ok: boolean
   message: string
@@ -65,6 +101,9 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
     })
 
     if (!order) {
+      // Tenta criar Invoice para cobrança recorrente do Asaas não registrada localmente
+      const created = await resolveAsaasSubscriptionCharge(chargeId, 'pending')
+      if (created) return handlePaymentReceived(chargeId)
       return handlePresentationPayment(chargeId)
     }
 
@@ -208,6 +247,8 @@ export async function handlePaymentOverdue(chargeId: string): Promise<{
   })
 
   if (!invoice) {
+    const created = await resolveAsaasSubscriptionCharge(chargeId, 'overdue')
+    if (created) return handlePaymentOverdue(chargeId)
     return { ok: false, message: `Fatura não encontrada para chargeId: ${chargeId}` }
   }
 
