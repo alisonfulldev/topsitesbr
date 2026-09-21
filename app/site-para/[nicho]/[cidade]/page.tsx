@@ -33,8 +33,8 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
 
   const url = `${SITE_URL}/site-para/${niche.slug}/${city.slug}`
   const ctaMessage = `Olá! Tenho uma ${niche.name.toLowerCase()} em ${city.name} e quero criar um site com a TopSite.`
-  const economyText = city.economy.slice(0, -1).join(', ') + ' e ' + city.economy[city.economy.length - 1]
-  const intro = `Desenvolvemos sites para ${niche.plural.toLowerCase()} em ${city.name} e região. ${city.context} Com forte atividade em ${economyText}, o mercado local é competitivo — e ${niche.plural.toLowerCase()} que aparecem quando o cliente busca saem na frente. ${niche.intro}`
+  const economyText = city.economy.slice(0, 3).join(', ')
+  const intro = `Desenvolvemos sites para ${niche.plural.toLowerCase()} em ${city.name} e região. O mercado local tem forte presença em ${economyText} — e ${niche.plural.toLowerCase()} que aparecem no Google quando o cliente busca saem na frente. ${niche.intro}`
 
   const schema = {
     '@context': 'https://schema.org',
