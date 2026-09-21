@@ -132,7 +132,7 @@ export async function generateReportsForAllClients(): Promise<{ generated: numbe
   let skipped = 0
 
   for (const site of sites) {
-    const ok = await generateReportForSite(site.id, site.client.id, site.id, true)
+    const ok = await generateReportForSite(site.id, site.client.id, site.id)
     if (ok) generated++
     else skipped++
   }
