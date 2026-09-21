@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { activateSubscription, changePlan, recreateAsaasSubscription, resetSubscriptionStatus, updateSubscriptionDueDate } from '../actions'
+import { activateSubscription, changePlan, recreateAsaasSubscription, resetSubscriptionStatus, sendManualPaymentReminder, updateSubscriptionDueDate } from '../actions'
 
 type SubscriptionInfo = {
   id: string
@@ -65,6 +65,10 @@ export function SubscriptionPageClient({
   const [editDueError, setEditDueError] = useState<string | null>(null)
   const [editDueSuccess, setEditDueSuccess] = useState<string | null>(null)
 
+  const [isReminderPending, startReminderTransition] = useTransition()
+  const [reminderSuccess, setReminderSuccess] = useState<string | null>(null)
+  const [reminderError, setReminderError] = useState<string | null>(null)
+
   const [showRecreate, setShowRecreate] = useState(false)
   const [recreateDate, setRecreateDate] = useState(daysFromNowStr(0))
   const [isRecreatePending, startRecreateTransition] = useTransition()
@@ -121,6 +125,16 @@ export function SubscriptionPageClient({
       } else {
         setSuccessMsg(`Assinatura "${selectedPlan?.name ?? 'Site no Ar'}" ativada com sucesso.`)
       }
+    })
+  }
+
+  function handleSendReminder() {
+    if (!subscription) return
+    setReminderError(null)
+    startReminderTransition(async () => {
+      const result = await sendManualPaymentReminder(clientId, subscription.id)
+      if (result.error) setReminderError(result.error)
+      else setReminderSuccess(result.paymentUrl ? `E-mail enviado com link de pagamento.` : 'E-mail enviado (sem link — verifique o Asaas).')
     })
   }
 
@@ -205,6 +219,20 @@ export function SubscriptionPageClient({
               </div>
             )}
           </div>
+          {(subscription.status === 'overdue' || subscription.status === 'pending') && (
+            <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
+              {reminderSuccess && <p className="text-xs text-green-700">{reminderSuccess}</p>}
+              {reminderError && <p className="text-xs text-red-600">{reminderError}</p>}
+              <button
+                onClick={handleSendReminder}
+                disabled={isReminderPending}
+                className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              >
+                {isReminderPending ? 'Enviando…' : 'Enviar cobrança por e-mail'}
+              </button>
+            </div>
+          )}
+
           {subscription.status === 'overdue' && (
             <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-3">
               <p className="text-xs text-gray-500 flex-1">

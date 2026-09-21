@@ -2,12 +2,52 @@
 
 import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
+import { sendOverdueDay0, sendNotification } from '@/lib/notifications'
+import { asaasFetch } from '@/lib/integrations/asaas'
 import { revalidatePath } from 'next/cache'
 
 function daysFromNowStr(days: number): string {
   const d = new Date()
   d.setDate(d.getDate() + days)
   return d.toISOString().split('T')[0]
+}
+
+export async function sendManualPaymentReminder(
+  clientId: string,
+  subscriptionId: string,
+): Promise<{ error?: string; success?: boolean; paymentUrl?: string }> {
+  const [client, invoice] = await Promise.all([
+    prisma.client.findUnique({ where: { id: clientId }, select: { name: true, email: true } }),
+    prisma.invoice.findFirst({
+      where: { subscriptionId, status: { in: ['pending', 'overdue'] } },
+      orderBy: { dueDate: 'desc' },
+      select: { asaasChargeId: true },
+    }),
+  ])
+
+  if (!client) return { error: 'Cliente não encontrado.' }
+  if (!invoice?.asaasChargeId) return { error: 'Nenhuma fatura pendente encontrada. Verifique se a assinatura foi recriada no Asaas.' }
+
+  let paymentUrl: string | null = null
+  if (process.env.PAYMENT_DRIVER === 'asaas') {
+    try {
+      const charge = await asaasFetch<{ invoiceUrl: string }>(`/payments/${invoice.asaasChargeId}`)
+      paymentUrl = charge.invoiceUrl ?? null
+    } catch {
+      // envia sem link se Asaas falhar
+    }
+  }
+
+  await sendOverdueDay0(client.email, client.name, paymentUrl)
+  await sendNotification(
+    clientId,
+    'Fatura aguardando pagamento',
+    'Sua fatura do plano Site no Ar está aguardando pagamento. Acesse o link enviado por e-mail para regularizar.',
+    'painel',
+    'payment-overdue',
+  )
+
+  return { success: true, paymentUrl: paymentUrl ?? undefined }
 }
 
 export async function resetSubscriptionStatus(
