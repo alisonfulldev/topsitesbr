@@ -11,7 +11,7 @@ async function sendBasicDueDateReminder(
   const firstName = clientName.split(' ')[0]
   const subject = `Seu plano Site no Ar vence em 2 dias`
   const message = `Olá, ${firstName}! Seu plano Site no Ar vence no dia ${dueDateStr}. Certifique-se de que o pagamento está em dia para manter seu site no ar sem interrupção.`
-  const html = buildHtml(subject, message, 'due-date-reminder', '', APP_URL + '/painel/assinatura', 'Ver minha assinatura')
+  const html = buildHtml(subject, message, 'charge-created', '', APP_URL + '/painel/assinatura', 'Ver minha assinatura')
   try {
     await sendEmail({ to: email, subject, html })
   } catch (err) {
