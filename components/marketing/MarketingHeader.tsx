@@ -29,6 +29,8 @@ export function MarketingHeader() {
               {marketingServices.map(({ href, label }) => (
                 <Link key={href} href={href} onClick={(event) => event.currentTarget.closest('details')?.removeAttribute('open')} className="block rounded-lg px-4 py-3 hover:bg-white/5 hover:text-yellow-400">{label}</Link>
               ))}
+              <div className="my-1 border-t border-white/10" />
+              <Link href="/site-para" onClick={(event) => event.currentTarget.closest('details')?.removeAttribute('open')} className="block rounded-lg px-4 py-3 text-white/65 hover:bg-white/5 hover:text-yellow-400">Sites por segmento</Link>
             </div>
           </details>
           <Link href="/sobre" className="hover:text-yellow-400">Sobre</Link>
@@ -45,7 +47,7 @@ export function MarketingHeader() {
       </nav>
       <nav id="marketing-mobile-menu" aria-label="Navegação no celular" hidden={!mobileOpen} className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-white/10 px-4 py-5 lg:hidden">
         <p className="mb-2 px-3 text-xs uppercase tracking-widest text-white/50">Serviços</p>
-        {[...marketingServices, { href: '/sobre', label: 'Sobre' }, { href: '/login', label: 'Área do cliente' }].map(({ href, label }) => (
+        {[...marketingServices, { href: '/site-para', label: 'Sites por segmento' }, { href: '/sobre', label: 'Sobre' }, { href: '/login', label: 'Área do cliente' }].map(({ href, label }) => (
           <Link key={href} href={href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-yellow-400">{label}</Link>
         ))}
         <a href={projectContact()} target="_blank" rel="noopener noreferrer" className="mt-4 block rounded-xl bg-yellow-400 px-4 py-3 text-center text-sm font-semibold text-black">Conversar sobre meu projeto</a>

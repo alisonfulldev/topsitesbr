@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import { MarketingIcon } from './MarketingIcon'
 import { SITE_URL, marketingServices, organizationSchema } from '@/lib/marketing'
+import type { ReactNode } from 'react'
 import type { ServiceContent } from '@/lib/marketing-services'
 import { MarketingLayout, ProjectCTA, ProcessSteps } from './MarketingSections'
 
-export function ServicePage({ content }: { content: ServiceContent }) {
+export function ServicePage({ content, bottomSection }: { content: ServiceContent; bottomSection?: ReactNode }) {
   const url = SITE_URL + '/' + content.slug
   const schema = {
     '@context': 'https://schema.org',
@@ -70,6 +71,7 @@ export function ServicePage({ content }: { content: ServiceContent }) {
           </div>
         </div>
       </section>
+      {bottomSection}
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Vamos conversar sobre sua ideia?</h2>

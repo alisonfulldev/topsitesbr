@@ -21,7 +21,7 @@ export function MarketingFooter() {
           <div>
             <h2 className="mb-4 text-sm font-semibold">TopSite</h2>
             <ul className="space-y-3">
-              {[['/login', 'Área do cliente'], ['/termos', 'Termos de uso'], ['/privacidade', 'Privacidade']].map(([href, label]) => <li key={href}><Link href={href} className="text-sm text-white/65 hover:text-yellow-400">{label}</Link></li>)}
+              {[['/login', 'Área do cliente'], ['/mapa-do-site', 'Mapa do site'], ['/termos', 'Termos de uso'], ['/privacidade', 'Privacidade']].map(([href, label]) => <li key={href}><Link href={href} className="text-sm text-white/65 hover:text-yellow-400">{label}</Link></li>)}
             </ul>
           </div>
         </div>
