@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { niches, getNicheBySlug } from '@/lib/seo/niches'
-import { cities, getCityBySlug } from '@/lib/seo/cities'
+import { niches, getNicheBySlug, getNichesBySector } from '@/lib/seo/niches'
+import { cities, getCityBySlug, getCitiesByRegion } from '@/lib/seo/cities'
 import { SITE_URL, marketingMetadata, organizationSchema } from '@/lib/marketing'
 import { MarketingLayout, ProjectCTA, ProcessSteps } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
+import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
 export const dynamicParams = false
 
@@ -33,6 +34,19 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
 
   const url = `${SITE_URL}/site-para/${niche.slug}/${city.slug}`
   const ctaMessage = `Olá! Tenho uma ${niche.name.toLowerCase()} em ${city.name} e quero criar um site com a TopSite.`
+
+  const nearbyCities = getCitiesByRegion(city.region, city.slug, 8)
+  const sectorNiches = getNichesBySector(niche.sector, niche.slug, 8)
+  const relatedGroups = [
+    {
+      heading: `Site para ${niche.name} em outras cidades`,
+      links: nearbyCities.map((c) => ({ label: `${niche.name} em ${c.name}`, href: `/site-para/${niche.slug}/${c.slug}` })),
+    },
+    {
+      heading: `Outros segmentos em ${city.name}`,
+      links: sectorNiches.map((n) => ({ label: `${n.name} em ${city.name}`, href: `/site-para/${n.slug}/${city.slug}` })),
+    },
+  ]
   const economyText = city.economy.slice(0, 3).join(', ')
   const intro = `Desenvolvemos sites para ${niche.plural.toLowerCase()} em ${city.name} e região. O mercado local tem forte presença em ${economyText} — e ${niche.plural.toLowerCase()} que aparecem no Google quando o cliente busca saem na frente. ${niche.intro}`
 
@@ -161,6 +175,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
         </div>
       </section>
 
+      <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para {niche.name} em {city.name} aparecer para quem já busca?</h2>

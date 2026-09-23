@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { niches, getNicheBySlug } from '@/lib/seo/niches'
+import { niches, getNicheBySlug, getNichesBySector } from '@/lib/seo/niches'
+import { cities } from '@/lib/seo/cities'
 import { SITE_URL, marketingMetadata, marketingServices, organizationSchema } from '@/lib/marketing'
 import { MarketingLayout, ProjectCTA, ProcessSteps } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
+import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
 export const dynamicParams = false
 
@@ -26,6 +28,20 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
   if (!niche) notFound()
 
   const url = SITE_URL + '/site-para/' + niche.slug
+
+  const sectorNiches = getNichesBySector(niche.sector, niche.slug, 8)
+  const topCities = cities.slice(0, 8)
+  const relatedGroups = [
+    {
+      heading: 'Outros segmentos em ' + niche.sector,
+      links: sectorNiches.map((n) => ({ label: n.heading, href: '/site-para/' + n.slug })),
+    },
+    {
+      heading: 'Site para ' + niche.name + ' nas principais cidades',
+      links: topCities.map((c) => ({ label: niche.name + ' em ' + c.name, href: '/site-para/' + niche.slug + '/' + c.slug })),
+    },
+  ]
+
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -128,6 +144,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
           </div>
         </div>
       </section>
+      <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para {niche.name} aparecer para quem já busca?</h2>

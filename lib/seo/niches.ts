@@ -3572,3 +3572,7 @@ export const niches: NicheData[] = [
 export function getNicheBySlug(slug: string): NicheData | undefined {
   return niches.find((n) => n.slug === slug)
 }
+
+export function getNichesBySector(sector: string, excludeSlug: string, limit = 8): NicheData[] {
+  return niches.filter((n) => n.sector === sector && n.slug !== excludeSlug).slice(0, limit)
+}

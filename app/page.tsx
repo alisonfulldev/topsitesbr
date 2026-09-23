@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Script from 'next/script'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { BRAND_DESCRIPTION, SITE_URL, marketingMetadata, organizationSchema, marketingServices } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, ProcessSteps, ProjectGrid, ContactSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, ProjectCTA, ProcessSteps, ContactSection } from '@/components/marketing/MarketingSections'
 import { AnimatedHero } from '@/components/marketing/AnimatedHero'
 
 export const metadata = marketingMetadata(
@@ -168,22 +168,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── 6. Portfólio ────────────────────────────────────────────────── */}
-      <section className="border-t border-white/10 bg-[#101010] px-4 py-20 sm:px-8 sm:py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-            <div>
-              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Trabalhos realizados</p>
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Projetos de sites.</h2>
-            </div>
-            <Link href="/portfolio" className="inline-flex items-center gap-2 text-sm font-semibold text-yellow-400 hover:underline">
-              Conhecer o portfólio <MarketingIcon name="arrow" />
-            </Link>
-          </div>
-          <ProjectGrid />
         </div>
       </section>
 

@@ -1,9 +1,8 @@
 import type { ReactNode } from 'react'
 import { MarketingIcon } from './MarketingIcon'
-import Image from 'next/image'
 import { MarketingHeader } from './MarketingHeader'
 import { MarketingFooter } from './MarketingFooter'
-import { portfolioProjects, projectContact } from '@/lib/marketing'
+import { projectContact } from '@/lib/marketing'
 
 export function MarketingLayout({ children }: { children: ReactNode }) {
   return (
@@ -37,24 +36,6 @@ export function ProcessSteps() {
         </li>
       ))}
     </ol>
-  )
-}
-
-export function ProjectGrid() {
-  return (
-    <div className="grid gap-6 md:grid-cols-3">
-      {portfolioProjects.map((project) => (
-        <article key={project.domain} className="flex min-w-0 flex-col rounded-2xl border border-white/10 bg-white/[0.025] p-7">
-          <div className="mb-8 flex items-center justify-between gap-3">
-            <Image src={project.favicon} alt="" width={40} height={40} className="h-10 w-10 rounded-lg bg-white object-contain p-1" />
-            <span className="text-xs text-white/55">{project.segment}</span>
-          </div>
-          <h3 className="mb-3 text-xl font-semibold">{project.name}</h3>
-          <p className="mb-8 flex-1 leading-relaxed text-white/65">{project.description}</p>
-          <a href={'https://' + project.domain} target="_blank" rel="noopener noreferrer" aria-label={'Visitar o site de ' + project.name} className="inline-flex items-center gap-2 border-t border-white/10 pt-5 text-sm font-semibold text-yellow-400 hover:underline">Visitar projeto <MarketingIcon name="arrow" /></a>
-        </article>
-      ))}
-    </div>
   )
 }
 

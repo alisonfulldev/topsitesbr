@@ -7,7 +7,7 @@ export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    ...['', ...marketingServices.map(({ href }) => href), '/sobre', '/portfolio'].map((path) => ({
+    ...['', ...marketingServices.map(({ href }) => href), '/sobre'].map((path) => ({
       url: SITE_URL + path,
       lastModified: new Date('2026-09-20'),
       changeFrequency: 'monthly' as const,

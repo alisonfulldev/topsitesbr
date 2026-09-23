@@ -1,8 +1,6 @@
 'use client'
 
-import Link from 'next/link'
 import { ProjectCTA } from '@/components/marketing/MarketingSections'
-import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 
 function WordReveal({ text, baseDelay, className }: { text: string; baseDelay: number; className?: string }) {
   const words = text.split(' ')
@@ -142,9 +140,6 @@ export function AnimatedHero() {
             style={{ animation: 'herFadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 2.1s both' }}
           >
             <ProjectCTA label="Quero que me encontrem assim" />
-            <Link href="/portfolio" className="inline-flex items-center gap-2 py-3 text-sm font-semibold text-white/80 hover:text-yellow-400">
-              Ver projetos <MarketingIcon name="arrow" />
-            </Link>
           </div>
           <p
             className="mt-7 text-sm text-white/50"

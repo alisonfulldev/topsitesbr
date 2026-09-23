@@ -31,7 +31,6 @@ export function MarketingHeader() {
               ))}
             </div>
           </details>
-          <Link href="/portfolio" className="hover:text-yellow-400">Portfólio</Link>
           <Link href="/sobre" className="hover:text-yellow-400">Sobre</Link>
           <Link href="/login" className="hover:text-yellow-400">Área do cliente</Link>
         </div>
@@ -46,7 +45,7 @@ export function MarketingHeader() {
       </nav>
       <nav id="marketing-mobile-menu" aria-label="Navegação no celular" hidden={!mobileOpen} className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-white/10 px-4 py-5 lg:hidden">
         <p className="mb-2 px-3 text-xs uppercase tracking-widest text-white/50">Serviços</p>
-        {[...marketingServices, { href: '/portfolio', label: 'Portfólio' }, { href: '/sobre', label: 'Sobre' }, { href: '/login', label: 'Área do cliente' }].map(({ href, label }) => (
+        {[...marketingServices, { href: '/sobre', label: 'Sobre' }, { href: '/login', label: 'Área do cliente' }].map(({ href, label }) => (
           <Link key={href} href={href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-yellow-400">{label}</Link>
         ))}
         <a href={projectContact()} target="_blank" rel="noopener noreferrer" className="mt-4 block rounded-xl bg-yellow-400 px-4 py-3 text-center text-sm font-semibold text-black">Conversar sobre meu projeto</a>

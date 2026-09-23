@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { cities, getCityBySlug } from '@/lib/seo/cities'
+import { cities, getCityBySlug, getCitiesByRegion } from '@/lib/seo/cities'
+import { niches } from '@/lib/seo/niches'
 import { SITE_URL, marketingMetadata, marketingServices, organizationSchema, projectContact } from '@/lib/marketing'
 import { MarketingLayout, ProjectCTA, ProcessSteps } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
+import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
 export const dynamicParams = false
 
@@ -35,6 +37,11 @@ const cityFeatures = [
   { title: 'Autoridade local', text: 'Informações da empresa organizadas para transmitir credibilidade e diferenciar sua marca dentro da concorrência da região.' },
 ]
 
+const POPULAR_NICHE_SLUGS = [
+  'restaurante', 'clinica-de-estetica', 'dentista', 'advogado', 'contador',
+  'oficina-mecanica', 'eletricista', 'pet-shop', 'escola', 'loja-de-roupas',
+]
+
 export default async function Page({ params }: { params: Promise<{ cidade: string }> }) {
   const { cidade } = await params
   const city = getCityBySlug(cidade)
@@ -44,6 +51,21 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
   const economyText = city.economy.slice(0, -1).join(', ') + ' e ' + city.economy[city.economy.length - 1]
   const intro = 'Desenvolvemos sites profissionais para empresas de ' + city.name + ' e região. ' + city.context + ' O mercado local tem forte presença em ' + economyText + ' — setores onde um site bem estruturado faz diferença na hora de conquistar novos clientes.'
   const message = 'Olá! Tenho uma empresa em ' + city.name + ' e quero criar um site com a TopSite.'
+
+  const nearbyCities = getCitiesByRegion(city.region, city.slug, 8)
+  const popularNiches = POPULAR_NICHE_SLUGS
+    .map((slug) => niches.find((n) => n.slug === slug))
+    .filter(Boolean) as NonNullable<(typeof niches)[number]>[]
+  const relatedGroups = [
+    {
+      heading: 'Criação de sites em outras cidades do ' + city.region,
+      links: nearbyCities.map((c) => ({ label: 'Sites em ' + c.name, href: '/criacao-de-sites/' + c.slug })),
+    },
+    {
+      heading: 'Sites por segmento em ' + city.name,
+      links: popularNiches.map((n) => ({ label: 'Site para ' + n.name + ' em ' + city.name, href: '/site-para/' + n.slug + '/' + city.slug })),
+    },
+  ]
 
   const schema = {
     '@context': 'https://schema.org',
@@ -168,6 +190,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </div>
         </div>
       </section>
+      <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para sua empresa em {city.name} ser encontrada por quem já busca?</h2>

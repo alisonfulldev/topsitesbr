@@ -43,8 +43,3 @@ export const organizationSchema = {
   },
 }
 
-export const portfolioProjects = [
-  { name: 'Estética Del Soares', segment: 'Clínica de estética', domain: 'esteticadelsoares.com.br', favicon: '/faicon/del.png', description: 'Presença digital para apresentar a clínica e seus tratamentos.' },
-  { name: 'OZ Energia Solar', segment: 'Energia solar', domain: 'ozenergiasolar.com.br', favicon: '/faicon/oz.png', description: 'Site para apresentar soluções de energia solar e os canais de contato.' },
-  { name: 'Yasmim Pinho Psicóloga', segment: 'Psicologia', domain: 'yasmimpinhopsicologa.com.br', favicon: '/faicon/yasmin.png', description: 'Apresentação profissional e informações sobre o atendimento psicológico.' },
-]

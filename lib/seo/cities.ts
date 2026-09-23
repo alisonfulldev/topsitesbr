@@ -67,3 +67,7 @@ export const cities: CityData[] = [
 export function getCityBySlug(slug: string): CityData | undefined {
   return cities.find((c) => c.slug === slug)
 }
+
+export function getCitiesByRegion(region: string, excludeSlug: string, limit = 8): CityData[] {
+  return cities.filter((c) => c.region === region && c.slug !== excludeSlug).slice(0, limit)
+}
