@@ -172,6 +172,28 @@ export default function HomePage() {
       </section>
 
       <ContactSection />
+
+      {/* Links para os hubs — crawling do Google */}
+      <section className="border-t border-white/10 bg-[#060606] px-4 py-12 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-8 sm:grid-cols-2">
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-yellow-400">Criação de sites por cidade</p>
+              <p className="mb-4 text-sm text-white/55">Atendemos todo o Brasil. Veja como desenvolvemos sites para empresas em cada cidade.</p>
+              <Link href="/criacao-de-sites" className="text-sm font-semibold text-white/75 underline decoration-white/25 underline-offset-4 hover:text-yellow-400">
+                Ver todas as cidades →
+              </Link>
+            </div>
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-yellow-400">Sites por segmento de negócio</p>
+              <p className="mb-4 text-sm text-white/55">Desenvolvemos sites para mais de 150 tipos de negócio — clínicas, restaurantes, advogados e muito mais.</p>
+              <Link href="/site-para" className="text-sm font-semibold text-white/75 underline decoration-white/25 underline-offset-4 hover:text-yellow-400">
+                Ver todos os segmentos →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </MarketingLayout>
   )
 }
