@@ -8,6 +8,18 @@
   color-scheme: light;
 }
 
+/* CTA verde pulsante do site de divulgação */
+@keyframes ctaPulse {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); transform: scale(1); }
+  50% { transform: scale(1.03); }
+  70% { box-shadow: 0 0 0 18px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); transform: scale(1); }
+}
+.cta-pulse { animation: ctaPulse 2s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .cta-pulse { animation: none; }
+}
+
 body {
   color: var(--foreground);
   background: var(--background);

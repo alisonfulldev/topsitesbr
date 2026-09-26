@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { niches, getNicheBySlug, getNichesBySector } from '@/lib/seo/niches'
 import { cities, getCityBySlug, getCitiesByRegion } from '@/lib/seo/cities'
-import { SITE_URL, marketingMetadata, organizationSchema } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, ProcessSteps } from '@/components/marketing/MarketingSections'
+import { SITE_URL, marketingMetadata, organizationSchema, offerPriceAnswer } from '@/lib/marketing'
+import { MarketingLayout, ProjectCTA, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
@@ -77,7 +77,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
   const faqs = [
     {
       q: `Quanto custa um site para ${niche.name.toLowerCase()} em ${city.name}?`,
-      a: `O investimento depende do escopo, número de páginas e funcionalidades. Após entender o que sua ${niche.name.toLowerCase()} em ${city.name} precisa, apresentamos uma proposta com valor, prazo e tudo que será entregue.`,
+      a: offerPriceAnswer,
     },
     {
       q: `O site vai aparecer para quem busca ${niche.name.toLowerCase()} em ${city.name}?`,
@@ -102,7 +102,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
               <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Site para {niche.name} em {city.name}</h1>
               <p className="mb-8 max-w-2xl text-lg leading-relaxed text-white/70">{intro}</p>
               <ProjectCTA message={ctaMessage} />
-              <p className="mt-5 text-sm text-white/50">Projeto sob orçamento · Atendimento remoto em {city.name} e todo o Brasil</p>
+              <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento remoto em {city.name} e todo o Brasil</p>
             </div>
             <aside className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-7 sm:p-10">
               <p className="mb-5 text-xs uppercase tracking-widest text-yellow-400">Feito para {niche.plural.toLowerCase()}</p>
@@ -135,6 +135,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
         </div>
       </section>
 
+      <CTABand message={ctaMessage} />
       <section className="px-4 py-16 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
@@ -155,6 +156,9 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
         <div className="mx-auto max-w-7xl">
           <h2 className="mb-10 text-3xl font-semibold sm:text-4xl">Como trabalhamos</h2>
           <ProcessSteps />
+          <div className="mt-12 text-center">
+            <ProjectCTA message={ctaMessage} />
+          </div>
         </div>
       </section>
 
@@ -175,12 +179,13 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
         </div>
       </section>
 
+      <PricingSection message={ctaMessage} />
       <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para {niche.name} em {city.name} aparecer para quem já busca?</h2>
           <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer {niche.name} aparecer para quem já procura em {city.name} e região.</p>
-          <ProjectCTA message={ctaMessage} label="Agendar uma conversa" />
+          <ProjectCTA message={ctaMessage} />
           <nav aria-label="Ver mais" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
             <Link href={`/site-para/${niche.slug}`} className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">Site para {niche.name} — Brasil</Link>
             <Link href={`/criacao-de-sites/${city.slug}`} className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">Criação de sites em {city.name}</Link>

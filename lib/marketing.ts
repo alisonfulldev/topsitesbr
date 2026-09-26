@@ -10,6 +10,23 @@ export const marketingServices = [
   { href: '/loja-virtual', label: 'Lojas virtuais' },
 ]
 
+// Oferta única exibida no site de divulgação
+export const offer = {
+  price: 'R$ 497',
+  installments: 'em até 12x no cartão',
+  deliverables: [
+    { title: 'Site completo com técnicas avançadas de posicionamento', text: 'Construído para atrair clientes que já buscam o que você vende — e não só existir na internet.' },
+    { title: 'Google Meu Negócio completo', text: 'Perfil criado ou otimizado do zero para sua empresa aparecer no Google Maps e nas buscas locais.' },
+  ],
+  optional: {
+    price: 'R$ 29/mês',
+    title: 'Hospedagem, manutenção e relatório mensal',
+    text: 'Opcional: deixamos seu site no ar, cuidamos dos ajustes e enviamos todo mês um relatório de visitas.',
+  },
+}
+
+export const offerPriceAnswer = 'O site completo com técnicas avançadas de posicionamento + Google Meu Negócio completo sai por R$ 497, em até 12x no cartão. Hospedagem, manutenção e relatório mensal são opcionais, por R$ 29/mês.'
+
 export function projectContact(message = 'Olá! Quero conversar sobre um projeto com a TopSite.') {
   return 'https://wa.me/5518996742364?text=' + encodeURIComponent(message)
 }

@@ -51,7 +51,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa criar um site?",
-        "a": "O investimento depende da quantidade de páginas, conteúdo e do que precisa ser feito para que sua empresa seja encontrada no seu segmento. Após entender sua necessidade, apresentamos uma proposta com escopo, prazo e condições."
+        "a": "O site completo com técnicas avançadas de posicionamento + Google Meu Negócio completo sai por R$ 497, em até 12x no cartão. Hospedagem, manutenção e relatório mensal são opcionais, por R$ 29/mês."
       },
       {
         "q": "Em quanto tempo o site começa a trazer resultado?",
@@ -198,7 +198,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma loja virtual?",
-        "a": "O investimento depende do catálogo, das variações, do checkout e das integrações. A proposta detalha o desenvolvimento e os custos recorrentes identificados no planejamento."
+        "a": "O site completo com técnicas avançadas de posicionamento + Google Meu Negócio completo sai por R$ 497, em até 12x no cartão. Hospedagem, manutenção e relatório mensal são opcionais, por R$ 29/mês."
       },
       {
         "q": "Preciso de pagamento online?",

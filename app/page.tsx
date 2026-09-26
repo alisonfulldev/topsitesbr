@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Script from 'next/script'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { BRAND_DESCRIPTION, SITE_URL, marketingMetadata, organizationSchema, marketingServices } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, ProcessSteps, ContactSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, ProjectCTA, ProcessSteps, ContactSection, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 import { AnimatedHero } from '@/components/marketing/AnimatedHero'
 
 export const metadata = marketingMetadata(
@@ -71,6 +71,9 @@ export default function HomePage() {
               </article>
             ))}
           </div>
+          <div className="mt-12 text-center">
+            <ProjectCTA label="Quero um site que trabalha por mim" />
+          </div>
         </div>
       </section>
 
@@ -113,6 +116,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <CTABand />
+
       {/* ── 4. Como trabalhamos ──────────────────────────────────────────── */}
       <section className="border-y border-white/10 bg-[#101010] px-4 py-20 sm:px-8 sm:py-24">
         <div className="mx-auto max-w-7xl">
@@ -129,6 +134,9 @@ export default function HomePage() {
             </p>
           </div>
           <ProcessSteps />
+          <div className="mt-12 text-center">
+            <ProjectCTA />
+          </div>
         </div>
       </section>
 
@@ -170,6 +178,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <PricingSection />
 
       <ContactSection />
 

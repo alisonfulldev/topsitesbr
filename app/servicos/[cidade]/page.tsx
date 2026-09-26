@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { cities, getCityBySlug } from '@/lib/seo/cities'
 import { niches } from '@/lib/seo/niches'
 import { SITE_URL, marketingMetadata, organizationSchema } from '@/lib/marketing'
-import { MarketingLayout } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 
 export const dynamicParams = false
 
@@ -88,6 +88,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </div>
         </div>
       </section>
+      <CTABand />
 
       <section className="border-t border-white/10 bg-[#101010] px-4 pb-20 pt-14 sm:px-8">
         <div className="mx-auto max-w-7xl space-y-14">
@@ -112,6 +113,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           ))}
         </div>
       </section>
+      <PricingSection />
     </MarketingLayout>
   )
 }

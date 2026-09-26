@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { cities, getCityBySlug, getCitiesByRegion } from '@/lib/seo/cities'
 import { niches } from '@/lib/seo/niches'
-import { SITE_URL, marketingMetadata, marketingServices, organizationSchema, projectContact } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, ProcessSteps } from '@/components/marketing/MarketingSections'
+import { SITE_URL, marketingMetadata, marketingServices, organizationSchema, projectContact, offerPriceAnswer } from '@/lib/marketing'
+import { MarketingLayout, ProjectCTA, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
@@ -94,7 +94,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
   const faqs = [
     {
       q: 'Quanto custa um site em ' + city.name + '?',
-      a: 'O investimento depende da quantidade de páginas, do conteúdo e das funcionalidades. Depois de entender o que sua empresa em ' + city.name + ' precisa, apresentamos uma proposta com escopo, prazo e condições.',
+      a: offerPriceAnswer,
     },
     {
       q: 'Vocês atendem empresas de ' + city.name + ' presencialmente?',
@@ -106,7 +106,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
     },
     {
       q: 'Quanto tempo leva para o site ir ao ar?',
-      a: 'O cronograma é definido conforme o escopo. Para sites institucionais em ' + city.name + ', trabalhamos com prazos que respeitam o planejamento e as validações necessárias antes da publicação. Você recebe essa previsão na proposta.',
+      a: 'O cronograma é definido conforme o escopo. Para sites institucionais em ' + city.name + ', trabalhamos com prazos que respeitam o planejamento e as validações necessárias antes da publicação. Você recebe essa previsão logo na primeira conversa pelo WhatsApp.',
     },
   ]
 
@@ -126,7 +126,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
               <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Criação de sites em {city.name}</h1>
               <p className="mb-8 max-w-2xl text-lg leading-relaxed text-white/70">{intro}</p>
               <ProjectCTA message={message} />
-              <p className="mt-5 text-sm text-white/50">Projeto sob orçamento · Atendimento remoto em {city.name} e todo o Brasil</p>
+              <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento remoto em {city.name} e todo o Brasil</p>
             </div>
             <aside className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-7 sm:p-10">
               <p className="mb-5 text-xs uppercase tracking-widest text-yellow-400">O que entregamos</p>
@@ -153,6 +153,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </div>
         </div>
       </section>
+      <CTABand message={message} />
       <section className="px-4 py-16 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
@@ -172,6 +173,9 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
         <div className="mx-auto max-w-7xl">
           <h2 className="mb-10 text-3xl font-semibold sm:text-4xl">Como trabalhamos</h2>
           <ProcessSteps />
+          <div className="mt-12 text-center">
+            <ProjectCTA message={message} />
+          </div>
         </div>
       </section>
       <section className="bg-[#101010] px-4 py-20 sm:px-8">
@@ -190,12 +194,13 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </div>
         </div>
       </section>
+      <PricingSection message={message} />
       <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para sua empresa em {city.name} ser encontrada por quem já busca?</h2>
           <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer sua empresa aparecer para quem já procura em {city.name} e região.</p>
-          <ProjectCTA message={message} label="Agendar uma conversa" />
+          <ProjectCTA message={message} />
           <nav aria-label="Outros serviços" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
             {marketingServices.filter(({ href }) => href !== '/criacao-de-sites').map(({ href, label }) => (
               <Link key={href} href={href} className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">{label}</Link>

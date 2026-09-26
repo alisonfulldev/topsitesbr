@@ -3,7 +3,7 @@ import { MarketingIcon } from './MarketingIcon'
 import { SITE_URL, marketingServices, organizationSchema } from '@/lib/marketing'
 import type { ReactNode } from 'react'
 import type { ServiceContent } from '@/lib/marketing-services'
-import { MarketingLayout, ProjectCTA, ProcessSteps } from './MarketingSections'
+import { MarketingLayout, ProjectCTA, ProcessSteps, CTABand, PricingSection } from './MarketingSections'
 
 export function ServicePage({ content, bottomSection }: { content: ServiceContent; bottomSection?: ReactNode }) {
   const url = SITE_URL + '/' + content.slug
@@ -33,7 +33,7 @@ export function ServicePage({ content, bottomSection }: { content: ServiceConten
               <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">{content.heading}</h1>
               <p className="mb-8 max-w-2xl text-lg leading-relaxed text-white/70">{content.intro}</p>
               <ProjectCTA message={message} />
-              <p className="mt-5 text-sm text-white/50">Projeto sob orçamento · Atendimento em todo o Brasil</p>
+              <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento em todo o Brasil</p>
             </div>
             <aside className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-7 sm:p-10">
               <p className="mb-5 text-xs uppercase tracking-widest text-yellow-400">Feito para sua necessidade</p>
@@ -60,8 +60,9 @@ export function ServicePage({ content, bottomSection }: { content: ServiceConten
           </div>
         </div>
       </section>
+      <CTABand message={message} />
       <section className="px-4 py-20 sm:px-8">
-        <div className="mx-auto max-w-7xl"><h2 className="mb-10 text-3xl font-semibold sm:text-4xl">Como trabalhamos</h2><ProcessSteps /></div>
+        <div className="mx-auto max-w-7xl"><h2 className="mb-10 text-3xl font-semibold sm:text-4xl">Como trabalhamos</h2><ProcessSteps /><div className="mt-12 text-center"><ProjectCTA message={message} /></div></div>
       </section>
       <section className="bg-[#101010] px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-3xl">
@@ -72,6 +73,7 @@ export function ServicePage({ content, bottomSection }: { content: ServiceConten
         </div>
       </section>
       {bottomSection}
+      <PricingSection message={message} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Vamos conversar sobre sua ideia?</h2>

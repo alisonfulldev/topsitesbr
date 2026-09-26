@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { SITE_URL, marketingMetadata, organizationSchema, projectContact } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, ContactSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, ProjectCTA, ContactSection, PricingSection } from '@/components/marketing/MarketingSections'
 
 export const metadata: Metadata = marketingMetadata(
   'Sobre a TopSite | Sites que fazem empresas serem encontradas',
@@ -176,6 +176,8 @@ export default function SobrePage() {
           </div>
         </div>
       </section>
+
+      <PricingSection />
 
       {/* ── CTA final ───────────────────────────────────────────────────── */}
       <section className="px-4 py-20 text-center sm:px-8 sm:py-28">

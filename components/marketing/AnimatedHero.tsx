@@ -145,7 +145,7 @@ export function AnimatedHero() {
             className="mt-7 text-sm text-white/50"
             style={{ animation: 'herFadeIn 0.5s ease 2.35s both' }}
           >
-            Atendimento consultivo · Proposta personalizada · Todo o Brasil
+            Resposta rápida no WhatsApp · Atendimento em todo o Brasil
           </p>
         </div>
       </div>

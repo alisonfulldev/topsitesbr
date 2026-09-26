@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MarketingIcon } from './MarketingIcon'
+import { MarketingIcon, WhatsAppIcon } from './MarketingIcon'
 import Image from 'next/image'
 import Link from 'next/link'
 import { marketingServices, projectContact } from '@/lib/marketing'
@@ -37,7 +37,7 @@ export function MarketingHeader() {
           <Link href="/login" className="hover:text-yellow-400">Área do cliente</Link>
         </div>
         <div className="flex items-center gap-3">
-          <a href={projectContact()} target="_blank" rel="noopener noreferrer" className="hidden rounded-xl bg-yellow-400 px-5 py-3 text-sm font-semibold text-black transition-colors hover:bg-yellow-300 sm:inline-flex">Agendar uma conversa</a>
+          <a href={projectContact()} target="_blank" rel="noopener noreferrer" className="cta-pulse hidden items-center gap-2 rounded-xl bg-[#25D366] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#1ebe5b] sm:inline-flex"><WhatsAppIcon className="h-5 w-5" />Quero meu site</a>
           <button type="button" aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={mobileOpen} aria-controls="marketing-mobile-menu" onClick={() => setMobileOpen(!mobileOpen)} className="rounded-lg border border-white/15 p-3 lg:hidden">
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
               <path d={mobileOpen ? 'M6 6l12 12M6 18L18 6' : 'M3 6h18M3 12h18M3 18h18'} />
@@ -50,7 +50,7 @@ export function MarketingHeader() {
         {[...marketingServices, { href: '/site-para', label: 'Sites por segmento' }, { href: '/sobre', label: 'Sobre' }, { href: '/login', label: 'Área do cliente' }].map(({ href, label }) => (
           <Link key={href} href={href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm text-white/80 hover:bg-white/5 hover:text-yellow-400">{label}</Link>
         ))}
-        <a href={projectContact()} target="_blank" rel="noopener noreferrer" className="mt-4 block rounded-xl bg-yellow-400 px-4 py-3 text-center text-sm font-semibold text-black">Conversar sobre meu projeto</a>
+        <a href={projectContact()} target="_blank" rel="noopener noreferrer" className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-4 text-center text-base font-bold text-white"><WhatsAppIcon className="h-5 w-5" />Quero meu site agora</a>
       </nav>
     </header>
   )
