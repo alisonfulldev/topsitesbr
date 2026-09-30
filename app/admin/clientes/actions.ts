@@ -17,6 +17,46 @@ const clientSchema = z.object({
   document: z.string().optional(),
 })
 
+const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
+
+function generateTempPassword(): string {
+  return Array.from({ length: 12 }, () =>
+    CHARS[Math.floor(Math.random() * CHARS.length)]
+  ).join('')
+}
+
+async function sendAccessEmail({ to, clientName, password }: { to: string; clientName: string; password: string }) {
+  const appUrl = process.env.NEXTAUTH_URL ?? 'https://topsitebr.com.br'
+  await sendEmail({
+    to,
+    subject: '🎉 Seu site está pronto — acesse o painel',
+    html: `
+      <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
+        <div style="background:#facc15;border-radius:12px;padding:20px 24px;margin-bottom:24px">
+          <h1 style="margin:0;font-size:20px;color:#1a1a1a">Olá, ${clientName}! 👋</h1>
+        </div>
+        <p style="color:#374151;font-size:15px;line-height:1.6">
+          Seu site foi cadastrado e está pronto para você acessar o painel.
+          Aqui estão suas credenciais de acesso:
+        </p>
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
+          <p style="margin:0 0 8px;font-size:14px;color:#6b7280">E-mail de acesso</p>
+          <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${to}</p>
+          <p style="margin:16px 0 8px;font-size:14px;color:#6b7280">Senha temporária</p>
+          <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${password}</p>
+        </div>
+        <a href="${appUrl}/login"
+           style="display:block;text-align:center;background:#facc15;color:#1a1a1a;font-weight:700;padding:14px 24px;border-radius:8px;text-decoration:none;font-size:15px;margin:24px 0">
+          Acessar o painel →
+        </a>
+        <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:24px">
+          Recomendamos trocar a senha após o primeiro acesso.
+        </p>
+      </div>
+    `,
+  })
+}
+
 export async function getClients() {
   const clients = await prisma.client.findMany({
     include: {
@@ -222,35 +262,7 @@ export async function createClient(data: {
         },
       })
 
-      const appUrl = process.env.NEXTAUTH_URL ?? 'https://topsitebr.com.br'
-      await sendEmail({
-        to: email,
-        subject: '🎉 Seu site está pronto — acesse o painel',
-        html: `
-          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
-            <div style="background:#facc15;border-radius:12px;padding:20px 24px;margin-bottom:24px">
-              <h1 style="margin:0;font-size:20px;color:#1a1a1a">Olá, ${client.name}! 👋</h1>
-            </div>
-            <p style="color:#374151;font-size:15px;line-height:1.6">
-              Seu site foi cadastrado e está pronto para você acessar o painel.
-              Aqui estão suas credenciais de acesso:
-            </p>
-            <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
-              <p style="margin:0 0 8px;font-size:14px;color:#6b7280">E-mail de acesso</p>
-              <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${email}</p>
-              <p style="margin:16px 0 8px;font-size:14px;color:#6b7280">Senha temporária</p>
-              <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${data.createUserPassword}</p>
-            </div>
-            <a href="${appUrl}/login"
-               style="display:block;text-align:center;background:#facc15;color:#1a1a1a;font-weight:700;padding:14px 24px;border-radius:8px;text-decoration:none;font-size:15px;margin:24px 0">
-              Acessar o painel →
-            </a>
-            <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:24px">
-              Recomendamos trocar a senha após o primeiro acesso.
-            </p>
-          </div>
-        `,
-      }).catch(() => {})
+      await sendAccessEmail({ to: email, clientName: client.name, password: data.createUserPassword }).catch(() => {})
     }
   }
 
@@ -261,7 +273,7 @@ export async function createClient(data: {
 export async function updateClient(
   id: string,
   data: { name: string; email: string; phone?: string; document?: string; siteEntryFee?: number; activationFlow?: 'quente' | 'frio'; entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao' }
-): Promise<{ error?: string; success?: boolean }> {
+): Promise<{ error?: string; success?: boolean; resentTo?: string }> {
   const parsed = clientSchema.safeParse(data)
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Dados inválidos.' }
@@ -273,6 +285,27 @@ export async function updateClient(
   })
   if (conflict) {
     return { error: 'Já existe outro cliente com este e-mail.' }
+  }
+
+  const current = await prisma.client.findUnique({
+    where: { id },
+    select: {
+      email: true,
+      users: { select: { id: true, email: true, mustChangePassword: true } },
+      proposals: { orderBy: { createdAt: 'desc' }, take: 1 },
+    },
+  })
+  if (!current) return { error: 'Cliente não encontrado.' }
+
+  // Também pega login que ficou com o e-mail antigo (clientes corrigidos antes desta regra)
+  const emailChanged = current.email !== email || current.users.some((u) => u.email !== email)
+  if (emailChanged && current.users.length > 0) {
+    const userConflict = await prisma.user.findFirst({
+      where: { email, NOT: { clientId: id } },
+    })
+    if (userConflict) {
+      return { error: 'Já existe um login com este e-mail.' }
+    }
   }
 
   await prisma.client.update({
@@ -288,9 +321,60 @@ export async function updateClient(
     },
   })
 
+  // E-mail corrigido: o login acompanha e o e-mail inicial é reenviado pro endereço novo
+  let resentTo: string | undefined
+  if (emailChanged) {
+    const name = data.name.trim()
+    const proposal = current.proposals[0]
+
+    if (current.users.length > 0) {
+      await prisma.user.updateMany({ where: { clientId: id }, data: { email } })
+
+      // Só reenvia credenciais se o cliente ainda não trocou a senha temporária
+      // (a senha original não fica salva, então gera uma nova)
+      const pendingUser = current.users.find((u) => u.mustChangePassword)
+      if (pendingUser) {
+        const password = generateTempPassword()
+        await prisma.user.update({
+          where: { id: pendingUser.id },
+          data: { passwordHash: await hashPassword(password) },
+        })
+        const send = proposal?.paidExternally
+          ? sendSiteInDevelopmentEmail({ to: email, clientName: name, loginEmail: email, loginPassword: password })
+          : sendAccessEmail({ to: email, clientName: name, password })
+        await send
+          .then(() => { resentTo = email })
+          .catch((err) => console.error('[updateClient] Erro ao reenviar acesso:', err))
+      }
+    } else if (proposal?.status === 'enviada') {
+      const rawToken = generateRawToken()
+      const expiresAt = new Date()
+      expiresAt.setDate(expiresAt.getDate() + 30)
+      await prisma.proposalAccessToken.create({
+        data: {
+          proposalId: proposal.id,
+          clientId: id,
+          tokenHash: hashToken(rawToken),
+          expiresAt,
+          purpose: 'view',
+        },
+      })
+      await sendProposalEmail({
+        to: email,
+        clientName: name,
+        proposalTitle: proposal.title,
+        magicLink: `${APP_URL}/proposta/${rawToken}`,
+        includedItems: proposal.includedItems,
+        creationPrice: Number(proposal.creationPrice),
+      })
+        .then(() => { resentTo = email })
+        .catch((err) => console.error('[updateClient] Erro ao reenviar proposta:', err))
+    }
+  }
+
   revalidatePath('/admin/clientes')
   revalidatePath(`/admin/clientes/${id}`)
-  return { success: true }
+  return { success: true, resentTo }
 }
 
 export async function lookupReferralCode(

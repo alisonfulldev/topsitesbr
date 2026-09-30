@@ -181,6 +181,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
         if (result?.error) {
           setError(result.error)
         } else {
+          if (result.resentTo) window.alert(`E-mail corrigido — acesso reenviado para ${result.resentTo}.`)
           router.push(`/admin/clientes/${clientId}`)
         }
       })
