@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { activateSubscription, changePlan, recreateAsaasSubscription, resetSubscriptionStatus, sendManualPaymentReminder, updateSubscriptionDueDate } from '../actions'
+import { activateSubscription, changePlan, confirmManualPayment, recreateAsaasSubscription, resetSubscriptionStatus, sendManualPaymentReminder, updateSubscriptionDueDate } from '../actions'
 
 type SubscriptionInfo = {
   id: string
@@ -81,6 +81,7 @@ export function SubscriptionPageClient({
   const [changeBlockedUntil, setChangeBlockedUntil] = useState<string | null>(null)
   const [isChangePending, startChangeTransition] = useTransition()
   const [isResetPending, startResetTransition] = useTransition()
+  const [isConfirmPending, startConfirmTransition] = useTransition()
 
   function handleResetStatus() {
     if (!subscription) return
@@ -88,6 +89,15 @@ export function SubscriptionPageClient({
       const result = await resetSubscriptionStatus(clientId, subscription.id)
       if (result.error) setError(result.error)
       else setSuccessMsg('Status da assinatura corrigido para Ativa.')
+    })
+  }
+
+  function handleConfirmPayment() {
+    if (!subscription) return
+    startConfirmTransition(async () => {
+      const result = await confirmManualPayment(clientId, subscription.id)
+      if (result.error) setError(result.error)
+      else setSuccessMsg('Pagamento confirmado — cobrança fechada no Asaas e e-mail enviado ao cliente.')
     })
   }
 
@@ -234,17 +244,31 @@ export function SubscriptionPageClient({
           )}
 
           {subscription.status === 'overdue' && (
-            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-3">
-              <p className="text-xs text-gray-500 flex-1">
-                Status marcado como inadimplente, mas o próximo vencimento ainda não chegou? Corrija manualmente.
-              </p>
-              <button
-                onClick={handleResetStatus}
-                disabled={isResetPending}
-                className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-medium hover:bg-green-700 disabled:opacity-50 transition-colors shrink-0"
-              >
-                {isResetPending ? 'Corrigindo…' : 'Corrigir → Ativa'}
-              </button>
+            <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
+              <div className="flex items-center gap-3">
+                <p className="text-xs text-gray-500 flex-1">
+                  Cliente pagou fora do sistema (Pix direto)? Confirme aqui — fecha a cobrança no Asaas e envia e-mail de confirmação.
+                </p>
+                <button
+                  onClick={handleConfirmPayment}
+                  disabled={isConfirmPending}
+                  className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-medium hover:bg-green-700 disabled:opacity-50 transition-colors shrink-0"
+                >
+                  {isConfirmPending ? 'Confirmando…' : 'Confirmar pagamento manual'}
+                </button>
+              </div>
+              <div className="flex items-center gap-3">
+                <p className="text-xs text-gray-400 flex-1">
+                  Só corrigir o status sem fechar no Asaas (erro de marcação):
+                </p>
+                <button
+                  onClick={handleResetStatus}
+                  disabled={isResetPending}
+                  className="px-3 py-1.5 rounded-lg bg-gray-200 text-gray-700 text-xs font-medium hover:bg-gray-300 disabled:opacity-50 transition-colors shrink-0"
+                >
+                  {isResetPending ? 'Corrigindo…' : 'Só corrigir status'}
+                </button>
+              </div>
             </div>
           )}
 

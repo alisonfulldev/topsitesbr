@@ -2,7 +2,8 @@
 
 import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
-import { sendOverdueDay0, sendNotification } from '@/lib/notifications'
+import { sendOverdueDay0, sendNotification, sendPaymentRegularized } from '@/lib/notifications'
+import { handlePaymentReceived } from '@/lib/payments/webhook-handlers'
 import { asaasFetch } from '@/lib/integrations/asaas'
 import { revalidatePath } from 'next/cache'
 
@@ -10,6 +11,85 @@ function daysFromNowStr(days: number): string {
   const d = new Date()
   d.setDate(d.getDate() + days)
   return d.toISOString().split('T')[0]
+}
+
+// Usado quando o cliente pagou fora do sistema (Pix direto ao admin).
+// Fecha a cobrança no Asaas, marca a fatura como paga no banco,
+// avança o nextDueDate e envia email de confirmação ao cliente.
+export async function confirmManualPayment(
+  clientId: string,
+  subscriptionId: string,
+): Promise<{ error?: string; success?: boolean }> {
+  const [client, invoice] = await Promise.all([
+    prisma.client.findUnique({ where: { id: clientId }, select: { name: true, email: true } }),
+    prisma.invoice.findFirst({
+      where: { subscriptionId, status: { in: ['pending', 'overdue'] } },
+      orderBy: { dueDate: 'desc' },
+    }),
+  ])
+
+  if (!client) return { error: 'Cliente não encontrado.' }
+
+  // Se há cobrança aberta no Asaas, fecha como recebida em dinheiro
+  if (invoice?.asaasChargeId && process.env.PAYMENT_DRIVER === 'asaas') {
+    try {
+      const today = new Date().toISOString().split('T')[0]
+      await asaasFetch(`/payments/${invoice.asaasChargeId}/receiveInCash`, {
+        method: 'POST',
+        body: JSON.stringify({ paymentDate: today, value: Number(invoice.amount) }),
+      })
+      // Webhook PAYMENT_RECEIVED chegará em breve, mas processamos localmente
+      // de imediato para não depender do timing do webhook
+      await handlePaymentReceived(invoice.asaasChargeId)
+    } catch {
+      // Se falhar no Asaas, processa manualmente no banco
+      if (invoice) {
+        const sub = await prisma.subscription.findUnique({ where: { id: subscriptionId } })
+        const nextDueDate = sub?.nextDueDate ? new Date(sub.nextDueDate) : null
+        if (nextDueDate) nextDueDate.setMonth(nextDueDate.getMonth() + 1)
+
+        await prisma.$transaction([
+          prisma.invoice.update({
+            where: { id: invoice.id },
+            data: { status: 'paid', paidAt: new Date() },
+          }),
+          prisma.subscription.update({
+            where: { id: subscriptionId },
+            data: { status: 'active', ...(nextDueDate ? { nextDueDate } : {}) },
+          }),
+        ])
+        await sendPaymentRegularized(client.email, client.name)
+        await sendNotification(clientId, 'Pagamento confirmado', 'Seu pagamento foi confirmado. Obrigado!', 'painel', 'payment-confirmed')
+      }
+    }
+  } else if (invoice) {
+    // Sem charge no Asaas — atualiza só o banco
+    const sub = await prisma.subscription.findUnique({ where: { id: subscriptionId } })
+    const nextDueDate = sub?.nextDueDate ? new Date(sub.nextDueDate) : null
+    if (nextDueDate) nextDueDate.setMonth(nextDueDate.getMonth() + 1)
+
+    await prisma.$transaction([
+      prisma.invoice.update({
+        where: { id: invoice.id },
+        data: { status: 'paid', paidAt: new Date() },
+      }),
+      prisma.subscription.update({
+        where: { id: subscriptionId },
+        data: { status: 'active', ...(nextDueDate ? { nextDueDate } : {}) },
+      }),
+    ])
+    await sendPaymentRegularized(client.email, client.name)
+    await sendNotification(clientId, 'Pagamento confirmado', 'Seu pagamento foi confirmado. Obrigado!', 'painel', 'payment-confirmed')
+  } else {
+    // Nenhuma fatura — só atualiza status da assinatura
+    await prisma.subscription.update({ where: { id: subscriptionId }, data: { status: 'active' } })
+    await sendPaymentRegularized(client.email, client.name)
+    await sendNotification(clientId, 'Pagamento confirmado', 'Seu pagamento foi confirmado. Obrigado!', 'painel', 'payment-confirmed')
+  }
+
+  revalidatePath(`/admin/clientes/${clientId}/assinatura`)
+  revalidatePath(`/painel/assinatura`)
+  return { success: true }
 }
 
 export async function sendManualPaymentReminder(
