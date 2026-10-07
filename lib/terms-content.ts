@@ -26,7 +26,6 @@ const TERMS_SNAPSHOTS: Record<string, string> = {
     <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Site no ar + SSL + monitoramento</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td></tr>
     <tr style="background:#f9fafb;"><td style="padding:7px 10px;border:1px solid #e5e7eb;">Prazo de execução de alterações</td><td style="text-align:center;border:1px solid #e5e7eb;">até 15 dias úteis</td><td style="text-align:center;border:1px solid #e5e7eb;">até 7 dias úteis</td></tr>
     <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Correções ilimitadas e gratuitas</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td></tr>
-    <tr style="background:#f9fafb;"><td style="padding:7px 10px;border:1px solid #e5e7eb;">Relatório de visitas</td><td style="text-align:center;border:1px solid #e5e7eb;">—</td><td style="text-align:center;border:1px solid #e5e7eb;">✓ completo</td></tr>
     <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Suporte via WhatsApp direto</td><td style="text-align:center;border:1px solid #e5e7eb;">—</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td></tr>
     <tr style="background:#f9fafb;"><td style="padding:7px 10px;border:1px solid #e5e7eb;">Desconto em serviços avulsos e upsells</td><td style="text-align:center;border:1px solid #e5e7eb;">—</td><td style="text-align:center;border:1px solid #e5e7eb;">10%</td></tr>
   </tbody>
@@ -128,7 +127,6 @@ const TERMS_SNAPSHOTS: Record<string, string> = {
     <tr style="background:#f9fafb;"><td style="padding:7px 10px;border:1px solid #e5e7eb;">Alterações de conteúdo incluídas/mês</td><td style="text-align:center;border:1px solid #e5e7eb;">0</td><td style="text-align:center;border:1px solid #e5e7eb;">1 (texto OU imagem)</td></tr>
     <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Prazo de execução de alterações</td><td style="text-align:center;border:1px solid #e5e7eb;">até 15 dias úteis</td><td style="text-align:center;border:1px solid #e5e7eb;">até 7 dias úteis</td></tr>
     <tr style="background:#f9fafb;"><td style="padding:7px 10px;border:1px solid #e5e7eb;">Correções ilimitadas e gratuitas</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td></tr>
-    <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Relatório de visitas</td><td style="text-align:center;border:1px solid #e5e7eb;">—</td><td style="text-align:center;border:1px solid #e5e7eb;">✓ completo</td></tr>
     <tr style="background:#f9fafb;"><td style="padding:7px 10px;border:1px solid #e5e7eb;">Suporte via WhatsApp direto</td><td style="text-align:center;border:1px solid #e5e7eb;">—</td><td style="text-align:center;border:1px solid #e5e7eb;">✓</td></tr>
     <tr><td style="padding:7px 10px;border:1px solid #e5e7eb;">Desconto em serviços avulsos e upsells</td><td style="text-align:center;border:1px solid #e5e7eb;">—</td><td style="text-align:center;border:1px solid #e5e7eb;">10%</td></tr>
   </tbody>
@@ -208,7 +206,6 @@ const TERMS_SNAPSHOTS: Record<string, string> = {
   <li><strong>1 (uma) alteração de conteúdo por mês</strong> — texto ou imagem — com prazo de execução de até 7 dias úteis</li>
   <li><strong>Correções ilimitadas e gratuitas</strong>: erros de digitação, links quebrados, dados desatualizados (telefone, endereço). Correções não consomem o limite mensal de alterações</li>
   <li>Suporte via WhatsApp direto</li>
-  <li>Relatório mensal de visitas (visitantes, origem, páginas mais vistas)</li>
   <li>10% de desconto em serviços e upgrades avulsos</li>
 </ul>
 

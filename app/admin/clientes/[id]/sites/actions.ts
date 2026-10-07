@@ -12,7 +12,6 @@ export async function createSite(
   const status = (formData.get('status') as string) || 'pendente_ativacao'
   const siteUrl = (formData.get('siteUrl') as string) || null
   const templateUsed = (formData.get('templateUsed') as string) || null
-  const analyticsSiteId = (formData.get('analyticsSiteId') as string) || null
   const notes = (formData.get('notes') as string) || null
 
   if (!clientId || !siteType) {
@@ -29,7 +28,6 @@ export async function createSite(
       siteUrl: siteUrl?.trim() || null,
       siteType: siteType as SiteType,
       templateUsed: templateUsed?.trim() || null,
-      analyticsSiteId: analyticsSiteId?.trim() || null,
       status: status as SiteStatus,
       notes: notes?.trim() || null,
     },
@@ -49,7 +47,6 @@ export async function updateSite(
   const status = formData.get('status') as string
   const siteUrl = (formData.get('siteUrl') as string) || null
   const templateUsed = (formData.get('templateUsed') as string) || null
-  const analyticsSiteId = (formData.get('analyticsSiteId') as string) || null
   const notes = (formData.get('notes') as string) || null
 
   if (!siteType) return { error: 'Tipo de site é obrigatório.' }
@@ -60,7 +57,6 @@ export async function updateSite(
       siteUrl: siteUrl?.trim() || null,
       siteType: siteType as SiteType,
       templateUsed: templateUsed?.trim() || null,
-      analyticsSiteId: analyticsSiteId?.trim() || null,
       status: status as SiteStatus,
       notes: notes?.trim() || null,
       publishedAt: status === 'online' ? new Date() : undefined,

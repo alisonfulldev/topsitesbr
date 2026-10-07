@@ -73,7 +73,7 @@ function buildPlanData(p1: number, p2: number, p3: number, monthly: number) {
         'Integração com Google Search Console',
         'SSL (segurança) — o Google prioriza sites seguros',
         'Velocidade otimizada',
-        'Painel de métricas — visitantes, origem, desempenho',
+        'Orientação para Google Analytics e Search Console',
         'Suporte contínuo — sem você mexer em nada técnico',
       ],
     },

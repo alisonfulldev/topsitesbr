@@ -20,12 +20,12 @@ export const offer = {
   ],
   optional: {
     price: 'R$ 29/mês',
-    title: 'Hospedagem, manutenção e relatório mensal',
-    text: 'Opcional: deixamos seu site no ar, cuidamos dos ajustes e enviamos todo mês um relatório de visitas.',
+    title: 'Hospedagem e manutenção mensal',
+    text: 'Opcional: deixamos seu site no ar e cuidamos dos ajustes necessários.',
   },
 }
 
-export const offerPriceAnswer = 'O site completo com técnicas avançadas de posicionamento + Google Meu Negócio completo sai por R$ 497, em até 12x no cartão. Hospedagem, manutenção e relatório mensal são opcionais, por R$ 29/mês.'
+export const offerPriceAnswer = 'O site completo com técnicas avançadas de posicionamento + Google Meu Negócio completo sai por R$ 497, em até 12x no cartão. Hospedagem e manutenção são opcionais, por R$ 29/mês.'
 
 export function projectContact(message = 'Olá! Quero conversar sobre um projeto com a TopSite.') {
   return 'https://wa.me/5518996742364?text=' + encodeURIComponent(message)

@@ -2,8 +2,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { getSiteAnalytics } from '@/lib/integrations/analytics'
-import type { AnalyticsResult } from '@/lib/integrations/analytics'
 import { syncSubscriptionPayment } from '@/lib/payments/webhook-handlers'
 import { isClientInProduction } from '@/lib/painel-guard'
 import { ActivationScreen, RegularizationScreen } from './_components/ActivationScreen'
@@ -262,18 +260,6 @@ export default async function PainelPage({
     }
   }
 
-  // ── Analytics — usa o UUID do próprio site como chave de rastreamento ────────
-  const analyticsSiteId = client.sites[0]?.id ?? null
-  let analyticsResult: AnalyticsResult | null = null
-
-  if (analyticsSiteId) {
-    const sinceDate = new Date(now.getFullYear(), now.getMonth(), 1)
-    const untilDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-    const fmt = (d: Date) =>
-      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-    analyticsResult = await getSiteAnalytics(analyticsSiteId, fmt(sinceDate), fmt(untilDate))
-  }
-
   // ── Dados para o Dashboard ──────────────────────────────────────────────────
   const sites = client.sites.map((s) => ({
     id: s.id,
@@ -326,7 +312,6 @@ export default async function PainelPage({
       ticketsUsedThisMonth={ticketsUsedThisMonth}
       recentEvents={events}
       contextualOffer={contextualOffer}
-      analytics={analyticsResult}
     />
   )
 }

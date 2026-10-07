@@ -108,18 +108,6 @@ export function SiteFormClient({ clientId }: { clientId: string }) {
           />
         </Field>
 
-        <Field
-          label="Analytics Site ID (Umami)"
-          hint="ID do site no Umami — encontrado na URL da página do site (deixe em branco se ainda não configurou)"
-        >
-          <input
-            type="text"
-            name="analyticsSiteId"
-            placeholder="a1b2c3d4e5f6..."
-            className={INPUT}
-          />
-        </Field>
-
         <Field label="Observações">
           <textarea
             name="notes"

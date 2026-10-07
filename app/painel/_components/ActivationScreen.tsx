@@ -28,7 +28,6 @@ const PLAN_BENEFITS = [
   '1 alteração de conteúdo por mês inclusa (texto ou imagem)',
   'Prazo de atendimento de até 7 dias',
   'Suporte especializado direto pelo WhatsApp',
-  'Relatório de visitas: quantas pessoas acessam, de onde vêm e páginas mais vistas',
   '10% de desconto em serviços e upgrades',
 ]
 
@@ -36,7 +35,6 @@ const WARM_BENEFITS = [
   'Site publicado e no ar com hospedagem e SSL',
   'Correções ilimitadas e gratuitas',
   'Suporte direto pelo WhatsApp',
-  'Relatório de visitas mensais',
 ]
 
 const REASONS = [
@@ -412,7 +410,6 @@ export function ActivationScreen({ siteId, filesZipUrl, pendingPayment, clientNa
               'Correções ilimitadas e gratuitas',
               'Monitoramento 24h — se cair, resolvemos',
               'Suporte no WhatsApp',
-              'Relatório de visitas do site',
             ].map((item) => (
               <li key={item} className="flex items-center gap-2 text-sm text-gray-700">
                 <span className="w-4 h-4 rounded-full bg-green-50 flex items-center justify-center shrink-0 text-green-500 text-xs font-bold">✓</span>

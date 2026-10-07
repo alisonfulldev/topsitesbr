@@ -68,11 +68,6 @@ export default function TermosHospedagemPage() {
                     <td className="text-center px-3 py-2 border border-gray-200">✓</td>
                     <td className="text-center px-3 py-2 border border-gray-200">✓</td>
                   </tr>
-                  <tr>
-                    <td className="px-3 py-2 border border-gray-200">Relatório de visitas</td>
-                    <td className="text-center px-3 py-2 border border-gray-200 text-gray-400">—</td>
-                    <td className="text-center px-3 py-2 border border-gray-200">✓ completo</td>
-                  </tr>
                   <tr className="bg-gray-50">
                     <td className="px-3 py-2 border border-gray-200">Suporte via WhatsApp direto</td>
                     <td className="text-center px-3 py-2 border border-gray-200 text-gray-400">—</td>

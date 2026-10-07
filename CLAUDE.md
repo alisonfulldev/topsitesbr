@@ -78,7 +78,6 @@ tem benefícios contínuos que fazem sentido manter mesmo em meses sem alteraç�
 | Alterações incluídas/mês | 0 | 1 (texto OU imagem) |
 | Prazo de execução de alterações | até 15 dias | até 7 dias |
 | Correções (link quebrado, erro de digitação, telefone desatualizado) | ✅ ilimitadas e gratuitas | ✅ ilimitadas e gratuitas |
-| Relatório de visitas do site | — (card bloqueado como incentivo) | completo (visitas, origem, páginas mais vistas) |
 | Suporte via WhatsApp direto | — (só pelo painel) | ✅ |
 | Desconto em serviços avulsos e upsells | — | 10% |
 

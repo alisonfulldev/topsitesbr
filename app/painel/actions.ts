@@ -10,9 +10,6 @@ import { sendSubscriptionWelcome, sendTermsAcceptanceEmail } from '@/lib/notific
 import { TERMS_VERSION, ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
 import { ensureTermsVersionSeeded } from '@/lib/terms-content'
 import { revalidatePath } from 'next/cache'
-import { getSiteAnalytics } from '@/lib/integrations/analytics'
-import { sendPushToClient } from '@/lib/integrations/webpush'
-import { APP_URL } from '@/lib/config'
 
 async function getClientId(): Promise<string | null> {
   const session = await getServerSession(authOptions)
@@ -293,18 +290,6 @@ export async function markAllNotificationsRead(): Promise<void> {
   revalidatePath('/painel/notificacoes')
 }
 
-// Escalating milestones — front-heavy to celebrate early wins, then less frequent at scale
-const VISIT_MILESTONES = [10, 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000]
-
-function getReachedMilestone(visits: number): number {
-  let reached = 0
-  for (const m of VISIT_MILESTONES) {
-    if (visits >= m) reached = m
-    else break
-  }
-  return reached
-}
-
 export async function payNextMonth(): Promise<{ error?: string; paymentUrl?: string }> {
   const { assertNotImpersonating } = await import('@/lib/impersonation')
   try { await assertNotImpersonating() } catch (e) {
@@ -379,43 +364,6 @@ export async function payNextMonth(): Promise<{ error?: string; paymentUrl?: str
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     return { error: `Erro ao gerar cobrança: ${msg}` }
-  }
-}
-
-export async function checkVisitMilestone(): Promise<void> {
-  const clientId = await getClientId()
-  if (!clientId) return
-
-  const sites = await prisma.site.findMany({
-    where: { clientId, status: 'online' },
-    select: { id: true, visitPushMilestone: true },
-  })
-
-  const today = new Date().toISOString().split('T')[0]
-
-  for (const site of sites) {
-    const result = await getSiteAnalytics(site.id, '2024-01-01', today)
-    if (!result.ok) continue
-
-    const { visits, topReferrers } = result.data
-    const reachedMilestone = getReachedMilestone(visits)
-    if (reachedMilestone <= site.visitPushMilestone) continue
-
-    const topRef = topReferrers[0]
-    const title = `🎉 ${reachedMilestone} visitas no seu site!`
-    const body = topRef
-      ? `Seu site já recebeu ${visits} visitas no total. A maioria veio de ${topRef.host}. Toque para ver o relatório.`
-      : `Seu site já foi visitado ${visits} vezes! Toque para ver de onde vieram seus visitantes.`
-
-    await prisma.notification.create({
-      data: { clientId, title, message: body, channel: 'painel' },
-    })
-    await sendPushToClient(clientId, title, body, `${APP_URL}/painel/relatorios`).catch(() => {})
-
-    await prisma.site.update({
-      where: { id: site.id },
-      data: { visitPushMilestone: reachedMilestone },
-    })
   }
 }
 

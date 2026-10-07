@@ -42,7 +42,6 @@ const PLAN_BENEFITS = [
   '1 alteração de conteúdo por mês inclusa (texto ou imagem)',
   'Prazo de atendimento de até 7 dias',
   'Suporte especializado direto pelo WhatsApp',
-  'Relatório de visitas completo',
   '10% de desconto em serviços e upgrades',
 ]
 

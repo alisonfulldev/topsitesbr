@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Script from 'next/script'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { BRAND_DESCRIPTION, SITE_URL, marketingMetadata, organizationSchema, marketingServices } from '@/lib/marketing'
 import { MarketingLayout, ProjectCTA, ProcessSteps, ContactSection, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
@@ -42,7 +41,6 @@ export default function HomePage() {
   return (
     <MarketingLayout>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <Script src="https://topsitebr.com.br/tracker.js" data-site-id="41442a6b-5fde-405e-a376-3161d0c44572" strategy="afterInteractive" />
 
       {/* ── 1. Hero — Animado ───────────────────────────────────────────── */}
       <AnimatedHero />

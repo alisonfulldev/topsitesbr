@@ -156,7 +156,6 @@ model Client {
   referralsGiven    Referral[]          @relation("ReferrerClient")
   referralReceived  Referral?           @relation("ReferredClient")
   planChangeHistory PlanChangeHistory[]
-  siteReports       SiteReport[]
   pushSubscriptions PushSubscription[]
   proposals         Proposal[]
 
@@ -204,8 +203,6 @@ model Site {
   status          SiteStatus @default(pendente_ativacao)
   publishedAt     DateTime?  @map("published_at")
   filesZipUrl     String?    @map("files_zip_url")
-  analyticsSiteId    String?    @map("analytics_site_id")
-  visitPushMilestone Int        @default(0) @map("visit_push_milestone")
   notes              String?
   createdAt          DateTime   @default(now()) @map("created_at")
   updatedAt       DateTime   @updatedAt @map("updated_at")
@@ -213,26 +210,9 @@ model Site {
   client    Client     @relation(fields: [clientId], references: [id])
   domains   Domain[]
   tickets   Ticket[]
-  reports   SiteReport[]
-  pageViews PageView[]
   proposal  Proposal?
 
   @@map("sites")
-}
-
-model PageView {
-  id        String   @id @default(uuid())
-  siteId    String   @map("site_id")
-  path      String   @default("/")
-  referrer  String?
-  sessionId String   @map("session_id")
-  timestamp DateTime @default(now())
-
-  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
-
-  @@index([siteId, timestamp])
-  @@index([siteId, sessionId])
-  @@map("page_views")
 }
 
 model Domain {
@@ -475,25 +455,6 @@ model ExtraRevenue {
   createdAt   DateTime             @default(now()) @map("created_at")
 
   @@map("extra_revenues")
-}
-
-model SiteReport {
-  id          String    @id @default(uuid())
-  siteId      String    @map("site_id")
-  clientId    String    @map("client_id")
-  periodStart DateTime  @map("period_start")
-  periodEnd   DateTime  @map("period_end")
-  generatedAt DateTime  @default(now()) @map("generated_at")
-  viewedAt    DateTime? @map("viewed_at")
-  archivedAt  DateTime? @map("archived_at")
-  data        Json
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-
-  site   Site   @relation(fields: [siteId], references: [id])
-  client Client @relation(fields: [clientId], references: [id])
-
-  @@map("site_reports")
 }
 
 model PushSubscription {

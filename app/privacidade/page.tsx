@@ -59,10 +59,6 @@ export default function PrivacidadePage() {
                 <strong>Conteúdo do site</strong>: textos e imagens enviados pelo cliente para
                 publicação no site
               </li>
-              <li>
-                <strong>Dados de analytics</strong>: visitas ao site do cliente, processadas de
-                forma agregada (sem identificação de visitantes individuais)
-              </li>
             </ul>
           </section>
 
@@ -128,11 +124,11 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">5. Analytics</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-3">5. Ferramentas de análise externas</h2>
             <p>
-              O relatório de visitas do site do cliente exibe dados agregados de tráfego (número
-              de visitas, páginas acessadas, origem do tráfego). Esses dados são coletados de forma
-              anônima — não identificamos individualmente os visitantes do site do cliente.
+              A TOP SITE não coleta nem armazena dados de visitas dos sites dos clientes. Para
+              acompanhar acessos e desempenho, recomendamos o uso de ferramentas externas, como
+              Google Analytics e Google Search Console, sujeitas às respectivas políticas de privacidade.
             </p>
           </section>
 

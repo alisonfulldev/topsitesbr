@@ -26,12 +26,10 @@ type Site = {
   siteUrl: string | null
   siteType: string
   templateUsed: string | null
-  analyticsSiteId: string | null
   status: string
   filesZipUrl: string | null
   notes: string | null
   domains: Domain[]
-  appUrl: string
 }
 
 const INPUT =
@@ -505,40 +503,6 @@ function UpdateSiteForm({ site }: { site: Site }) {
   )
 }
 
-// ─── Tracking code copy ──────────────────────────────────────────────────────
-
-function CopyTrackingCode({ siteId, appUrl }: { siteId: string; appUrl: string }) {
-  const [copied, setCopied] = useState(false)
-  const snippet = `<script src="${appUrl}/tracker.js" data-site-id="${siteId}"></script>`
-
-  function handleCopy() {
-    navigator.clipboard.writeText(snippet).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
-  }
-
-  return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
-      <h3 className="text-sm font-semibold text-gray-700 mb-1">Código de Rastreamento</h3>
-      <p className="text-xs text-gray-500 mb-3">
-        Cole este script no <code className="bg-gray-100 px-1 rounded">&lt;head&gt;</code> do site do cliente para rastrear visitas automaticamente.
-      </p>
-      <div className="flex items-start gap-2">
-        <code className="flex-1 block bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs font-mono text-gray-700 break-all select-all">
-          {snippet}
-        </code>
-        <button
-          onClick={handleCopy}
-          className="shrink-0 px-3 py-2 bg-brand text-brand-dark text-xs font-medium rounded-lg hover:bg-brand-hover transition-colors"
-        >
-          {copied ? 'Copiado!' : 'Copiar'}
-        </button>
-      </div>
-    </div>
-  )
-}
-
 // ─── Main export ─────────────────────────────────────────────────────────────
 
 export function SiteDetailClient({ site }: { site: Site }) {
@@ -650,9 +614,6 @@ export function SiteDetailClient({ site }: { site: Site }) {
         </div>
         <AddDomainForm siteId={site.id} clientId={site.clientId} />
       </div>
-
-      {/* Tracking code */}
-      <CopyTrackingCode siteId={site.id} appUrl={site.appUrl} />
     </div>
   )
 }

@@ -18,7 +18,6 @@ export type EmailType =
   | 'ticket-done'
   | 'promotion'
   | 'referral-reward'
-  | 'weekly-report'
   | 'loyalty-reminder'
   | 'password-reset-request'
   | 'proposal-sent'
@@ -40,7 +39,6 @@ const EMAIL_CONFIG: Record<EmailType, { color: string; icon: string; label: stri
   'ticket-done':              { color: '#10b981', icon: '🎉', label: 'Solicitação concluída' },
   'promotion':                { color: '#f97316', icon: '🎁', label: 'Promoção especial' },
   'referral-reward':          { color: '#eab308', icon: '⭐', label: 'Recompensa de indicação' },
-  'weekly-report':            { color: '#0ea5e9', icon: '📊', label: 'Relatório semanal' },
   'loyalty-reminder':         { color: '#7c3aed', icon: '⭐', label: 'Benefício de fidelidade' },
   'password-reset-request':   { color: '#6366f1', icon: '🔐', label: 'Redefinição de senha' },
   'proposal-sent':            { color: '#0f172a', icon: '📋', label: 'Proposta de projeto' },
@@ -57,7 +55,6 @@ function detectType(title: string): EmailType {
   if (t.includes('pagamento confirmado') || t.includes('compra confirmada')) return 'payment-confirmed'
   if (t.includes('atraso') || t.includes('vencido') || t.includes('inadimplente')) return 'payment-overdue'
   if (t.includes('mês grátis') || t.includes('mes gratis') || t.includes('ganhou') || t.includes('recompensa')) return 'referral-reward'
-  if (t.includes('relatório') || t.includes('relatorio') || t.includes('weekly')) return 'weekly-report'
   if (t.includes('promoção') || t.includes('promocao') || t.includes('promo')) return 'promotion'
   if (t.includes('site') && (t.includes('online') || t.includes('offline') || t.includes('publicado') || t.includes('status'))) return 'site-status'
   if (t.includes('cobrança') || t.includes('cobranca') || t.includes('boleto') || t.includes('fatura')) return 'charge-created'
@@ -225,7 +222,6 @@ export async function sendSubscriptionWelcome(
     '1 alteração de conteúdo por mês inclusa (texto ou imagem)',
     'Prazo de atendimento de até 7 dias',
     'Suporte especializado direto pelo WhatsApp',
-    'Relatório de visitas: quantas pessoas acessam, de onde vêm e páginas mais vistas',
     '10% de desconto em serviços e upgrades',
   ]
 
@@ -252,7 +248,6 @@ export async function sendSubscriptionWelcome(
     <ol style="margin:0 0 24px;padding-left:20px;font-size:14px;color:#374151;line-height:1.8;">
       <li>Acesse o painel e acompanhe o status do seu site</li>
       <li>Solicite alterações ou correções quando precisar</li>
-      <li>Acompanhe as visitas e o desempenho do site</li>
     </ol>
 
     <!-- Botão WhatsApp -->
@@ -403,39 +398,6 @@ export async function sendPaymentRegularized(
   }
 }
 
-// ── E-mail de aviso: relatório semanal pronto ─────────────────────────────────
-
-export async function sendWeeklyReportEmail(
-  email: string,
-  clientName: string,
-  periodLabel: string,
-): Promise<void> {
-  const loginUrl = APP_URL + '/login'
-  const subject = `Seu relatório semanal está pronto — ${periodLabel}`
-  const message = `Olá, ${clientName}! O relatório de desempenho do seu site da semana de ${periodLabel} já está disponível na plataforma. Acesse para ver quantas pessoas visitaram seu site, de onde vieram e dicas para crescer ainda mais.`
-
-  const extraHtml = `
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom:24px;">
-      <tr>
-        <td align="center">
-          <a href="${loginUrl}"
-             style="display:inline-block;background:#0ea5e9;color:#ffffff;
-                    text-decoration:none;font-size:14px;font-weight:600;
-                    padding:13px 30px;border-radius:7px;letter-spacing:0.3px;">
-            Acessar a plataforma
-          </a>
-        </td>
-      </tr>
-    </table>
-  `
-
-  const html = buildHtml(subject, message, 'weekly-report', extraHtml)
-  try {
-    await sendEmail({ to: email, subject, html })
-  } catch (err) {
-    console.error('[sendWeeklyReportEmail] Falha:', err instanceof Error ? err.message : err)
-  }
-}
 
 // ── E-mails de fidelidade (lembrete pré-vencimento + conquista dos 12 meses) ──
 
