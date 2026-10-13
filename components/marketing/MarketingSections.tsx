@@ -3,6 +3,7 @@ import { MarketingIcon, WhatsAppIcon } from './MarketingIcon'
 import { MarketingHeader } from './MarketingHeader'
 import { MarketingFooter } from './MarketingFooter'
 import { offer, projectContact } from '@/lib/marketing'
+import { ProjectCTA } from './QuoteWizard'
 
 export function MarketingLayout({ children }: { children: ReactNode }) {
   return (
@@ -17,14 +18,8 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
   )
 }
 
-export function ProjectCTA({ message, label = 'Quero meu site agora', className = '' }: { message?: string; label?: string; className?: string }) {
-  return (
-    <a href={projectContact(message)} target="_blank" rel="noopener noreferrer" className={'cta-pulse inline-flex max-w-full items-center justify-center gap-3 rounded-2xl bg-[#25D366] px-8 py-5 text-center text-base font-bold text-white shadow-lg shadow-[#25D366]/25 transition-colors hover:bg-[#1ebe5b] sm:px-10 sm:text-lg ' + className}>
-      <WhatsAppIcon />
-      {label}
-    </a>
-  )
-}
+// Os CTAs abrem o fluxo de orçamento, que termina com a mensagem pronta no WhatsApp
+export { ProjectCTA }
 
 // Faixa de CTA entre seções — aumenta os pontos de conversão ao longo da página
 export function CTABand({ message, title = 'Sua empresa pode começar a ser encontrada ainda este mês.', label }: { message?: string; title?: string; label?: string }) {
@@ -44,7 +39,7 @@ export function PricingSection({ message }: { message?: string }) {
       <div className="mx-auto max-w-4xl">
         <div className="mb-10 text-center">
           <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Investimento</p>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Tudo isso em um único valor.</h2>
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Um projeto sob medida para o seu negócio.</h2>
         </div>
         <div className="rounded-3xl border border-[#25D366]/30 bg-gradient-to-b from-[#25D366]/[0.08] to-transparent p-7 sm:p-12">
           <ul className="mb-10 space-y-6">
@@ -59,7 +54,7 @@ export function PricingSection({ message }: { message?: string }) {
             ))}
           </ul>
           <div className="mb-8 border-t border-white/10 pt-8 text-center">
-            <p className="mb-2 text-sm uppercase tracking-widest text-white/55">Por apenas</p>
+            <p className="mb-2 text-sm uppercase tracking-widest text-white/55">A partir de</p>
             <p className="text-6xl font-bold tracking-tight text-[#25D366] sm:text-7xl">{offer.price}</p>
             <p className="mt-3 text-lg font-semibold text-white/85">{offer.installments}</p>
           </div>
@@ -69,8 +64,8 @@ export function PricingSection({ message }: { message?: string }) {
             <p className="mt-1 text-sm leading-relaxed text-white/60">{offer.optional.text}</p>
           </div>
           <div className="text-center">
-            <ProjectCTA message={message} label="Quero meu site por R$ 497" className="w-full sm:w-auto" />
-            <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento em todo o Brasil</p>
+            <ProjectCTA message={message} label="Montar meu orçamento" className="w-full sm:w-auto" />
+            <p className="mt-5 text-sm text-white/50">Leva menos de 1 minuto · Orçamento pelo WhatsApp</p>
           </div>
         </div>
       </div>

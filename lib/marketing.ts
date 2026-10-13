@@ -12,7 +12,7 @@ export const marketingServices = [
 
 // Oferta única exibida no site de divulgação
 export const offer = {
-  price: 'R$ 497',
+  price: 'R$ 490',
   installments: 'em até 12x no cartão',
   deliverables: [
     { title: 'Site completo com técnicas avançadas de posicionamento', text: 'Construído para atrair clientes que já buscam o que você vende — e não só existir na internet.' },
@@ -25,7 +25,7 @@ export const offer = {
   },
 }
 
-export const offerPriceAnswer = 'O site completo com técnicas avançadas de posicionamento + Google Meu Negócio completo sai por R$ 497, em até 12x no cartão. Hospedagem e manutenção são opcionais, por R$ 29/mês.'
+export const offerPriceAnswer = 'Os projetos começam a partir de R$ 490, em até 12x no cartão, já com técnicas avançadas de posicionamento e Google Meu Negócio completo. O valor final depende do tipo de site, da quantidade de serviços e do seu objetivo — monte seu orçamento em menos de 1 minuto e receba pelo WhatsApp. Hospedagem e manutenção são opcionais, por R$ 29/mês.'
 
 export function projectContact(message = 'Olá! Quero conversar sobre um projeto com a TopSite.') {
   return 'https://wa.me/5518996742364?text=' + encodeURIComponent(message)
