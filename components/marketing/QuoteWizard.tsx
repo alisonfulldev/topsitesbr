@@ -149,14 +149,14 @@ function QuoteWizard({ intro, onClose }: { intro?: string; onClose: () => void }
   const progress = ((step + 1) / TOTAL_STEPS) * 100
 
   return createPortal(
-    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/75 backdrop-blur-sm sm:items-center sm:p-6" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm sm:p-6" onClick={onClose}>
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="quote-wizard-title"
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92dvh] w-full max-w-xl flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-[#111] text-white shadow-2xl sm:rounded-3xl"
+        className="flex max-h-[calc(100dvh-2rem)] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#111] text-white shadow-2xl"
       >
         <div className="flex items-center justify-between gap-4 px-6 pt-5">
           <p className="text-xs font-semibold uppercase tracking-widest text-yellow-400">
