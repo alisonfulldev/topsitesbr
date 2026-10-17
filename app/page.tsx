@@ -93,9 +93,12 @@ export default function HomePage() {
           <div className="grid gap-5 md:grid-cols-2">
             {marketingServices.map(({ href, label }, index) => {
               const descriptions: Record<string, string> = {
-                '/criacao-de-sites': 'Presença digital completa, construída para que seus clientes te encontrem quando buscam no Google.',
-                '/site-institucional': 'Apresente sua empresa com credibilidade e apareça para quem procura o que você oferece.',
-                '/landing-page': 'Página focada em uma oferta específica — para converter quem já está procurando.',
+                '/criacao-de-sites': 'Site profissional one page com serviços, fotos, contatos e WhatsApp — por R$ 165.',
+                '/site-institucional': 'Apresente sua empresa com credibilidade, sem pagar caro — por R$ 165.',
+                '/landing-page': 'Página focada em uma oferta específica, com WhatsApp em destaque — por R$ 165.',
+                '/pagina-de-vendas': 'Página para vender um produto ou serviço, com benefícios e pedido pelo WhatsApp — por R$ 165.',
+                '/pagina-de-lancamento': 'Página própria para lançar um produto, curso, evento ou inauguração — por R$ 165.',
+                '/pagina-de-captura': 'Página simples e direta para captar contatos de interessados — por R$ 165.',
                 '/loja-virtual': 'Catálogo e jornada de compra para quem quer vender para quem já busca o produto.',
               }
               return (

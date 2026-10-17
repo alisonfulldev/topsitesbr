@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { marketingServices, SITE_URL } from '@/lib/marketing'
+import { nicheOfferServices } from '@/lib/marketing-services'
 import { cities } from '@/lib/seo/cities'
 import { niches } from '@/lib/seo/niches'
 
@@ -47,6 +48,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       cities.map((city) => ({
         url: SITE_URL + '/site-para/' + niche.slug + '/' + city.slug,
         lastModified: new Date('2026-09-20'),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      }))
+    ),
+    // Páginas por R$ 165 por nicho (/[servico]/[nicho])
+    ...nicheOfferServices.flatMap((service) =>
+      niches.map((niche) => ({
+        url: SITE_URL + '/' + service + '/' + niche.slug,
+        lastModified: new Date('2026-10-17'),
         changeFrequency: 'monthly' as const,
         priority: 0.6,
       }))

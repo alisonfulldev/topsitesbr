@@ -6,6 +6,7 @@ import { cities } from '@/lib/seo/cities'
 import { SITE_URL, marketingMetadata, marketingServices, organizationSchema, offerPriceAnswer } from '@/lib/marketing'
 import { MarketingLayout, ProjectCTA, PriceTag, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
+import { serviceContent, nicheOfferServices } from '@/lib/marketing-services'
 import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
 export const dynamicParams = false
@@ -33,6 +34,10 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
   const sectorNiches = getNichesBySector(niche.sector, niche.slug, 8)
   const topCities = cities.slice(0, 8)
   const relatedGroups = [
+    {
+      heading: 'Outras páginas para ' + niche.name.toLowerCase() + ' por R$ 165',
+      links: nicheOfferServices.map((s) => ({ label: serviceContent[s].offerProduct + ' para ' + niche.name, href: '/' + s + '/' + niche.slug })),
+    },
     {
       heading: 'Outros segmentos em ' + niche.sector,
       links: sectorNiches.map((n) => ({ label: n.heading, href: '/site-para/' + n.slug })),

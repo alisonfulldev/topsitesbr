@@ -7,6 +7,9 @@ export const marketingServices = [
   { href: '/criacao-de-sites', label: 'Criação de sites' },
   { href: '/site-institucional', label: 'Site institucional' },
   { href: '/landing-page', label: 'Landing pages' },
+  { href: '/pagina-de-vendas', label: 'Página de vendas' },
+  { href: '/pagina-de-lancamento', label: 'Página de lançamento' },
+  { href: '/pagina-de-captura', label: 'Página de captura' },
   { href: '/loja-virtual', label: 'Lojas virtuais' },
 ]
 

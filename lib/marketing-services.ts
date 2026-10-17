@@ -15,6 +15,10 @@ export interface ServiceContent {
   offerProduct?: string
 }
 
+// Serviços por R$ 165 que ganham páginas por nicho (ex: /pagina-de-vendas/dentista)
+export const nicheOfferServices = ['landing-page', 'pagina-de-vendas', 'pagina-de-lancamento', 'pagina-de-captura'] as const
+export type NicheOfferService = (typeof nicheOfferServices)[number]
+
 export const serviceContent = {
   "criacao-de-sites": {
     "slug": "criacao-de-sites",
@@ -152,6 +156,10 @@ export const serviceContent = {
     ],
     "faqs": [
       {
+        "q": "Quanto custa uma landing page?",
+        "a": "A landing page sai por apenas R$ 165: uma página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+      },
+      {
         "q": "A landing page substitui o site institucional?",
         "a": "Ela atende bem a uma oferta específica. Se você precisa apresentar diferentes serviços, equipe e histórico da empresa, um site institucional pode complementar essa página."
       },
@@ -214,5 +222,155 @@ export const serviceContent = {
         "a": "O cronograma é definido após avaliar os produtos, materiais e integrações. Você recebe essa previsão na proposta antes de iniciar o projeto."
       }
     ]
+  },
+  "pagina-de-vendas": {
+    "slug": "pagina-de-vendas",
+    "label": "Página de vendas",
+    "title": "Página de Vendas por R$ 165 | Criação de Página de Vendas Barata | TopSite",
+    "eyebrow": "Venda o seu produto ou serviço",
+    "heading": "Página de vendas por apenas R$ 165.",
+    "description": "Criação de página de vendas por apenas R$ 165: apresente seu produto ou serviço com benefícios, depoimentos e botão de WhatsApp, adaptada ao celular. Peça a sua pelo WhatsApp.",
+    "intro": "Uma página feita para vender um produto ou serviço específico: mostra os benefícios, responde às dúvidas e leva o cliente direto para o WhatsApp — tudo adaptado ao celular, por apenas R$ 165.",
+    "focus": "Sua oferta pronta para vender, por R$ 165",
+    "audience": "Para quem quer divulgar um produto, serviço, curso ou pacote e receber os pedidos pelo WhatsApp.",
+    "features": [
+      {
+        "title": "Título que chama atenção",
+        "text": "A primeira coisa que o visitante lê já mostra o que você vende e por que vale a pena."
+      },
+      {
+        "title": "Benefícios bem explicados",
+        "text": "O que o cliente ganha, como funciona e o que está incluso, em blocos fáceis de ler no celular."
+      },
+      {
+        "title": "Depoimentos e garantias",
+        "text": "Espaço para avaliações de clientes, fotos e garantias que ajudam a convencer quem ainda está em dúvida."
+      },
+      {
+        "title": "Pedido pelo WhatsApp",
+        "text": "Botões de compra ao longo da página levam o cliente direto para a conversa com você."
+      }
+    ],
+    "deliverables": [
+      "Página de vendas completa",
+      "Seções de benefícios, depoimentos e dúvidas",
+      "Botões de WhatsApp ao longo da página",
+      "Design adaptado ao celular"
+    ],
+    "faqs": [
+      {
+        "q": "Quanto custa uma página de vendas?",
+        "a": "A página de vendas sai por apenas R$ 165: uma página completa para apresentar o seu produto ou serviço, adaptada ao celular e com botões de WhatsApp. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+      },
+      {
+        "q": "Posso vender qualquer produto ou serviço?",
+        "a": "Sim. A página serve para produtos físicos, serviços, cursos, pacotes e consultas — você conta o que vende e a gente monta."
+      },
+      {
+        "q": "A página aceita pagamento online?",
+        "a": "O caminho principal é o WhatsApp, onde você fecha a venda. Se você já usa um link de pagamento, ele pode entrar nos botões da página."
+      }
+    ],
+    "offerProduct": "Página de vendas"
+  },
+  "pagina-de-lancamento": {
+    "slug": "pagina-de-lancamento",
+    "label": "Página de lançamento",
+    "title": "Página de Lançamento por R$ 165 | Página para Lançar Produto ou Evento | TopSite",
+    "eyebrow": "Lance com uma página própria",
+    "heading": "Página de lançamento por apenas R$ 165.",
+    "description": "Criação de página de lançamento por apenas R$ 165: divulgue um produto, curso, evento ou inauguração com uma página própria, adaptada ao celular e com WhatsApp. Peça pelo WhatsApp.",
+    "intro": "Vai lançar um produto, curso, evento ou inaugurar um espaço? Criamos uma página própria para o lançamento, com data, detalhes e botão de WhatsApp em destaque — por apenas R$ 165.",
+    "focus": "Seu lançamento com página própria, por R$ 165",
+    "audience": "Para quem vai lançar um produto, abrir as inscrições de um curso, divulgar um evento ou anunciar uma inauguração.",
+    "features": [
+      {
+        "title": "Data e detalhes em destaque",
+        "text": "O que está sendo lançado, quando e onde, logo no topo da página."
+      },
+      {
+        "title": "Lista de espera ou inscrição",
+        "text": "Quem se interessar entra em contato pelo WhatsApp para garantir a vaga ou ser avisado primeiro."
+      },
+      {
+        "title": "Fotos e vídeo",
+        "text": "Espaço para imagens e vídeo de apresentação que mostram o lançamento antes mesmo de ele acontecer."
+      },
+      {
+        "title": "Pronta para divulgar",
+        "text": "Um link próprio para colocar na bio do Instagram, nos anúncios e nos grupos de WhatsApp."
+      }
+    ],
+    "deliverables": [
+      "Página de lançamento completa",
+      "Data, detalhes e fotos em destaque",
+      "Botão de WhatsApp para inscrições",
+      "Design adaptado ao celular"
+    ],
+    "faqs": [
+      {
+        "q": "Quanto custa uma página de lançamento?",
+        "a": "A página de lançamento sai por apenas R$ 165: uma página própria para o seu lançamento, adaptada ao celular e com botão de WhatsApp em destaque. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+      },
+      {
+        "q": "Serve para evento ou inauguração?",
+        "a": "Sim. A página de lançamento serve para produtos, cursos, eventos, inaugurações e qualquer novidade que você queira divulgar com um link próprio."
+      },
+      {
+        "q": "Depois do lançamento a página pode virar página de vendas?",
+        "a": "Pode. Depois do lançamento, a página pode ser ajustada para continuar vendendo — combine os ajustes pelo WhatsApp."
+      }
+    ],
+    "offerProduct": "Página de lançamento"
+  },
+  "pagina-de-captura": {
+    "slug": "pagina-de-captura",
+    "label": "Página de captura",
+    "title": "Página de Captura por R$ 165 | Página para Captar Contatos | TopSite",
+    "eyebrow": "Capte contatos de clientes",
+    "heading": "Página de captura por apenas R$ 165.",
+    "description": "Criação de página de captura por apenas R$ 165: uma página simples e direta para captar contatos de interessados, adaptada ao celular e com WhatsApp. Peça a sua pelo WhatsApp.",
+    "intro": "Uma página simples e direta, feita para transformar visitantes em contatos: o interessado chama no WhatsApp para receber o que você oferece — por apenas R$ 165.",
+    "focus": "Mais contatos de interessados, por R$ 165",
+    "audience": "Para quem quer montar uma lista de interessados, oferecer um material gratuito, um cupom ou uma avaliação, e falar com eles depois.",
+    "features": [
+      {
+        "title": "Oferta que atrai",
+        "text": "Um material gratuito, cupom, avaliação ou aula: a página deixa claro o que o visitante ganha ao entrar em contato."
+      },
+      {
+        "title": "Direta ao ponto",
+        "text": "Sem distrações: só o que o visitante precisa ler para decidir chamar você."
+      },
+      {
+        "title": "Contato pelo WhatsApp",
+        "text": "O interessado chama você no WhatsApp com a mensagem pronta, e a conversa já começa ali."
+      },
+      {
+        "title": "Ideal para anúncios",
+        "text": "Um link próprio e leve para usar nos anúncios do Instagram, Facebook e Google."
+      }
+    ],
+    "deliverables": [
+      "Página de captura completa",
+      "Oferta e chamada em destaque",
+      "Botão de WhatsApp com mensagem pronta",
+      "Design adaptado ao celular"
+    ],
+    "faqs": [
+      {
+        "q": "Quanto custa uma página de captura?",
+        "a": "A página de captura sai por apenas R$ 165: uma página simples e direta para captar contatos, adaptada ao celular e com botão de WhatsApp. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+      },
+      {
+        "q": "Qual a diferença para uma página de vendas?",
+        "a": "A página de captura busca o contato do interessado para você conversar depois. A página de vendas apresenta o produto completo para fechar a venda."
+      },
+      {
+        "q": "Funciona com anúncios?",
+        "a": "Sim. Por ser simples e leve, a página de captura é uma ótima opção para usar nos anúncios do Instagram, Facebook e Google."
+      }
+    ],
+    "offerProduct": "Página de captura"
   }
 } satisfies Record<string, ServiceContent>
