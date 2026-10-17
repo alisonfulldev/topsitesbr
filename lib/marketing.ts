@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const SITE_URL = 'https://topsitebr.com.br'
-export const BRAND_DESCRIPTION = 'Criamos sites que fazem empresas serem encontradas por clientes reais. Se você chegou até aqui pela internet, já está vivendo nosso método.'
+export const BRAND_DESCRIPTION = 'Site profissional por apenas R$ 165: site institucional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular.'
 
 export const marketingServices = [
   { href: '/criacao-de-sites', label: 'Criação de sites' },
@@ -10,13 +10,14 @@ export const marketingServices = [
   { href: '/loja-virtual', label: 'Lojas virtuais' },
 ]
 
-// Oferta única exibida no site de divulgação
+// Oferta principal do site de divulgação — o preço é o grande diferencial
 export const offer = {
-  price: 'R$ 490',
-  installments: 'em até 12x no cartão',
+  price: 'R$ 165',
+  product: 'Site institucional one page',
   deliverables: [
-    { title: 'Site completo com técnicas avançadas de posicionamento', text: 'Construído para atrair clientes que já buscam o que você vende — e não só existir na internet.' },
-    { title: 'Google Meu Negócio completo', text: 'Perfil criado ou otimizado do zero para sua empresa aparecer no Google Maps e nas buscas locais.' },
+    { title: 'Site institucional one page', text: 'Sua empresa, seus serviços, fotos e contatos reunidos em uma página profissional.' },
+    { title: 'Adaptado ao celular', text: 'Fica bonito e fácil de usar no celular, no tablet e no computador.' },
+    { title: 'Botão de WhatsApp em destaque', text: 'Quem visita seu site fala com você em um clique.' },
   ],
   optional: {
     price: 'R$ 29/mês',
@@ -25,9 +26,11 @@ export const offer = {
   },
 }
 
-export const offerPriceAnswer = 'Os projetos começam a partir de R$ 490, em até 12x no cartão, já com técnicas avançadas de posicionamento e Google Meu Negócio completo. O valor final depende do tipo de site, da quantidade de serviços e do seu objetivo — monte seu orçamento em menos de 1 minuto e receba pelo WhatsApp. Hospedagem e manutenção são opcionais, por R$ 29/mês.'
+export const offerPriceAnswer = 'O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Hospedagem e manutenção são opcionais, por R$ 29/mês.'
 
-export function projectContact(message = 'Olá! Quero conversar sobre um projeto com a TopSite.') {
+export const DEFAULT_WHATSAPP_MESSAGE = 'Olá! Quero meu site por R$ 165.'
+
+export function projectContact(message = DEFAULT_WHATSAPP_MESSAGE) {
   return 'https://wa.me/5518996742364?text=' + encodeURIComponent(message)
 }
 
@@ -40,7 +43,7 @@ export function marketingMetadata(title: string, description: string, path = '')
     openGraph: {
       type: 'website', title, description, url: SITE_URL + path,
       siteName: 'TopSite', locale: 'pt_BR',
-      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'TopSite — Sites que fazem empresas serem encontradas' }],
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'TopSite — Site profissional por R$ 165' }],
     },
     twitter: { card: 'summary_large_image', title, description, images: ['/og-image.png'] },
   }

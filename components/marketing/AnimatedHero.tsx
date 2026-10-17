@@ -117,33 +117,33 @@ export function AnimatedHero() {
       <div className="relative mx-auto max-w-7xl">
         <div className="mx-auto max-w-4xl">
           <h1 className="mb-7 text-[2.65rem] font-semibold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
-            <WordReveal text="Você nos encontrou pela internet." baseDelay={0.82} />
-            <span className="block text-yellow-400">
-              <WordReveal text="Não foi acidente." baseDelay={1.26} />
+            <WordReveal text="Site profissional" baseDelay={0.82} />
+            <span className="block text-[#25D366]">
+              <WordReveal text="por apenas R$ 165." baseDelay={1.1} />
             </span>
           </h1>
           <p
             className="mb-4 max-w-2xl text-xl font-semibold leading-snug sm:text-2xl"
-            style={{ animation: 'herFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 1.68s both' }}
+            style={{ animation: 'herFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 1.5s both' }}
           >
-            E é exatamente assim que seus clientes vão te encontrar.
+            Sua empresa na internet sem pagar caro.
           </p>
           <p
             className="mb-9 max-w-2xl text-lg leading-relaxed text-white/70"
-            style={{ animation: 'herFadeIn 0.65s ease 1.9s both' }}
+            style={{ animation: 'herFadeIn 0.65s ease 1.7s both' }}
           >
-            A forma como chegou até nós é o nosso método funcionando. Aplicamos o mesmo em sites para
-            empresas — e elas passam a ser encontradas por quem já busca o que oferecem.
+            Site institucional one page com seus serviços, fotos, contatos e botão de WhatsApp,
+            adaptado ao celular. Chame no WhatsApp e a gente monta o seu.
           </p>
           <div
             className="flex flex-wrap items-center gap-6"
-            style={{ animation: 'herFadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 2.1s both' }}
+            style={{ animation: 'herFadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 1.9s both' }}
           >
-            <ProjectCTA label="Quero que me encontrem assim" />
+            <ProjectCTA />
           </div>
           <p
             className="mt-7 text-sm text-white/50"
-            style={{ animation: 'herFadeIn 0.5s ease 2.35s both' }}
+            style={{ animation: 'herFadeIn 0.5s ease 2.1s both' }}
           >
             Resposta rápida no WhatsApp · Atendimento em todo o Brasil
           </p>

@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { cities, getCityBySlug } from '@/lib/seo/cities'
 import { niches } from '@/lib/seo/niches'
 import { SITE_URL, marketingMetadata, organizationSchema } from '@/lib/marketing'
-import { MarketingLayout, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, PriceTag, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 
 export const dynamicParams = false
 
@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: { params: Promise<{ cidade: s
   const city = getCityBySlug(cidade)
   if (!city) return marketingMetadata('Página não encontrada', '', '/servicos/' + cidade)
   return marketingMetadata(
-    `Criação de Sites em ${city.name} — Todos os Segmentos | TopSite`,
-    `Sites profissionais para mais de 150 segmentos de negócio em ${city.name} (${city.stateAbbr}). Clínicas, restaurantes, advogados, construtoras e muito mais.`,
+    `Sites em ${city.name} por R$ 165 — Todos os Segmentos | TopSite`,
+    `Site profissional por apenas R$ 165 para mais de 150 segmentos de negócio em ${city.name} (${city.stateAbbr}). Clínicas, restaurantes, advogados, construtoras e muito mais.`,
     `/servicos/${city.slug}`
   )
 }
@@ -64,13 +64,14 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </nav>
           <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">{city.name} — {city.stateAbbr}</p>
           <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">
-            Criação de sites para os principais segmentos em {city.name}
+            Sites para todos os segmentos em {city.name} por apenas <span className="text-[#25D366]">R$ 165</span>
           </h1>
+          <PriceTag className="mb-6" />
           <p className="mb-4 max-w-2xl text-lg leading-relaxed text-white/70">
-            Desenvolvemos sites profissionais para empresas de {city.name} e região. {city.context}
+            Criamos sites profissionais para empresas de {city.name} e região. {city.context}
           </p>
           <p className="mb-10 max-w-2xl leading-relaxed text-white/55">
-            Abaixo, todos os segmentos para os quais criamos sites com foco em aparecer no Google local — para que seus futuros clientes em {city.name} te encontrem quando já estão buscando.
+            Abaixo, todos os segmentos para os quais criamos sites em {city.name}. Escolha o seu e peça o seu site por R$ 165 pelo WhatsApp.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link

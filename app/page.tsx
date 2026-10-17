@@ -5,8 +5,8 @@ import { MarketingLayout, ProjectCTA, ProcessSteps, ContactSection, CTABand, Pri
 import { AnimatedHero } from '@/components/marketing/AnimatedHero'
 
 export const metadata = marketingMetadata(
-  'TopSite | Sites que fazem sua empresa ser encontrada',
-  BRAND_DESCRIPTION,
+  'Site Barato por R$ 165 | Criação de Site Profissional | TopSite',
+  'Site profissional por apenas R$ 165: site institucional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.',
 )
 
 const schema = {
@@ -20,20 +20,20 @@ const schema = {
 
 const diferentials = [
   {
-    title: 'Clientes que já estão procurando',
-    text: 'Diferente do anúncio que interrompe, um site bem trabalhado aparece para quem digitou exatamente o que você vende. Pessoas que já querem — não que precisam ser convencidas.',
+    title: 'Preço que cabe no bolso',
+    text: 'Site profissional por apenas R$ 165. Sem orçamento complicado e sem surpresa: você já sabe quanto vai pagar antes de chamar.',
   },
   {
-    title: 'Funciona sem você apertar botão',
-    text: 'Anúncio para quando o dinheiro para. Uma presença digital bem construída atrai visitantes dia e noite, sem depender de verba diária para funcionar.',
+    title: 'Feito para o celular',
+    text: 'A maioria dos seus clientes vai abrir o site pelo celular. Ele fica bonito e fácil de usar em qualquer tela.',
   },
   {
-    title: 'Em paralelo com o que você já faz',
-    text: 'Não substituímos seus anúncios nem seu WhatsApp. Adicionamos uma fonte de clientes qualificados que trabalha em paralelo — e que vem crescendo todo mês.',
+    title: 'WhatsApp em um clique',
+    text: 'Botão de WhatsApp em destaque para quem visita o site falar com você na hora, sem procurar telefone.',
   },
   {
-    title: 'Aplicamos em nós o que fazemos por você',
-    text: 'O maior case que temos somos nós mesmos. Você nos encontrou aqui — sem anúncio, sem indicação. É o método que entregamos para cada cliente.',
+    title: 'Sem mensalidade obrigatória',
+    text: 'Hospedagem e manutenção são opcionais, por R$ 29/mês. Você escolhe se quer que a gente cuide de tudo.',
   },
 ]
 
@@ -50,14 +50,14 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 grid gap-6 md:grid-cols-2 md:items-end">
             <div>
-              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">O que muda</p>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Por que a TopSite</p>
               <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">
-                Um site que só existe<br />não faz nada.
+                Site profissional<br />sem pagar caro.
               </h2>
             </div>
             <p className="max-w-lg leading-relaxed text-white/65">
-              A maioria das empresas tem um site. Mas quase nenhuma tem um site que trabalha — que atrai
-              clientes que buscam ativamente o que a empresa vende. Essa diferença é enorme.
+              Sua empresa merece estar na internet com um site bonito e profissional — e isso não
+              precisa custar caro. Por R$ 165 você tem tudo o que precisa para começar.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2">
@@ -70,7 +70,7 @@ export default function HomePage() {
             ))}
           </div>
           <div className="mt-12 text-center">
-            <ProjectCTA label="Quero um site que trabalha por mim" />
+            <ProjectCTA />
           </div>
         </div>
       </section>
@@ -86,8 +86,8 @@ export default function HomePage() {
               </h2>
             </div>
             <p className="max-w-lg leading-relaxed text-white/65">
-              Desenvolvemos sites, landing pages e lojas virtuais pensados para que sua empresa seja encontrada
-              por quem já busca o que você vende. Escolha o formato que mais faz sentido para o seu negócio.
+              Site institucional e landing page por apenas R$ 165. Precisa de algo maior, como uma loja
+              virtual? Também fazemos — é só chamar no WhatsApp.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2">
@@ -123,12 +123,12 @@ export default function HomePage() {
             <div>
               <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Como trabalhamos</p>
               <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">
-                Seu negócio orienta<br />cada decisão.
+                Simples, rápido<br />e sem burocracia.
               </h2>
             </div>
             <p className="max-w-lg leading-relaxed text-white/65">
-              Antes de escrever uma linha de código ou uma palavra de conteúdo, entendemos quem são seus
-              clientes, o que eles buscam e como sua empresa pode aparecer no caminho deles.
+              Tudo acontece pelo WhatsApp. Você manda as informações da sua empresa, a gente monta o
+              site e você só aprova.
             </p>
           </div>
           <ProcessSteps />

@@ -11,19 +11,21 @@ export interface ServiceContent {
   features: { title: string; text: string }[]
   deliverables: string[]
   faqs: { q: string; a: string }[]
+  // Produto vendido a preço fixo (R$ 165) — ausente nos serviços sob orçamento
+  offerProduct?: string
 }
 
 export const serviceContent = {
   "criacao-de-sites": {
     "slug": "criacao-de-sites",
     "label": "Criação de sites",
-    "title": "Criação de Sites | TopSite",
-    "eyebrow": "Presença que trabalha por você",
-    "heading": "Sites que fazem sua empresa ser encontrada por quem já procura o que você vende.",
-    "description": "Criamos sites profissionais para empresas serem encontradas por clientes reais. Design responsivo, estrutura pensada para buscadores e foco em resultado. Conheça a TopSite.",
-    "intro": "Seu site deve ser mais do que uma presença — deve ser o caminho pelo qual seus futuros clientes chegam até você. Construímos a estrutura e o conteúdo para que isso aconteça.",
-    "focus": "Um site que trabalha enquanto você trabalha",
-    "audience": "Para empresas e profissionais que querem ser encontrados por quem já procura o que oferecem, e transformar essas visitas em conversas reais.",
+    "title": "Criação de Sites por R$ 165 | Site Barato e Profissional | TopSite",
+    "eyebrow": "Criação de sites",
+    "heading": "Criação de sites por apenas R$ 165.",
+    "description": "Criação de site profissional por apenas R$ 165: site institucional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.",
+    "intro": "Sua empresa na internet sem pagar caro. Criamos um site institucional one page com seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular — tudo resolvido pelo WhatsApp.",
+    "focus": "Tudo isso por R$ 165",
+    "audience": "Para empresas e profissionais que querem um site bonito e profissional sem gastar muito.",
     "features": [
       {
         "title": "Conteúdo que responde ao que buscam",
@@ -34,8 +36,8 @@ export const serviceContent = {
         "text": "Cores, tipografia e composição alinhadas à sua identidade, com navegação adaptada a celulares, tablets e computadores."
       },
       {
-        "title": "Estrutura para ser encontrado",
-        "text": "Organizamos títulos, endereços e conteúdo de cada página para que os buscadores entendam exatamente o que sua empresa oferece e apresentem você para quem procura."
+        "title": "Preço que cabe no bolso",
+        "text": "Site profissional por apenas R$ 165, sem orçamento complicado. Você já sabe quanto vai pagar antes de chamar."
       },
       {
         "title": "Contato ao alcance de quem chegou",
@@ -43,36 +45,37 @@ export const serviceContent = {
       }
     ],
     "deliverables": [
-      "Estrutura de páginas definida no planejamento",
-      "Design e desenvolvimento responsivo",
-      "Configuração dos canais de contato acordados",
-      "Revisão antes da publicação"
+      "Site institucional one page",
+      "Design adaptado ao celular e ao computador",
+      "Botão de WhatsApp em destaque",
+      "Revisão e ajustes antes de ficar pronto"
     ],
     "faqs": [
       {
         "q": "Quanto custa criar um site?",
-        "a": "Os projetos começam a partir de R$ 490, em até 12x no cartão, já com técnicas avançadas de posicionamento e Google Meu Negócio completo. O valor final depende do tipo de site, da quantidade de serviços e do seu objetivo — monte seu orçamento em menos de 1 minuto e receba pelo WhatsApp. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+        "a": "O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Hospedagem e manutenção são opcionais, por R$ 29/mês."
       },
       {
-        "q": "Em quanto tempo o site começa a trazer resultado?",
-        "a": "Depende do mercado e da concorrência, mas o caminho começa no lançamento. Construímos a estrutura correta desde o início para que a evolução aconteça de forma consistente."
+        "q": "O que eu preciso enviar?",
+        "a": "As informações da sua empresa: logo (se tiver), fotos, lista de serviços e contatos. Você manda tudo pelo WhatsApp e a gente monta o site."
       },
       {
-        "q": "Preciso continuar anunciando se tiver um site assim?",
-        "a": "Não substituímos os anúncios — adicionamos uma fonte de clientes que funciona em paralelo. Quem chega por busca já quer o que você oferece; é um lead mais qualificado do que o que viu um anúncio."
+        "q": "Tem mensalidade?",
+        "a": "Não é obrigatória. Hospedagem e manutenção são opcionais, por R$ 29/mês, para quem quer que a gente deixe o site no ar e cuide dos ajustes."
       }
-    ]
+    ],
+    "offerProduct": "Site institucional one page"
   },
   "site-institucional": {
     "slug": "site-institucional",
     "label": "Site institucional",
-    "title": "Site Institucional para Empresas | TopSite",
+    "title": "Site Institucional por R$ 165 | Site Barato para Empresas | TopSite",
     "eyebrow": "Sua empresa na internet",
-    "heading": "Uma apresentação institucional que coloca sua empresa no caminho de quem a busca.",
-    "description": "Desenvolvimento de sites institucionais que apresentam sua empresa e a fazem ser encontrada por clientes reais. Design personalizado e estrutura pensada para resultado. Solicite uma proposta à TopSite.",
-    "intro": "Reúna a história da empresa, os serviços e os canais de atendimento em um endereço próprio. Criamos uma apresentação que ajuda clientes e parceiros a conhecer seu trabalho — e que faz você aparecer quando pesquisam pelo que sua empresa oferece.",
-    "focus": "Credibilidade que aparece quando precisam de você",
-    "audience": "Para empresas que precisam de uma apresentação completa, com espaço para explicar sua atuação, seus diferenciais e ser encontradas por quem procura o que oferecem.",
+    "heading": "Site institucional por apenas R$ 165.",
+    "description": "Site institucional one page por apenas R$ 165: apresentação da empresa, serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.",
+    "intro": "Reúna a história da empresa, os serviços e os canais de atendimento em uma página profissional, adaptada ao celular e com botão de WhatsApp em destaque — por apenas R$ 165.",
+    "focus": "Credibilidade por R$ 165",
+    "audience": "Para empresas que querem passar confiança na internet com uma apresentação profissional, sem pagar caro.",
     "features": [
       {
         "title": "Sobre a empresa",
@@ -99,28 +102,29 @@ export const serviceContent = {
     ],
     "faqs": [
       {
-        "q": "Quantas páginas o site institucional pode ter?",
-        "a": "Definimos essa quantidade no planejamento. Sobre, serviços, portfólio e contato são exemplos comuns; a estrutura deve refletir o conteúdo que sua empresa precisa apresentar."
+        "q": "Quanto custa o site institucional?",
+        "a": "O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Hospedagem e manutenção são opcionais, por R$ 29/mês."
       },
       {
         "q": "Preciso enviar textos e imagens?",
-        "a": "Conversamos sobre os materiais disponíveis antes de começar. A proposta define as responsabilidades pela produção, revisão e fornecimento dos conteúdos."
+        "a": "Sim: logo (se tiver), fotos, lista de serviços e contatos. Você manda tudo pelo WhatsApp e a gente monta o site."
       },
       {
         "q": "Posso ampliar o site depois?",
         "a": "Novas páginas e seções podem ser avaliadas conforme a evolução do negócio. O escopo e o investimento dessa ampliação são combinados antes do desenvolvimento."
       }
-    ]
+    ],
+    "offerProduct": "Site institucional one page"
   },
   "landing-page": {
     "slug": "landing-page",
     "label": "Landing pages",
-    "title": "Criação de Landing Pages | TopSite",
+    "title": "Landing Page por R$ 165 | Criação de Landing Page Barata | TopSite",
     "eyebrow": "Uma oferta, um objetivo",
-    "heading": "Landing pages que convertem quem já está procurando o que você oferece.",
-    "description": "Criamos landing pages para empresas que querem converter visitantes em contatos e clientes. Foco na oferta, design responsivo e estrutura pensada para resultado. Solicite uma proposta à TopSite.",
-    "intro": "Quando você tem uma oferta específica para apresentar, a página precisa acompanhar essa intenção — e aparecer para quem já procura por ela. Desenvolvemos landing pages com uma mensagem clara e um caminho direto para a próxima ação.",
-    "focus": "A página certa para quem chegou procurando",
+    "heading": "Landing page por apenas R$ 165.",
+    "description": "Criação de landing page por apenas R$ 165: página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque. Peça a sua pelo WhatsApp.",
+    "intro": "Tem um serviço, produto ou campanha para divulgar? Criamos uma landing page com mensagem clara e botão de WhatsApp em destaque, adaptada ao celular — por apenas R$ 165.",
+    "focus": "Sua oferta em uma página, por R$ 165",
     "audience": "Para divulgar um serviço, apresentar um lançamento ou captar interessados em uma oferta específica — de forma orgânica ou com apoio de anúncios.",
     "features": [
       {
@@ -159,7 +163,8 @@ export const serviceContent = {
         "q": "É possível integrar com meu CRM?",
         "a": "A integração depende da ferramenta e dos acessos disponíveis. Informe qual CRM você usa para avaliarmos a viabilidade, o escopo e o prazo."
       }
-    ]
+    ],
+    "offerProduct": "Landing page"
   },
   "loja-virtual": {
     "slug": "loja-virtual",
@@ -198,7 +203,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma loja virtual?",
-        "a": "Os projetos começam a partir de R$ 490, em até 12x no cartão, já com técnicas avançadas de posicionamento e Google Meu Negócio completo. O valor final depende do tipo de site, da quantidade de serviços e do seu objetivo — monte seu orçamento em menos de 1 minuto e receba pelo WhatsApp. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+        "a": "A loja virtual tem orçamento sob medida, porque depende da quantidade de produtos, da forma de pagamento e das integrações. Conte no WhatsApp o que você vende e passamos o valor. Se você precisa só apresentar a empresa e os produtos, o site institucional one page sai por apenas R$ 165."
       },
       {
         "q": "Preciso de pagamento online?",

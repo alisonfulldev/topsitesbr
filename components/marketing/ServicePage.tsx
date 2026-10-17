@@ -3,22 +3,25 @@ import { MarketingIcon } from './MarketingIcon'
 import { SITE_URL, marketingServices, organizationSchema } from '@/lib/marketing'
 import type { ReactNode } from 'react'
 import type { ServiceContent } from '@/lib/marketing-services'
-import { MarketingLayout, ProjectCTA, ProcessSteps, CTABand, PricingSection } from './MarketingSections'
+import { MarketingLayout, ProjectCTA, PriceTag, ProcessSteps, CTABand, PricingSection } from './MarketingSections'
 
 export function ServicePage({ content, bottomSection }: { content: ServiceContent; bottomSection?: ReactNode }) {
   const url = SITE_URL + '/' + content.slug
+  const product = content.offerProduct
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
       organizationSchema,
-      { '@type': 'Service', '@id': url + '/#service', name: content.label, description: content.description, url, provider: { '@id': SITE_URL + '/#organization' }, areaServed: { '@type': 'Country', name: 'Brazil' } },
+      { '@type': 'Service', '@id': url + '/#service', name: content.label, description: content.description, url, provider: { '@id': SITE_URL + '/#organization' }, areaServed: { '@type': 'Country', name: 'Brazil' }, ...(product && { offers: { '@type': 'Offer', price: '165', priceCurrency: 'BRL' } }) },
       { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Início', item: SITE_URL },
         { '@type': 'ListItem', position: 2, name: content.label, item: url },
       ] },
     ],
   }
-  const message = 'Olá! Quero conversar sobre um projeto de ' + content.label.toLowerCase() + ' com a TopSite.'
+  const message = product
+    ? 'Olá! Quero contratar ' + product.toLowerCase() + ' por R$ 165.'
+    : 'Olá! Quero um orçamento de ' + content.label.toLowerCase() + ' com a TopSite.'
   return (
     <MarketingLayout>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
@@ -31,6 +34,7 @@ export function ServicePage({ content, bottomSection }: { content: ServiceConten
             <div>
               <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">{content.eyebrow}</p>
               <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">{content.heading}</h1>
+              {product && <PriceTag product={product} className="mb-6" />}
               <p className="mb-8 max-w-2xl text-lg leading-relaxed text-white/70">{content.intro}</p>
               <ProjectCTA message={message} />
               <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento em todo o Brasil</p>
@@ -73,7 +77,7 @@ export function ServicePage({ content, bottomSection }: { content: ServiceConten
         </div>
       </section>
       {bottomSection}
-      <PricingSection message={message} />
+      <PricingSection message={message} product={product} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Vamos conversar sobre sua ideia?</h2>

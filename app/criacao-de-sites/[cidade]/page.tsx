@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { cities, getCityBySlug, getCitiesByRegion } from '@/lib/seo/cities'
 import { niches } from '@/lib/seo/niches'
 import { SITE_URL, marketingMetadata, marketingServices, organizationSchema, projectContact, offerPriceAnswer } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, ProjectCTA, PriceTag, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
@@ -18,20 +18,20 @@ export async function generateMetadata({ params }: { params: Promise<{ cidade: s
   const { cidade } = await params
   const city = getCityBySlug(cidade)
   if (!city) return marketingMetadata('Página não encontrada', 'Página não encontrada', '/criacao-de-sites/' + cidade)
-  const title = 'Criação de Sites em ' + city.name + ' | TopSite'
-  const description = 'Desenvolvemos sites profissionais para empresas de ' + city.name + ' (' + city.stateAbbr + '). Design responsivo, SEO e integração com WhatsApp. Solicite uma proposta à TopSite.'
+  const title = 'Site Barato em ' + city.name + ' por R$ 165 | Criação de Sites | TopSite'
+  const description = 'Criação de sites em ' + city.name + ' (' + city.stateAbbr + ') por apenas R$ 165: site institucional one page com serviços, fotos, contatos e WhatsApp, adaptado ao celular. Peça pelo WhatsApp.'
   return marketingMetadata(title, description, '/criacao-de-sites/' + city.slug)
 }
 
 const cityDeliverables = [
-  'Estrutura de páginas planejada com você',
-  'Design responsivo para celular e desktop',
-  'Configuração de canais de contato',
-  'Revisão e ajustes antes da publicação',
+  'Site institucional one page',
+  'Design adaptado ao celular e ao computador',
+  'Botão de WhatsApp em destaque',
+  'Revisão e ajustes antes de ficar pronto',
 ]
 
 const cityFeatures = [
-  { title: 'Presença que aparece no Google', text: 'Estruturamos títulos, descrições e conteúdo para ajudar buscadores a entender cada página, ampliando as chances de aparecer para quem procura no seu bairro ou cidade.' },
+  { title: 'Preço que cabe no bolso', text: 'Site profissional por apenas R$ 165, sem orçamento complicado. Você já sabe quanto vai pagar antes de chamar.' },
   { title: 'Design adaptado ao celular', text: 'A maioria dos acessos vem do celular. Cores, tipografia e navegação são desenhadas para ler bem e agir rápido em qualquer tela.' },
   { title: 'Contato ao alcance', text: 'WhatsApp, formulários e telefone posicionados nos pontos certos para que o visitante inicie a conversa sem procurar.' },
   { title: 'Autoridade local', text: 'Informações da empresa organizadas para transmitir credibilidade e diferenciar sua marca dentro da concorrência da região.' },
@@ -49,8 +49,8 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
 
   const url = SITE_URL + '/criacao-de-sites/' + city.slug
   const economyText = city.economy.slice(0, -1).join(', ') + ' e ' + city.economy[city.economy.length - 1]
-  const intro = 'Desenvolvemos sites profissionais para empresas de ' + city.name + ' e região. ' + city.context + ' O mercado local tem forte presença em ' + economyText + ' — setores onde um site bem estruturado faz diferença na hora de conquistar novos clientes.'
-  const message = 'Olá! Tenho uma empresa em ' + city.name + ' e quero criar um site com a TopSite.'
+  const intro = 'Criamos sites profissionais para empresas de ' + city.name + ' e região por apenas R$ 165. ' + city.context + ' Em um mercado forte em ' + economyText + ', ter um site bonito e com WhatsApp em destaque passa confiança para quem procura a sua empresa.'
+  const message = 'Olá! Tenho uma empresa em ' + city.name + ' e quero meu site por R$ 165.'
 
   const nearbyCities = getCitiesByRegion(city.region, city.slug, 8)
   const popularNiches = POPULAR_NICHE_SLUGS
@@ -75,8 +75,9 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
         '@type': 'Service',
         '@id': url + '/#service',
         name: 'Criação de sites em ' + city.name,
-        description: 'Criação de sites profissionais para empresas de ' + city.name + ' (' + city.stateAbbr + ').',
+        description: 'Criação de sites profissionais para empresas de ' + city.name + ' (' + city.stateAbbr + ') por R$ 165.',
         url,
+        offers: { '@type': 'Offer', price: '165', priceCurrency: 'BRL' },
         provider: { '@id': SITE_URL + '/#organization' },
         areaServed: { '@type': 'City', name: city.name },
       },
@@ -106,7 +107,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
     },
     {
       q: 'Quanto tempo leva para o site ir ao ar?',
-      a: 'O cronograma é definido conforme o escopo. Para sites institucionais em ' + city.name + ', trabalhamos com prazos que respeitam o planejamento e as validações necessárias antes da publicação. Você recebe essa previsão logo na primeira conversa pelo WhatsApp.',
+      a: 'Depende de você enviar as informações da empresa (logo, fotos, serviços e contatos). Com tudo em mãos, montamos o site e você recebe a previsão de entrega já na primeira conversa pelo WhatsApp.',
     },
   ]
 
@@ -122,16 +123,17 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </nav>
           <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
             <div>
-              <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">{city.name} — {city.stateAbbr}</p>
-              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Criação de sites em {city.name}</h1>
+              <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">Criação de sites em {city.name} — {city.stateAbbr}</p>
+              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Site barato em {city.name} por apenas <span className="text-[#25D366]">R$ 165</span></h1>
+              <PriceTag className="mb-6" />
               <p className="mb-8 max-w-2xl text-lg leading-relaxed text-white/70">{intro}</p>
               <ProjectCTA message={message} />
               <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento remoto em {city.name} e todo o Brasil</p>
             </div>
             <aside className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-7 sm:p-10">
               <p className="mb-5 text-xs uppercase tracking-widest text-yellow-400">O que entregamos</p>
-              <h2 className="mb-4 text-2xl font-semibold">Um site pensado para sua empresa</h2>
-              <p className="mb-8 leading-relaxed text-white/65">Para empresas de {city.name} que querem apresentar seus serviços, organizar informações e transformar visitas em conversas.</p>
+              <h2 className="mb-4 text-2xl font-semibold">Tudo isso por R$ 165</h2>
+              <p className="mb-8 leading-relaxed text-white/65">Para empresas de {city.name} que querem um site profissional para apresentar seus serviços sem pagar caro.</p>
               <ul className="space-y-4">
                 {cityDeliverables.map((item) => <li key={item} className="flex gap-3 text-sm leading-relaxed text-white/80"><MarketingIcon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-yellow-400" />{item}</li>)}
               </ul>
@@ -153,18 +155,18 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </div>
         </div>
       </section>
-      <CTABand message={message} />
+      <CTABand message={message} title={'Site profissional em ' + city.name + ' por apenas R$ 165.'} />
       <section className="px-4 py-16 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Por que a TopSite</p>
             <h2 className="mb-4 max-w-2xl text-2xl font-semibold sm:text-3xl">
-              Se você nos encontrou buscando criação de sites em {city.name}, já viu o método funcionar.
+              Site profissional em {city.name} não precisa custar caro.
             </h2>
             <p className="max-w-2xl leading-relaxed text-white/70">
-              Empresas em {city.name} que aparecem quando seus clientes buscam no Google não chegaram lá por acidente.
-              É o mesmo trabalho que fazemos pelo seu negócio — para que seus clientes te encontrem
-              da mesma forma que você nos encontrou. Não entregamos um site e sumimos: posicionamos sua empresa.
+              Muita empresa em {city.name} ainda não tem site porque acha que é caro ou complicado. Aqui você paga
+              apenas R$ 165, resolve tudo pelo WhatsApp e recebe um site bonito, adaptado ao celular e com o
+              botão de WhatsApp em destaque.
             </p>
           </div>
         </div>
@@ -198,8 +200,8 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
       <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para sua empresa em {city.name} ser encontrada por quem já busca?</h2>
-          <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer sua empresa aparecer para quem já procura em {city.name} e região.</p>
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Seu site em {city.name} por apenas R$ 165</h2>
+          <p className="mb-8 text-lg text-white/65">Chame no WhatsApp, conte sobre a sua empresa e a gente monta o seu site.</p>
           <ProjectCTA message={message} />
           <nav aria-label="Outros serviços" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
             {marketingServices.filter(({ href }) => href !== '/criacao-de-sites').map(({ href, label }) => (

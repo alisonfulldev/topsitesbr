@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { niches, getNicheBySlug, getNichesBySector } from '@/lib/seo/niches'
 import { cities } from '@/lib/seo/cities'
 import { SITE_URL, marketingMetadata, marketingServices, organizationSchema, offerPriceAnswer } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, ProjectCTA, PriceTag, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
@@ -18,8 +18,9 @@ export async function generateMetadata({ params }: { params: Promise<{ nicho: st
   const { nicho } = await params
   const niche = getNicheBySlug(nicho)
   if (!niche) return marketingMetadata('Página não encontrada', 'Página não encontrada', '/site-para/' + nicho)
-  const title = niche.heading + ' | TopSite'
-  return marketingMetadata(title, niche.description, '/site-para/' + niche.slug)
+  const title = 'Site para ' + niche.name + ' por R$ 165 | Site Barato e Profissional | TopSite'
+  const description = 'Site para ' + niche.name.toLowerCase() + ' por apenas R$ 165: site profissional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça pelo WhatsApp.'
+  return marketingMetadata(title, description, '/site-para/' + niche.slug)
 }
 
 export default async function Page({ params }: { params: Promise<{ nicho: string }> }) {
@@ -52,6 +53,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
         name: niche.heading,
         description: niche.description,
         url,
+        offers: { '@type': 'Offer', price: '165', priceCurrency: 'BRL' },
         provider: { '@id': SITE_URL + '/#organization' },
         areaServed: { '@type': 'Country', name: 'Brazil' },
       },
@@ -77,7 +79,8 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
           <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
             <div>
               <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">{niche.sector}</p>
-              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">{niche.heading}</h1>
+              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Site para {niche.name} por apenas <span className="text-[#25D366]">R$ 165</span></h1>
+              <PriceTag className="mb-6" />
               <p className="mb-8 max-w-2xl text-lg leading-relaxed text-white/70">{niche.intro}</p>
               <ProjectCTA message={niche.ctaMessage} />
               <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento em todo o Brasil</p>
@@ -107,18 +110,17 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
           </div>
         </div>
       </section>
-      <CTABand message={niche.ctaMessage} />
+      <CTABand message={niche.ctaMessage} title={'Site para ' + niche.name.toLowerCase() + ' por apenas R$ 165.'} />
       <section className="px-4 py-16 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Por que a TopSite</p>
             <h2 className="mb-4 max-w-2xl text-2xl font-semibold sm:text-3xl">
-              Você nos encontrou da mesma forma que seus clientes vão te encontrar.
+              Site profissional para {niche.name.toLowerCase()} sem pagar caro.
             </h2>
             <p className="max-w-2xl leading-relaxed text-white/70">
-              Você buscou e chegou até aqui. Seus clientes fazem o mesmo quando procuram por {niche.name.toLowerCase()} —
-              e o nosso trabalho é garantir que sua empresa esteja no caminho deles nessa busca.
-              Não entregamos um site e sumimos: posicionamos seu negócio para ser encontrado.
+              Por apenas R$ 165 o seu negócio ganha um site bonito, adaptado ao celular e com o botão de WhatsApp
+              em destaque. Tudo resolvido pelo WhatsApp, sem reunião e sem burocracia.
             </p>
           </div>
         </div>
@@ -152,8 +154,8 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
       <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para {niche.name} aparecer para quem já busca?</h2>
-          <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer sua empresa aparecer para quem já procura o que você oferece.</p>
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Seu site para {niche.name.toLowerCase()} por apenas R$ 165</h2>
+          <p className="mb-8 text-lg text-white/65">Chame no WhatsApp, conte sobre o seu negócio e a gente monta o seu site.</p>
           <ProjectCTA message={niche.ctaMessage} />
           <nav aria-label="Outros serviços" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
             {marketingServices.map(({ href, label }) => (

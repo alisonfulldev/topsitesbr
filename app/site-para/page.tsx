@@ -5,8 +5,8 @@ import { SITE_URL, marketingMetadata, organizationSchema } from '@/lib/marketing
 import { MarketingLayout, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 
 export const metadata: Metadata = marketingMetadata(
-  'Sites por Segmento de Negócio | TopSite',
-  'Sites profissionais para mais de 150 tipos de negócio em todo o Brasil. Clínicas, restaurantes, advogados, construtoras e muito mais. Encontre o segmento da sua empresa.',
+  'Site por R$ 165 para Todo Tipo de Negócio | Sites por Segmento | TopSite',
+  'Site profissional por apenas R$ 165 para mais de 150 tipos de negócio em todo o Brasil. Clínicas, restaurantes, advogados, construtoras e muito mais.',
   '/site-para'
 )
 
@@ -44,13 +44,13 @@ export default function Page() {
           </nav>
           <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">Todos os segmentos</p>
           <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">
-            Sites profissionais por segmento de negócio
+            Site para o seu negócio por apenas <span className="text-[#25D366]">R$ 165</span>
           </h1>
           <p className="mb-4 max-w-2xl text-lg leading-relaxed text-white/70">
-            Desenvolvemos sites para mais de 150 tipos de negócio em todo o Brasil. Cada projeto é planejado com o conteúdo, estrutura e visual que fazem sentido para o público do segmento — para aparecer quando o cliente certo busca.
+            Criamos sites para mais de 150 tipos de negócio em todo o Brasil, cada um com o conteúdo e o visual que fazem sentido para o segmento — por apenas R$ 165.
           </p>
           <p className="max-w-2xl leading-relaxed text-white/55">
-            Encontre o segmento da sua empresa abaixo e veja como a TopSite pode ajudar seu negócio a ser encontrado no Google.
+            Encontre o segmento da sua empresa abaixo e peça o seu site pelo WhatsApp.
           </p>
         </div>
       </section>

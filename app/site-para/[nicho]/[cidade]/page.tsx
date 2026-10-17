@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { niches, getNicheBySlug, getNichesBySector } from '@/lib/seo/niches'
 import { cities, getCityBySlug, getCitiesByRegion } from '@/lib/seo/cities'
 import { SITE_URL, marketingMetadata, organizationSchema, offerPriceAnswer } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, ProjectCTA, PriceTag, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: { params: Promise<{ nicho: st
   const niche = getNicheBySlug(nicho)
   const city = getCityBySlug(cidade)
   if (!niche || !city) return marketingMetadata('Página não encontrada', 'Página não encontrada', '/site-para/' + nicho + '/' + cidade)
-  const title = `Site para ${niche.name} em ${city.name} | TopSite`
-  const description = `Criamos sites profissionais para ${niche.plural.toLowerCase()} em ${city.name} (${city.stateAbbr}). ${niche.description}`
+  const title = `Site para ${niche.name} em ${city.name} por R$ 165 | TopSite`
+  const description = `Site para ${niche.name.toLowerCase()} em ${city.name} (${city.stateAbbr}) por apenas R$ 165: site profissional one page com serviços, fotos, contatos e WhatsApp, adaptado ao celular.`
   return marketingMetadata(title, description, '/site-para/' + niche.slug + '/' + city.slug)
 }
 
@@ -33,7 +33,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
   if (!niche || !city) notFound()
 
   const url = `${SITE_URL}/site-para/${niche.slug}/${city.slug}`
-  const ctaMessage = `Olá! Tenho uma ${niche.name.toLowerCase()} em ${city.name} e quero criar um site com a TopSite.`
+  const ctaMessage = `Olá! Quero um site para ${niche.name.toLowerCase()} em ${city.name} por R$ 165.`
 
   const nearbyCities = getCitiesByRegion(city.region, city.slug, 8)
   const sectorNiches = getNichesBySector(niche.sector, niche.slug, 8)
@@ -48,7 +48,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
     },
   ]
   const economyText = city.economy.slice(0, 3).join(', ')
-  const intro = `Desenvolvemos sites para ${niche.plural.toLowerCase()} em ${city.name} e região. O mercado local tem forte presença em ${economyText} — e ${niche.plural.toLowerCase()} que aparecem no Google quando o cliente busca saem na frente. ${niche.intro}`
+  const intro = `Criamos sites para ${niche.plural.toLowerCase()} em ${city.name} e região por apenas R$ 165. Em um mercado forte em ${economyText}, um site profissional passa confiança para quem procura o seu negócio. ${niche.intro}`
 
   const schema = {
     '@context': 'https://schema.org',
@@ -58,8 +58,9 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
         '@type': 'Service',
         '@id': url + '/#service',
         name: `Site para ${niche.name} em ${city.name}`,
-        description: `Criação de site profissional para ${niche.plural.toLowerCase()} em ${city.name} (${city.stateAbbr}).`,
+        description: `Criação de site profissional para ${niche.plural.toLowerCase()} em ${city.name} (${city.stateAbbr}) por R$ 165.`,
         url,
+        offers: { '@type': 'Offer', price: '165', priceCurrency: 'BRL' },
         provider: { '@id': SITE_URL + '/#organization' },
         areaServed: { '@type': 'City', name: city.name },
       },
@@ -99,7 +100,8 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
           <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
             <div>
               <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">{niche.sector} · {city.name} — {city.stateAbbr}</p>
-              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Site para {niche.name} em {city.name}</h1>
+              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Site para {niche.name} em {city.name} por apenas <span className="text-[#25D366]">R$ 165</span></h1>
+              <PriceTag className="mb-6" />
               <p className="mb-8 max-w-2xl text-lg leading-relaxed text-white/70">{intro}</p>
               <ProjectCTA message={ctaMessage} />
               <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento remoto em {city.name} e todo o Brasil</p>
@@ -135,18 +137,17 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
         </div>
       </section>
 
-      <CTABand message={ctaMessage} />
+      <CTABand message={ctaMessage} title={`Site para ${niche.name.toLowerCase()} em ${city.name} por apenas R$ 165.`} />
       <section className="px-4 py-16 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Por que a TopSite</p>
             <h2 className="mb-4 max-w-2xl text-2xl font-semibold sm:text-3xl">
-              Se você nos encontrou buscando site para {niche.name.toLowerCase()} em {city.name}, já viu o método funcionar.
+              Site para {niche.name.toLowerCase()} em {city.name} sem pagar caro.
             </h2>
             <p className="max-w-2xl leading-relaxed text-white/70">
-              {niche.plural} em {city.name} nos encontram da mesma forma que seus clientes vão te encontrar.
-              Não entregamos um site e sumimos: posicionamos {niche.name} para aparecer
-              para quem já busca o que você oferece em {city.name} e região.
+              Por apenas R$ 165 o seu negócio ganha um site profissional, adaptado ao celular e com
+              o botão de WhatsApp em destaque. Tudo resolvido pelo WhatsApp, sem reunião e sem burocracia.
             </p>
           </div>
         </div>
@@ -183,8 +184,8 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
       <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Pronto para {niche.name} em {city.name} aparecer para quem já busca?</h2>
-          <p className="mb-8 text-lg text-white/65">A conversa é gratuita. Entendemos o seu negócio e mostramos como fazer {niche.name} aparecer para quem já procura em {city.name} e região.</p>
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Seu site para {niche.name.toLowerCase()} em {city.name} por apenas R$ 165</h2>
+          <p className="mb-8 text-lg text-white/65">Chame no WhatsApp, conte sobre o seu negócio e a gente monta o seu site.</p>
           <ProjectCTA message={ctaMessage} />
           <nav aria-label="Ver mais" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
             <Link href={`/site-para/${niche.slug}`} className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">Site para {niche.name} — Brasil</Link>
