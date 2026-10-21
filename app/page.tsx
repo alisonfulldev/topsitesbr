@@ -5,8 +5,8 @@ import { WhySection, ServicesSection, ProcessSection, LandingPricingSection, Faq
 import { AnimatedHero } from '@/components/marketing/AnimatedHero'
 
 export const metadata = marketingMetadata(
-  'Site Barato por R$ 165 | Criação de Site Profissional | TopSite',
-  'Site profissional por apenas R$ 165: site institucional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.',
+  'Criação de Site Profissional por R$ 97/mês | TopSite',
+  'Site profissional com a Top Site: página de captura por R$ 97/mês, com a primeira parcela só após 30 dias, configuração de SEO e Google Meu Negócio. Fale pelo WhatsApp.',
 )
 
 const schema = {
