@@ -57,15 +57,11 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa criar um site?",
-        "a": "O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+        "a": "O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular."
       },
       {
         "q": "O que eu preciso enviar?",
         "a": "As informações da sua empresa: logo (se tiver), fotos, lista de serviços e contatos. Você manda tudo pelo WhatsApp e a gente monta o site."
-      },
-      {
-        "q": "Tem mensalidade?",
-        "a": "Não é obrigatória. Hospedagem e manutenção são opcionais, por R$ 29/mês, para quem quer que a gente deixe o site no ar e cuide dos ajustes."
       }
     ],
     "offerProduct": "Site institucional one page"
@@ -107,7 +103,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa o site institucional?",
-        "a": "O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+        "a": "O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular."
       },
       {
         "q": "Preciso enviar textos e imagens?",
@@ -157,7 +153,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma landing page?",
-        "a": "A landing page sai por apenas R$ 165: uma página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+        "a": "A landing page sai por apenas R$ 165: uma página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque."
       },
       {
         "q": "A landing page substitui o site institucional?",
@@ -260,7 +256,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma página de vendas?",
-        "a": "A página de vendas sai por apenas R$ 165: uma página completa para apresentar o seu produto ou serviço, adaptada ao celular e com botões de WhatsApp. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+        "a": "A página de vendas sai por apenas R$ 165: uma página completa para apresentar o seu produto ou serviço, adaptada ao celular e com botões de WhatsApp."
       },
       {
         "q": "Posso vender qualquer produto ou serviço?",
@@ -310,7 +306,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma página de lançamento?",
-        "a": "A página de lançamento sai por apenas R$ 165: uma página própria para o seu lançamento, adaptada ao celular e com botão de WhatsApp em destaque. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+        "a": "A página de lançamento sai por apenas R$ 165: uma página própria para o seu lançamento, adaptada ao celular e com botão de WhatsApp em destaque."
       },
       {
         "q": "Serve para evento ou inauguração?",
@@ -360,7 +356,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma página de captura?",
-        "a": "A página de captura sai por apenas R$ 165: uma página simples e direta para captar contatos, adaptada ao celular e com botão de WhatsApp. Hospedagem e manutenção são opcionais, por R$ 29/mês."
+        "a": "A página de captura sai por apenas R$ 165: uma página simples e direta para captar contatos, adaptada ao celular e com botão de WhatsApp."
       },
       {
         "q": "Qual a diferença para uma página de vendas?",

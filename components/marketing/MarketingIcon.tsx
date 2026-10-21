@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react'
 
-type IconName = 'arrow' | 'chevron' | 'check' | 'chat' | 'plus'
+type IconName = 'arrow' | 'chevron' | 'check' | 'chat' | 'plus' | 'mail' | 'sparkle' | 'pencil' | 'phone' | 'calendar' | 'clock' | 'search' | 'pin'
 
 const paths: Record<IconName, string> = {
   arrow: 'M7 17 17 7M7 7h10v10',
@@ -8,6 +8,14 @@ const paths: Record<IconName, string> = {
   check: 'm5 12 4 4L19 6',
   chat: 'M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-3 2 1.5-6A8.5 8.5 0 1 1 21 11.5ZM7 10h9M7 14h6',
   plus: 'M12 5v14M5 12h14',
+  mail: 'M3 6.5A1.5 1.5 0 0 1 4.5 5h15A1.5 1.5 0 0 1 21 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5v-11ZM3.5 6l8.5 7 8.5-7',
+  sparkle: 'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3ZM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z',
+  pencil: 'M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4ZM13.5 6.5l4 4',
+  phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2',
+  calendar: 'M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1ZM4 10h16M8 3v4M16 3v4',
+  clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3 2',
+  search: 'M10.5 18a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15ZM21 21l-5.2-5.2',
+  pin: 'M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21ZM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z',
 }
 
 export function WhatsAppIcon({ className = 'h-6 w-6 shrink-0' }: { className?: string }) {

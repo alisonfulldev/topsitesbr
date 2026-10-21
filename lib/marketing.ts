@@ -22,14 +22,33 @@ export const offer = {
     { title: 'Adaptado ao celular', text: 'Fica bonito e fácil de usar no celular, no tablet e no computador.' },
     { title: 'Botão de WhatsApp em destaque', text: 'Quem visita seu site fala com você em um clique.' },
   ],
-  optional: {
-    price: 'R$ 29/mês',
-    title: 'Hospedagem e manutenção mensal',
-    text: 'Opcional: deixamos seu site no ar e cuidamos dos ajustes necessários.',
-  },
 }
 
-export const offerPriceAnswer = 'O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Hospedagem e manutenção são opcionais, por R$ 29/mês.'
+export const offerPriceAnswer = 'O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular.'
+
+// Âncoras da home — usadas também na navegação do rodapé
+export const homeAnchors = {
+  why: 'por-que-a-top-site',
+  services: 'servicos',
+  process: 'como-trabalhamos',
+  pricing: 'investimento',
+  faq: 'perguntas-frequentes',
+  contact: 'solicitar-orcamento',
+}
+
+// Opções do formulário "Vamos conversar sobre o seu projeto?" da home
+export const SITE_TYPES = [
+  'Criação de sites',
+  'Site institucional',
+  'Landing page',
+  'Página de lançamento',
+  'Página de captura',
+  'Loja virtual',
+  'Outro',
+] as const
+
+// E-mail oficial de contato (também usado no JSON-LD)
+export const CONTACT_EMAIL = 'contato@topsitebr.com.br'
 
 export const DEFAULT_WHATSAPP_MESSAGE = 'Olá! Quero meu site por R$ 165.'
 
@@ -58,7 +77,7 @@ export const organizationSchema = {
   name: 'TopSite', url: SITE_URL, logo: SITE_URL + '/logo.png',
   description: BRAND_DESCRIPTION,
   telephone: '+55-18-99674-2364',
-  email: 'contato@topsitebr.com.br',
+  email: CONTACT_EMAIL,
   areaServed: { '@type': 'Country', name: 'Brazil' },
   contactPoint: {
     '@type': 'ContactPoint', contactType: 'customer service',

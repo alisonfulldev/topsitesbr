@@ -703,3 +703,20 @@ model TemplatePresentation {
 
   @@map("template_presentations")
 }
+
+// Pedidos do formulário "Vamos conversar sobre o seu projeto?" da home (aba Site do admin)
+model ContactRequest {
+  id        String   @id @default(uuid())
+  name      String   @default("")
+  email     String?
+  // Legado: pedidos antigos tinham nome e sobrenome separados (o painel junta os dois na exibição)
+  firstName String?  @map("first_name")
+  lastName  String?  @map("last_name")
+  phone     String
+  siteType  String   @map("site_type")
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("contact_requests")
+}

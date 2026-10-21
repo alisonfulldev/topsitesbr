@@ -6,15 +6,14 @@ import { offer, projectContact } from '@/lib/marketing'
 
 const CTA_LABEL = 'Quero meu site por ' + offer.price
 
-export function MarketingLayout({ children }: { children: ReactNode }) {
+// theme="light": página clara (home). As páginas de serviço seguem no tema escuro.
+export function MarketingLayout({ children, theme = 'dark' }: { children: ReactNode; theme?: 'dark' | 'light' }) {
+  const light = theme === 'light'
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-yellow-400 selection:text-black">
-      <MarketingHeader />
-      <main id="conteudo-principal" className="pt-20">{children}</main>
+    <div className={'min-h-screen selection:bg-[#FDD900] selection:text-black ' + (light ? 'bg-white text-black' : 'bg-[#0a0a0a] text-white')}>
+      <MarketingHeader theme={theme} />
+      <main id="conteudo-principal" className="pt-16">{children}</main>
       <MarketingFooter />
-      <a href={projectContact()} target="_blank" rel="noopener noreferrer" aria-label="Conversar com a TopSite pelo WhatsApp" className="cta-pulse fixed bottom-5 right-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/40 transition-colors hover:bg-[#1ebe5b]">
-        <WhatsAppIcon className="h-9 w-9" />
-      </a>
     </div>
   )
 }
@@ -75,11 +74,6 @@ export function PricingSection({ message, product = offer.product }: { message?:
               </li>
             ))}
           </ul>
-          <div className="mb-10 rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-yellow-400">Opcional</p>
-            <p className="font-semibold">{offer.optional.title} — <span className="text-[#25D366]">{offer.optional.price}</span></p>
-            <p className="mt-1 text-sm leading-relaxed text-white/60">{offer.optional.text}</p>
-          </div>
           <div className="text-center">
             <ProjectCTA message={message} className="w-full sm:w-auto" />
             <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento em todo o Brasil</p>

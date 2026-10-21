@@ -14,7 +14,7 @@ function formatCurrency(value: number) {
 function contractClauses(clientName: string, value: number): string[] {
   const price = value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
   return [
-    `1. Partes: TOP SITE, CNPJ 22.556.759/0001-98 (Contratada) e ${clientName} (Contratante).`,
+    `1. Partes: TOP SITE, CNPJ 64.470.641/0001-92 (Contratada) e ${clientName} (Contratante).`,
     `2. Objeto: desenvolvimento de um site conforme o escopo da proposta aprovada e do briefing acordado.`,
     `3. Valor e pagamento: o valor refere-se EXCLUSIVAMENTE ao desenvolvimento (criação) do site, no valor de R$ ${price}. Pagamento único via Asaas; a confirmação inicia a produção.`,
     `4. O que está incluído: os itens listados como inclusos na proposta.`,

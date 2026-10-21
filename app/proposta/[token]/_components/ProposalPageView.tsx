@@ -47,7 +47,7 @@ function ContractModal({
 }) {
   const priceFormatted = Number(creationPrice).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
   const clauses = [
-    `1. Partes: TOP SITE, CNPJ 22.556.759/0001-98 (Contratada) e ${clientName} (Contratante).`,
+    `1. Partes: TOP SITE, CNPJ 64.470.641/0001-92 (Contratada) e ${clientName} (Contratante).`,
     `2. Objeto: desenvolvimento de um site conforme o escopo da proposta "${proposalTitle}" e do briefing acordado.`,
     `3. Valor e pagamento: o valor da proposta refere-se EXCLUSIVAMENTE ao desenvolvimento (criação) do site, no valor de R$ ${priceFormatted}. Pagamento único via Asaas; a confirmação inicia a produção.`,
     `4. O que está incluído: os itens listados como inclusos na proposta.`,

@@ -20,6 +20,52 @@
   .cta-pulse { animation: none; }
 }
 
+/* Rolagem suave para as âncoras da home (ex.: "Quero outro site" → #solicitar-orcamento) */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* Hero da home — fundo, montagens laterais e sublinhados animados */
+.hero-bg {
+  background-image: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(253, 217, 0, 0.12), rgba(253, 217, 0, 0.03) 45%, rgba(253, 217, 0, 0) 75%);
+}
+.hero-rise { animation: heroRise 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+/* Sublinhado amarelo, desenhado da esquerda para a direita (só background-size: sem reflow) */
+.hero-mark {
+  background-image: linear-gradient(#FDD900, #FDD900);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 0.16em;
+  padding-bottom: 0.04em;
+  animation: heroMark 0.75s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.hero-mark-1 { animation-delay: 0.75s; }
+.hero-mark-2 { animation-delay: 1.25s; }
+.hero-mark-3 { animation-delay: 1.75s; }
+@keyframes heroMark { to { background-size: 100% 0.16em; } }
+/* Abaixo de lg: base das montagens laterais desaparece suavemente no fundo branco.
+   Só a máscara do wrapper das imagens — a caixa de mensagem não é afetada. */
+@media (max-width: 1023.98px) {
+  .hero-shot-fade {
+    -webkit-mask-image: linear-gradient(to bottom, #000 50%, rgba(0, 0, 0, 0.6) 72%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 50%, rgba(0, 0, 0, 0.6) 72%, transparent 100%);
+  }
+}
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .hero-shot-fade {
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, rgba(0, 0, 0, 0.6) 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 62%, rgba(0, 0, 0, 0.6) 80%, transparent 100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise { animation: none; }
+  .hero-mark { animation: none; background-size: 100% 0.16em; }
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
