@@ -5,8 +5,8 @@ import { SITE_URL, marketingMetadata, organizationSchema } from '@/lib/marketing
 import { MarketingLayout, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 
 export const metadata: Metadata = marketingMetadata(
-  'Site por R$ 165 para Todo Tipo de Negócio | Sites por Segmento | TopSite',
-  'Site profissional por apenas R$ 165 para mais de 150 tipos de negócio em todo o Brasil. Clínicas, restaurantes, advogados, construtoras e muito mais.',
+  'Site por R$ 97/mês para Todo Tipo de Negócio | Sites por Segmento | TopSite',
+  'Site profissional por apenas R$ 97/mês para mais de 150 tipos de negócio em todo o Brasil. Clínicas, restaurantes, advogados, construtoras e muito mais.',
   '/site-para'
 )
 
@@ -37,36 +37,36 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
       <section className="px-4 py-12 sm:px-8 sm:py-20">
         <div className="mx-auto max-w-7xl">
-          <nav aria-label="Caminho da página" className="mb-12 flex flex-wrap gap-3 text-sm text-white/55">
-            <Link href="/" className="hover:text-yellow-400">Início</Link>
+          <nav aria-label="Caminho da página" className="mb-12 flex flex-wrap gap-3 text-sm text-black/55">
+            <Link href="/" className="hover:text-black">Início</Link>
             <span aria-hidden="true">/</span>
             <span aria-current="page">Sites por segmento</span>
           </nav>
-          <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">Todos os segmentos</p>
+          <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-black/55">Todos os segmentos</p>
           <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">
-            Site para o seu negócio por apenas <span className="text-[#25D366]">R$ 165</span>
+            Site para o seu negócio por apenas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">R$ 97/mês</span>
           </h1>
-          <p className="mb-4 max-w-2xl text-lg leading-relaxed text-white/70">
-            Criamos sites para mais de 150 tipos de negócio em todo o Brasil, cada um com o conteúdo e o visual que fazem sentido para o segmento — por apenas R$ 165.
+          <p className="mb-4 max-w-2xl text-lg leading-relaxed text-black/70">
+            Criamos sites para mais de 150 tipos de negócio em todo o Brasil, cada um com o conteúdo e o visual que fazem sentido para o segmento — por apenas R$ 97/mês.
           </p>
-          <p className="max-w-2xl leading-relaxed text-white/55">
+          <p className="max-w-2xl leading-relaxed text-black/55">
             Encontre o segmento da sua empresa abaixo e peça o seu site pelo WhatsApp.
           </p>
         </div>
       </section>
       <CTABand />
 
-      <section className="border-t border-white/10 bg-[#101010] px-4 pb-20 pt-14 sm:px-8">
+      <section className="border-t border-black/10 bg-white px-4 pb-20 pt-14 sm:px-8">
         <div className="mx-auto max-w-7xl space-y-16">
           {sectorEntries.map(([sector, nicheList]) => (
             <div key={sector}>
-              <h2 className="mb-6 border-b border-white/10 pb-3 text-lg font-semibold text-yellow-400">{sector}</h2>
+              <h2 className="mb-6 border-b border-black/10 pb-3 text-lg font-semibold text-black">{sector}</h2>
               <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {nicheList.map((n) => (
                   <li key={n.slug}>
                     <Link
                       href={`/site-para/${n.slug}`}
-                      className="block rounded-xl border border-white/10 px-4 py-3 text-sm text-white/75 transition-colors hover:border-yellow-400/40 hover:text-yellow-400"
+                      className="block rounded-xl border border-black/10 px-4 py-3 text-sm text-black/80 transition-colors hover:border-black/30 hover:bg-[#FAFAF7] hover:text-black"
                     >
                       {n.heading}
                     </Link>
@@ -80,9 +80,9 @@ export default function Page() {
 
       <section className="px-4 py-12 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <nav aria-label="Páginas relacionadas" className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/55">
-            <Link href="/criacao-de-sites" className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">Criação de sites por cidade</Link>
-            <Link href="/mapa-do-site" className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">Mapa do site</Link>
+          <nav aria-label="Páginas relacionadas" className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-black/55">
+            <Link href="/criacao-de-sites" className="underline decoration-[#FDD900] decoration-2 underline-offset-4 hover:text-black">Criação de sites por cidade</Link>
+            <Link href="/mapa-do-site" className="underline decoration-[#FDD900] decoration-2 underline-offset-4 hover:text-black">Mapa do site</Link>
           </nav>
         </div>
       </section>

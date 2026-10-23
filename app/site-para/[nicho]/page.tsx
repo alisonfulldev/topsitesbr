@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { niches, getNicheBySlug, getNichesBySector } from '@/lib/seo/niches'
 import { cities } from '@/lib/seo/cities'
-import { SITE_URL, marketingMetadata, marketingServices, organizationSchema, offerPriceAnswer } from '@/lib/marketing'
+import { SITE_URL, marketingMetadata, marketingServices, organizationSchema, offerPriceAnswer, monthlyOfferSchema } from '@/lib/marketing'
 import { MarketingLayout, ProjectCTA, PriceTag, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { serviceContent, nicheOfferServices } from '@/lib/marketing-services'
@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ nicho: st
   const { nicho } = await params
   const niche = getNicheBySlug(nicho)
   if (!niche) return marketingMetadata('Página não encontrada', 'Página não encontrada', '/site-para/' + nicho)
-  const title = 'Site para ' + niche.name + ' por R$ 165 | Site Barato e Profissional | TopSite'
-  const description = 'Site para ' + niche.name.toLowerCase() + ' por apenas R$ 165: site profissional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça pelo WhatsApp.'
+  const title = 'Site para ' + niche.name + ' por R$ 97/mês | Site Barato e Profissional | TopSite'
+  const description = 'Site para ' + niche.name.toLowerCase() + ' por apenas R$ 97/mês: site profissional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça pelo WhatsApp.'
   return marketingMetadata(title, description, '/site-para/' + niche.slug)
 }
 
@@ -35,7 +35,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
   const topCities = cities.slice(0, 8)
   const relatedGroups = [
     {
-      heading: 'Outras páginas para ' + niche.name.toLowerCase() + ' por R$ 165',
+      heading: 'Outras páginas para ' + niche.name.toLowerCase() + ' por R$ 97/mês',
       links: nicheOfferServices.map((s) => ({ label: serviceContent[s].offerProduct + ' para ' + niche.name, href: '/' + s + '/' + niche.slug })),
     },
     {
@@ -58,7 +58,7 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
         name: niche.heading,
         description: niche.description,
         url,
-        offers: { '@type': 'Offer', price: '165', priceCurrency: 'BRL' },
+        offers: monthlyOfferSchema,
         provider: { '@id': SITE_URL + '/#organization' },
         areaServed: { '@type': 'Country', name: 'Brazil' },
       },
@@ -77,79 +77,79 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
       <section className="px-4 py-12 sm:px-8 sm:py-20">
         <div className="mx-auto max-w-7xl">
-          <nav aria-label="Caminho da página" className="mb-12 flex flex-wrap gap-3 text-sm text-white/55">
-            <Link href="/" className="hover:text-yellow-400">Início</Link><span aria-hidden="true">/</span>
+          <nav aria-label="Caminho da página" className="mb-12 flex flex-wrap gap-3 text-sm text-black/55">
+            <Link href="/" className="hover:text-black">Início</Link><span aria-hidden="true">/</span>
             <span aria-current="page">{niche.name}</span>
           </nav>
           <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
             <div>
-              <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">{niche.sector}</p>
-              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Site para {niche.name} por apenas <span className="text-[#25D366]">R$ 165</span></h1>
+              <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-black/55">{niche.sector}</p>
+              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Site para {niche.name} por apenas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">R$ 97/mês</span></h1>
               <PriceTag className="mb-6" />
-              <p className="mb-8 max-w-2xl text-lg leading-relaxed text-white/70">{niche.intro}</p>
+              <p className="mb-8 max-w-2xl text-lg leading-relaxed text-black/70">{niche.intro}</p>
               <ProjectCTA message={niche.ctaMessage} />
-              <p className="mt-5 text-sm text-white/50">Resposta rápida no WhatsApp · Atendimento em todo o Brasil</p>
+              <p className="mt-5 text-sm text-black/55">Resposta rápida no WhatsApp · Atendimento em todo o Brasil</p>
             </div>
-            <aside className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-7 sm:p-10">
-              <p className="mb-5 text-xs uppercase tracking-widest text-yellow-400">Feito para {niche.plural.toLowerCase()}</p>
+            <aside className="rounded-3xl border border-[#FDD900] bg-[#FFFBE0] p-7 sm:p-10">
+              <p className="mb-5 text-xs uppercase tracking-widest text-black/55">Feito para {niche.plural.toLowerCase()}</p>
               <h2 className="mb-4 text-2xl font-semibold">{niche.focus}</h2>
-              <p className="mb-8 leading-relaxed text-white/65">{niche.audience}</p>
+              <p className="mb-8 leading-relaxed text-black/70">{niche.audience}</p>
               <ul className="space-y-4">
-                {niche.deliverables.map((item) => <li key={item} className="flex gap-3 text-sm leading-relaxed text-white/80"><MarketingIcon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-yellow-400" />{item}</li>)}
+                {niche.deliverables.map((item) => <li key={item} className="flex gap-3 text-sm leading-relaxed text-black/80"><MarketingIcon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-black" />{item}</li>)}
               </ul>
             </aside>
           </div>
         </div>
       </section>
-      <section className="border-y border-white/10 bg-[#101010] px-4 py-20 sm:px-8">
+      <section className="border-y border-black/10 bg-white px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <h2 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">O que um site para {niche.name} pode ter</h2>
+          <h2 className="text-balance text-center mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">O que um site para {niche.name} pode ter</h2>
           <div className="grid gap-6 md:grid-cols-2">
             {niche.features.map(({ title, text }, index) => (
-              <article key={title} className="rounded-2xl border border-white/10 p-7 sm:p-8">
-                <span className="mb-5 block text-sm font-semibold text-yellow-400">0{index + 1}</span>
+              <article key={title} className="rounded-2xl border border-black/10 p-7 sm:p-8">
+                <span className="mb-5 inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#FDD900] text-sm font-semibold tabular-nums text-black">0{index + 1}</span>
                 <h3 className="mb-3 text-xl font-semibold">{title}</h3>
-                <p className="leading-relaxed text-white/65">{text}</p>
+                <p className="leading-relaxed text-black/70">{text}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
-      <CTABand message={niche.ctaMessage} title={'Site para ' + niche.name.toLowerCase() + ' por apenas R$ 165.'} />
+      <CTABand message={niche.ctaMessage} title={'Site para ' + niche.name.toLowerCase() + ' por apenas R$ 97/mês.'} />
       <section className="px-4 py-16 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="rounded-3xl border border-yellow-400/20 bg-yellow-400/[0.04] p-8 sm:p-12">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-yellow-400">Por que a TopSite</p>
+          <div className="rounded-3xl border border-[#FDD900] bg-[#FFFBE0] p-8 sm:p-12">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-black/55">Por que a TopSite</p>
             <h2 className="mb-4 max-w-2xl text-2xl font-semibold sm:text-3xl">
               Site profissional para {niche.name.toLowerCase()} sem pagar caro.
             </h2>
-            <p className="max-w-2xl leading-relaxed text-white/70">
-              Por apenas R$ 165 o seu negócio ganha um site bonito, adaptado ao celular e com o botão de WhatsApp
+            <p className="max-w-2xl leading-relaxed text-black/70">
+              Por apenas R$ 97/mês o seu negócio ganha um site bonito, adaptado ao celular e com o botão de WhatsApp
               em destaque. Tudo resolvido pelo WhatsApp, sem reunião e sem burocracia.
             </p>
           </div>
         </div>
       </section>
-      <section className="border-t border-white/10 bg-[#101010] px-4 py-20 sm:px-8">
+      <section className="border-t border-black/10 bg-white px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <h2 className="mb-10 text-3xl font-semibold sm:text-4xl">Como trabalhamos</h2>
+          <h2 className="text-balance text-center mb-10 text-3xl font-semibold sm:text-4xl">Como trabalhamos</h2>
           <ProcessSteps />
           <div className="mt-12 text-center">
             <ProjectCTA message={niche.ctaMessage} />
           </div>
         </div>
       </section>
-      <section className="bg-[#101010] px-4 py-20 sm:px-8">
+      <section className="bg-white px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-8 text-3xl font-semibold">Perguntas frequentes</h2>
+          <h2 className="text-balance text-center mb-8 text-3xl font-semibold">Perguntas frequentes</h2>
           <div className="space-y-4">
             {[{ q: `Quanto custa um site para ${niche.name.toLowerCase()}?`, a: offerPriceAnswer }, ...niche.faqs].map(({ q, a }) => (
-              <details key={q} className="group/faq rounded-xl border border-white/10 p-6">
+              <details key={q} className="group/faq border-b border-black/15 py-5 first:border-t">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-5 font-semibold [&::-webkit-details-marker]:hidden">
                   <span>{q}</span>
-                  <MarketingIcon name="plus" className="h-5 w-5 shrink-0 text-yellow-400 transition-transform group-open/faq:rotate-45" />
+                  <MarketingIcon name="plus" className="h-5 w-5 shrink-0 text-black transition-transform group-open/faq:rotate-45" />
                 </summary>
-                <p className="mt-4 leading-relaxed text-white/65">{a}</p>
+                <p className="mt-4 leading-relaxed text-black/70">{a}</p>
               </details>
             ))}
           </div>
@@ -159,12 +159,12 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
       <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Seu site para {niche.name.toLowerCase()} por apenas R$ 165</h2>
-          <p className="mb-8 text-lg text-white/65">Chame no WhatsApp, conte sobre o seu negócio e a gente monta o seu site.</p>
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Seu site para {niche.name.toLowerCase()} por apenas R$ 97/mês</h2>
+          <p className="mb-8 text-lg text-black/70">Chame no WhatsApp, conte sobre o seu negócio e a gente monta o seu site.</p>
           <ProjectCTA message={niche.ctaMessage} />
-          <nav aria-label="Outros serviços" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-white/65">
+          <nav aria-label="Outros serviços" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-black/70">
             {marketingServices.map(({ href, label }) => (
-              <Link key={href} href={href} className="underline decoration-white/25 underline-offset-4 hover:text-yellow-400">{label}</Link>
+              <Link key={href} href={href} className="underline decoration-[#FDD900] decoration-2 underline-offset-4 hover:text-black">{label}</Link>
             ))}
           </nav>
         </div>

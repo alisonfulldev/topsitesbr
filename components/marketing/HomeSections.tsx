@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { MarketingIcon, WhatsAppIcon } from './MarketingIcon'
 import { FaqAccordion } from './FaqAccordion'
 import { ContactForm } from './ContactForm'
-import { homeAnchors, projectContact } from '@/lib/marketing'
+import { homeAnchors, offerHighlights, projectContact } from '@/lib/marketing'
 
 // Seções da página inicial — tema claro: fundo branco, texto preto e destaques em #FDD900.
 // O fundo ocupa a largura toda; o conteúdo fica centralizado em max-w-6xl.
@@ -13,14 +13,6 @@ const sectionIntro = 'mx-auto mt-6 max-w-2xl text-pretty text-center text-base l
 
 // Botão padrão das seções brancas: amarelo com texto preto
 export const yellowButton = 'inline-flex h-14 items-center justify-center gap-2.5 rounded-xl bg-[#FDD900] px-8 text-base font-semibold text-black transition-colors duration-200 hover:bg-[#E8C700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white'
-
-// Indicadores do box comercial da página de captura
-const captureHighlights = [
-  { icon: 'clock', label: 'Primeira parcela após 30 dias.' },
-  { icon: 'calendar', label: 'Durante 12 meses' },
-  { icon: 'search', label: '+ Configuração SEO' },
-  { icon: 'pin', label: '+ Google Meu Negócio' },
-] as const
 
 const CAPTURE_PAGE_MESSAGE = 'Olá! Quero contratar a página de captura por R$ 97/mês, com a primeira parcela após 30 dias.'
 
@@ -151,7 +143,7 @@ export function LandingPricingSection() {
             R$ 97<span className="text-[0.4em] font-semibold tracking-tight">/mês</span>
           </p>
           <ul className="mx-auto mt-6 grid max-w-2xl grid-cols-[auto_auto] justify-center gap-1.5 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-3 sm:gap-y-4">
-            {captureHighlights.map(({ icon, label }, index) => (
+            {offerHighlights.map(({ icon, label }, index) => (
               <li key={label} className={'flex sm:justify-center' + (index === 0 ? ' sm:w-full' : '')}>
                 <span className="inline-flex w-full items-center justify-center gap-1 whitespace-nowrap rounded-full border border-black/20 bg-white/40 px-2 py-1.5 text-[clamp(8.5px,2.5vw,12px)] max-[339px]:whitespace-normal font-semibold tracking-tight sm:w-auto sm:gap-2 sm:px-4 sm:py-2 sm:text-sm sm:tracking-normal">
                   <MarketingIcon name={icon} className="h-3 w-3 shrink-0 sm:h-4 sm:w-4" strokeWidth={2} />

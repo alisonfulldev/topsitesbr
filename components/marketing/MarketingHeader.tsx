@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { CONTACT_EMAIL, marketingServices, offer, projectContact } from '@/lib/marketing'
 
-// Classes por tema: "light" na home, "dark" nas demais páginas
+// Classes por tema: "light" em todas as páginas de divulgação (padrão); "dark" fica disponível
 const themes = {
   dark: {
     header: 'border-white/[0.06] bg-[#0A0A0A]/85 text-white',

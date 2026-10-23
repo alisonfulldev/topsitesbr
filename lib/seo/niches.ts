@@ -37,7 +37,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode receber avaliações do Google?', a: 'Sim. Podemos exibir as avaliações do seu perfil Google Meu Negócio ou apresentar depoimentos coletados diretamente. Isso aumenta a credibilidade da clínica.' },
       { q: 'Consigo divulgar promoções sazonais?', a: 'Sim. O site pode ter uma seção destacada para promoções vigentes, atualizada conforme as campanhas da clínica. Combinamos como será a manutenção antes de começar.' },
     ],
-    ctaMessage: 'Olá! Tenho uma clínica de estética e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma clínica de estética e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'barbearia',
@@ -61,7 +61,7 @@ export const niches: NicheData[] = [
       { q: 'Preciso ter fotos profissionais?', a: 'Fotos reais dos cortes ajudam bastante, mas não precisam ser de fotógrafo profissional. Conversamos sobre os materiais disponíveis antes de iniciar.' },
       { q: 'O site vai aparecer para clientes perto da barbearia?', a: 'Com a estrutura certa, sim. Configuramos as informações locais para ajudar clientes próximos a encontrar sua barbearia nas buscas do Google da região.' },
     ],
-    ctaMessage: 'Olá! Tenho uma barbearia e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma barbearia e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'salao-de-beleza',
@@ -85,7 +85,7 @@ export const niches: NicheData[] = [
       { q: 'Cada profissional pode ter agenda própria?', a: 'Sim, se usarmos uma ferramenta de agendamento externa que permita isso. Avaliamos as opções conforme o número de profissionais e o volume de atendimentos.' },
       { q: 'O site funciona bem no celular?', a: 'Sim, todos os nossos sites são desenvolvidos com layout responsivo. Como a maioria das clientes acessa pelo celular, esse é um cuidado central do projeto.' },
     ],
-    ctaMessage: 'Olá! Tenho um salão de beleza e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um salão de beleza e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'psicologo',
@@ -109,7 +109,7 @@ export const niches: NicheData[] = [
       { q: 'Como divulgar sem violar o Código de Ética?', a: 'Trabalhamos dentro do que o CFP permite — apresentação profissional, especializações e áreas de atuação, sem promessas de resultado ou uso de expressões proibidas. Você revisa tudo antes da publicação.' },
       { q: 'Consigo atender pacientes de outras cidades?', a: 'Sim, principalmente no atendimento online. Estruturamos o site para que essa modalidade fique clara para quem chega, com informações sobre horários e forma de pagamento.' },
     ],
-    ctaMessage: 'Olá! Sou psicólogo e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou psicólogo e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'dentista',
@@ -133,7 +133,7 @@ export const niches: NicheData[] = [
       { q: 'Como listar os convênios que atendo?', a: 'Criamos uma seção específica com os logos ou nomes dos convênios. Assim o paciente confirma rapidamente se pode ser atendido pelo plano dele.' },
       { q: 'O site respeita as regras do Conselho de Odontologia?', a: 'Sim. Não usamos linguagem sensacionalista, promessa de resultado ou termos proibidos. Você revisa o conteúdo antes da publicação para garantir conformidade.' },
     ],
-    ctaMessage: 'Olá! Sou dentista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou dentista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'medico',
@@ -157,7 +157,7 @@ export const niches: NicheData[] = [
       { q: 'Preciso mostrar o CRM no site?', a: 'Sim, é obrigatório pelo Conselho. Colocamos o número do CRM de forma visível em pontos apropriados do site.' },
       { q: 'Consigo receber contato de pacientes de outras cidades?', a: 'Sim. Se você atende por telemedicina, o site pode destacar essa modalidade e facilitar o contato de pacientes de outras localidades — sempre dentro das regras do CFM.' },
     ],
-    ctaMessage: 'Olá! Sou médico e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou médico e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'nutricionista',
@@ -181,7 +181,7 @@ export const niches: NicheData[] = [
       { q: 'O site respeita o Código de Ética do CFN?', a: 'Sim. Não usamos frases como "resultado garantido", nem depoimentos com número de quilos perdidos. Você revisa cada conteúdo antes da publicação para garantir conformidade.' },
       { q: 'Posso publicar receitas no site?', a: 'Sim. Um espaço com receitas ou dicas nutricionais atrai visitantes qualificados via Google e demonstra seu conhecimento. Combinamos a frequência antes de começar.' },
     ],
-    ctaMessage: 'Olá! Sou nutricionista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou nutricionista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'personal-trainer',
@@ -205,7 +205,7 @@ export const niches: NicheData[] = [
       { q: 'Posso mostrar fotos e vídeos de alunos?', a: 'Sim, com autorização de imagem por escrito. Sugerimos foco no processo (execução, evolução) em vez de apenas "antes e depois", o que constrói confiança de forma mais sólida.' },
       { q: 'Preciso ter CREF para divulgar meu trabalho?', a: 'Sim, é obrigatório atuar com CREF e exibir o registro no site. Colocamos essa informação nos pontos apropriados para transmitir credibilidade e cumprir a legislação.' },
     ],
-    ctaMessage: 'Olá! Sou personal trainer e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou personal trainer e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'fisioterapeuta',
@@ -229,7 +229,7 @@ export const niches: NicheData[] = [
       { q: 'Como funciona o site respeitando o COFFITO?', a: 'Não usamos promessa de cura, depoimentos com garantia de resultado ou linguagem sensacionalista. Estruturamos o conteúdo dentro do que o Conselho permite.' },
       { q: 'Posso ter uma página só para pilates ou RPG?', a: 'Sim. Cada modalidade pode ter sua página própria, com explicação sobre o método, indicações e como marcar avaliação — o que ajuda também nas buscas do Google.' },
     ],
-    ctaMessage: 'Olá! Sou fisioterapeuta e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou fisioterapeuta e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'academia',
@@ -253,7 +253,7 @@ export const niches: NicheData[] = [
       { q: 'Como atualizar a grade de aulas?', a: 'A grade pode ser um PDF fácil de trocar, uma imagem atualizável ou um bloco editável no painel do site. Escolhemos o formato conforme sua frequência de mudanças.' },
       { q: 'Consigo fazer campanhas promocionais no site?', a: 'Sim. Criamos áreas destacadas para promoções sazonais (Black Friday, retorno de férias, semana da mulher) que você ativa e desativa conforme a campanha.' },
     ],
-    ctaMessage: 'Olá! Tenho uma academia e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma academia e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'restaurante',
@@ -277,7 +277,7 @@ export const niches: NicheData[] = [
       { q: 'O site substitui perfis do iFood e Instagram?', a: 'Não substitui, mas centraliza. O site funciona como o "endereço oficial" onde o cliente encontra tudo — inclusive os links para iFood e redes sociais — e onde o Google indexa suas informações.' },
       { q: 'Consigo receber reservas pelo site?', a: 'Sim. Pode ser via WhatsApp com mensagem estruturada, formulário simples ou integração com sistema de reservas. Avaliamos a opção mais adequada ao seu movimento.' },
     ],
-    ctaMessage: 'Olá! Tenho um restaurante e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um restaurante e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'pizzaria',
@@ -301,7 +301,7 @@ export const niches: NicheData[] = [
       { q: 'Como atualizo preços quando aumenta ingrediente?', a: 'Trabalhamos com um cardápio fácil de editar (PDF, imagem ou painel próprio). Você troca conforme a necessidade sem depender de terceiros.' },
       { q: 'Consigo receber pedidos programados para depois?', a: 'Sim, se usarmos um sistema de pedidos com essa função ou se estruturarmos o WhatsApp para permitir agendamento. Definimos junto conforme o volume da pizzaria.' },
     ],
-    ctaMessage: 'Olá! Tenho uma pizzaria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma pizzaria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'hamburgueria',
@@ -325,7 +325,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo destacar lançamentos ou edições limitadas?', a: 'Sim. Criamos áreas destacadas para o burger do mês, edições especiais ou colaborações — atualizadas conforme a frequência da sua cozinha.' },
       { q: 'O site pode ter cardápio para consumo no local?', a: 'Sim. Podemos criar um cardápio digital acessível por QR code na mesa, sem precisar imprimir cardápios físicos ou trocar quando muda um item.' },
     ],
-    ctaMessage: 'Olá! Tenho uma hamburgueria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma hamburgueria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'lanchonete',
@@ -349,7 +349,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo mudar preços com frequência?', a: 'Sim. Trabalhamos com cardápio em formato fácil de editar. Você atualiza quando necessário sem depender de retrabalho no design.' },
       { q: 'Vale a pena ter delivery próprio no lugar do iFood?', a: 'Depende do volume. Para lanchonete com clientela fiel, ter WhatsApp de pedidos economiza taxas. iFood ainda vale para captar clientes novos — o site pode ter os dois canais lado a lado.' },
     ],
-    ctaMessage: 'Olá! Tenho uma lanchonete e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma lanchonete e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'confeitaria',
@@ -373,7 +373,7 @@ export const niches: NicheData[] = [
       { q: 'Como funciona o pedido personalizado pelo site?', a: 'O cliente preenche um formulário com tema, cor, sabor, quantidade e data. Você recebe por e-mail ou WhatsApp e responde com o orçamento final.' },
       { q: 'Posso mostrar bolos de festas que já fiz?', a: 'Sim, com autorização quando aparecem crianças ou pessoas na foto. Um portfólio de trabalhos anteriores ajuda muito a fechar novas encomendas.' },
     ],
-    ctaMessage: 'Olá! Tenho uma confeitaria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma confeitaria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'acai',
@@ -397,7 +397,7 @@ export const niches: NicheData[] = [
       { q: 'Faz diferença ter delivery próprio além do iFood?', a: 'Faz. iFood cobra taxa por pedido; o WhatsApp direto economiza margem, principalmente com clientes fiéis. O site pode ter os dois canais visíveis.' },
       { q: 'Consigo alterar preços com frequência?', a: 'Sim. O cardápio digital é feito para ser atualizado quando necessário. Você não depende de retrabalho no design para mudar valores.' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de açaí e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de açaí e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'marmitaria',
@@ -421,7 +421,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo apresentar planos de assinatura?', a: 'Sim. Criamos uma tabela clara comparando planos (avulso, semanal, mensal) para o cliente perceber a vantagem do plano recorrente.' },
       { q: 'Preciso mostrar informações nutricionais?', a: 'Não é obrigatório, mas para marmitaria fitness essas informações fazem diferença. Podemos exibi-las junto de cada prato do cardápio.' },
     ],
-    ctaMessage: 'Olá! Tenho uma marmitaria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma marmitaria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'buffet-gastronomico',
@@ -445,7 +445,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode enviar orçamento automaticamente?', a: 'O site pode enviar por e-mail as informações que o cliente preencheu (data, convidados, tipo de evento) para você calcular e responder com a proposta personalizada.' },
       { q: 'Vale a pena separar cardápio por tipo de evento?', a: 'Sim. Cada ocasião tem expectativa diferente (casamento pede sofisticação, corporativo pede praticidade). Cardápios separados ajudam o cliente a se identificar.' },
     ],
-    ctaMessage: 'Olá! Tenho um buffet gastronômico e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um buffet gastronômico e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'eletricista',
@@ -469,7 +469,7 @@ export const niches: NicheData[] = [
       { q: 'Vale a pena investir em site sendo autônomo?', a: 'Vale, principalmente porque o Google prioriza sites bem estruturados nas buscas locais. Isso te coloca à frente de concorrentes que só usam Instagram ou WhatsApp isolado.' },
       { q: 'Consigo destacar meu atendimento 24 horas?', a: 'Sim. Se você atende emergência, colocamos essa informação em posição de destaque no site e no botão de contato, porque é o que gera o cliente mais qualificado.' },
     ],
-    ctaMessage: 'Olá! Sou eletricista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou eletricista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'encanador',
@@ -493,7 +493,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode receber fotos do problema pelo WhatsApp?', a: 'Sim. Configuramos o botão para abrir o WhatsApp com mensagem sugerindo o envio de foto, o que agiliza o orçamento e evita visita desnecessária.' },
       { q: 'Preciso de fotos do meu trabalho?', a: 'Ajuda bastante. Fotos de instalações concluídas, ferramentas e equipamentos transmitem profissionalismo. Se não tiver, começamos com o que houver e vamos adicionando.' },
     ],
-    ctaMessage: 'Olá! Sou encanador e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou encanador e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'pintor',
@@ -517,7 +517,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter técnicas especiais em destaque?', a: 'Sim. Grafiato, textura, epóxi e verniz têm público que busca especificamente por elas. Páginas próprias para cada técnica ajudam nas buscas.' },
       { q: 'Vale a pena ter site sendo autônomo?', a: 'Vale, porque coloca você em posição de igualdade com empresas maiores nas buscas locais. Cliente que compara três orçamentos escolhe quem transmite mais confiança visual.' },
     ],
-    ctaMessage: 'Olá! Sou pintor e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou pintor e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'marceneiro',
@@ -541,7 +541,7 @@ export const niches: NicheData[] = [
       { q: 'O site atende marcenaria de móveis populares e alto padrão?', a: 'Sim. Adaptamos o tom e a apresentação ao seu público — mais funcional para móveis populares, mais refinado para alto padrão. Você define a linha antes de começar.' },
       { q: 'Vale destacar prazos de entrega?', a: 'Sim, principalmente porque o prazo é uma das principais preocupações do cliente de móveis planejados. Ter essa informação clara reduz dúvidas no primeiro contato.' },
     ],
-    ctaMessage: 'Olá! Sou marceneiro e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou marceneiro e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'arquiteto',
@@ -565,7 +565,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo separar projetos residenciais e comerciais?', a: 'Sim. O portfólio pode ser filtrado por categoria (residencial, comercial, interiores, corporativo) para o cliente encontrar rapidamente o tipo de projeto que procura.' },
       { q: 'O site precisa ter estilo próprio como meu trabalho?', a: 'Sim, e essa é a diferença de um site sob medida. O layout é desenhado para acompanhar sua identidade autoral, não é template genérico.' },
     ],
-    ctaMessage: 'Olá! Sou arquiteto e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou arquiteto e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'construtora',
@@ -589,7 +589,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter tour virtual dos apartamentos?', a: 'Sim. Se você tem tours 360, vídeos aéreos com drone ou plantas humanizadas, podemos integrar tudo isso no site.' },
       { q: 'Como funciona a captação de leads pelo site?', a: 'Formulários específicos por empreendimento enviam os dados do interessado direto para a equipe comercial, que pode dar o retorno rapidamente.' },
     ],
-    ctaMessage: 'Olá! Tenho uma construtora e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma construtora e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'empresa-de-limpeza',
@@ -613,7 +613,7 @@ export const niches: NicheData[] = [
       { q: 'Como transmito segurança sobre a equipe?', a: 'Informações sobre carteira assinada, treinamento, uniformes, produtos utilizados e seguro contra danos são detalhes que fazem diferença na decisão do cliente.' },
       { q: 'O site atende empresa grande e diarista?', a: 'Sim. Adaptamos o tom conforme o público. Empresa maior fala em contratos corporativos; diarista fala em atendimento residencial mais próximo.' },
     ],
-    ctaMessage: 'Olá! Tenho uma empresa de limpeza e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma empresa de limpeza e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'dedetizadora',
@@ -637,7 +637,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo separar dedetização de outros serviços?', a: 'Sim. Cada tipo de praga (baratas, ratos, cupim, escorpião, pombos) atrai busca específica no Google. Páginas separadas ajudam no posicionamento e na conversão.' },
       { q: 'O site pode oferecer plano de manutenção?', a: 'Sim. Planos mensais ou trimestrais para condomínios, empresas e residências podem ter área destacada com o benefício de recorrência (preço menor, garantia estendida).' },
     ],
-    ctaMessage: 'Olá! Tenho uma dedetizadora e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma dedetizadora e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'oficina-mecanica',
@@ -661,7 +661,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo apresentar orçamento sem visita?', a: 'Sim, para serviços simples e conhecidos (troca de óleo, filtro, revisão básica). Para problemas complexos, o site pode facilitar o envio de fotos ou vídeos pelo WhatsApp.' },
       { q: 'O site pode ter tabela de valores?', a: 'Sim, para serviços de valor fixo (troca de óleo, alinhamento, balanceamento). Serviços variáveis ficam por consulta, com orçamento após avaliação.' },
     ],
-    ctaMessage: 'Olá! Tenho uma oficina mecânica e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma oficina mecânica e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'lava-rapido',
@@ -685,7 +685,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo receber agendamento pelo site?', a: 'Sim. Pode ser via WhatsApp com horários sugeridos, formulário simples ou integração com sistema de agenda, conforme o volume de atendimento.' },
       { q: 'O site pode ter fotos dos serviços?', a: 'Sim. Fotos de carros antes e depois da lavagem detalhada, cristalização e polimento ajudam a mostrar o padrão de acabamento do seu trabalho.' },
     ],
-    ctaMessage: 'Olá! Tenho um lava-rápido e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um lava-rápido e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'funilaria',
@@ -709,7 +709,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo destacar atendimento a seguradoras?', a: 'Sim. Se você é credenciado ou atende sinistros, coloque essa informação em destaque, com a lista de seguradoras. Isso atrai um público específico e recorrente.' },
       { q: 'O site pode ter área para acompanhar o reparo?', a: 'Sim, com um sistema simples de acompanhamento. É uma comodidade para o cliente e reduz mensagens perguntando "quando fica pronto?". Avaliamos conforme o volume.' },
     ],
-    ctaMessage: 'Olá! Tenho uma funilaria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma funilaria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'autoescola',
@@ -733,7 +733,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo destacar renovação e cursos extras?', a: 'Sim. Renovação, EAR e mudança de categoria têm público específico e valor recorrente — merecem página própria com destaque.' },
       { q: 'O site pode ter simulado da prova teórica?', a: 'Sim, se você quiser oferecer como diferencial. Um simulado gratuito atrai visitantes qualificados e cria uma primeira relação com futuros alunos.' },
     ],
-    ctaMessage: 'Olá! Tenho uma autoescola e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma autoescola e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'escola',
@@ -757,7 +757,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter área para pais e alunos?', a: 'Sim. Uma área restrita com boletins, avisos e cronograma é possível, integrada ao seu sistema de gestão escolar. Avaliamos conforme a infraestrutura já existente.' },
       { q: 'Vale destacar mensalidades no site?', a: 'A prática varia. Muitas escolas preferem apresentar valores apenas na visita ou por formulário. Definimos junto a melhor estratégia para o seu perfil de aluno.' },
     ],
-    ctaMessage: 'Olá! Tenho uma escola e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma escola e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'curso-de-ingles',
@@ -781,7 +781,7 @@ export const niches: NicheData[] = [
       { q: 'O site atende curso presencial e online?', a: 'Sim. Cada modalidade tem sua página, com informações específicas (localização e estrutura para presencial; plataforma e horários para online).' },
       { q: 'Vale destacar certificação (TOEFL, Cambridge)?', a: 'Sim, principalmente para adultos que buscam certificado. Preparação para exames internacionais atrai público específico e disposto a pagar mais.' },
     ],
-    ctaMessage: 'Olá! Tenho um curso de inglês e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um curso de inglês e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'escola-de-musica',
@@ -805,7 +805,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter vídeos de alunos?', a: 'Sim, com autorização. Vídeos de recital, apresentações e alunos tocando ajudam muito na conversão, especialmente para pais interessados em aulas para os filhos.' },
       { q: 'Vale apresentar formações e certificados dos professores?', a: 'Vale. O aluno adulto principalmente busca professores qualificados. Mostrar formação, tempo de experiência e alunos formados aumenta a credibilidade da escola.' },
     ],
-    ctaMessage: 'Olá! Tenho uma escola de música e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma escola de música e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'escola-de-danca',
@@ -829,7 +829,7 @@ export const niches: NicheData[] = [
       { q: 'O site atende ballet infantil e zumba adulto no mesmo lugar?', a: 'Sim. Cada modalidade e faixa etária pode ter página própria, com abordagem específica (lúdica para crianças, energética para adultos).' },
       { q: 'Vale a pena mostrar horários das turmas?', a: 'Vale. Horário fixo é um dos primeiros filtros do aluno — se não fecha com a rotina, ele nem entra em contato. Mostrar a grade evita mensagens desnecessárias.' },
     ],
-    ctaMessage: 'Olá! Tenho uma escola de dança e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma escola de dança e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'escola-de-informatica',
@@ -853,7 +853,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter grade curricular detalhada?', a: 'Sim. Cada curso pode ter sua grade completa (aula por aula, módulo por módulo), o que reduz dúvidas e aumenta a taxa de matrícula.' },
       { q: 'Vale oferecer teste vocacional gratuito?', a: 'Vale. Um teste ou questionário simples ajuda o candidato a escolher o curso certo e cria uma primeira relação antes da matrícula.' },
     ],
-    ctaMessage: 'Olá! Tenho uma escola de informática e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma escola de informática e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'pet-shop',
@@ -877,7 +877,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter delivery de ração?', a: 'Sim. Podemos criar uma seção de delivery com WhatsApp direto, catálogo simples ou pequena loja virtual para pedidos recorrentes.' },
       { q: 'Vale a pena separar banho, tosa, hospedagem?', a: 'Vale. Cada serviço tem público diferente (tutor de emergência vs. tutor que planeja viagem). Páginas separadas ajudam nas buscas específicas.' },
     ],
-    ctaMessage: 'Olá! Tenho um pet shop e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um pet shop e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'clinica-veterinaria',
@@ -901,7 +901,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter agendamento de consulta?', a: 'Sim. Pode ser via WhatsApp com dados do pet, ou integrado com sistema veterinário. Definimos conforme sua estrutura atual.' },
       { q: 'Vale destacar planos de saúde pet aceitos?', a: 'Vale. Tutor com plano pet quer saber se sua clínica atende antes de marcar. Uma lista clara evita mensagens perguntando e facilita a decisão.' },
     ],
-    ctaMessage: 'Olá! Tenho uma clínica veterinária e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma clínica veterinária e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'advogado',
@@ -925,7 +925,7 @@ export const niches: NicheData[] = [
       { q: 'Posso divulgar casos que ganhei?', a: 'Não do modo que a publicidade comercial costuma fazer. A OAB proíbe divulgar resultado. Você pode apresentar sua expertise por meio de artigos educativos e áreas de atuação.' },
       { q: 'Consigo ter blog jurídico no site?', a: 'Sim, e é uma das formas mais efetivas de atrair clientes qualificados. Conteúdo educativo sobre direitos e obrigações é permitido e valorizado pelo Google.' },
     ],
-    ctaMessage: 'Olá! Sou advogado e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou advogado e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'contador',
@@ -949,7 +949,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter área para clientes enviarem documentos?', a: 'Sim. Podemos integrar com sistemas contábeis já existentes ou criar uma área simples para upload de notas fiscais e documentos.' },
       { q: 'Vale destacar abertura de empresa?', a: 'Vale. Abertura de empresa é uma das buscas mais frequentes no Google. Uma página específica com passo a passo atrai empreendedores no momento certo.' },
     ],
-    ctaMessage: 'Olá! Sou contador e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou contador e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'imobiliaria',
@@ -973,7 +973,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter tour virtual dos imóveis?', a: 'Sim. Se você tem tours 360, vídeos ou plantas humanizadas, integramos no site para ampliar a experiência de visita virtual.' },
       { q: 'Vale destacar imóveis lançamento e usados?', a: 'Vale. São públicos diferentes com expectativas diferentes. Áreas separadas ajudam o cliente a encontrar o que procura sem misturar.' },
     ],
-    ctaMessage: 'Olá! Tenho uma imobiliária e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma imobiliária e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'seguradora',
@@ -997,7 +997,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter área para renovação?', a: 'Sim. Uma área simples para o cliente solicitar renovação, atualizar dados ou acionar sinistro melhora bastante a experiência pós-venda.' },
       { q: 'Vale destacar as seguradoras que trabalho?', a: 'Vale. Cliente confia em corretora que trabalha com marcas conhecidas. Uma vitrine dos logos das seguradoras parceiras transmite variedade e credibilidade.' },
     ],
-    ctaMessage: 'Olá! Tenho uma corretora de seguros e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma corretora de seguros e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'agencia-de-viagens',
@@ -1021,7 +1021,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter blog com dicas de destino?', a: 'Sim. Blog com dicas de destinos, roteiros e curiosidades atrai visitantes qualificados via Google e mostra especialidade da agência.' },
       { q: 'Vale destacar intercâmbio separado?', a: 'Vale. Intercâmbio tem público específico (jovens e famílias) com dúvidas específicas (visto, escola, hospedagem). Página própria ajuda muito.' },
     ],
-    ctaMessage: 'Olá! Tenho uma agência de viagens e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma agência de viagens e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'fotografo',
@@ -1045,7 +1045,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo separar casamento e ensaio?', a: 'Sim. Cada segmento tem página própria com galeria específica e pacotes distintos. Isso ajuda muito nas buscas e conversão.' },
       { q: 'O site pode ter área para os clientes verem suas fotos?', a: 'Sim. Podemos criar uma área com acesso restrito por link ou senha para o cliente ver as fotos entregues, sem precisar mandar por WeTransfer toda vez.' },
     ],
-    ctaMessage: 'Olá! Sou fotógrafo e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou fotógrafo e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'loja-de-roupas',
@@ -1069,7 +1069,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo atualizar coleção sem pagar retrabalho?', a: 'Sim. Trabalhamos com painel de cadastro de produtos ou catálogo em formato editável, para você trocar peças e coleções conforme a estação.' },
       { q: 'O site pode integrar com Instagram Shopping?', a: 'Sim. Podemos configurar a integração para que os produtos apareçam também no Instagram, ampliando os canais de venda.' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de roupas e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de roupas e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'otica',
@@ -1093,7 +1093,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter agendamento de exame de vista?', a: 'Sim. Botão de WhatsApp direto para agendar exame ou formulário com data preferida agiliza o processo.' },
       { q: 'Vale destacar lentes de contato separadamente?', a: 'Vale. Lente de contato tem público específico (jovens, esportistas) e pode ter página própria com marcas, tipos e informação sobre adaptação.' },
     ],
-    ctaMessage: 'Olá! Tenho uma ótica e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma ótica e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'joalheria',
@@ -1117,7 +1117,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo fazer joia sob medida via site?', a: 'Sim. Formulário para criação personalizada (com descrição, referências e faixa de investimento) facilita o primeiro contato de projetos exclusivos.' },
       { q: 'O site precisa de fotos profissionais?', a: 'Ajuda muito. Joia bem fotografada vende. Se você não tem, começamos com o material disponível e podemos ir substituindo por fotos profissionais.' },
     ],
-    ctaMessage: 'Olá! Tenho uma joalheria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma joalheria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'loja-de-eletronicos',
@@ -1141,7 +1141,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter comparativo entre produtos?', a: 'Sim. Comparativos de especificações (câmera, memória, tela) ajudam o cliente a decidir entre modelos e aumentam conversão.' },
       { q: 'Consigo destacar assistência técnica?', a: 'Sim. Assistência é área de alto valor. Página dedicada com serviços, garantia, prazos e orçamento por WhatsApp atrai clientes específicos.' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de eletrônicos e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de eletrônicos e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'farmacia',
@@ -1165,7 +1165,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo receber pedido de manipulação pelo site?', a: 'Sim. Formulário para envio de receita ou WhatsApp com foto da prescrição agiliza o pedido e o orçamento.' },
       { q: 'O site pode ter cadastro de fidelidade?', a: 'Sim, se você tem programa de fidelidade próprio. Podemos criar área para o cliente consultar pontos, benefícios e histórico de compras.' },
     ],
-    ctaMessage: 'Olá! Tenho uma farmácia e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma farmácia e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'transportadora',
@@ -1189,7 +1189,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter rastreamento de carga?', a: 'Sim, se você tem sistema próprio. Podemos integrar ou criar uma área para o cliente consultar status da entrega com código.' },
       { q: 'Vale destacar tipos específicos de carga?', a: 'Vale. Transporte refrigerado, químico, mudança residencial têm públicos específicos com buscas próprias. Páginas dedicadas ajudam nas buscas.' },
     ],
-    ctaMessage: 'Olá! Tenho uma transportadora e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma transportadora e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'empresa-de-seguranca',
@@ -1213,7 +1213,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo destacar monitoramento por câmeras?', a: 'Sim. Monitoramento eletrônico é área de alta procura. Página específica com equipamentos, central de monitoramento e valor mensal ajuda muito.' },
       { q: 'O site pode ter área para clientes corporativos?', a: 'Sim. Área com relatórios, ocorrências e cronogramas para clientes existentes agrega valor ao contrato e fideliza.' },
     ],
-    ctaMessage: 'Olá! Tenho uma empresa de segurança e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma empresa de segurança e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'empresa-de-ti',
@@ -1237,7 +1237,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter blog técnico?', a: 'Sim. Blog com conteúdo técnico atrai leads qualificados via Google e demonstra autoridade — muito efetivo em vendas B2B.' },
       { q: 'Vale ter área para suporte de clientes?', a: 'Vale. Área com chamados, base de conhecimento e status de serviço agrega valor ao contrato e reduz demanda no atendimento telefônico.' },
     ],
-    ctaMessage: 'Olá! Tenho uma empresa de TI e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma empresa de TI e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'grafica',
@@ -1261,7 +1261,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter cotação automática?', a: 'Sim, para produtos com fórmula clara (cartão de visita padrão, banner por metro). Produtos complexos podem seguir cotação manual.' },
       { q: 'Vale destacar impressão rápida?', a: 'Vale. Impressão em 24h é busca frequente e de urgência. Página com produtos disponíveis para pronta entrega atrai cliente decidido.' },
     ],
-    ctaMessage: 'Olá! Tenho uma gráfica e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma gráfica e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'buffet-infantil',
@@ -1285,7 +1285,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode receber consulta de data?', a: 'Sim. Formulário com data e número de convidados chega direto para você, agilizando a resposta e evitando datas duplicadas.' },
       { q: 'Vale mostrar preços dos pacotes?', a: 'Vale. Mãe compara buffets primeiro pelo preço. Faixa de valor ou tabela por convidados evita mensagens perguntando "quanto custa?" e traz cliente decidido.' },
     ],
-    ctaMessage: 'Olá! Tenho um buffet infantil e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um buffet infantil e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'fotografo-de-casamento',
@@ -1309,7 +1309,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter área para clientes verem as fotos?', a: 'Sim. Área com link ou senha para o casal ver e baixar as fotos após o casamento — muito valorizado pelos noivos.' },
       { q: 'Vale mostrar valores dos pacotes?', a: 'Alguns fotógrafos preferem faixa (a partir de X), outros só via formulário. Depende do posicionamento. Definimos junto conforme sua estratégia.' },
     ],
-    ctaMessage: 'Olá! Sou fotógrafo de casamento e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou fotógrafo de casamento e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'espaco-de-eventos',
@@ -1333,7 +1333,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter tour virtual?', a: 'Sim. Se você tem tour 360 ou vídeo do espaço, integramos para ampliar a experiência de visita virtual.' },
       { q: 'Vale mostrar valores da locação?', a: 'Depende. Muitos espaços preferem enviar proposta personalizada após entender o evento; outros apresentam faixa. Definimos a melhor estratégia junto.' },
     ],
-    ctaMessage: 'Olá! Tenho um espaço de eventos e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um espaço de eventos e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'dj',
@@ -1357,7 +1357,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter vídeos de festas anteriores?', a: 'Sim. Vídeos são o argumento mais forte para DJ. Podemos integrar YouTube, Vimeo ou upload direto, com autorização dos noivos ou aniversariantes.' },
       { q: 'Vale destacar pacotes com estrutura completa?', a: 'Vale. Pacote com DJ + som + iluminação + LED simplifica a decisão do cliente e aumenta o ticket médio.' },
     ],
-    ctaMessage: 'Olá! Sou DJ e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou DJ e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'yoga-e-pilates',
@@ -1381,7 +1381,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter agendamento de aulas?', a: 'Sim. Pode ser via WhatsApp com horários, formulário simples ou integração com sistema de agenda especializado.' },
       { q: 'Vale destacar pilates de aparelhos separadamente?', a: 'Vale. Pilates de aparelhos tem público específico (reabilitação, pós-cirurgia, terceira idade) e valor diferente. Página dedicada ajuda muito.' },
     ],
-    ctaMessage: 'Olá! Tenho um estúdio de yoga e pilates e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um estúdio de yoga e pilates e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'spa-e-massagem',
@@ -1405,7 +1405,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode receber agendamento direto?', a: 'Sim. WhatsApp com terapia, data e horário desejado, ou integração com sistema de agenda especializado em bem-estar.' },
       { q: 'Vale destacar pacotes específicos (para casais, gestantes)?', a: 'Vale. Massagem para casais e para gestantes têm público específico e valor diferente. Páginas dedicadas ajudam nas buscas.' },
     ],
-    ctaMessage: 'Olá! Tenho um spa e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um spa e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'floricultura',
@@ -1429,7 +1429,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode receber pedido com entrega urgente?', a: 'Sim. WhatsApp direto com endereço e horário desejado agiliza pedidos urgentes (condolências, esquecimento de aniversário).' },
       { q: 'Vale destacar coroas e arranjos fúnebres?', a: 'Vale, mas em área discreta. Cliente que precisa desse serviço geralmente busca com pressa e valoriza atendimento respeitoso.' },
     ],
-    ctaMessage: 'Olá! Tenho uma floricultura e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma floricultura e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'hotel-e-pousada',
@@ -1453,7 +1453,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter sistema de reserva?', a: 'Sim. Podemos integrar com PMS ou motor de reservas próprio, ou começar com WhatsApp para reservas via atendimento direto.' },
       { q: 'Vale destacar café da manhã e comodidades?', a: 'Vale muito. Café da manhã incluído, wi-fi rápido, estacionamento e piscina são critérios frequentes de escolha. Detalhe essas comodidades no site.' },
     ],
-    ctaMessage: 'Olá! Tenho um hotel e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um hotel e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'clinica-odontologica',
@@ -1477,7 +1477,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter tour virtual da clínica?', a: 'Sim. Se você tem vídeo ou tour 360, integramos para o paciente conhecer a estrutura antes da visita.' },
       { q: 'Vale destacar plano próprio da clínica?', a: 'Vale. Plano de fidelidade com desconto em procedimentos atrai paciente sem convênio odontológico e cria receita recorrente.' },
     ],
-    ctaMessage: 'Olá! Tenho uma clínica odontológica e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma clínica odontológica e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'sorveteria',
@@ -1501,7 +1501,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter delivery próprio?', a: 'Sim. WhatsApp com sabores selecionados agiliza pedido próprio e economiza taxa do iFood. Podemos exibir ambos os canais lado a lado.' },
       { q: 'Vale destacar sorvete artesanal?', a: 'Vale muito. Cliente que busca artesanal está disposto a pagar mais e valoriza ingredientes naturais. Página com processo e ingredientes ajuda muito.' },
     ],
-    ctaMessage: 'Olá! Tenho uma sorveteria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma sorveteria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'clinica-medica',
@@ -1525,7 +1525,7 @@ export const niches: NicheData[] = [
       { q: 'O site respeita as regras do CFM?', a: 'Sim. Toda a comunicação segue as normas de publicidade médica: sem antes e depois, sem promessa de resultado, com CRM visível.' },
       { q: 'Posso listar os exames feitos na clínica?', a: 'Sim. Uma seção pode apresentar exames laboratoriais ou de imagem oferecidos, informando quais convênios cobrem cada um.' },
     ],
-    ctaMessage: 'Olá! Tenho uma clínica médica e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma clínica médica e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'clinica-de-psicologia',
@@ -1549,7 +1549,7 @@ export const niches: NicheData[] = [
       { q: 'O site respeita as normas do CFP?', a: 'Sim. Toda a comunicação segue o Código de Ética da Psicologia, sem promessas terapêuticas nem sensacionalismo. Você revisa o conteúdo antes da publicação.' },
       { q: 'Consigo destacar atendimento infantil ou de casal?', a: 'Sim. Nichos específicos como psicologia infantil, terapia de casal ou luto podem ter páginas próprias, ajudando quem busca exatamente esse tipo de atendimento.' },
     ],
-    ctaMessage: 'Olá! Tenho uma clínica de psicologia e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma clínica de psicologia e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'clinica-de-reabilitacao',
@@ -1573,7 +1573,7 @@ export const niches: NicheData[] = [
       { q: 'Como divulgar sem expor os pacientes?', a: 'Toda a comunicação é feita sem imagens de pacientes reais. Usamos fotos da estrutura, da equipe e recursos gráficos que transmitem cuidado sem violar a privacidade.' },
       { q: 'Consigo receber contatos de outras cidades?', a: 'Sim. Muitas famílias procuram clínicas em cidades diferentes. O site pode destacar o suporte para chegada, hospedagem próxima e todo o processo de admissão.' },
     ],
-    ctaMessage: 'Olá! Tenho uma clínica de reabilitação e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma clínica de reabilitação e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'dermatologista',
@@ -1597,7 +1597,7 @@ export const niches: NicheData[] = [
       { q: 'É obrigatório ter RQE em dermatologia?', a: 'O RQE (Registro de Qualificação de Especialista) é o que garante ao paciente que você é dermatologista de fato. Colocamos no site em posição visível.' },
       { q: 'Consigo atender por telemedicina?', a: 'Para acompanhamento de casos clínicos, sim. O site pode explicar quais consultas são adequadas para telemedicina e quais exigem presencial.' },
     ],
-    ctaMessage: 'Olá! Sou dermatologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou dermatologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'pediatra',
@@ -1621,7 +1621,7 @@ export const niches: NicheData[] = [
       { q: 'O site respeita as normas do CFM?', a: 'Sim. Toda a comunicação segue as diretrizes de publicidade médica, com CRM visível, sem antes e depois e sem promessa de resultado.' },
       { q: 'Atende só crianças ou também adolescentes?', a: 'Definimos junto. O site pode deixar claro se você atende do recém-nascido ao adolescente, ou apenas uma faixa específica, para evitar contatos fora do escopo.' },
     ],
-    ctaMessage: 'Olá! Sou pediatra e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou pediatra e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'cardiologista',
@@ -1645,7 +1645,7 @@ export const niches: NicheData[] = [
       { q: 'O site respeita as regras do CFM?', a: 'Sim. Toda a comunicação segue as normas do Conselho, com CRM visível, sem sensacionalismo e sem promessa de resultado.' },
       { q: 'Faz sentido publicar conteúdo educativo?', a: 'Sim. Textos sobre pressão alta, colesterol e hábitos cardiovasculares atraem visitantes qualificados e posicionam você como referência.' },
     ],
-    ctaMessage: 'Olá! Sou cardiologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou cardiologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'ortopedista',
@@ -1669,7 +1669,7 @@ export const niches: NicheData[] = [
       { q: 'Faz diferença destacar a subespecialidade?', a: 'Muita. Quem tem lesão no menisco procura "ortopedista de joelho", não ortopedista genérico. Uma página por área aumenta a chance de ser encontrado.' },
       { q: 'Posso listar os hospitais onde opero?', a: 'Sim. É informação relevante para o paciente que quer confirmar se o hospital aceita seu plano ou fica em local acessível.' },
     ],
-    ctaMessage: 'Olá! Sou ortopedista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou ortopedista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'ginecologista',
@@ -1693,7 +1693,7 @@ export const niches: NicheData[] = [
       { q: 'O site respeita as normas do CFM?', a: 'Sim. A comunicação segue as diretrizes de publicidade médica com CRM visível, sem antes e depois e sem promessa de resultado.' },
       { q: 'Consigo criar página para adolescentes?', a: 'Sim. Ginecologia da adolescente é uma área importante e pouco divulgada. Uma página específica atrai mães que buscam esse tipo de atendimento para as filhas.' },
     ],
-    ctaMessage: 'Olá! Sou ginecologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou ginecologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'psiquiatra',
@@ -1717,7 +1717,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo atender por telemedicina?', a: 'Sim. A psiquiatria é uma das especialidades mais adaptáveis à telemedicina. O site pode destacar essa modalidade para pacientes de outras cidades.' },
       { q: 'Como divulgar sem sensacionalismo?', a: 'Trabalhamos com linguagem técnica acessível, sem palavras alarmistas, sem promessas terapêuticas. Você revisa cada conteúdo antes da publicação.' },
     ],
-    ctaMessage: 'Olá! Sou psiquiatra e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou psiquiatra e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'oftalmologista',
@@ -1741,7 +1741,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter área para óculos e lentes?', a: 'Pode. Uma seção explica adaptação de lentes de contato, prescrição de óculos e cuidados, agregando valor educativo ao paciente.' },
       { q: 'Consigo destacar atendimento pediátrico?', a: 'Sim. Oftalmopediatria é uma área específica e muito buscada por pais. Criamos página própria para essa faixa etária.' },
     ],
-    ctaMessage: 'Olá! Sou oftalmologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou oftalmologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'urologista',
@@ -1765,7 +1765,7 @@ export const niches: NicheData[] = [
       { q: 'O site respeita as normas do CFM?', a: 'Sim. Toda a comunicação segue as diretrizes de publicidade médica, sem sensacionalismo e sem promessa de resultado.' },
       { q: 'Faz sentido destacar urologia feminina?', a: 'Sim. Muitas mulheres não sabem que existe urologia feminina para questões como incontinência ou infecções urinárias recorrentes. Uma página própria abre esse público.' },
     ],
-    ctaMessage: 'Olá! Sou urologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou urologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'endocrinologista',
@@ -1789,7 +1789,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido ter blog educativo?', a: 'Muito. Endocrinologia atrai buscas educativas sobre tireoide, diabetes, hormônios. Um blog bem escrito posiciona você como referência e traz pacientes qualificados.' },
       { q: 'Consigo destacar endocrinologia esportiva?', a: 'Sim. É uma área em crescimento, com público específico. Uma página própria facilita ser encontrado por atletas e praticantes de musculação.' },
     ],
-    ctaMessage: 'Olá! Sou endocrinologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou endocrinologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'neurologista',
@@ -1813,7 +1813,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode ter conteúdo para cuidadores?', a: 'Sim. Cuidadores de pacientes com Alzheimer ou Parkinson buscam muita informação. Uma seção para eles agrega valor e aproxima famílias.' },
       { q: 'Faz sentido destacar neurologia infantil?', a: 'Sim, se você atende. É uma subespecialidade específica com demanda alta e poucos profissionais divulgando bem online.' },
     ],
-    ctaMessage: 'Olá! Sou neurologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou neurologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'otorrinolaringologista',
@@ -1837,7 +1837,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo apresentar as cirurgias?', a: 'Sim. Cada cirurgia com descrição técnica, indicação, hospital e recuperação estimada — sem promessa de resultado e sem antes e depois.' },
       { q: 'Faz sentido ter foco em otorrino infantil?', a: 'Sim, se você atende. Crianças com amidalites recorrentes, otites e adenoide são público específico. Uma página própria abre essa porta.' },
     ],
-    ctaMessage: 'Olá! Sou otorrinolaringologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou otorrinolaringologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'reumatologista',
@@ -1861,7 +1861,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode falar de imunobiológicos?', a: 'Sim, com linguagem informativa, indicação e cuidados. É um tema de interesse dos pacientes que já convivem com autoimunes.' },
       { q: 'Faz sentido ter blog educativo?', a: 'Faz. Muita gente demora anos para ser diagnosticada com doença reumática. Conteúdo educativo ajuda essa pessoa a se identificar e procurar ajuda.' },
     ],
-    ctaMessage: 'Olá! Sou reumatologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou reumatologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'oncologista',
@@ -1885,7 +1885,7 @@ export const niches: NicheData[] = [
       { q: 'O site pode explicar os tratamentos?', a: 'Sim, com linguagem informativa e respeitosa. Muitas famílias buscam informação confiável e valorizam encontrar o próprio médico oferecendo isso.' },
       { q: 'Consigo destacar cuidados paliativos?', a: 'Sim. Cuidado paliativo é uma área que precisa de mais divulgação séria. Uma página específica ajuda pacientes e famílias que buscam esse tipo de cuidado.' },
     ],
-    ctaMessage: 'Olá! Sou oncologista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou oncologista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'acupunturista',
@@ -1909,7 +1909,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo explicar para quem nunca fez?', a: 'Sim. Estruturamos textos didáticos, sem misticismo excessivo, focando no que a pessoa vai sentir e para que serve, aumentando a chance de conversão.' },
       { q: 'Faz sentido divulgar pacotes de sessões?', a: 'Faz. Acupuntura raramente resolve em uma sessão — pacotes trazem previsibilidade para o paciente e melhoram o resultado terapêutico.' },
     ],
-    ctaMessage: 'Olá! Sou acupunturista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou acupunturista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'quiropraxia',
@@ -1933,7 +1933,7 @@ export const niches: NicheData[] = [
       { q: 'O ajuste faz barulho? Dói?', a: 'Perguntas frequentes de quem nunca fez. Uma página de FAQ próprio no site tira o medo do primeiro atendimento e melhora a taxa de conversão.' },
       { q: 'Consigo integrar com fisioterapia?', a: 'Se sua clínica tem essa integração, o site pode destacar a abordagem multidisciplinar, que agrega valor e diferencia da concorrência.' },
     ],
-    ctaMessage: 'Olá! Trabalho com quiropraxia e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Trabalho com quiropraxia e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'terapeuta-holistico',
@@ -1957,7 +1957,7 @@ export const niches: NicheData[] = [
       { q: 'Preciso ter registro para atuar?', a: 'Terapias holísticas não têm conselho federal, mas cursos e certificações agregam credibilidade. Você pode apresentar todas as formações no site.' },
       { q: 'O site pode ter loja de florais ou óleos?', a: 'Pode. Se você comercializa florais, óleos essenciais ou outros produtos, criamos uma seção de loja simples com contato via WhatsApp.' },
     ],
-    ctaMessage: 'Olá! Sou terapeuta holístico e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou terapeuta holístico e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'manicure-e-pedicure',
@@ -1981,7 +1981,7 @@ export const niches: NicheData[] = [
       { q: 'Meu site aparece para "manicure perto de mim"?', a: 'Com a estrutura certa, sim. Configuramos informações locais que ajudam sua página a aparecer para clientes próximas.' },
       { q: 'Faz sentido divulgar atendimento em domicílio?', a: 'Faz muito sentido. Muitas clientes preferem o serviço em casa e buscam exatamente por isso. Uma página que destaca esse serviço abre um bom nicho.' },
     ],
-    ctaMessage: 'Olá! Sou manicure e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou manicure e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'studio-de-depilacao',
@@ -2005,7 +2005,7 @@ export const niches: NicheData[] = [
       { q: 'Posso oferecer pacotes de sessões?', a: 'Sim. Pacotes trazem previsibilidade financeira para você e desconto para a cliente. O site apresenta cada pacote com clareza.' },
       { q: 'Faz sentido separar depilação masculina?', a: 'Faz. Muitos homens buscam por "depilação masculina" especificamente. Uma seção própria abre esse público sem constrangimento.' },
     ],
-    ctaMessage: 'Olá! Tenho um studio de depilação e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um studio de depilação e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'designer-de-sobrancelhas',
@@ -2029,7 +2029,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo destacar brow lamination?', a: 'Sim. Técnicas modernas como brow lamination têm público específico e pesquisado. Uma página própria atrai esse interesse.' },
       { q: 'O site pode ter agenda própria?', a: 'Pode. Integramos com aplicativos de agenda para a cliente escolher horário direto pelo site, sem depender de conversa por WhatsApp.' },
     ],
-    ctaMessage: 'Olá! Sou designer de sobrancelhas e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou designer de sobrancelhas e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'micropigmentacao',
@@ -2053,7 +2053,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido explicar o retoque?', a: 'Sim. Muitas clientes desconhecem que o retoque de 30 dias é parte do procedimento. Uma página explicando isso evita mal-entendido e desiste comprador.' },
       { q: 'Consigo destacar micropigmentação capilar?', a: 'Sim. Micropigmentação capilar (SMP) é um nicho em alta com público masculino específico. Uma página própria abre esse mercado.' },
     ],
-    ctaMessage: 'Olá! Trabalho com micropigmentação e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Trabalho com micropigmentação e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'studio-de-tatuagem',
@@ -2077,7 +2077,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo mostrar biossegurança?', a: 'Sim. É um diferencial importante hoje. Fotos e explicação sobre esterilização, agulhas descartáveis e cuidados aumentam a confiança.' },
       { q: 'O site pode receber pedido de orçamento?', a: 'Pode. Formulário com upload de imagem de referência e detalhes já organiza a informação para o tatuador responder pelo WhatsApp.' },
     ],
-    ctaMessage: 'Olá! Tenho um studio de tatuagem e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um studio de tatuagem e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'lash-designer',
@@ -2101,7 +2101,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido explicar a manutenção?', a: 'Faz muito. Muitas clientes não sabem que precisa manutenção quinzenal. Uma página explicando isso alinha expectativa e fideliza.' },
       { q: 'O site pode divulgar cursos?', a: 'Pode. Se você dá aulas, criamos uma seção separada para cursos e turmas, gerando renda adicional além do atendimento.' },
     ],
-    ctaMessage: 'Olá! Sou lash designer e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou lash designer e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'esteticista',
@@ -2125,7 +2125,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido oferecer pacotes?', a: 'Faz muito. Pacotes trazem receita previsível para você e economia para a cliente. Cada pacote com quantidade de sessões e valor claro.' },
       { q: 'Posso destacar pós-operatório?', a: 'Sim. Drenagem pós-operatório é um nicho específico e muito buscado. Uma página própria atrai cirurgiões que indicam profissionais de confiança.' },
     ],
-    ctaMessage: 'Olá! Sou esteticista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou esteticista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'maquiadora',
@@ -2149,7 +2149,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido atender fora da cidade?', a: 'Se você aceita, sim. Muitas noivas buscam maquiadoras dispostas a viajar para o destination wedding. O site pode destacar isso.' },
       { q: 'Posso divulgar cursos de maquiagem?', a: 'Pode. Se você dá aulas, seção separada com turmas e valores gera renda paralela e posiciona você como referência.' },
     ],
-    ctaMessage: 'Olá! Sou maquiadora e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou maquiadora e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'colorista-de-cabelo',
@@ -2173,7 +2173,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido cobrar avaliação?', a: 'Faz. Avaliação prévia é técnica e evita frustração. O site já explica esse processo, aumentando a percepção de valor.' },
       { q: 'Posso destacar loiros e ruivas?', a: 'Pode. Loiros e ruivas são especialidades específicas com público fiel. Páginas próprias abrem esse mercado premium.' },
     ],
-    ctaMessage: 'Olá! Sou colorista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou colorista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'spa-capilar',
@@ -2197,7 +2197,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido diagnóstico com câmera?', a: 'Faz. Diagnóstico técnico agrega muito valor percebido. Uma página explicando o processo aumenta a conversão em avaliações.' },
       { q: 'Posso destacar tratamento de queda?', a: 'Sim. Queda de cabelo é dor real para muitas pessoas. Uma página específica com abordagem técnica atrai esse público que busca solução.' },
     ],
-    ctaMessage: 'Olá! Tenho um spa capilar e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um spa capilar e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'padaria',
@@ -2221,7 +2221,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido destacar pães artesanais?', a: 'Muito. Cliente que busca sourdough ou integrais está disposto a pagar mais e valoriza padarias que fazem isso bem.' },
       { q: 'Meu site aparece para "padaria perto de mim"?', a: 'Com a estrutura certa, sim. Configuramos informações locais que ajudam sua padaria a aparecer para clientes próximos.' },
     ],
-    ctaMessage: 'Olá! Tenho uma padaria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma padaria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'cafeteria',
@@ -2245,7 +2245,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo destacar espaço para trabalhar?', a: 'Sim. Muitos buscam cafeteria com Wi-Fi para trabalhar. Se você tem estrutura, destaque no site captura esse público que fica mais tempo e consome mais.' },
       { q: 'Posso vender grãos ou cursos no site?', a: 'Pode. Se você vende grãos torrados ou dá cursos de barista, seção separada gera renda paralela e fortalece a marca.' },
     ],
-    ctaMessage: 'Olá! Tenho uma cafeteria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma cafeteria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'churrascaria',
@@ -2269,7 +2269,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido divulgar kit para eventos?', a: 'Faz muito. Muitas empresas contratam churrasco para confraternização. Uma página específica captura essa demanda pouco disputada.' },
       { q: 'O site pode ter valores do rodízio?', a: 'Pode. Transparência de preço é hoje um valor, principalmente para o cliente que compara antes de escolher.' },
     ],
-    ctaMessage: 'Olá! Tenho uma churrascaria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma churrascaria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'doceria',
@@ -2293,7 +2293,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido vender presentes corporativos?', a: 'Faz. Empresas compram caixas para clientes, funcionários e datas comemorativas. Um catálogo B2B abre esse mercado.' },
       { q: 'O site pode ter fotos apetitosas?', a: 'Sim, e faz toda a diferença. Ajudamos a organizar seu material atual, e você pode investir em ensaio quando quiser evoluir.' },
     ],
-    ctaMessage: 'Olá! Tenho uma doceria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma doceria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'pastelaria',
@@ -2317,7 +2317,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido destacar promoções?', a: 'Faz. Combo pastel + caldo, meio a meio ou dia da promoção aumentam ticket médio. Área destacada gira mais.' },
       { q: 'O site pode aparecer no Google local?', a: 'Sim. Configuramos as informações certas para clientes próximos encontrarem sua pastelaria nas buscas de bairro.' },
     ],
-    ctaMessage: 'Olá! Tenho uma pastelaria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma pastelaria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'sushi',
@@ -2341,7 +2341,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido diferenciar delivery próprio de iFood?', a: 'Faz. Delivery próprio livra você da taxa e fideliza. Combo especial só pelo WhatsApp é ótimo argumento para migrar clientes.' },
       { q: 'O site pode receber reserva de grupos?', a: 'Sim. Formulário simples com data, horário e número de pessoas chega direto no WhatsApp para confirmação rápida.' },
     ],
-    ctaMessage: 'Olá! Tenho um restaurante de sushi e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um restaurante de sushi e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'comida-arabe',
@@ -2365,7 +2365,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido kit para festa em casa?', a: 'Faz muito. Cliente que faz festa árabe em casa é público fiel. Kit com quantidades sugeridas facilita a decisão.' },
       { q: 'O site pode ter área para eventos?', a: 'Sim. Buffet árabe para casamento e evento corporativo tem ticket alto. Uma página com pacotes atrai esse mercado.' },
     ],
-    ctaMessage: 'Olá! Tenho um restaurante árabe e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um restaurante árabe e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'bar',
@@ -2389,7 +2389,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido reservar mesa online?', a: 'Faz muito. Em noites de sexta e sábado, reserva é obrigatória. Formulário facilita e reduz cliente perdido por falta de mesa.' },
       { q: 'O site pode ter cardápio de drinks?', a: 'Pode. Carta de drinks assinados com fotos posiciona seu bar acima dos comuns e atrai público que valoriza mixologia.' },
     ],
-    ctaMessage: 'Olá! Tenho um bar e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um bar e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'choperia',
@@ -2413,7 +2413,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido divulgar tap takeover?', a: 'Faz muito. Evento com cervejaria convidada atrai público específico. Agenda no site posiciona sua choperia no calendário cervejeiro da cidade.' },
       { q: 'Posso vender cerveja para levar?', a: 'Pode. Growlers, latas e garrafas para viagem em seção separada agregam receita e fidelizam o cliente de casa.' },
     ],
-    ctaMessage: 'Olá! Tenho uma choperia e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma choperia e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'food-truck',
@@ -2437,7 +2437,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido divulgar contratação?', a: 'Faz muito. Evento é onde está o dinheiro grande. Formulário com data, local e número de convidados agiliza fechamento.' },
       { q: 'Consigo mostrar prêmios ou matérias?', a: 'Sim. Se você foi tema de matéria ou ganhou prêmio, área destacada aumenta autoridade e converte contratações.' },
     ],
-    ctaMessage: 'Olá! Tenho um food truck e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um food truck e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'emporio',
@@ -2461,7 +2461,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido divulgar degustações?', a: 'Faz. Degustação de vinho ou queijo cria comunidade e fideliza. Cliente que participa compra mais e volta mais vezes.' },
       { q: 'O site pode ter área para importados?', a: 'Pode. Se você tem produtos exclusivos, área destacada com origem e nota agrega valor e diferencia da concorrência.' },
     ],
-    ctaMessage: 'Olá! Tenho um empório e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um empório e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'hortifruti',
@@ -2485,7 +2485,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido destacar orgânicos?', a: 'Faz muito. Cliente de orgânico está disposto a pagar mais e valoriza rastreabilidade. Página específica captura esse público.' },
       { q: 'O site pode ter cardápio de receitas?', a: 'Pode. Receitas com os produtos da semana ampliam permanência no site e ajudam clientes a comprar mais e experimentar novos itens.' },
     ],
-    ctaMessage: 'Olá! Tenho um hortifruti e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um hortifruti e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'brigadeiro-e-doces',
@@ -2509,7 +2509,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido vender para empresas?', a: 'Faz muito. Caixas corporativas para clientes de fim de ano têm ticket alto e recorrência. Página B2B abre esse mercado pouco disputado.' },
       { q: 'O site pode ter fotos profissionais?', a: 'Sim. Ajudamos a organizar seu material atual — e você pode investir em fotos profissionais quando quiser dar o próximo passo.' },
     ],
-    ctaMessage: 'Olá! Faço brigadeiros gourmet e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Faço brigadeiros gourmet e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'bolos-personalizados',
@@ -2533,7 +2533,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido vender kit fechado?', a: 'Faz muito. Kit bolo + doces é bem mais fácil para a cliente decidir e aumenta seu ticket médio significativamente.' },
       { q: 'O site pode receber referências dela?', a: 'Pode. Formulário com upload de imagem de inspiração agiliza orçamento e mostra profissionalismo.' },
     ],
-    ctaMessage: 'Olá! Faço bolos personalizados e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Faço bolos personalizados e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'rotisserie',
@@ -2557,7 +2557,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido cardápio semanal?', a: 'Faz muito. Cardápio que muda toda semana renova interesse e atualização é feita por você direto no painel.' },
       { q: 'O site pode ter comida congelada?', a: 'Pode. Congelados têm shelf life longo e permitem venda em maior volume. Categoria separada facilita a organização.' },
     ],
-    ctaMessage: 'Olá! Tenho uma rotisserie e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma rotisserie e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'casa-de-massas',
@@ -2581,7 +2581,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido vender kit fechado?', a: 'Faz. Kit massa + molho + queijo é prático para o cliente e aumenta seu ticket sem esforço adicional.' },
       { q: 'O site pode ter receitas com sua massa?', a: 'Pode. Receitas usando seus produtos ampliam permanência no site e ajudam o cliente a experimentar novas combinações.' },
     ],
-    ctaMessage: 'Olá! Tenho uma casa de massas e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma casa de massas e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'salgaderia',
@@ -2605,7 +2605,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido kit fechado para festa?', a: 'Faz muito. Kit simplifica a decisão da cliente. Ela quer 200 salgados para 30 convidados — o kit resolve.' },
       { q: 'O site pode calcular quantos salgados?', a: 'Pode ter guia de sugestão: quantos convidados = quantos salgados. Isso ajuda a cliente a decidir e aumenta ticket médio.' },
     ],
-    ctaMessage: 'Olá! Tenho uma salgaderia e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma salgaderia e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'quentinha-delivery',
@@ -2629,7 +2629,7 @@ export const niches: NicheData[] = [
       { q: 'Faz sentido plano mensal?', a: 'Faz muito. Plano mensal gera previsibilidade financeira e simplifica para o cliente que come todo dia com você.' },
       { q: 'O site pode ter área para empresas?', a: 'Pode. Empresas que dão quentinha para funcionários compram em volume alto. Página B2B abre esse mercado.' },
     ],
-    ctaMessage: 'Olá! Tenho um delivery de quentinhas e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um delivery de quentinhas e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'serralheiro',
@@ -2653,7 +2653,7 @@ export const niches: NicheData[] = [
       { q: 'O site aparece para quem busca no meu bairro?', a: 'Sim. Incluímos informações de localização e bairros atendidos que ajudam o Google a entender onde você trabalha.' },
       { q: 'Consigo receber orçamentos pelo site?', a: 'Sim. O WhatsApp com mensagem guiada facilita o pedido de orçamento e já orienta o cliente a enviar as medidas necessárias.' },
     ],
-    ctaMessage: 'Olá! Sou serralheiro e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou serralheiro e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'chaveiro',
@@ -2677,7 +2677,7 @@ export const niches: NicheData[] = [
       { q: 'O site funciona para automotivo também?', a: 'Sim. Abertura de veículos, cópia de chave codificada e reprogramação de controles são serviços com busca própria.' },
       { q: 'Preciso mostrar preços?', a: 'Não é obrigatório, mas exibir faixas de preço reduz chamados que terminam em recusa pelo valor.' },
     ],
-    ctaMessage: 'Olá! Tenho um chaveiro e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um chaveiro e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'vidraceiro',
@@ -2701,7 +2701,7 @@ export const niches: NicheData[] = [
       { q: 'Posso mostrar serviços para empresas?', a: 'Pode. Fachadas e divisórias de escritório são contratos maiores. Uma seção voltada para construtoras e reformas comerciais abre esse mercado.' },
       { q: 'O cliente consegue pedir orçamento pela foto?', a: 'Sim. WhatsApp com orientação para enviar foto e medidas facilita o levantamento antes da visita técnica.' },
     ],
-    ctaMessage: 'Olá! Tenho uma vidraçaria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma vidraçaria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'empresa-de-reformas',
@@ -2725,7 +2725,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo mostrar cronograma de obras?', a: 'Pode mostrar um exemplo de cronograma típico para cada tipo de reforma, dando ao cliente uma expectativa realista de prazo.' },
       { q: 'Vale mostrar preço médio de reformas?', a: 'Vale mostrar faixas — "reforma de banheiro a partir de R$X" — para filtrar clientes com orçamento compatível.' },
     ],
-    ctaMessage: 'Olá! Tenho uma empresa de reformas e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma empresa de reformas e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'instalador-de-ar-condicionado',
@@ -2749,7 +2749,7 @@ export const niches: NicheData[] = [
       { q: 'Posso atender empresas também?', a: 'Empresas têm múltiplos equipamentos e precisam de contrato de manutenção periódica. Uma seção comercial abre esse mercado.' },
       { q: 'Vale mostrar certificações técnicas?', a: 'Vale muito. Certificado de técnico em refrigeração transmite competência e justifica valores acima da média.' },
     ],
-    ctaMessage: 'Olá! Faço instalação de ar-condicionado e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Faço instalação de ar-condicionado e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'empresa-de-mudancas',
@@ -2773,7 +2773,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo mostrar a frota?', a: 'Sim. Fotos dos caminhões com identificação da empresa transmitem seriedade e ajudam o cliente a confirmar que é uma empresa estruturada.' },
       { q: 'Vale para pequenos fretes também?', a: 'Vale. Frete de sofá ou TV tem muita busca. Uma seção de pequenos fretes captura quem não quer contratar mudança completa.' },
     ],
-    ctaMessage: 'Olá! Tenho uma empresa de mudanças e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma empresa de mudanças e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'lavanderia',
@@ -2797,7 +2797,7 @@ export const niches: NicheData[] = [
       { q: 'Vale ter agendamento online?', a: 'Para o estágio inicial, WhatsApp com mensagem pré-pronta resolve bem. Agendamento próprio faz sentido quando o volume aumentar.' },
       { q: 'Como atrair clientes corporativos?', a: 'Hotéis, clínicas e restaurantes precisam de lavanderia com frequência. Uma seção B2B com preços por volume abre esse mercado.' },
     ],
-    ctaMessage: 'Olá! Tenho uma lavanderia e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma lavanderia e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'conserto-de-celular',
@@ -2821,7 +2821,7 @@ export const niches: NicheData[] = [
       { q: 'O site ajuda a receber aparelhos pelo correio?', a: 'Sim. Com endereço, instruções de envio e orçamento online, você pode atender clientes de outras cidades.' },
       { q: 'Peças originais ou compatíveis aparecem no site?', a: 'Sim, e é bom deixar claro. Muitos clientes preferem original mesmo pagando mais. Exibir as duas opções aumenta conversão.' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de conserto de celular e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de conserto de celular e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'instalador-de-energia-solar',
@@ -2845,7 +2845,7 @@ export const niches: NicheData[] = [
       { q: 'Funciona em dias nublados?', a: 'Funciona com menos eficiência, mas não para. Essa explicação no site reduz objeções e educa o cliente sobre o que esperar.' },
       { q: 'Posso financiar a instalação?', a: 'Sim, e esse é um argumento decisivo. Mostrar que a parcela pode ser menor que a economia na conta converte muito.' },
     ],
-    ctaMessage: 'Olá! Tenho uma empresa de energia solar e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma empresa de energia solar e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'jardinagem-e-paisagismo',
@@ -2869,7 +2869,7 @@ export const niches: NicheData[] = [
       { q: 'O site funciona para condomínios?', a: 'Muito bem. Condomínios buscam empresa com histórico comprovado. Portfólio de áreas comuns é o argumento certo.' },
       { q: 'Consigo mostrar espécies de plantas?', a: 'Pode. Guia de espécies para o clima da região diferencia paisagistas de simples jardineiros.' },
     ],
-    ctaMessage: 'Olá! Faço jardinagem e paisagismo e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Faço jardinagem e paisagismo e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'piscineiro',
@@ -2893,7 +2893,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo atender condomínios?', a: 'Condomínios precisam de manutenção constante e documentação da qualidade da água. Página específica para condomínios abre esse mercado.' },
       { q: 'Vale mostrar produtos utilizados?', a: 'Vale. Explicar que você usa produtos certificados e faz análise de pH transmite profissionalismo.' },
     ],
-    ctaMessage: 'Olá! Faço manutenção de piscinas e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Faço manutenção de piscinas e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'marmoraria',
@@ -2917,7 +2917,7 @@ export const niches: NicheData[] = [
       { q: 'Bancada de cozinha é o serviço mais buscado?', a: 'Sim, junto com pia de banheiro. Ter páginas específicas para esses dois itens aumenta muito a visibilidade.' },
       { q: 'Vale atender construtoras pelo site?', a: 'Vale muito. Construtoras compram em volume e em contratos contínuos. Uma seção institucional abre esse mercado.' },
     ],
-    ctaMessage: 'Olá! Tenho uma marmoraria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma marmoraria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'concessionaria',
@@ -2941,7 +2941,7 @@ export const niches: NicheData[] = [
       { q: 'Posso mostrar carros usados e novos no mesmo site?', a: 'Sim. Categorias separadas com filtros deixam a navegação clara para quem busca novo e para quem busca seminovo.' },
       { q: 'O site aparece para buscas de modelos específicos?', a: 'Sim. Cada ficha de veículo é uma página indexável — "HB20 2023 [cidade]" tem chance de aparecer no Google com o modelo correto.' },
     ],
-    ctaMessage: 'Olá! Tenho uma concessionária e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma concessionária e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'distribuidora-de-autopecas',
@@ -2965,7 +2965,7 @@ export const niches: NicheData[] = [
       { q: 'Como diferenciar peça original de paralela?', a: 'Cada produto pode ter tag de origem clara. Muitos clientes buscam paralela pelo preço — apresentar as duas opções aumenta conversão.' },
       { q: 'Vale atender consumidor final e oficina no mesmo site?', a: 'Vale com seções distintas — preço varejo para o dono do carro e condições de atacado para o mecânico.' },
     ],
-    ctaMessage: 'Olá! Tenho uma distribuidora de autopeças e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma distribuidora de autopeças e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'despachante-automotivo',
@@ -2989,7 +2989,7 @@ export const niches: NicheData[] = [
       { q: 'O site funciona para clientes de outros municípios?', a: 'Funciona. Muito serviço de documentação pode ser feito com envio de documentos por correio ou foto. O site pode explicar esse processo.' },
       { q: 'Como diferenciar de despachante geral?', a: 'Especialização automotiva é um argumento forte. Quem só faz veículos conhece bem as tabelas, prazos e exceções do Detran.' },
     ],
-    ctaMessage: 'Olá! Sou despachante automotivo e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou despachante automotivo e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'higienizacao-automotiva',
@@ -3013,7 +3013,7 @@ export const niches: NicheData[] = [
       { q: 'Preciso de local fixo para ter site?', a: 'Não. Muitos higienizadores atendem em domicílio. O site pode destacar esse atendimento como conveniência.' },
       { q: 'Vitrificação e polimento aparecem em buscas?', a: 'Sim. São serviços com muita busca específica. Páginas dedicadas a cada serviço aumentam muito a visibilidade.' },
     ],
-    ctaMessage: 'Olá! Faço higienização automotiva e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Faço higienização automotiva e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'loja-de-calcados',
@@ -3037,7 +3037,7 @@ export const niches: NicheData[] = [
       { q: 'Como mostrar os tamanhos disponíveis?', a: 'Tabela de tamanhos por modelo com disponibilidade em tempo real ou aviso para consultar pelo WhatsApp.' },
       { q: 'Consigo vender para outras cidades?', a: 'Sim. Com frete via Correios ou transportadora, o site pode receber pedidos de todo o Brasil.' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de calçados e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de calçados e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'loja-de-cosmeticos',
@@ -3061,7 +3061,7 @@ export const niches: NicheData[] = [
       { q: 'Posso vender cosméticos naturais pelo site?', a: 'Sim. Cosméticos naturais e veganos têm nicho específico que busca ativamente. Destaque para certificações e ingredientes é decisivo.' },
       { q: 'Como concorrer com grandes redes?', a: 'Personalização e atendimento. Recomendação personalizada pelo WhatsApp e curadoria de produtos específicos diferencia a loja pequena.' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de cosméticos e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de cosméticos e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'loja-de-moveis',
@@ -3085,7 +3085,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo mostrar móveis sob medida no site?', a: 'Sim. Galeria de projetos executados com antes/depois do ambiente é muito eficiente para converter clientes de reformas e obras.' },
       { q: 'Como mostrar tamanhos de forma clara?', a: 'Cada produto pode ter dimensões em destaque e sugestão de ambiente onde cabe melhor — reduz devoluções e reclamações de "não coube".' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de móveis e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de móveis e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'loja-de-suplementos',
@@ -3109,7 +3109,7 @@ export const niches: NicheData[] = [
       { q: 'Como concorrer com grandes marketplaces em preço?', a: 'Consultoria especializada e atendimento personalizado. Quem não sabe o que comprar prefere falar com alguém que entende.' },
       { q: 'Posso vender suplementos naturais e veganos?', a: 'Sim, e é um nicho em crescimento. Certificações veganas e ingredientes naturais têm destaque próprio no site.' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de suplementos e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de suplementos e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'loja-de-decoracao',
@@ -3133,7 +3133,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo vender para outras cidades?', a: 'Sim. Produtos de decoração têm fácil envio. Loja virtual com Correios abre o mercado nacional para itens menores.' },
       { q: 'Como mostrar que o produto é handmade?', a: 'Fotos do processo de fabricação e história da peça valorizam o produto artesanal e justificam preços acima do industrializado.' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de decoração e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de decoração e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'papelaria',
@@ -3157,7 +3157,7 @@ export const niches: NicheData[] = [
       { q: 'Vale ter lista de material escolar online?', a: 'Vale muito. Família que pesquisa lista de material no Google e encontra sua papelaria com os itens disponíveis tem grande chance de comprar na sua loja.' },
       { q: 'Posso fazer impressão de banners para empresas pelo site?', a: 'Sim. Formulário com tamanho, quantidade e upload do arquivo agiliza o pedido de impressão sem precisar ir pessoalmente.' },
     ],
-    ctaMessage: 'Olá! Tenho uma papelaria e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma papelaria e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'loja-de-material-de-construcao',
@@ -3181,7 +3181,7 @@ export const niches: NicheData[] = [
       { q: 'Como atrair construtoras e empreiteiras?', a: 'Página específica com condições para CNPJ, prazo de pagamento e entrega programada abre esse mercado de maior volume.' },
       { q: 'Consigo vender pela internet?', a: 'Para produtos menores e leves, sim. Para material pesado como cimento e areia, o site funciona mais como catálogo que gera pedidos para entrega local.' },
     ],
-    ctaMessage: 'Olá! Tenho uma loja de material de construção e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma loja de material de construção e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'escola-de-idiomas',
@@ -3205,7 +3205,7 @@ export const niches: NicheData[] = [
       { q: 'A escola oferece certificação?', a: 'Se oferece preparação para TOEFL, IELTS ou outros exames, isso precisa ter destaque — é um argumento de venda poderoso.' },
       { q: 'Tem aula online?', a: 'Se você oferece modalidade online, ela merece seção própria com formato, plataforma e o que o aluno precisa para assistir.' },
     ],
-    ctaMessage: 'Olá! Tenho uma escola de idiomas e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma escola de idiomas e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'professor-particular',
@@ -3229,7 +3229,7 @@ export const niches: NicheData[] = [
       { q: 'Preciso de faculdade para anunciar?', a: 'Não é obrigatório, mas mostrar sua formação transmite credibilidade. Experiência prática e resultados de alunos também contam.' },
       { q: 'Consigo dar aula para alunos de outras cidades?', a: 'Sim. Aulas online abrem o mercado nacional. O site pode descrever como funciona a aula remota e quais ferramentas são usadas.' },
     ],
-    ctaMessage: 'Olá! Dou aulas particulares e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Dou aulas particulares e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'reforco-escolar',
@@ -3253,7 +3253,7 @@ export const niches: NicheData[] = [
       { q: 'Como mostrar que o método funciona?', a: 'Depoimentos de pais com antes e depois das notas do filho são o argumento mais forte que existe no segmento de reforço.' },
       { q: 'O reforço funciona para vestibular?', a: 'Se você prepara para vestibular e ENEM, isso merece seção própria — é o público mais motivado e mais disposto a pagar por resultado.' },
     ],
-    ctaMessage: 'Olá! Tenho um reforço escolar e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um reforço escolar e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'pilates',
@@ -3277,7 +3277,7 @@ export const niches: NicheData[] = [
       { q: 'Pilates tem indicação médica?', a: 'Para pilates clínico, é comum. Se você atende alunos com prescrição médica, isso é um diferencial importante que precisa estar visível.' },
       { q: 'Quantos alunos por turma?', a: 'Turmas reduzidas são o principal argumento de qualidade do pilates. Exibir o número máximo de alunos por turma reforça esse diferencial.' },
     ],
-    ctaMessage: 'Olá! Tenho um estúdio de pilates e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um estúdio de pilates e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'crossfit',
@@ -3301,7 +3301,7 @@ export const niches: NicheData[] = [
       { q: 'Quanto custa o plano mensal?', a: 'Mostrar a faixa de investimento no site filtra leads e reduz perguntas básicas, qualificando quem entra em contato.' },
       { q: 'Tem turmas por nível?', a: 'Se você separa iniciantes de avançados, destaque isso — quem está começando quer saber que não vai treinar junto com o atleta.' },
     ],
-    ctaMessage: 'Olá! Tenho um box de CrossFit e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um box de CrossFit e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'muay-thai-e-artes-marciais',
@@ -3325,7 +3325,7 @@ export const niches: NicheData[] = [
       { q: 'Tem turma para adulto iniciante?', a: 'Se tem, destaque — adulto sem experiência tem medo de entrar em turma avançada. Turma iniciante separada reduz essa barreira.' },
       { q: 'A academia prepara para competições?', a: 'Se prepara, é um diferencial para quem busca evolução além do hobby. Resultados de competição transmitem nível técnico.' },
     ],
-    ctaMessage: 'Olá! Tenho uma academia de artes marciais e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma academia de artes marciais e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'agencia-de-marketing-digital',
@@ -3349,7 +3349,7 @@ export const niches: NicheData[] = [
       { q: 'Qual o investimento mínimo em tráfego pago?', a: 'Transparência sobre mínimo de verba de mídia e valor da gestão filtra leads e alinha expectativa desde o início.' },
       { q: 'A agência atende qualquer segmento?', a: 'Se você tem especialização em algum setor (saúde, imóveis, e-commerce), isso é um diferencial competitivo que precisa estar visível.' },
     ],
-    ctaMessage: 'Olá! Tenho uma agência de marketing digital e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma agência de marketing digital e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'designer-grafico',
@@ -3373,7 +3373,7 @@ export const niches: NicheData[] = [
       { q: 'Vale mostrar preços no site?', a: 'Tabela de valores de referência por tipo de projeto (logo a partir de R$X) filtra leads e qualifica quem entra em contato.' },
       { q: 'Consigo atender clientes de outros estados?', a: 'Sim. Design é 100% digital — briefing, aprovação e entrega acontecem online sem precisar de presença física.' },
     ],
-    ctaMessage: 'Olá! Sou designer gráfico e quero meu portfólio por R$ 165.',
+    ctaMessage: 'Olá! Sou designer gráfico e quero meu portfólio por R$ 97/mês.',
   },
   {
     slug: 'desenvolvedor-de-sistemas',
@@ -3397,7 +3397,7 @@ export const niches: NicheData[] = [
       { q: 'Você faz manutenção após a entrega?', a: 'Se faz suporte e manutenção contínua, isso é um diferencial importante — muitos clientes têm medo de ficar sem suporte depois da entrega.' },
       { q: 'Consigo ver exemplos do sistema antes de contratar?', a: 'Demonstrações ou capturas de tela dos sistemas entregues transmitem qualidade visual e funcional melhor que qualquer texto.' },
     ],
-    ctaMessage: 'Olá! Sou desenvolvedor de sistemas e quero meu portfólio por R$ 165.',
+    ctaMessage: 'Olá! Sou desenvolvedor de sistemas e quero meu portfólio por R$ 97/mês.',
   },
   {
     slug: 'cerimonialista',
@@ -3421,7 +3421,7 @@ export const niches: NicheData[] = [
       { q: 'Você atende casamentos em outros estados?', a: 'Se atende, destaque isso — destinos de casamento como praias e cidades históricas têm demanda de casais de outras regiões.' },
       { q: 'Como você gerencia fornecedores?', a: 'Explicar que você tem parceiros homologados e experiência com diferentes tipos de fornecedor transmite que o casal não vai ter surpresa no dia.' },
     ],
-    ctaMessage: 'Olá! Sou cerimonialista e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou cerimonialista e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'corretor-de-imoveis',
@@ -3445,7 +3445,7 @@ export const niches: NicheData[] = [
       { q: 'Consigo capturar leads de quem quer vender o imóvel?', a: 'Sim. Uma seção "quero vender meu imóvel" com formulário de avaliação capta o lado do proprietário, ampliando o estoque.' },
       { q: 'Vale colocar preço no site?', a: 'Sim. Imóvel sem preço perde o lead que não quer perder tempo. Seja transparente — isso filtra e qualifica quem entra em contato.' },
     ],
-    ctaMessage: 'Olá! Sou corretor de imóveis e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou corretor de imóveis e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'corretor-de-seguros',
@@ -3469,7 +3469,7 @@ export const niches: NicheData[] = [
       { q: 'Seguro residencial cobre o quê?', a: 'Roubo, incêndio, vazamento, danos elétricos — a cobertura depende da apólice. O site pode apresentar as coberturas mais comuns e o que cada uma inclui.' },
       { q: 'Posso fazer cotação pelo WhatsApp?', a: 'Sim. Formulário no site que direciona ao WhatsApp com os dados pré-preenchidos agiliza o atendimento sem perder o lead.' },
     ],
-    ctaMessage: 'Olá! Sou corretor de seguros e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou corretor de seguros e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'consultoria-financeira',
@@ -3493,7 +3493,7 @@ export const niches: NicheData[] = [
       { q: 'Quanto custa a consultoria?', a: 'Modelos de cobrança (por sessão, por projeto, recorrente) com faixa de valores ajudam o potencial cliente a entender o investimento antes de entrar em contato.' },
       { q: 'Você atende pelo WhatsApp ou apenas presencialmente?', a: 'Se atende online, destaque — pessoas de qualquer cidade podem ser seus clientes.' },
     ],
-    ctaMessage: 'Olá! Sou consultor financeiro e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou consultor financeiro e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'escritorio-contabil',
@@ -3517,7 +3517,7 @@ export const niches: NicheData[] = [
       { q: 'Vocês atendem abertura de empresa?', a: 'Se atendem, detalhe o processo, prazo e o que é necessário — abertura de empresa é uma das buscas mais frequentes de empreendedores.' },
       { q: 'Qual o valor mensal da contabilidade?', a: 'Tabela por porte de empresa ou faixa de faturamento ajuda o empresário a qualificar o serviço antes do contato.' },
     ],
-    ctaMessage: 'Olá! Tenho um escritório contábil e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho um escritório contábil e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'coach',
@@ -3541,7 +3541,7 @@ export const niches: NicheData[] = [
       { q: 'Quantas sessões são necessárias?', a: 'Depende do objetivo, mas apresentar um programa típico (ex: 8 sessões em 3 meses) ajuda o cliente a entender o investimento de tempo.' },
       { q: 'Você tem certificação?', a: 'ICF, IBC, SBC — certificações de coaching reconhecidas transmitem credencial a quem não conhece o mercado.' },
     ],
-    ctaMessage: 'Olá! Sou coach e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Sou coach e quero meu site por R$ 97/mês.',
   },
   {
     slug: 'consultoria-empresarial',
@@ -3565,7 +3565,7 @@ export const niches: NicheData[] = [
       { q: 'Qual o prazo típico de um projeto de consultoria?', a: 'Apresentar exemplos de projetos com duração e escopo ajuda o cliente a dimensionar o investimento antes da conversa.' },
       { q: 'Como é feita a medição de resultado?', a: 'Indicadores claros de antes e depois do projeto transmitem responsabilidade por resultado — diferencial competitivo forte.' },
     ],
-    ctaMessage: 'Olá! Tenho uma consultoria empresarial e quero meu site por R$ 165.',
+    ctaMessage: 'Olá! Tenho uma consultoria empresarial e quero meu site por R$ 97/mês.',
   },
 ]
 

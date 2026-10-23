@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.6,
       }))
     ),
-    // Páginas por R$ 165 por nicho (/[servico]/[nicho])
+    // Páginas por R$ 97/mês por nicho (/[servico]/[nicho])
     ...nicheOfferServices.flatMap((service) =>
       niches.map((niche) => ({
         url: SITE_URL + '/' + service + '/' + niche.slug,

@@ -11,11 +11,11 @@ export interface ServiceContent {
   features: { title: string; text: string }[]
   deliverables: string[]
   faqs: { q: string; a: string }[]
-  // Produto vendido a preço fixo (R$ 165) — ausente nos serviços sob orçamento
+  // Produto vendido a preço fixo (R$ 97/mês) — ausente nos serviços sob orçamento
   offerProduct?: string
 }
 
-// Serviços por R$ 165 que ganham páginas por nicho (ex: /pagina-de-vendas/dentista)
+// Serviços por R$ 97/mês que ganham páginas por nicho (ex: /pagina-de-vendas/dentista)
 export const nicheOfferServices = ['landing-page', 'pagina-de-vendas', 'pagina-de-lancamento', 'pagina-de-captura'] as const
 export type NicheOfferService = (typeof nicheOfferServices)[number]
 
@@ -23,12 +23,12 @@ export const serviceContent = {
   "criacao-de-sites": {
     "slug": "criacao-de-sites",
     "label": "Criação de sites",
-    "title": "Criação de Sites por R$ 165 | Site Barato e Profissional | TopSite",
+    "title": "Criação de Sites por R$ 97/mês | Site Barato e Profissional | TopSite",
     "eyebrow": "Criação de sites",
-    "heading": "Criação de sites por apenas R$ 165.",
-    "description": "Criação de site profissional por apenas R$ 165: site institucional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.",
+    "heading": "Criação de sites por apenas R$ 97/mês.",
+    "description": "Criação de site profissional por apenas R$ 97/mês: site institucional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.",
     "intro": "Sua empresa na internet sem pagar caro. Criamos um site institucional one page com seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular — tudo resolvido pelo WhatsApp.",
-    "focus": "Tudo isso por R$ 165",
+    "focus": "Tudo isso por R$ 97/mês",
     "audience": "Para empresas e profissionais que querem um site bonito e profissional sem gastar muito.",
     "features": [
       {
@@ -41,7 +41,7 @@ export const serviceContent = {
       },
       {
         "title": "Preço que cabe no bolso",
-        "text": "Site profissional por apenas R$ 165, sem orçamento complicado. Você já sabe quanto vai pagar antes de chamar."
+        "text": "Site profissional por apenas R$ 97/mês, sem orçamento complicado. Você já sabe quanto vai pagar antes de chamar."
       },
       {
         "title": "Contato ao alcance de quem chegou",
@@ -57,7 +57,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa criar um site?",
-        "a": "O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular."
+        "a": "O site institucional one page sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular."
       },
       {
         "q": "O que eu preciso enviar?",
@@ -69,12 +69,12 @@ export const serviceContent = {
   "site-institucional": {
     "slug": "site-institucional",
     "label": "Site institucional",
-    "title": "Site Institucional por R$ 165 | Site Barato para Empresas | TopSite",
+    "title": "Site Institucional por R$ 97/mês | Site Barato para Empresas | TopSite",
     "eyebrow": "Sua empresa na internet",
-    "heading": "Site institucional por apenas R$ 165.",
-    "description": "Site institucional one page por apenas R$ 165: apresentação da empresa, serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.",
-    "intro": "Reúna a história da empresa, os serviços e os canais de atendimento em uma página profissional, adaptada ao celular e com botão de WhatsApp em destaque — por apenas R$ 165.",
-    "focus": "Credibilidade por R$ 165",
+    "heading": "Site institucional por apenas R$ 97/mês.",
+    "description": "Site institucional one page por apenas R$ 97/mês: apresentação da empresa, serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.",
+    "intro": "Reúna a história da empresa, os serviços e os canais de atendimento em uma página profissional, adaptada ao celular e com botão de WhatsApp em destaque — por apenas R$ 97/mês.",
+    "focus": "Credibilidade por R$ 97/mês",
     "audience": "Para empresas que querem passar confiança na internet com uma apresentação profissional, sem pagar caro.",
     "features": [
       {
@@ -103,7 +103,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa o site institucional?",
-        "a": "O site institucional one page sai por apenas R$ 165. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular."
+        "a": "O site institucional one page sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular."
       },
       {
         "q": "Preciso enviar textos e imagens?",
@@ -119,12 +119,12 @@ export const serviceContent = {
   "landing-page": {
     "slug": "landing-page",
     "label": "Landing pages",
-    "title": "Landing Page por R$ 165 | Criação de Landing Page Barata | TopSite",
+    "title": "Landing Page por R$ 97/mês | Criação de Landing Page Barata | TopSite",
     "eyebrow": "Uma oferta, um objetivo",
-    "heading": "Landing page por apenas R$ 165.",
-    "description": "Criação de landing page por apenas R$ 165: página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque. Peça a sua pelo WhatsApp.",
-    "intro": "Tem um serviço, produto ou campanha para divulgar? Criamos uma landing page com mensagem clara e botão de WhatsApp em destaque, adaptada ao celular — por apenas R$ 165.",
-    "focus": "Sua oferta em uma página, por R$ 165",
+    "heading": "Landing page por apenas R$ 97/mês.",
+    "description": "Criação de landing page por apenas R$ 97/mês: página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque. Peça a sua pelo WhatsApp.",
+    "intro": "Tem um serviço, produto ou campanha para divulgar? Criamos uma landing page com mensagem clara e botão de WhatsApp em destaque, adaptada ao celular — por apenas R$ 97/mês.",
+    "focus": "Sua oferta em uma página, por R$ 97/mês",
     "audience": "Para divulgar um serviço, apresentar um lançamento ou captar interessados em uma oferta específica — de forma orgânica ou com apoio de anúncios.",
     "features": [
       {
@@ -153,7 +153,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma landing page?",
-        "a": "A landing page sai por apenas R$ 165: uma página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque."
+        "a": "A landing page sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses: uma página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque."
       },
       {
         "q": "A landing page substitui o site institucional?",
@@ -207,7 +207,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma loja virtual?",
-        "a": "A loja virtual tem orçamento sob medida, porque depende da quantidade de produtos, da forma de pagamento e das integrações. Conte no WhatsApp o que você vende e passamos o valor. Se você precisa só apresentar a empresa e os produtos, o site institucional one page sai por apenas R$ 165."
+        "a": "A loja virtual tem orçamento sob medida, porque depende da quantidade de produtos, da forma de pagamento e das integrações. Conte no WhatsApp o que você vende e passamos o valor. Se você precisa só apresentar a empresa e os produtos, o site institucional one page sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses."
       },
       {
         "q": "Preciso de pagamento online?",
@@ -222,12 +222,12 @@ export const serviceContent = {
   "pagina-de-vendas": {
     "slug": "pagina-de-vendas",
     "label": "Página de vendas",
-    "title": "Página de Vendas por R$ 165 | Criação de Página de Vendas Barata | TopSite",
+    "title": "Página de Vendas por R$ 97/mês | Criação de Página de Vendas Barata | TopSite",
     "eyebrow": "Venda o seu produto ou serviço",
-    "heading": "Página de vendas por apenas R$ 165.",
-    "description": "Criação de página de vendas por apenas R$ 165: apresente seu produto ou serviço com benefícios, depoimentos e botão de WhatsApp, adaptada ao celular. Peça a sua pelo WhatsApp.",
-    "intro": "Uma página feita para vender um produto ou serviço específico: mostra os benefícios, responde às dúvidas e leva o cliente direto para o WhatsApp — tudo adaptado ao celular, por apenas R$ 165.",
-    "focus": "Sua oferta pronta para vender, por R$ 165",
+    "heading": "Página de vendas por apenas R$ 97/mês.",
+    "description": "Criação de página de vendas por apenas R$ 97/mês: apresente seu produto ou serviço com benefícios, depoimentos e botão de WhatsApp, adaptada ao celular. Peça a sua pelo WhatsApp.",
+    "intro": "Uma página feita para vender um produto ou serviço específico: mostra os benefícios, responde às dúvidas e leva o cliente direto para o WhatsApp — tudo adaptado ao celular, por apenas R$ 97/mês.",
+    "focus": "Sua oferta pronta para vender, por R$ 97/mês",
     "audience": "Para quem quer divulgar um produto, serviço, curso ou pacote e receber os pedidos pelo WhatsApp.",
     "features": [
       {
@@ -256,7 +256,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma página de vendas?",
-        "a": "A página de vendas sai por apenas R$ 165: uma página completa para apresentar o seu produto ou serviço, adaptada ao celular e com botões de WhatsApp."
+        "a": "A página de vendas sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses: uma página completa para apresentar o seu produto ou serviço, adaptada ao celular e com botões de WhatsApp."
       },
       {
         "q": "Posso vender qualquer produto ou serviço?",
@@ -272,12 +272,12 @@ export const serviceContent = {
   "pagina-de-lancamento": {
     "slug": "pagina-de-lancamento",
     "label": "Página de lançamento",
-    "title": "Página de Lançamento por R$ 165 | Página para Lançar Produto ou Evento | TopSite",
+    "title": "Página de Lançamento por R$ 97/mês | Página para Lançar Produto ou Evento | TopSite",
     "eyebrow": "Lance com uma página própria",
-    "heading": "Página de lançamento por apenas R$ 165.",
-    "description": "Criação de página de lançamento por apenas R$ 165: divulgue um produto, curso, evento ou inauguração com uma página própria, adaptada ao celular e com WhatsApp. Peça pelo WhatsApp.",
-    "intro": "Vai lançar um produto, curso, evento ou inaugurar um espaço? Criamos uma página própria para o lançamento, com data, detalhes e botão de WhatsApp em destaque — por apenas R$ 165.",
-    "focus": "Seu lançamento com página própria, por R$ 165",
+    "heading": "Página de lançamento por apenas R$ 97/mês.",
+    "description": "Criação de página de lançamento por apenas R$ 97/mês: divulgue um produto, curso, evento ou inauguração com uma página própria, adaptada ao celular e com WhatsApp. Peça pelo WhatsApp.",
+    "intro": "Vai lançar um produto, curso, evento ou inaugurar um espaço? Criamos uma página própria para o lançamento, com data, detalhes e botão de WhatsApp em destaque — por apenas R$ 97/mês.",
+    "focus": "Seu lançamento com página própria, por R$ 97/mês",
     "audience": "Para quem vai lançar um produto, abrir as inscrições de um curso, divulgar um evento ou anunciar uma inauguração.",
     "features": [
       {
@@ -306,7 +306,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma página de lançamento?",
-        "a": "A página de lançamento sai por apenas R$ 165: uma página própria para o seu lançamento, adaptada ao celular e com botão de WhatsApp em destaque."
+        "a": "A página de lançamento sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses: uma página própria para o seu lançamento, adaptada ao celular e com botão de WhatsApp em destaque."
       },
       {
         "q": "Serve para evento ou inauguração?",
@@ -322,12 +322,12 @@ export const serviceContent = {
   "pagina-de-captura": {
     "slug": "pagina-de-captura",
     "label": "Página de captura",
-    "title": "Página de Captura por R$ 165 | Página para Captar Contatos | TopSite",
+    "title": "Página de Captura por R$ 97/mês | Página para Captar Contatos | TopSite",
     "eyebrow": "Capte contatos de clientes",
-    "heading": "Página de captura por apenas R$ 165.",
-    "description": "Criação de página de captura por apenas R$ 165: uma página simples e direta para captar contatos de interessados, adaptada ao celular e com WhatsApp. Peça a sua pelo WhatsApp.",
-    "intro": "Uma página simples e direta, feita para transformar visitantes em contatos: o interessado chama no WhatsApp para receber o que você oferece — por apenas R$ 165.",
-    "focus": "Mais contatos de interessados, por R$ 165",
+    "heading": "Página de captura por apenas R$ 97/mês.",
+    "description": "Criação de página de captura por apenas R$ 97/mês: uma página simples e direta para captar contatos de interessados, adaptada ao celular e com WhatsApp. Peça a sua pelo WhatsApp.",
+    "intro": "Uma página simples e direta, feita para transformar visitantes em contatos: o interessado chama no WhatsApp para receber o que você oferece — por apenas R$ 97/mês.",
+    "focus": "Mais contatos de interessados, por R$ 97/mês",
     "audience": "Para quem quer montar uma lista de interessados, oferecer um material gratuito, um cupom ou uma avaliação, e falar com eles depois.",
     "features": [
       {
@@ -356,7 +356,7 @@ export const serviceContent = {
     "faqs": [
       {
         "q": "Quanto custa uma página de captura?",
-        "a": "A página de captura sai por apenas R$ 165: uma página simples e direta para captar contatos, adaptada ao celular e com botão de WhatsApp."
+        "a": "A página de captura sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses: uma página simples e direta para captar contatos, adaptada ao celular e com botão de WhatsApp."
       },
       {
         "q": "Qual a diferença para uma página de vendas?",

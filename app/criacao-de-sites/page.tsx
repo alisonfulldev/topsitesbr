@@ -13,22 +13,22 @@ const byRegion = cities.reduce<Record<string, typeof cities>>((acc, c) => {
 }, {})
 
 const citiesSection = (
-  <section className="border-t border-white/10 bg-[#101010] px-4 py-16 sm:px-8">
+  <section className="border-t border-black/10 bg-white px-4 py-16 sm:px-8">
     <div className="mx-auto max-w-7xl">
-      <h2 className="mb-3 text-2xl font-semibold">Criação de sites por cidade</h2>
-      <p className="mb-10 max-w-2xl text-white/65">
+      <h2 className="text-balance text-center mb-3 text-2xl font-semibold">Criação de sites por cidade</h2>
+      <p className="mx-auto mb-10 max-w-2xl text-center text-black/70">
         Atendemos todo o Brasil de forma remota. Veja as principais cidades onde desenvolvemos sites profissionais.
       </p>
       <div className="space-y-10">
         {Object.entries(byRegion).map(([region, regionCities]) => (
           <div key={region}>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-yellow-400">{region}</h3>
-            <ul className="flex flex-wrap gap-3">
+            <h3 className="mb-4 text-center text-sm font-semibold uppercase tracking-widest text-black/55">{region}</h3>
+            <ul className="flex flex-wrap justify-center gap-3">
               {regionCities.map((c) => (
                 <li key={c.slug}>
                   <Link
                     href={`/criacao-de-sites/${c.slug}`}
-                    className="rounded-xl border border-white/10 px-4 py-2 text-sm text-white/75 transition-colors hover:border-yellow-400/40 hover:text-yellow-400"
+                    className="rounded-xl border border-black/10 px-4 py-2 text-sm text-black/80 transition-colors hover:border-black/30 hover:bg-[#FAFAF7] hover:text-black"
                   >
                     {c.name} ({c.stateAbbr})
                   </Link>

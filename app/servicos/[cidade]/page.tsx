@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: { params: Promise<{ cidade: s
   const city = getCityBySlug(cidade)
   if (!city) return marketingMetadata('Página não encontrada', '', '/servicos/' + cidade)
   return marketingMetadata(
-    `Sites em ${city.name} por R$ 165 — Todos os Segmentos | TopSite`,
-    `Site profissional por apenas R$ 165 para mais de 150 segmentos de negócio em ${city.name} (${city.stateAbbr}). Clínicas, restaurantes, advogados, construtoras e muito mais.`,
+    `Sites em ${city.name} por R$ 97/mês — Todos os Segmentos | TopSite`,
+    `Site profissional por apenas R$ 97/mês para mais de 150 segmentos de negócio em ${city.name} (${city.stateAbbr}). Clínicas, restaurantes, advogados, construtoras e muito mais.`,
     `/servicos/${city.slug}`
   )
 }
@@ -55,34 +55,34 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
       <section className="px-4 py-12 sm:px-8 sm:py-20">
         <div className="mx-auto max-w-7xl">
-          <nav aria-label="Caminho da página" className="mb-12 flex flex-wrap gap-3 text-sm text-white/55">
-            <Link href="/" className="hover:text-yellow-400">Início</Link>
+          <nav aria-label="Caminho da página" className="mb-12 flex flex-wrap gap-3 text-sm text-black/55">
+            <Link href="/" className="hover:text-black">Início</Link>
             <span aria-hidden="true">/</span>
-            <Link href="/mapa-do-site" className="hover:text-yellow-400">Mapa do site</Link>
+            <Link href="/mapa-do-site" className="hover:text-black">Mapa do site</Link>
             <span aria-hidden="true">/</span>
             <span aria-current="page">{city.name}</span>
           </nav>
-          <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-yellow-400">{city.name} — {city.stateAbbr}</p>
+          <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-black/55">{city.name} — {city.stateAbbr}</p>
           <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">
-            Sites para todos os segmentos em {city.name} por apenas <span className="text-[#25D366]">R$ 165</span>
+            Sites para todos os segmentos em {city.name} por apenas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">R$ 97/mês</span>
           </h1>
           <PriceTag className="mb-6" />
-          <p className="mb-4 max-w-2xl text-lg leading-relaxed text-white/70">
+          <p className="mb-4 max-w-2xl text-lg leading-relaxed text-black/70">
             Criamos sites profissionais para empresas de {city.name} e região. {city.context}
           </p>
-          <p className="mb-10 max-w-2xl leading-relaxed text-white/55">
-            Abaixo, todos os segmentos para os quais criamos sites em {city.name}. Escolha o seu e peça o seu site por R$ 165 pelo WhatsApp.
+          <p className="mb-10 max-w-2xl leading-relaxed text-black/55">
+            Abaixo, todos os segmentos para os quais criamos sites em {city.name}. Escolha o seu e peça o seu site por R$ 97/mês pelo WhatsApp.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
               href={`/criacao-de-sites/${city.slug}`}
-              className="rounded-xl border border-yellow-400/30 px-4 py-2 text-sm text-yellow-400 transition-colors hover:bg-yellow-400/10"
+              className="rounded-xl border border-[#FDD900] bg-[#FDD900] px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-[#E8C700]"
             >
               Criação de sites em {city.name}
             </Link>
             <Link
               href="/mapa-do-site"
-              className="rounded-xl border border-white/15 px-4 py-2 text-sm text-white/65 transition-colors hover:border-white/30 hover:text-white"
+              className="rounded-xl border border-black/10 px-4 py-2 text-sm text-black/70 transition-colors hover:border-black/25 hover:text-black"
             >
               Ver outras cidades
             </Link>
@@ -91,11 +91,11 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
       </section>
       <CTABand />
 
-      <section className="border-t border-white/10 bg-[#101010] px-4 pb-20 pt-14 sm:px-8">
+      <section className="border-t border-black/10 bg-white px-4 pb-20 pt-14 sm:px-8">
         <div className="mx-auto max-w-7xl space-y-14">
           {sectorEntries.map(([sector, nicheList]) => (
             <div key={sector}>
-              <h2 className="mb-5 border-b border-white/10 pb-3 text-base font-semibold text-yellow-400">
+              <h2 className="mb-5 border-b border-black/10 pb-3 text-base font-semibold text-black">
                 {sector} em {city.name}
               </h2>
               <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -103,7 +103,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
                   <li key={n.slug}>
                     <Link
                       href={`/site-para/${n.slug}/${city.slug}`}
-                      className="block rounded-xl border border-white/10 px-4 py-3 text-sm text-white/75 transition-colors hover:border-yellow-400/40 hover:text-yellow-400"
+                      className="block rounded-xl border border-black/10 px-4 py-3 text-sm text-black/80 transition-colors hover:border-black/30 hover:bg-[#FAFAF7] hover:text-black"
                     >
                       Site para {n.name} em {city.name}
                     </Link>
