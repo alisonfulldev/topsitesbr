@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
     {
       "path": "/api/cron/due-date-reminder",
@@ -8,6 +9,22 @@
       "path": "/api/cron/sync-subscriptions",
       "schedule": "0 12 * * *"
     }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": {
+            "re": "(?i)(GPTBot|ClaudeBot|anthropic-ai|CCBot|Bytespider|meta-externalagent|Amazonbot|cohere-ai|Diffbot|ImagesiftBot|Timpibot|omgili|img2dataset|PanguBot|AhrefsBot|SemrushBot|MJ12bot|DotBot|BLEXBot|DataForSeoBot|Barkrowler|serpstatbot|SeekportBot|MegaIndex|PetalBot|YandexBot|YandexImages|Baiduspider|Sogou|360Spider|Yeti/|SeznamBot|coccocbot)"
+          }
+        }
+      ],
+      "mitigate": {
+        "action": "deny"
+      }
+    }
   ]
 }
-
