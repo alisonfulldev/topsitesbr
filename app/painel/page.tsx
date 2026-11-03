@@ -6,6 +6,9 @@ import { syncSubscriptionPayment } from '@/lib/payments/webhook-handlers'
 import { isClientInProduction } from '@/lib/painel-guard'
 import { ActivationScreen, RegularizationScreen } from './_components/ActivationScreen'
 import { Dashboard } from './_components/Dashboard'
+import { MonthlyOnboarding } from './_components/MonthlyOnboarding'
+import { FIDELITY_MONTHS, buildMonthlyContract, isMonthlyClient, subscriptionPrice } from '@/lib/monthly-plan'
+import { getMonthlyPix } from '@/lib/monthly-plan-service'
 import type { ContextualOffer } from './_components/Dashboard'
 
 export default async function PainelPage({
@@ -89,6 +92,35 @@ export default async function PainelPage({
   const hasActiveSubscription = subscription?.status === 'active'
   const hasPendingSubscription = subscription?.status === 'pending'
   const hasPriorSubscription = !!priorSubRow
+
+  // ── Plano mensal sem taxa de criação: contrato → Pix do 1º mês ────────────────
+  if (isMonthlyClient(client) && client.monthlyPrice != null) {
+    const monthlyPrice = Number(client.monthlyPrice)
+    const waitingFirstPix = hasPendingSubscription && !!subscription?.pixAutomaticAuthorizationId
+    if (waitingFirstPix || (!subscription && !hasPriorSubscription)) {
+      const pix = waitingFirstPix ? await getMonthlyPix(clientId).catch(() => null) : null
+      // Pagamento confirmado durante a consulta: segue para o painel já ativado
+      if (pix?.status !== 'ACTIVE') {
+        return (
+          <MonthlyOnboarding
+            clientName={client.name}
+            monthlyPrice={monthlyPrice}
+            fidelityMonths={FIDELITY_MONTHS}
+            contractHtml={buildMonthlyContract({
+              name: client.name,
+              document: client.document,
+              email: client.email,
+              phone: client.phone,
+              monthlyPrice,
+            })}
+            signed={waitingFirstPix}
+            initialPix={pix}
+          />
+        )
+      }
+      redirect('/painel')
+    }
+  }
 
   // ── Fluxo proposta ────────────────────────────────────────────────────────────
   if ((client.entryFlow === 'proposta' || client.entryFlow === 'apresentacao') && !hasActiveSubscription) {
@@ -284,7 +316,7 @@ export default async function PainelPage({
   const subData = subscription
     ? {
         planName: subscription.plan.name,
-        planPrice: Number(subscription.plan.price),
+        planPrice: subscriptionPrice(subscription),
         status: subscription.status as string,
         nextDueDate: subscription.nextDueDate?.toISOString() ?? null,
         planActivatedAt: subscription.planActivatedAt.toISOString(),

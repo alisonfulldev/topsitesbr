@@ -22,18 +22,22 @@ export default async function ComprovantePage({
       document: true,
       termsAcceptedAt: true,
       termsVersion: true,
+      // Plano mensal: contrato assinado guardado com o texto exato, IP e navegador
+      contractAcceptances: { orderBy: { acceptedAt: 'desc' }, take: 1 },
     },
   })
 
   if (!client || !client.termsAcceptedAt) notFound()
 
-  const version = client.termsVersion ?? '1.0'
-  const termsContent = await getTermsContentFromDb(version)
+  const contract = client.contractAcceptances[0] ?? null
+  const acceptedAtDate = contract?.acceptedAt ?? client.termsAcceptedAt
+  const version = contract?.version ?? client.termsVersion ?? '1.0'
+  const termsContent = contract ? contract.content : await getTermsContentFromDb(version)
 
-  const dateStr = client.termsAcceptedAt.toLocaleDateString('pt-BR', {
+  const dateStr = acceptedAtDate.toLocaleDateString('pt-BR', {
     day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'America/Sao_Paulo',
   })
-  const timeStr = client.termsAcceptedAt.toLocaleTimeString('pt-BR', {
+  const timeStr = acceptedAtDate.toLocaleTimeString('pt-BR', {
     hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/Sao_Paulo',
   })
   const generatedAt = new Date().toLocaleString('pt-BR', {
@@ -86,10 +90,11 @@ export default async function ComprovantePage({
               <p className="text-xs font-bold uppercase tracking-widest opacity-80">{COMPANY_NAME}</p>
               <p className="text-xs opacity-60">Gerado em {generatedAt}</p>
             </div>
-            <h1 className="text-2xl font-bold">Comprovante de Aceite dos Termos de Uso</h1>
+            <h1 className="text-2xl font-bold">{contract ? 'Comprovante de Assinatura do Contrato' : 'Comprovante de Aceite dos Termos de Uso'}</h1>
             <p className="text-sm opacity-80 mt-1">
-              Este documento registra o aceite formal dos Termos de Uso e da Política de Privacidade
-              pelo cliente ao ativar a assinatura do plano Site no Ar.
+              {contract
+                ? 'Este documento registra a assinatura eletrônica do contrato do site por assinatura mensal, com o texto exato lido e aceito pelo cliente.'
+                : 'Este documento registra o aceite formal dos Termos de Uso e da Política de Privacidade pelo cliente ao ativar a assinatura do plano Site no Ar.'}
             </p>
           </div>
 
@@ -125,10 +130,32 @@ export default async function ComprovantePage({
                 <dt className="text-xs text-gray-500">Plataforma</dt>
                 <dd className="text-sm font-semibold text-gray-900 mt-0.5">{APP_URL}</dd>
               </div>
+              {contract && (
+                <>
+                  <div>
+                    <dt className="text-xs text-gray-500">Endereço IP</dt>
+                    <dd className="text-sm font-semibold text-gray-900 mt-0.5">{contract.ipAddress ?? 'não identificado'}</dd>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <dt className="text-xs text-gray-500">Navegador</dt>
+                    <dd className="text-xs text-gray-700 mt-0.5 break-all">{contract.userAgent ?? 'não identificado'}</dd>
+                  </div>
+                </>
+              )}
             </dl>
           </div>
 
           {/* Alert: inadimplência */}
+          {contract ? (
+          <div className="mx-8 my-6 bg-red-50 border border-red-200 rounded-xl px-5 py-4">
+            <p className="text-xs font-bold text-red-700 uppercase tracking-wide mb-1">⚠️ Fidelidade e cobrança — aceitas pelo cliente</p>
+            <p className="text-sm text-red-800 leading-relaxed">
+              Fidelidade de <strong>6 meses</strong>; encerramento antecipado exige o pagamento das mensalidades restantes
+              acrescidas de 2% (cláusula 6). Débitos podem ser cobrados por meios extrajudiciais e judiciais, com
+              inscrição em órgãos de proteção ao crédito e protesto (cláusula 7).
+            </p>
+          </div>
+          ) : (
           <div className="mx-8 my-6 bg-red-50 border border-red-200 rounded-xl px-5 py-4">
             <p className="text-xs font-bold text-red-700 uppercase tracking-wide mb-1">⚠️ Cláusula de inadimplência — aceita pelo cliente</p>
             <p className="text-sm text-red-800 leading-relaxed">
@@ -138,11 +165,12 @@ export default async function ComprovantePage({
               Não há cobrança de taxa de reativação.
             </p>
           </div>
+          )}
 
           {/* Full terms snapshot */}
           <div className="px-8 pb-8">
             <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 pt-2 border-t border-gray-100">
-              Texto integral dos Termos de Uso — versão {version} (snapshot no momento do aceite)
+              {contract ? `Texto integral do contrato — versão ${version} (exatamente como assinado)` : `Texto integral dos Termos de Uso — versão ${version} (snapshot no momento do aceite)`}
             </h2>
             <div
               className="terms-content text-sm text-gray-700 leading-relaxed"
@@ -153,8 +181,9 @@ export default async function ComprovantePage({
           {/* Footer */}
           <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 text-xs text-gray-400 text-center">
             Comprovante gerado automaticamente pelo sistema {COMPANY_NAME} em {generatedAt}.
-            O aceite foi registrado quando o cliente marcou o checkbox "Li e concordo com os Termos de Uso"
-            e clicou em "Ativar" na tela de ativação do plano.
+            {contract
+              ? 'A assinatura foi registrada quando o cliente leu o contrato até o fim, marcou "Li e concordo com o contrato" e clicou em "Assinar contrato" no painel.'
+              : 'O aceite foi registrado quando o cliente marcou o checkbox "Li e concordo com os Termos de Uso" e clicou em "Ativar" na tela de ativação do plano.'}
           </div>
         </div>
       </div>

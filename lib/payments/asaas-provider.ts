@@ -7,6 +7,9 @@ import type {
   UpdateSubscriptionResult,
   CreateSingleChargeInput,
   CreateSingleChargeResult,
+  CreatePixAutomaticInput,
+  PixAutomaticAuthorization,
+  PixAutomaticStatus,
 } from './provider'
 
 // ── Tipos da API do Asaas ─────────────────────────────────────────────────────
@@ -27,6 +30,31 @@ interface AsaasPayment {
 
 interface AsaasPaymentList {
   data: AsaasPayment[]
+}
+
+// POST/GET /pix/automatic/authorizations — https://docs.asaas.com/reference/criar-uma-autorizacao-pix-automatico
+interface AsaasPixAutomaticAuthorization {
+  id: string
+  status: PixAutomaticStatus
+  subscriptionId?: string | null
+  payload?: string | null
+  encodedImage?: string | null
+  immediateQrCode?: {
+    payload?: string | null
+    encodedImage?: string | null
+    expirationDate?: string | null
+  } | null
+}
+
+function toPixAutomatic(a: AsaasPixAutomaticAuthorization): PixAutomaticAuthorization {
+  return {
+    authorizationId: a.id,
+    status: a.status,
+    subscriptionId: a.subscriptionId ?? null,
+    qrCodePayload: a.immediateQrCode?.payload ?? a.payload ?? null,
+    qrCodeImage: a.immediateQrCode?.encodedImage ?? a.encodedImage ?? null,
+    expiresAt: a.immediateQrCode?.expirationDate ?? null,
+  }
 }
 
 interface AsaasSubscriptionDetail {
@@ -222,9 +250,9 @@ export class AsaasPaymentProvider implements PaymentProvider {
         method: 'POST',
         body: JSON.stringify({
           customer: input.customerId,
-          billingType: 'UNDEFINED',
+          billingType: input.billingType ?? 'UNDEFINED',
           value: input.price,
-          dueDate: daysFromNow(3),
+          dueDate: daysFromNow(input.dueInDays ?? 3),
           description: input.description,
           ...(input.externalReference && { externalReference: input.externalReference }),
           ...(input.successUrl && {
@@ -235,6 +263,58 @@ export class AsaasPaymentProvider implements PaymentProvider {
       return { chargeId: payment.id, paymentUrl: payment.invoiceUrl }
     } catch (err) {
       asaasError('createSingleCharge', err)
+    }
+  }
+
+  // Modo SUBSCRIPTION: depois da ativação o próprio Asaas gera as cobranças mensais.
+  // O QR Code imediato cobra o primeiro mês e registra a autorização da recorrência.
+  async createPixAutomaticAuthorization(
+    input: CreatePixAutomaticInput,
+  ): Promise<PixAutomaticAuthorization> {
+    try {
+      const auth = await asaasFetch<AsaasPixAutomaticAuthorization>('/pix/automatic/authorizations', {
+        method: 'POST',
+        body: JSON.stringify({
+          customerId: input.customerId,
+          frequency: 'MONTHLY',
+          contractId: input.contractId.slice(0, 35),
+          startDate: input.recurringStartDate,
+          value: input.value,
+          description: input.description.slice(0, 35),
+          paymentCreationMode: 'SUBSCRIPTION',
+          immediateQrCode: {
+            originalValue: input.value,
+            expirationSeconds: 24 * 60 * 60,
+            description: input.description.slice(0, 35),
+          },
+        }),
+      })
+      return toPixAutomatic(auth)
+    } catch (err) {
+      asaasError('createPixAutomaticAuthorization', err)
+    }
+  }
+
+  async getPixAutomaticAuthorization(authorizationId: string): Promise<PixAutomaticAuthorization> {
+    try {
+      const auth = await asaasFetch<AsaasPixAutomaticAuthorization>(
+        `/pix/automatic/authorizations/${authorizationId}`,
+      )
+      return toPixAutomatic(auth)
+    } catch (err) {
+      asaasError('getPixAutomaticAuthorization', err)
+    }
+  }
+
+  async findLatestReceivedPixCharge(customerId: string): Promise<string | null> {
+    try {
+      const list = await asaasFetch<{ data: { id: string; status: string }[] }>(
+        `/payments?customer=${customerId}&billingType=PIX&limit=10&offset=0`,
+      )
+      const received = list.data.find((p) => p.status === 'RECEIVED' || p.status === 'CONFIRMED')
+      return received?.id ?? null
+    } catch {
+      return null
     }
   }
 }

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { AssinaturasClient } from './_components/AssinaturasClient'
+import { subscriptionPrice } from '@/lib/monthly-plan'
 
 export const metadata = { title: 'Assinaturas — Admin' }
 
@@ -17,7 +18,7 @@ export default async function AssinaturasPage() {
     clientId: s.client.id,
     clientName: s.client.name,
     planName: s.plan.name,
-    planPrice: Number(s.plan.price),
+    planPrice: subscriptionPrice(s),
     status: s.status,
     nextDueDate: s.nextDueDate?.toISOString() ?? null,
     asaasSubscriptionId: s.asaasSubscriptionId,

@@ -159,6 +159,7 @@ export async function activateSubscription(
   ])
 
   if (!client || !plan) return { error: 'Cliente ou plano não encontrado.' }
+  if (client.entryFlow === 'mensal') return { error: 'Cliente do plano mensal: a assinatura nasce quando ele assina o contrato e paga o 1º Pix pelo painel. Gerencie a recorrência pelo Asaas.' }
 
   const docDigits = client.document?.replace(/\D/g, '') ?? ''
   if (docDigits.length !== 11 && docDigits.length !== 14) {
@@ -230,6 +231,7 @@ export async function recreateAsaasSubscription(
   if (!client || !subscription || subscription.clientId !== clientId) {
     return { error: 'Dados não encontrados.' }
   }
+  if (client.entryFlow === 'mensal') return { error: 'Cliente do plano mensal: a assinatura nasce quando ele assina o contrato e paga o 1º Pix pelo painel. Gerencie a recorrência pelo Asaas.' }
 
   const docDigits = client.document?.replace(/\D/g, '') ?? ''
   if (docDigits.length !== 11 && docDigits.length !== 14) {
@@ -321,6 +323,9 @@ export async function changePlan(
   })
 
   if (!subscription) return { error: 'Nenhuma assinatura ativa encontrada.' }
+  if (subscription.customPrice != null) {
+    return { error: 'Assinatura do plano mensal: o valor é definido no cadastro do cliente e não há troca de plano.' }
+  }
   if (subscription.planId === newPlanId) return { error: 'O cliente já está neste plano.' }
 
   const newPlan = await prisma.plan.findUnique({ where: { id: newPlanId } })

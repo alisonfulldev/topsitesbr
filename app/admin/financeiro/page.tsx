@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { FinanceiroClient, type MonthlyRow, type OverdueItem, type CostBreakdown, type TransactionItem } from './_components/FinanceiroClient'
+import { subscriptionPrice } from '@/lib/monthly-plan'
 
 const MAINTENANCE_PRODUCTS = new Set([
   'Nova Seção',
@@ -326,7 +327,7 @@ export default async function AdminFinanceiroPage({
   const kpiCosts = selectedQuinzenaRow ? selectedQuinzenaRow.totalCosts : totalCosts
   const kpiProfit = selectedQuinzenaRow ? selectedQuinzenaRow.profit : totalProfit
   const kpiMargin = selectedQuinzenaRow ? selectedQuinzenaRow.margin : totalMargin
-  const currentMRR = activeSubscriptions.reduce((a, s) => a + Number(s.plan.price), 0)
+  const currentMRR = activeSubscriptions.reduce((a, s) => a + subscriptionPrice(s), 0)
 
   const avgActiveClients = activeSubscriptions.length || 1
   const arpu = months.length > 0 ? totalRevenue / months.length / avgActiveClients : 0

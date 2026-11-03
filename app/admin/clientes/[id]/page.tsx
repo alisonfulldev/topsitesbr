@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { ProposalCard } from './_components/ProposalCard'
 import { ImpersonateButton } from './_components/ImpersonateButton'
+import { MonthlyPlanCard } from './_components/MonthlyPlanCard'
+import { DOMAIN_ANNUAL_PRICE, earlyTerminationQuote, isMonthlyClient, subscriptionPrice } from '@/lib/monthly-plan'
 
 const STATUS_LABEL: Record<string, string> = {
   pendente_ativacao: 'Pendente',
@@ -44,7 +46,10 @@ export default async function ClientePage({
         orderBy: { createdAt: 'desc' },
       },
       subscriptions: {
-        include: { plan: { select: { name: true, price: true } } },
+        include: {
+          plan: { select: { name: true, price: true } },
+          invoices: { where: { status: 'paid' }, select: { id: true } },
+        },
         orderBy: { createdAt: 'desc' },
         take: 1,
       },
@@ -55,6 +60,7 @@ export default async function ClientePage({
       referralReceived: {
         include: { referrerClient: { select: { id: true, name: true } } },
       },
+      contractAcceptances: { select: { id: true }, take: 1 },
       proposals: {
         select: {
           id: true,
@@ -189,7 +195,7 @@ export default async function ClientePage({
               subscription ? (
                 <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-brand-100 text-brand-text">
                   {subscription.plan.name} — R${' '}
-                  {Number(subscription.plan.price).toFixed(2).replace('.', ',')}
+                  {subscriptionPrice(subscription).toFixed(2).replace('.', ',')}
                   /mês
                 </span>
               ) : (
@@ -199,6 +205,23 @@ export default async function ClientePage({
           />
         </dl>
       </div>
+
+      {isMonthlyClient(client) && (
+        <MonthlyPlanCard
+          clientId={client.id}
+          monthlyPrice={client.monthlyPrice != null ? Number(client.monthlyPrice) : null}
+          subscriptionStatus={subscription?.status ?? null}
+          paidMonths={subscription?.invoices.length ?? 0}
+          fidelityEndsAt={subscription?.fidelityEndsAt?.toISOString() ?? null}
+          quitacao={earlyTerminationQuote({
+            monthlyPrice: subscription ? subscriptionPrice(subscription) : 0,
+            paidMonths: subscription?.invoices.length ?? 0,
+            fidelityEndsAt: subscription?.fidelityEndsAt ?? null,
+          })}
+          hasContract={client.contractAcceptances.length > 0}
+          domainPrice={DOMAIN_ANNUAL_PRICE}
+        />
+      )}
 
       {/* Logins */}
       <div className="bg-white rounded-xl border border-gray-200 p-5 mb-4">

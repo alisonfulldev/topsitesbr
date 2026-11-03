@@ -43,6 +43,9 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
   const clientId = await getClientId()
   if (!clientId) return { error: 'Cliente não encontrado.' }
 
+  const flow = await prisma.client.findUnique({ where: { id: clientId }, select: { entryFlow: true } })
+  if (flow?.entryFlow === 'mensal') return { error: 'Seu plano é ativado pela assinatura do contrato no painel.' }
+
   const existing = await prisma.subscription.findFirst({
     where: { clientId, status: { not: 'canceled' } },
     include: { invoices: { orderBy: { createdAt: 'desc' }, take: 1 } },
@@ -306,6 +309,9 @@ export async function payNextMonth(): Promise<{ error?: string; paymentUrl?: str
   })
 
   if (!subscription) return { error: 'Nenhuma assinatura ativa encontrada.' }
+  if (subscription.customPrice != null) {
+    return { error: 'No plano mensal as mensalidades são cobradas por Pix todo mês, na data do primeiro pagamento.' }
+  }
   if (!subscription.nextDueDate) return { error: 'Data de vencimento não encontrada.' }
   if (!subscription.asaasSubscriptionId) {
     return { error: 'Pagamento antecipado não disponível para esta assinatura. Entre em contato pelo suporte.' }

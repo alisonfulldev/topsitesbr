@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { isClientInProduction } from '@/lib/painel-guard'
 import { AssinaturaPageClient } from './_components/AssinaturaPageClient'
+import { subscriptionPrice } from '@/lib/monthly-plan'
 
 export default async function PainelAssinaturaPage() {
   const session = await getServerSession(authOptions)
@@ -40,7 +41,7 @@ export default async function PainelAssinaturaPage() {
     status: subscriptionRaw.status,
     planId: subscriptionRaw.planId,
     planName: subscriptionRaw.plan.name,
-    planPrice: Number(subscriptionRaw.plan.price),
+    planPrice: subscriptionPrice(subscriptionRaw),
     nextDueDate: subscriptionRaw.nextDueDate?.toISOString() ?? null,
     planActivatedAt: subscriptionRaw.planActivatedAt.toISOString(),
     hasAsaasLink: !!subscriptionRaw.asaasSubscriptionId,

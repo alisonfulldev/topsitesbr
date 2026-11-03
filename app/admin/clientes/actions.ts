@@ -89,8 +89,9 @@ export async function createClient(data: {
   referralCode?: string
   createUserPassword?: string
   siteEntryFee?: number
+  monthlyPrice?: number
   activationFlow?: 'quente' | 'frio'
-  entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao'
+  entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao' | 'mensal'
   proposalTitle?: string
   proposalDescription?: string
   proposalIncludedItems?: string
@@ -131,6 +132,7 @@ export async function createClient(data: {
       document: data.document?.trim() || null,
       referralCode: newReferralCode,
       siteEntryFee: data.siteEntryFee != null ? data.siteEntryFee : null,
+      monthlyPrice: data.entryFlow === 'mensal' && data.monthlyPrice != null ? data.monthlyPrice : null,
       activationFlow: data.activationFlow ?? 'frio',
       entryFlow: data.entryFlow ?? 'whatsapp',
     },
@@ -272,7 +274,7 @@ export async function createClient(data: {
 
 export async function updateClient(
   id: string,
-  data: { name: string; email: string; phone?: string; document?: string; siteEntryFee?: number; activationFlow?: 'quente' | 'frio'; entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao' }
+  data: { name: string; email: string; phone?: string; document?: string; siteEntryFee?: number; monthlyPrice?: number; activationFlow?: 'quente' | 'frio'; entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao' | 'mensal' }
 ): Promise<{ error?: string; success?: boolean; resentTo?: string }> {
   const parsed = clientSchema.safeParse(data)
   if (!parsed.success) {
@@ -316,6 +318,7 @@ export async function updateClient(
       phone: data.phone?.trim() || null,
       document: data.document?.trim() || null,
       ...(data.siteEntryFee !== undefined && { siteEntryFee: data.siteEntryFee }),
+      ...(data.monthlyPrice !== undefined && { monthlyPrice: data.monthlyPrice }),
       ...(data.activationFlow !== undefined && { activationFlow: data.activationFlow }),
       ...(data.entryFlow !== undefined && { entryFlow: data.entryFlow }),
     },

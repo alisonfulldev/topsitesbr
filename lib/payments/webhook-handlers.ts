@@ -47,6 +47,17 @@ async function resolveAsaasSubscriptionCharge(
 
     if (!subscription) return null
 
+    // Plano mensal: o 1º mês é registrado na ativação, às vezes sem o id da cobrança
+    const unlinkedFirstMonth = await prisma.invoice.findFirst({
+      where: { subscriptionId: subscription.id, asaasChargeId: null, status: 'paid' },
+    })
+    if (status === 'pending' && unlinkedFirstMonth && Number(unlinkedFirstMonth.amount) === Number(charge.value)) {
+      return await prisma.invoice.update({
+        where: { id: unlinkedFirstMonth.id },
+        data: { asaasChargeId: chargeId },
+      })
+    }
+
     return await prisma.invoice.create({
       data: {
         subscriptionId: subscription.id,
@@ -129,6 +140,11 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
       ok: true,
       message: `Pedido de "${order.product.name}" por ${order.client.name} confirmado.`,
     }
+  }
+
+  // Webhook repetido do Asaas (ou 1º mês do plano mensal já registrado na ativação): nada a fazer
+  if (invoice.status === 'paid') {
+    return { ok: true, message: `Fatura ${chargeId} já estava paga.` }
   }
 
   const { subscription } = invoice

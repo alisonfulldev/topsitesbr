@@ -136,6 +136,8 @@ model Client {
   document                 String?
   referralCode             String    @unique
   siteEntryFee             Decimal?  @map("site_entry_fee") @db.Decimal(10, 2)
+  // Plano mensal sem taxa de criação (entryFlow = "mensal"): valor da mensalidade definido no cadastro
+  monthlyPrice             Decimal?  @map("monthly_price") @db.Decimal(10, 2)
   monthlyFeeAcknowledgedAt DateTime?
   downloadRetentionShownAt DateTime?
   termsAcceptedAt          DateTime? @map("terms_accepted_at")
@@ -158,6 +160,7 @@ model Client {
   planChangeHistory PlanChangeHistory[]
   pushSubscriptions PushSubscription[]
   proposals         Proposal[]
+  contractAcceptances ContractAcceptance[]
 
   @@map("clients")
 }
@@ -257,6 +260,10 @@ model Subscription {
   asaasSubscriptionId String?            @map("asaas_subscription_id")
   nextDueDate         DateTime?          @map("next_due_date")
   planActivatedAt     DateTime           @default(now()) @map("plan_activated_at")
+  // Plano mensal: valor próprio (sobrepõe plan.price), autorização do Pix Automático e fim da fidelidade
+  customPrice                 Decimal?  @map("custom_price") @db.Decimal(10, 2)
+  pixAutomaticAuthorizationId String?   @map("pix_automatic_authorization_id")
+  fidelityEndsAt              DateTime? @map("fidelity_ends_at")
   createdAt           DateTime           @default(now()) @map("created_at")
   updatedAt           DateTime           @updatedAt @map("updated_at")
 
@@ -719,4 +726,20 @@ model ContactRequest {
 
   @@index([createdAt])
   @@map("contact_requests")
+}
+
+// Contrato aceito pelo cliente — guarda o texto exato (já preenchido) que ele leu e assinou
+model ContractAcceptance {
+  id         String   @id @default(uuid())
+  clientId   String   @map("client_id")
+  version    String
+  content    String   @db.Text
+  acceptedAt DateTime @default(now()) @map("accepted_at")
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+
+  client Client @relation(fields: [clientId], references: [id])
+
+  @@index([clientId])
+  @@map("contract_acceptances")
 }

@@ -6,11 +6,13 @@ import {
   handlePaymentOverdue,
   handleProposalPayment,
 } from '@/lib/payments/webhook-handlers'
+import { handlePixAutomaticAuthorizationEvent } from '@/lib/monthly-plan-service'
 
 // Payload enviado pelo Asaas em cada evento
 interface AsaasWebhookPayload {
   event: string
   payment?: { id: string; externalReference?: string }
+  pixAutomaticAuthorization?: { id: string; status?: string }
 }
 
 export async function GET() {
@@ -35,6 +37,28 @@ export async function POST(req: NextRequest) {
   }
 
   const { event, payment } = body
+
+  // ── Pix Automático (plano mensal): eventos da autorização, sem objeto payment ──
+  if (event?.startsWith('PIX_AUTOMATIC_RECURRING_AUTHORIZATION_')) {
+    const authorizationId = body.pixAutomaticAuthorization?.id
+    console.log(`[webhook:asaas] evento=${event} autorizacao=${authorizationId ?? '(sem id)'}`)
+    if (!authorizationId) return NextResponse.json({ ok: true, message: 'Evento recebido.' })
+    try {
+      const result = await handlePixAutomaticAuthorizationEvent(event, authorizationId)
+      if (!result.ok) console.log(`[webhook:asaas] ${result.message} — ignorado.`)
+      return NextResponse.json({ ok: true, message: result.message })
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err)
+      console.error(`[webhook:asaas] ERRO evento=${event} autorizacao=${authorizationId}: ${errMsg}`)
+      await sendNotification(
+        null,
+        'Falha ao processar Pix Automático — verificar manualmente',
+        `Evento: ${event}\nAutorização: ${authorizationId}\nErro: ${errMsg}\n\nConfira o pagamento no Asaas.`,
+      ).catch(() => {})
+      return NextResponse.json({ ok: true, message: 'Evento recebido com erro interno — admin notificado.' })
+    }
+  }
+
   const chargeId = payment?.id ?? '(sem id)'
   const externalRef = payment?.externalReference ?? ''
 

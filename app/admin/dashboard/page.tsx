@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { DashboardCharts } from './_components/DashboardCharts'
+import { subscriptionPrice } from '@/lib/monthly-plan'
 
 function fmtBRL(n: number) {
   return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -50,7 +51,7 @@ export default async function AdminDashboardPage() {
     }),
   ])
 
-  const mrr = activeSubscriptions.reduce((acc, s) => acc + Number(s.plan.price), 0)
+  const mrr = activeSubscriptions.reduce((acc, s) => acc + subscriptionPrice(s), 0)
   const subscribedClientCount = new Set(activeSubscriptions.map((s) => s.clientId)).size
   const upsellCount = upsellClients.length
 

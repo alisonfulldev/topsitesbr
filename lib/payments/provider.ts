@@ -31,11 +31,42 @@ export interface CreateSingleChargeInput {
   price: number
   successUrl?: string
   externalReference?: string
+  /** "PIX" restringe a cobrança a Pix (plano mensal). Padrão: cliente escolhe. */
+  billingType?: 'PIX' | 'UNDEFINED'
+  /** Dias até o vencimento. Padrão: 3. */
+  dueInDays?: number
 }
 
 export interface CreateSingleChargeResult {
   chargeId: string
   paymentUrl: string
+}
+
+// ── Pix Automático (Jornada 3: primeiro pagamento + autorização no mesmo QR Code) ──
+
+export type PixAutomaticStatus = 'CREATED' | 'ACTIVE' | 'CANCELLED' | 'REFUSED' | 'EXPIRED'
+
+export interface CreatePixAutomaticInput {
+  customerId: string
+  /** Valor da mensalidade — usado no primeiro pagamento e nas cobranças recorrentes */
+  value: number
+  /** Identificador do contrato (máx. 35 caracteres) */
+  contractId: string
+  description: string
+  /** Início das cobranças recorrentes (YYYY-MM-DD) — o mês seguinte ao primeiro pagamento */
+  recurringStartDate: string
+}
+
+export interface PixAutomaticAuthorization {
+  authorizationId: string
+  status: PixAutomaticStatus
+  /** Assinatura criada pelo Asaas (modo SUBSCRIPTION) — presente após a ativação */
+  subscriptionId: string | null
+  /** Pix copia e cola do primeiro pagamento */
+  qrCodePayload: string | null
+  /** Imagem do QR Code em base64 (PNG) */
+  qrCodeImage: string | null
+  expiresAt: string | null
 }
 
 export interface PaymentProvider {
@@ -64,6 +95,11 @@ export interface PaymentProvider {
   ): Promise<{ chargeId: string; paymentUrl: string; isExisting: boolean }>
   cancelSubscription(subscriptionId: string): Promise<void>
   createSingleCharge(input: CreateSingleChargeInput): Promise<CreateSingleChargeResult>
+  /** Cria a autorização de Pix Automático com o QR Code do primeiro pagamento */
+  createPixAutomaticAuthorization(input: CreatePixAutomaticInput): Promise<PixAutomaticAuthorization>
+  getPixAutomaticAuthorization(authorizationId: string): Promise<PixAutomaticAuthorization>
+  /** Último pagamento Pix recebido do cliente (para vincular a fatura do primeiro mês) */
+  findLatestReceivedPixCharge(customerId: string): Promise<string | null>
 }
 
 // ── Mock (PAYMENT_DRIVER=mock) ────────────────────────────────────────────────
@@ -77,6 +113,8 @@ function addDays(days: number): Date {
   d.setDate(d.getDate() + days)
   return d
 }
+
+const MOCK_PIX_PAYLOAD = '00020101021226MOCKPIXAUTOMATICO5204000053039865802BR6304ABCD'
 
 const mockProvider: PaymentProvider = {
   async createCustomer(input) {
@@ -128,6 +166,34 @@ const mockProvider: PaymentProvider = {
       chargeId: mockId('chg'),
       paymentUrl: '/dev/pagamento-simulado',
     }
+  },
+
+  // No mock a autorização fica "CREATED"; o painel mostra um botão de simular pagamento (só fora de produção)
+  async createPixAutomaticAuthorization(input) {
+    console.log('[MOCK:createPixAutomaticAuthorization]', input.contractId, `R$${input.value}`, 'recorrência a partir de', input.recurringStartDate)
+    return {
+      authorizationId: mockId('mockpix'),
+      status: 'CREATED',
+      subscriptionId: null,
+      qrCodePayload: MOCK_PIX_PAYLOAD,
+      qrCodeImage: null,
+      expiresAt: addDays(1).toISOString(),
+    }
+  },
+
+  async getPixAutomaticAuthorization(authorizationId) {
+    return {
+      authorizationId,
+      status: 'CREATED',
+      subscriptionId: null,
+      qrCodePayload: MOCK_PIX_PAYLOAD,
+      qrCodeImage: null,
+      expiresAt: addDays(1).toISOString(),
+    }
+  },
+
+  async findLatestReceivedPixCharge() {
+    return null
   },
 }
 

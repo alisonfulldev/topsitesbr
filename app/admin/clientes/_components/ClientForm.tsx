@@ -18,8 +18,9 @@ type InitialData = {
   phone: string
   document: string
   siteEntryFee?: number | null
+  monthlyPrice?: number | null
   activationFlow?: 'quente' | 'frio'
-  entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao'
+  entryFlow?: 'whatsapp' | 'proposta' | 'apresentacao' | 'mensal'
 }
 
 interface Props {
@@ -67,10 +68,13 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
   const [siteEntryFee, setSiteEntryFee] = useState(
     initialData?.siteEntryFee != null ? String(initialData.siteEntryFee) : ''
   )
+  const [monthlyPrice, setMonthlyPrice] = useState(
+    initialData?.monthlyPrice != null ? String(initialData.monthlyPrice) : ''
+  )
   const [activationFlow, setActivationFlow] = useState<'quente' | 'frio'>(
     initialData?.activationFlow ?? 'frio'
   )
-  const [entryFlow, setEntryFlow] = useState<'whatsapp' | 'proposta' | 'apresentacao'>(
+  const [entryFlow, setEntryFlow] = useState<'whatsapp' | 'proposta' | 'apresentacao' | 'mensal'>(
     initialData?.entryFlow ?? 'whatsapp'
   )
 
@@ -123,6 +127,21 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
         setError('Informe a senha para o login.')
         return
       }
+      if (entryFlow === 'mensal') {
+        if (!monthlyPrice || parseFloat(monthlyPrice) <= 0) {
+          setError('Informe o valor da mensalidade.')
+          return
+        }
+        const docDigits = document.replace(/\D/g, '')
+        if (docDigits.length !== 11 && docDigits.length !== 14) {
+          setError('CPF ou CNPJ é obrigatório no plano mensal (necessário para a cobrança por Pix).')
+          return
+        }
+        if (!loginPassword.trim()) {
+          setError('Informe a senha temporária de acesso ao painel.')
+          return
+        }
+      }
       if (entryFlow === 'whatsapp' && paidExternally && !loginPassword.trim()) {
         setError('Informe a senha temporária para o cliente pago por fora.')
         return
@@ -148,8 +167,9 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           phone: phone || undefined,
           document: document || undefined,
           referralCode: referralCode.trim() || undefined,
-          createUserPassword: entryFlow === 'proposta' ? undefined : (createLogin ? loginPassword : undefined),
-          siteEntryFee: entryFlow === 'proposta' ? undefined : (siteEntryFee ? parseFloat(siteEntryFee) : undefined),
+          createUserPassword: entryFlow === 'proposta' ? undefined : (createLogin || entryFlow === 'mensal' ? loginPassword : undefined),
+          siteEntryFee: entryFlow === 'proposta' || entryFlow === 'mensal' ? undefined : (siteEntryFee ? parseFloat(siteEntryFee) : undefined),
+          monthlyPrice: entryFlow === 'mensal' ? parseFloat(monthlyPrice) : undefined,
           activationFlow,
           entryFlow,
           ...(entryFlow === 'proposta' && {
@@ -175,6 +195,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           phone: phone || undefined,
           document: document || undefined,
           siteEntryFee: siteEntryFee ? parseFloat(siteEntryFee) : undefined,
+          monthlyPrice: entryFlow === 'mensal' && monthlyPrice ? parseFloat(monthlyPrice) : undefined,
           activationFlow,
           entryFlow,
         })
@@ -256,6 +277,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
               { value: 'whatsapp', label: 'WhatsApp', desc: 'Chegou pelo WhatsApp / tráfego pago' },
               { value: 'proposta', label: 'Proposta', desc: 'Recebe link de proposta por e-mail' },
               { value: 'apresentacao', label: 'Apresentação', desc: 'Comprou pelo link de apresentação (R$97)' },
+              { value: 'mensal', label: 'Mensal sem taxa', desc: 'Só a mensalidade, Pix, fidelidade de 6 meses' },
             ] as const).map((opt) => (
               <label
                 key={opt.value}
@@ -279,6 +301,30 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
             ))}
           </div>
         </div>
+
+        {/* Plano mensal sem taxa de criação: valor da mensalidade */}
+        {entryFlow === 'mensal' && (
+          <Field
+            label="Valor da mensalidade (R$)"
+            required
+            hint="Sem taxa de criação. Cobrança só por Pix, com o 1º mês pago na assinatura do contrato e fidelidade de 6 meses."
+          >
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
+                R$
+              </span>
+              <input
+                type="number"
+                min="1"
+                step="0.01"
+                value={monthlyPrice}
+                onChange={(e) => setMonthlyPrice(e.target.value)}
+                placeholder="67,00"
+                className={`${INPUT} pl-9`}
+              />
+            </div>
+          </Field>
+        )}
 
         {/* Site entry fee / creation price — WhatsApp only */}
         {entryFlow === 'whatsapp' && (
@@ -409,6 +455,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
         )}
 
         {/* Activation flow */}
+        {entryFlow !== 'mensal' && (
         <div className="pt-2 border-t border-gray-100">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
             Tipo de cliente na ativação
@@ -440,6 +487,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
             ))}
           </div>
         </div>
+        )}
 
         {/* Referral code — only on create */}
         {mode === 'create' && (
@@ -520,6 +568,28 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
                   ))}
                 </div>
               )}
+            </Field>
+          </div>
+        )}
+
+        {/* Login obrigatório no plano mensal: o cliente assina o contrato e paga pelo painel */}
+        {mode === 'create' && entryFlow === 'mensal' && (
+          <div className="pt-2 border-t border-gray-100">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              Acesso ao painel
+            </p>
+            <Field
+              label="Senha temporária"
+              required
+              hint="O cliente recebe o acesso por e-mail, lê e assina o contrato e paga o 1º mês por Pix."
+            >
+              <input
+                type="text"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                placeholder="Senha a ser entregue ao cliente"
+                className={`${INPUT} font-mono`}
+              />
             </Field>
           </div>
         )}

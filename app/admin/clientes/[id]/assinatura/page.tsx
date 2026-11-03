@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { SubscriptionPageClient } from './_components/SubscriptionPageClient'
+import { subscriptionPrice } from '@/lib/monthly-plan'
 
 export default async function AssinaturaPage({
   params,
@@ -57,7 +58,7 @@ export default async function AssinaturaPage({
                 status: sub.status,
                 planId: sub.planId,
                 planName: sub.plan.name,
-                planPrice: Number(sub.plan.price),
+                planPrice: subscriptionPrice(sub),
                 nextDueDate: sub.nextDueDate?.toISOString() ?? null,
                 planActivatedAt: sub.planActivatedAt.toISOString(),
                 asaasSubscriptionId: sub.asaasSubscriptionId,
