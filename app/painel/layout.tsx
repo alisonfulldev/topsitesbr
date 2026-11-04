@@ -117,10 +117,11 @@ export default async function PainelLayout({ children }: { children: React.React
       }),
       prisma.subscription.findFirst({
         where: { clientId, status: 'active' },
-        select: { id: true },
+        select: { id: true, customPrice: true },
       }),
     ])
-    inProduction = !!inDevProposal && !activeSub
+    // Plano mensal: assinatura ativa desde o 1º Pix, mas o site ainda está em produção
+    inProduction = !!inDevProposal && (!activeSub || activeSub.customPrice != null)
   }
 
   return (

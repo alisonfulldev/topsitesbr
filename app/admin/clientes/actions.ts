@@ -57,6 +57,44 @@ async function sendAccessEmail({ to, clientName, password }: { to: string; clien
   })
 }
 
+// Plano mensal: o site ainda não existe — o acesso serve para assinar o contrato e pagar o 1º mês
+async function sendMonthlyAccessEmail({ to, clientName, password }: { to: string; clientName: string; password: string }) {
+  const appUrl = process.env.NEXTAUTH_URL ?? 'https://topsitebr.com.br'
+  await sendEmail({
+    to,
+    subject: 'Seu acesso à Top Site — próximos passos do seu site',
+    html: `
+      <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
+        <div style="background:#facc15;border-radius:12px;padding:20px 24px;margin-bottom:24px">
+          <h1 style="margin:0;font-size:20px;color:#1a1a1a">Olá, ${clientName}! 👋</h1>
+        </div>
+        <p style="color:#374151;font-size:15px;line-height:1.6">
+          Seu cadastro na Top Site foi feito. Pelo painel você acompanha todas as etapas do seu site:
+        </p>
+        <ol style="color:#374151;font-size:15px;line-height:1.7;padding-left:20px;margin:16px 0">
+          <li>Leia e assine o contrato</li>
+          <li>Pague a primeira mensalidade por Pix</li>
+          <li>Envie as informações do seu negócio</li>
+          <li>Acompanhe o desenvolvimento e aprove o seu site</li>
+        </ol>
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
+          <p style="margin:0 0 8px;font-size:14px;color:#6b7280">E-mail de acesso</p>
+          <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${to}</p>
+          <p style="margin:16px 0 8px;font-size:14px;color:#6b7280">Senha temporária</p>
+          <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${password}</p>
+        </div>
+        <a href="${appUrl}/login"
+           style="display:block;text-align:center;background:#facc15;color:#1a1a1a;font-weight:700;padding:14px 24px;border-radius:8px;text-decoration:none;font-size:15px;margin:24px 0">
+          Acessar o painel →
+        </a>
+        <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:24px">
+          Recomendamos trocar a senha após o primeiro acesso.
+        </p>
+      </div>
+    `,
+  })
+}
+
 export async function getClients() {
   const clients = await prisma.client.findMany({
     include: {
@@ -264,7 +302,8 @@ export async function createClient(data: {
         },
       })
 
-      await sendAccessEmail({ to: email, clientName: client.name, password: data.createUserPassword }).catch(() => {})
+      const sendAccess = data.entryFlow === 'mensal' ? sendMonthlyAccessEmail : sendAccessEmail
+      await sendAccess({ to: email, clientName: client.name, password: data.createUserPassword }).catch(() => {})
     }
   }
 

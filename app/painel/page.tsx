@@ -8,7 +8,7 @@ import { ActivationScreen, RegularizationScreen } from './_components/Activation
 import { Dashboard } from './_components/Dashboard'
 import { MonthlyOnboarding } from './_components/MonthlyOnboarding'
 import { FIDELITY_MONTHS, buildMonthlyContract, isMonthlyClient, subscriptionPrice } from '@/lib/monthly-plan'
-import { getMonthlyPix } from '@/lib/monthly-plan-service'
+import { ensureMonthlyProposal, getMonthlyPix } from '@/lib/monthly-plan-service'
 import type { ContextualOffer } from './_components/Dashboard'
 
 export default async function PainelPage({
@@ -23,6 +23,13 @@ export default async function PainelPage({
   const ctx = await resolveClientId(session)
   if (!ctx) redirect('/login')
   const clientId = ctx.clientId
+
+  // Plano mensal já pago sem projeto (ativado antes do fluxo de produção existir): cria agora
+  const monthlyActive = await prisma.client.findFirst({
+    where: { id: clientId, entryFlow: 'mensal', subscriptions: { some: { status: 'active', customPrice: { not: null } } }, proposals: { none: {} } },
+    select: { name: true },
+  })
+  if (monthlyActive) await ensureMonthlyProposal(clientId, monthlyActive.name)
 
   if (await isClientInProduction(clientId)) {
     redirect('/painel/projeto')
@@ -326,6 +333,9 @@ export default async function PainelPage({
           changeDeadlineDays: subscription.plan.changeDeadlineDays,
           discountPercent: subscription.plan.discountPercent,
         },
+        monthly: isMonthlyClient(client)
+          ? { fidelityEndsAt: subscription.fidelityEndsAt?.toISOString() ?? null }
+          : null,
       }
     : null
 

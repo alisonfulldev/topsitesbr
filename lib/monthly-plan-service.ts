@@ -259,17 +259,19 @@ export async function activateMonthlySubscription(subscriptionId: string, asaasS
     },
   })
 
+  await ensureMonthlyProposal(client.id, client.name, now)
+
   await sendNotification(
     client.id,
     'Pagamento confirmado',
-    'Recebemos o pagamento da primeira mensalidade. Seu site será publicado em breve.',
+    'Recebemos o pagamento da primeira mensalidade. Agora envie as informações do seu negócio no painel para começarmos o seu site.',
     'painel',
     'payment-confirmed',
   )
   await sendNotification(
     null,
-    `Publicar site de ${client.name}`,
-    `Cliente ${client.name} (plano mensal, ${formatBRL(Number(subscription.customPrice))}/mês) pagou a primeira mensalidade. Suba o site e atualize o status para "online". Fidelidade até ${addMonths(now, FIDELITY_MONTHS).toLocaleDateString('pt-BR')}.`,
+    `Plano mensal ativo — ${client.name}`,
+    `Cliente ${client.name} (plano mensal, ${formatBRL(Number(subscription.customPrice))}/mês) pagou a primeira mensalidade. O projeto entrou em "aguardando informações" (briefing). Fidelidade até ${addMonths(now, FIDELITY_MONTHS).toLocaleDateString('pt-BR')}.`,
   )
 
   const referral = client.referralReceived
@@ -282,6 +284,31 @@ export async function activateMonthlySubscription(subscriptionId: string, asaasS
   }
 
   return true
+}
+
+/**
+ * Projeto do plano mensal no mesmo fluxo de produção dos demais clientes:
+ * briefing → em desenvolvimento → revisão → publicado. Idempotente.
+ */
+export async function ensureMonthlyProposal(clientId: string, clientName: string, paidAt = new Date()) {
+  const existingProposal = await prisma.proposal.findFirst({ where: { clientId }, select: { id: true } })
+  if (existingProposal) return
+  const contract = await prisma.contractAcceptance.findFirst({
+    where: { clientId },
+    orderBy: { acceptedAt: 'desc' },
+  })
+  await prisma.proposal.create({
+    data: {
+      clientId,
+      title: `Site de ${clientName}`,
+      creationPrice: 0,
+      status: 'aguardando_info',
+      paidAt,
+      contractAcceptedAt: contract?.acceptedAt ?? null,
+      contractVersion: contract?.version ?? MONTHLY_CONTRACT_VERSION,
+      contractAcceptedIp: contract?.ipAddress ?? null,
+    },
+  })
 }
 
 /** Webhooks PIX_AUTOMATIC_RECURRING_AUTHORIZATION_* do Asaas. */

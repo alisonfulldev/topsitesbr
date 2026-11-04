@@ -40,6 +40,8 @@ type SubscriptionData = {
   nextDueDate: string | null
   planActivatedAt: string
   plan: PlanFeatures
+  /** Plano mensal sem taxa de criação: o cliente edita o site pelo painel administrativo do próprio site */
+  monthly?: { fidelityEndsAt: string | null } | null
 }
 
 type EventData = {
@@ -282,7 +284,20 @@ function ContextualOfferCard({ offer }: { offer: NonNullable<ContextualOffer> })
 
 // ─── 3. InfoCards ─────────────────────────────────────────────────────────────
 
-function ChangesInfoCard({ plan, used }: { plan: PlanFeatures; used: number }) {
+function ChangesInfoCard({ plan, used, isMonthly }: { plan: PlanFeatures; used: number; isMonthly?: boolean }) {
+  if (isMonthly) {
+    return (
+      <Card className="flex flex-col justify-between">
+        <CardTitle>Alterações de Conteúdo</CardTitle>
+        <div className="flex-1 py-3">
+          <p className="text-sm text-gray-700 leading-relaxed">
+            Você mesmo edita textos, imagens e informações pelo painel administrativo do seu site.
+          </p>
+          <p className="text-xs text-gray-400 mt-2">Dúvidas sobre o funcionamento? Fale com o suporte.</p>
+        </div>
+      </Card>
+    )
+  }
   if (plan.monthlyChangesIncluded === 0) {
     return (
       <Card className="flex flex-col justify-between">
@@ -362,7 +377,15 @@ function PlanBenefitsCard({ subscription }: { subscription: SubscriptionData }) 
   const hasWhatsApp = subscription.planPrice >= 29
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? ''
 
-  const benefits = [
+  const benefits = subscription.monthly ? [
+    'Site no ar com hospedagem e SSL',
+    'Painel administrativo para você editar o seu site',
+    'Suporte técnico sobre o site e o painel',
+    'Pagamento mensal somente por Pix',
+    ...(subscription.monthly.fidelityEndsAt
+      ? [`Fidelidade até ${fmtDate(subscription.monthly.fidelityEndsAt)}`]
+      : []),
+  ] : [
     'Hospedagem, SSL e monitoramento 24h',
     `Prazo de atendimento: até ${plan.changeDeadlineDays} dias úteis`,
     ...(plan.monthlyChangesIncluded > 0
@@ -501,7 +524,7 @@ export function Dashboard({
 
       {/* 3. Cards informativos em grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <ChangesInfoCard plan={subscription.plan} used={ticketsUsedThisMonth} />
+        <ChangesInfoCard plan={subscription.plan} used={ticketsUsedThisMonth} isMonthly={!!subscription.monthly} />
         <BillingInfoCard subscription={subscription} />
       </div>
 

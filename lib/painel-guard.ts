@@ -12,8 +12,9 @@ export async function isClientInProduction(clientId: string): Promise<boolean> {
     }),
     prisma.subscription.findFirst({
       where: { clientId, status: 'active' },
-      select: { id: true },
+      select: { id: true, customPrice: true },
     }),
   ])
-  return !!proposal && !subscription
+  // Plano mensal: a assinatura fica ativa no 1º Pix, antes do site existir
+  return !!proposal && (!subscription || subscription.customPrice != null)
 }
