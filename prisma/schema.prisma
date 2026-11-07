@@ -652,9 +652,12 @@ model QuoteLead {
   @@map("quote_leads")
 }
 
+// Lista de supressão global: nenhum e-mail (marketing ou prospecção) sai para estes endereços
 model EmailOptOut {
   id        String   @id @default(uuid())
   email     String   @unique
+  // descadastro | bounce | spam | manual (nulo nos registros antigos da página /descadastrar)
+  reason    String?
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("email_opt_outs")
@@ -742,4 +745,92 @@ model ContractAcceptance {
 
   @@index([clientId])
   @@map("contract_acceptances")
+}
+
+// ── Prospecção por e-mail ───────────────────────────────────────────────────
+// O sistema não gera conteúdo: só guarda os 5 e-mails colados pelo admin, agenda e envia.
+
+enum ProspectStatus {
+  rascunho
+  ativo
+  pausado
+  interessado
+  respondeu
+  descadastrado
+  invalido
+  finalizado
+}
+
+enum ProspectEmailStatus {
+  rascunho
+  agendado
+  enviando
+  enviado
+  cancelado
+  falhou
+}
+
+model Prospect {
+  id               String         @id @default(uuid())
+  name             String
+  email            String         @unique
+  business         String
+  segment          String?
+  site             String?
+  score            Float?
+  status           ProspectStatus @default(rascunho)
+  stopReason       String?        @map("stop_reason")
+  unsubscribeToken String         @unique @map("unsubscribe_token")
+  activatedAt      DateTime?      @map("activated_at")
+  stoppedAt        DateTime?      @map("stopped_at")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+
+  emails ProspectEmail[]
+  events ProspectEvent[]
+
+  @@index([status])
+  @@map("prospects")
+}
+
+model ProspectEmail {
+  id           String              @id @default(uuid())
+  prospectId   String              @map("prospect_id")
+  step         Int
+  subject      String
+  body         String              @db.Text
+  status       ProspectEmailStatus @default(rascunho)
+  scheduledAt  DateTime?           @map("scheduled_at")
+  sentAt       DateTime?           @map("sent_at")
+  attempts     Int                 @default(0)
+  lastError    String?             @map("last_error")
+  resendId     String?             @unique @map("resend_id")
+  deliveredAt  DateTime?           @map("delivered_at")
+  openedAt     DateTime?           @map("opened_at")
+  clickedAt    DateTime?           @map("clicked_at")
+  bouncedAt    DateTime?           @map("bounced_at")
+  complainedAt DateTime?           @map("complained_at")
+  createdAt    DateTime            @default(now()) @map("created_at")
+  updatedAt    DateTime            @updatedAt @map("updated_at")
+
+  prospect Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+
+  @@unique([prospectId, step])
+  @@index([status, scheduledAt])
+  @@map("prospect_emails")
+}
+
+// Linha do tempo do prospect: envios, entregas, cliques, descadastro, ações manuais
+model ProspectEvent {
+  id         String   @id @default(uuid())
+  prospectId String   @map("prospect_id")
+  emailId    String?  @map("email_id")
+  type       String
+  detail     String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  prospect Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+
+  @@index([prospectId, createdAt])
+  @@map("prospect_events")
 }
