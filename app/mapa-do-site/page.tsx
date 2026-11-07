@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { cities } from '@/lib/seo/cities'
 import { SITE_URL, marketingMetadata, marketingServices, organizationSchema } from '@/lib/marketing'
-import { MarketingLayout, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, CTABand, DiagnosticSection } from '@/components/marketing/MarketingSections'
 
 export const metadata: Metadata = marketingMetadata(
   'Mapa do Site | TopSite',
@@ -127,7 +127,7 @@ export default function Page() {
 
         </div>
       </section>
-      <PricingSection />
+      <DiagnosticSection />
     </MarketingLayout>
   )
 }

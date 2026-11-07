@@ -21,8 +21,10 @@ export function AnimatedHero() {
     <section className="hero-bg relative overflow-hidden bg-white px-4 pt-12 sm:px-8 sm:pt-20 lg:pt-24">
       <div className="relative mx-auto max-w-5xl text-center">
         <h1 className="text-balance text-[clamp(1.5rem,0.9rem+4vw,2.2rem)] font-semibold sm:text-[clamp(1.9rem,1rem+4.4vw,4.25rem)] leading-[1.08] tracking-[-0.03em] text-black">
-          Garanta seu site hoje e pague somente{' '}
-          <span className="whitespace-nowrap underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">daqui a 30 dias!</span>
+          Seu site no{' '}
+          <span className="whitespace-nowrap underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">Google</span>{' '}
+          e nas{' '}
+          <span className="whitespace-nowrap underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">IAs.</span>
         </h1>
       </div>
 
@@ -36,8 +38,8 @@ export function AnimatedHero() {
         <div className="hero-rise relative z-10 mx-auto w-[70vw] rounded-t-[12px] border border-b-0 border-black/10 bg-white/95 p-3.5 shadow-[0_-8px_32px_-12px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:w-[64vw] sm:rounded-t-[18px] sm:p-7 lg:mx-0 lg:w-auto">
           <div className="flex flex-wrap items-center justify-between gap-2 text-[0.65rem] sm:gap-3 sm:text-xs">
             <span className="inline-flex items-center gap-1.5 text-black/55">
-              <MarketingIcon name="pencil" className="h-3.5 w-3.5" />
-              Descreva seu site
+              <MarketingIcon name="search" className="h-3.5 w-3.5" />
+              Google · ChatGPT · Gemini
             </span>
             <Link href="/site-para" className="inline-flex items-center gap-1.5 rounded-md border border-black/10 px-2 py-1 text-black/65 transition-colors duration-150 hover:border-black/25 hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/30 sm:px-2.5 sm:py-1.5">
               <MarketingIcon name="sparkle" className="h-3.5 w-3.5" />
@@ -46,13 +48,13 @@ export function AnimatedHero() {
           </div>
 
           <p className="mb-5 mt-3 text-balance text-[clamp(0.98rem,0.7rem+1.4vw,1.7rem)] font-medium leading-[1.45] tracking-[-0.01em] text-black sm:mb-10 sm:mt-7">
-            <span className="sm:block">Precisa de um <span className="hero-mark hero-mark-1">site profissional</span> para sua empresa?</span>{' '}
-            <span className="sm:block">Chegou a hora de <span className="hero-mark hero-mark-2">tirar esse projeto</span>{' '}
-            <span className="hero-mark hero-mark-3">do papel!</span></span>
+            <span className="sm:block"><span className="hero-mark hero-mark-1">Criamos ou otimizamos</span> seu site para</span>{' '}
+            <span className="sm:block">aparecer <span className="hero-mark hero-mark-2">quando seu cliente</span>{' '}
+            <span className="hero-mark hero-mark-3">pesquisar.</span></span>
           </p>
 
           <p className="text-[0.65rem] text-black/50 sm:text-sm">
-            Resposta rápida no WhatsApp · Atendimento em todo o Brasil
+            Diagnóstico grátis no WhatsApp · Atendimento em todo o Brasil
           </p>
         </div>
 

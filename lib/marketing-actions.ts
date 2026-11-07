@@ -43,7 +43,7 @@ export async function requestContactAction(input: ContactInput): Promise<FormRes
   if (looksLikeBot(website, startedAt)) return { ok: true }
 
   const title = 'Novo pedido de contato: ' + name
-  const body = ['Nome: ' + name, 'E-mail: ' + email, 'Telefone/WhatsApp: ' + phone, 'Tipo de site: ' + siteType, '', message].join('\n')
+  const body = ['Nome: ' + name, 'E-mail: ' + email, 'Telefone/WhatsApp: ' + phone, 'Precisa de: ' + siteType, '', message].join('\n')
 
   // O pedido só é confirmado ao visitante depois de salvo no banco.
   // O registro fica em contact_requests (aba Site); a notificação é só o aviso no sininho.

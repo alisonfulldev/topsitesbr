@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
-import { SITE_URL, marketingMetadata, organizationSchema, projectContact } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, ContactSection, PricingSection } from '@/components/marketing/MarketingSections'
+import { SITE_URL, marketingMetadata, organizationSchema } from '@/lib/marketing'
+import { MarketingLayout, ProjectCTA, DiagnosticSection } from '@/components/marketing/MarketingSections'
 
 export const metadata: Metadata = marketingMetadata(
   'Sobre a TopSite | Sites que fazem empresas serem encontradas',
-  'Há 5 anos criamos sites que fazem empresas serem encontradas por clientes reais. Conheça a história da TopSite e o método que aplicamos.',
+  'Criamos e otimizamos sites que fazem empresas serem encontradas no Google e nas IAs por clientes reais. Conheça a história da TopSite e o método que aplicamos.',
   '/sobre',
 )
 
@@ -145,16 +145,16 @@ export default function SobrePage() {
                 Fazer sua empresa aparecer quando procuram por você.
               </h2>
               <p className="mb-5 leading-relaxed text-black/70">
-                Desenvolvemos sites com uma estrutura que ajuda os buscadores a entender o que sua empresa
-                oferece — e a apresentar você para quem procura exatamente isso. Não é magia: é a forma certa
-                de construir desde o início.
+                Criamos ou otimizamos sites com uma estrutura que ajuda o Google e as IAs, como o ChatGPT e o
+                Gemini, a entender o que sua empresa oferece — e a apresentar você para quem procura exatamente
+                isso. Não é magia: é a forma certa de construir.
               </p>
               <p className="mb-8 leading-relaxed text-black/70">
                 O resultado é uma fonte de clientes que funciona em paralelo com o que você já faz.
                 Quem chega por esse caminho já quer o que você vende — é diferente de quem viu um anúncio
                 enquanto rolava o feed.
               </p>
-              <ProjectCTA label="Quero que me encontrem assim" />
+              <ProjectCTA />
             </div>
             <ol className="space-y-0">
               {[
@@ -177,7 +177,7 @@ export default function SobrePage() {
         </div>
       </section>
 
-      <PricingSection />
+      <DiagnosticSection />
 
       {/* ── CTA final ───────────────────────────────────────────────────── */}
       <section className="px-4 py-20 text-center sm:px-8 sm:py-28">
@@ -187,12 +187,13 @@ export default function SobrePage() {
             Pronto para sua empresa ser encontrada assim?
           </h2>
           <p className="mb-8 text-lg leading-relaxed text-black/70">
-            A conversa é gratuita e sem compromisso. Entendemos o seu negócio e mostramos,
-            de forma concreta, como podemos fazer sua empresa aparecer para quem já busca o que você oferece.
+            O diagnóstico é grátis e sem compromisso. Entendemos o seu negócio e mostramos, de forma concreta,
+            como ele aparece hoje no Google e nas IAs — e o que fazer para aparecer para quem já busca o que você oferece.
           </p>
           <ProjectCTA />
           <nav aria-label="Ver serviços" className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-black/55">
             <Link href="/criacao-de-sites" className="hover:text-black">Criação de sites</Link>
+            <Link href="/otimizacao-de-sites" className="hover:text-black">Otimização de sites</Link>
             <Link href="/site-institucional" className="hover:text-black">Site institucional</Link>
             <Link href="/landing-page" className="hover:text-black">Landing pages</Link>
             <Link href="/loja-virtual" className="hover:text-black">Lojas virtuais</Link>

@@ -17,7 +17,7 @@ const citiesSection = (
     <div className="mx-auto max-w-7xl">
       <h2 className="text-balance text-center mb-3 text-2xl font-semibold">Criação de sites por cidade</h2>
       <p className="mx-auto mb-10 max-w-2xl text-center text-black/70">
-        Atendemos todo o Brasil de forma remota. Veja as principais cidades onde desenvolvemos sites profissionais.
+        Atendemos todo o Brasil de forma remota. Veja como ajudamos empresas das principais cidades a aparecer para quem pesquisa na região.
       </p>
       <div className="space-y-10">
         {Object.entries(byRegion).map(([region, regionCities]) => (

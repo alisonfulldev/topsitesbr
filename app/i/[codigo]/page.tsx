@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { RedirectScreen } from './_components/RedirectScreen'
+import { DEFAULT_WHATSAPP_MESSAGE } from '@/lib/marketing'
 
 export default async function ReferralRedirectPage({
   params,
@@ -18,7 +19,7 @@ export default async function ReferralRedirectPage({
   })
 
   const number = process.env.WHATSAPP_BUSINESS_NUMBER ?? ''
-  const base = 'Olá! Quero conversar sobre um projeto com a TopSite.'
+  const base = DEFAULT_WHATSAPP_MESSAGE
   const message = client ? `${base} (ref: ${codigo})` : base
   const waUrl = `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 

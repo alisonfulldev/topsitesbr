@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { niches, getNicheBySlug, getNichesBySector } from '@/lib/seo/niches'
 import { cities } from '@/lib/seo/cities'
-import { SITE_URL, marketingMetadata, marketingServices, organizationSchema, offerPriceAnswer, monthlyOfferSchema } from '@/lib/marketing'
-import { MarketingLayout, ProjectCTA, PriceTag, ProcessSteps, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
+import { SITE_URL, ctaNote, marketingMetadata, marketingServices, organizationSchema, offerPriceAnswer } from '@/lib/marketing'
+import { MarketingLayout, ProjectCTA, DiagnosticTag, ProcessSteps, CTABand, DiagnosticSection } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { serviceContent, nicheOfferServices } from '@/lib/marketing-services'
 import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ nicho: st
   const { nicho } = await params
   const niche = getNicheBySlug(nicho)
   if (!niche) return marketingMetadata('Página não encontrada', 'Página não encontrada', '/site-para/' + nicho)
-  const title = 'Site para ' + niche.name + ' por R$ 97/mês | Site Barato e Profissional | TopSite'
-  const description = 'Site para ' + niche.name.toLowerCase() + ' por apenas R$ 97/mês: site profissional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça pelo WhatsApp.'
+  const title = 'Site para ' + niche.name + ' no Google e nas IAs | TopSite'
+  const description = 'Site para ' + niche.name.toLowerCase() + ' que aparece no Google e nas IAs quando o cliente pesquisa. Criamos ou otimizamos o seu. Peça seu diagnóstico grátis pelo WhatsApp.'
   return marketingMetadata(title, description, '/site-para/' + niche.slug)
 }
 
@@ -35,8 +35,8 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
   const topCities = cities.slice(0, 8)
   const relatedGroups = [
     {
-      heading: 'Outras páginas para ' + niche.name.toLowerCase() + ' por R$ 97/mês',
-      links: nicheOfferServices.map((s) => ({ label: serviceContent[s].offerProduct + ' para ' + niche.name, href: '/' + s + '/' + niche.slug })),
+      heading: 'Outras páginas para ' + niche.name.toLowerCase(),
+      links: nicheOfferServices.map((s) => ({ label: serviceContent[s].product + ' para ' + niche.name, href: '/' + s + '/' + niche.slug })),
     },
     {
       heading: 'Outros segmentos em ' + niche.sector,
@@ -58,7 +58,6 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
         name: niche.heading,
         description: niche.description,
         url,
-        offers: monthlyOfferSchema,
         provider: { '@id': SITE_URL + '/#organization' },
         areaServed: { '@type': 'Country', name: 'Brazil' },
       },
@@ -84,11 +83,11 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
           <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
             <div>
               <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-black/55">{niche.sector}</p>
-              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Site para {niche.name} por apenas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">R$ 97/mês</span></h1>
-              <PriceTag className="mb-6" />
+              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">Site para {niche.name} no <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">Google</span> e nas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">IAs</span></h1>
+              <DiagnosticTag className="mb-6" />
               <p className="mb-8 max-w-2xl text-lg leading-relaxed text-black/70">{niche.intro}</p>
               <ProjectCTA message={niche.ctaMessage} />
-              <p className="mt-5 text-sm text-black/55">Resposta rápida no WhatsApp · Atendimento em todo o Brasil</p>
+              <p className="mt-5 text-sm text-black/55">{ctaNote}</p>
             </div>
             <aside className="rounded-3xl border border-[#FDD900] bg-[#FFFBE0] p-7 sm:p-10">
               <p className="mb-5 text-xs uppercase tracking-widest text-black/55">Feito para {niche.plural.toLowerCase()}</p>
@@ -115,24 +114,25 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
           </div>
         </div>
       </section>
-      <CTABand message={niche.ctaMessage} title={'Site para ' + niche.name.toLowerCase() + ' por apenas R$ 97/mês.'} />
+      <CTABand message={niche.ctaMessage} title={'Seu cliente pesquisa ' + niche.name.toLowerCase() + '. Você aparece? O diagnóstico é grátis.'} />
       <section className="px-4 py-16 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-3xl border border-[#FDD900] bg-[#FFFBE0] p-8 sm:p-12">
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-black/55">Por que a TopSite</p>
             <h2 className="mb-4 max-w-2xl text-2xl font-semibold sm:text-3xl">
-              Site profissional para {niche.name.toLowerCase()} sem pagar caro.
+              Quem procura {niche.name.toLowerCase()} pesquisa antes de chamar.
             </h2>
             <p className="max-w-2xl leading-relaxed text-black/70">
-              Por apenas R$ 97/mês o seu negócio ganha um site bonito, adaptado ao celular e com o botão de WhatsApp
-              em destaque. Tudo resolvido pelo WhatsApp, sem reunião e sem burocracia.
+              No Google, no Google Maps e, cada vez mais, perguntando para IAs como o ChatGPT e o Gemini. Criamos ou
+              otimizamos o seu site para o seu negócio aparecer nessas respostas — tudo resolvido pelo WhatsApp, sem
+              reunião e sem burocracia.
             </p>
           </div>
         </div>
       </section>
       <section className="border-t border-black/10 bg-white px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <h2 className="text-balance text-center mb-10 text-3xl font-semibold sm:text-4xl">Como trabalhamos</h2>
+          <h2 className="text-balance text-center mb-10 text-3xl font-semibold sm:text-4xl">Como funciona</h2>
           <ProcessSteps />
           <div className="mt-12 text-center">
             <ProjectCTA message={niche.ctaMessage} />
@@ -155,12 +155,12 @@ export default async function Page({ params }: { params: Promise<{ nicho: string
           </div>
         </div>
       </section>
-      <PricingSection message={niche.ctaMessage} />
+      <DiagnosticSection message={niche.ctaMessage} />
       <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Seu site para {niche.name.toLowerCase()} por apenas R$ 97/mês</h2>
-          <p className="mb-8 text-lg text-black/70">Chame no WhatsApp, conte sobre o seu negócio e a gente monta o seu site.</p>
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Seu site para {niche.name.toLowerCase()} no Google e nas IAs</h2>
+          <p className="mb-8 text-lg text-black/70">Comece pelo diagnóstico grátis: conte sobre o seu negócio no WhatsApp e veja como você aparece hoje.</p>
           <ProjectCTA message={niche.ctaMessage} />
           <nav aria-label="Outros serviços" className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-4 text-sm text-black/70">
             {marketingServices.map(({ href, label }) => (

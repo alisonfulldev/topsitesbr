@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { MarketingIcon, WhatsAppIcon } from './MarketingIcon'
 import Image from 'next/image'
 import Link from 'next/link'
-import { CONTACT_EMAIL, marketingServices, offer, projectContact } from '@/lib/marketing'
+import { CONTACT_EMAIL, ctaLabels, marketingServices, projectContact } from '@/lib/marketing'
 
 // Classes por tema: "light" em todas as páginas de divulgação (padrão); "dark" fica disponível
 const themes = {
@@ -86,7 +86,7 @@ export function MarketingHeader({ theme = 'dark' }: { theme?: 'dark' | 'light' }
           <Link key={href} href={href} onClick={() => setMobileOpen(false)} className={'block rounded-lg px-3 py-3 text-sm ' + t.mobileLink}>{label}</Link>
         ))}
         <div className="mt-4 grid gap-3">
-          <a href={projectContact()} target="_blank" rel="noopener noreferrer" className={'flex items-center justify-center gap-2 rounded-xl px-4 py-4 text-center text-base font-semibold ' + t.mobileCta}><WhatsAppIcon className="h-5 w-5" />Quero meu site por {offer.price}</a>
+          <a href={projectContact()} target="_blank" rel="noopener noreferrer" className={'flex items-center justify-center gap-2 rounded-xl px-4 py-4 text-center text-base font-semibold ' + t.mobileCta}><WhatsAppIcon className="h-5 w-5" />{ctaLabels.whatsapp}</a>
           <a href={'mailto:' + CONTACT_EMAIL} className={'flex items-center justify-center gap-2 rounded-xl border px-4 py-3.5 text-center text-sm ' + t.ghost}><MarketingIcon name="mail" className="h-4 w-4" />{CONTACT_EMAIL}</a>
         </div>
       </nav>

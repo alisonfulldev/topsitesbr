@@ -11,35 +11,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Páginas principais
     ...['', ...marketingServices.map(({ href }) => href), '/sobre', '/site-para'].map((path) => ({
       url: SITE_URL + path,
-      lastModified: new Date('2026-09-20'),
+      lastModified: new Date('2026-11-07'),
       changeFrequency: 'monthly' as const,
       priority: path === '' ? 1 : 0.8,
     })),
     // Índices hub
     ...['/mapa-do-site'].map((path) => ({
       url: SITE_URL + path,
-      lastModified: new Date('2026-09-20'),
+      lastModified: new Date('2026-11-07'),
       changeFrequency: 'monthly' as const,
       priority: 0.5,
     })),
     // Hubs por cidade (/servicos/[cidade])
     ...cities.map((city) => ({
       url: SITE_URL + '/servicos/' + city.slug,
-      lastModified: new Date('2026-09-20'),
+      lastModified: new Date('2026-11-07'),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
     // Páginas de cidade (/criacao-de-sites/[cidade])
     ...cities.map((city) => ({
       url: SITE_URL + '/criacao-de-sites/' + city.slug,
-      lastModified: new Date('2026-09-20'),
+      lastModified: new Date('2026-11-07'),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
     // Páginas de nicho (/site-para/[nicho])
     ...niches.map((niche) => ({
       url: SITE_URL + '/site-para/' + niche.slug,
-      lastModified: new Date('2026-09-20'),
+      lastModified: new Date('2026-11-07'),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
@@ -47,16 +47,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...niches.flatMap((niche) =>
       cities.map((city) => ({
         url: SITE_URL + '/site-para/' + niche.slug + '/' + city.slug,
-        lastModified: new Date('2026-09-20'),
+        lastModified: new Date('2026-11-07'),
         changeFrequency: 'monthly' as const,
         priority: 0.6,
       }))
     ),
-    // Páginas por R$ 97/mês por nicho (/[servico]/[nicho])
+    // Páginas de serviço por nicho (/[servico]/[nicho])
     ...nicheOfferServices.flatMap((service) =>
       niches.map((niche) => ({
         url: SITE_URL + '/' + service + '/' + niche.slug,
-        lastModified: new Date('2026-10-17'),
+        lastModified: new Date('2026-11-07'),
         changeFrequency: 'monthly' as const,
         priority: 0.6,
       }))

@@ -11,228 +11,270 @@ export interface ServiceContent {
   features: { title: string; text: string }[]
   deliverables: string[]
   faqs: { q: string; a: string }[]
-  // Produto vendido a preço fixo (R$ 97/mês) — ausente nos serviços sob orçamento
-  offerProduct?: string
+  // Nome do produto nas páginas por nicho (ex: "Landing page para Dentista") — só nos serviços que têm essas páginas
+  product?: string
 }
 
-// Serviços por R$ 97/mês que ganham páginas por nicho (ex: /pagina-de-vendas/dentista)
+// Serviços que ganham páginas por nicho (ex: /pagina-de-vendas/dentista)
 export const nicheOfferServices = ['landing-page', 'pagina-de-vendas', 'pagina-de-lancamento', 'pagina-de-captura'] as const
 export type NicheOfferService = (typeof nicheOfferServices)[number]
+
+// Resposta de "Quanto custa?" das páginas de serviço — sem preço nas páginas públicas, o valor vem depois do diagnóstico
+const priceFaq = (service: string) => ({
+  q: 'Quanto custa ' + service + '?',
+  a: 'Depende do que o seu negócio precisa e do ponto de partida. Por isso começamos com um diagnóstico grátis e sem compromisso: você vê como aparece hoje no Google e nas IAs e recebe a proposta antes de decidir qualquer coisa.',
+})
 
 export const serviceContent = {
   "criacao-de-sites": {
     "slug": "criacao-de-sites",
     "label": "Criação de sites",
-    "title": "Criação de Sites por R$ 97/mês | Site Barato e Profissional | TopSite",
+    "title": "Criação de Sites para Aparecer no Google e nas IAs | TopSite",
     "eyebrow": "Criação de sites",
-    "heading": "Criação de sites por apenas R$ 97/mês.",
-    "description": "Criação de site profissional por apenas R$ 97/mês: site institucional one page com serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.",
-    "intro": "Sua empresa na internet sem pagar caro. Criamos um site institucional one page com seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular — tudo resolvido pelo WhatsApp.",
-    "focus": "Tudo isso por R$ 97/mês",
-    "audience": "Para empresas e profissionais que querem um site bonito e profissional sem gastar muito.",
+    "heading": "Criação de sites para aparecer no Google e nas IAs.",
+    "description": "Criação de site profissional pensado para aparecer no Google e nas IAs, como ChatGPT e Gemini, quando o seu cliente pesquisar. Peça seu diagnóstico grátis pelo WhatsApp.",
+    "intro": "Ainda não tem site? Criamos um do zero, com os seus serviços, fotos e contatos organizados do jeito que o Google lê e que as IAs entendem — para a sua empresa aparecer quando o cliente pesquisar.",
+    "focus": "Um site feito para ser encontrado",
+    "audience": "Para empresas e profissionais que ainda não têm site e querem aparecer para quem já está procurando o que eles oferecem.",
     "features": [
       {
         "title": "Conteúdo que responde ao que buscam",
-        "text": "Organizamos serviços, diferenciais e informações de contato de forma que seus futuros clientes encontrem o que procuram — e entendam por que você é a resposta."
+        "text": "Organizamos serviços, diferenciais e região de atendimento com as palavras que o seu cliente usa na pesquisa — e que as IAs usam para montar as respostas."
       },
       {
-        "title": "Design que transmite credibilidade",
-        "text": "Cores, tipografia e composição alinhadas à sua identidade, com navegação adaptada a celulares, tablets e computadores."
+        "title": "SEO desde o primeiro dia",
+        "text": "Títulos, descrições, estrutura das páginas e velocidade configurados para o Google entender o seu site logo que ele vai ao ar."
       },
       {
-        "title": "Preço que cabe no bolso",
-        "text": "Site profissional por apenas R$ 97/mês, sem orçamento complicado. Você já sabe quanto vai pagar antes de chamar."
+        "title": "Informações claras para as IAs",
+        "text": "Nome, serviços, cidade e contatos organizados em dados estruturados, para o ChatGPT, o Gemini e outras IAs conseguirem citar a sua empresa."
       },
       {
         "title": "Contato ao alcance de quem chegou",
-        "text": "WhatsApp, formulários e outros canais posicionados para que o visitante que encontrou sua empresa não precise procurar como entrar em contato."
+        "text": "WhatsApp e outros canais em destaque, para que quem encontrou a sua empresa na busca fale com você em um clique."
       }
     ],
     "deliverables": [
-      "Site institucional one page",
-      "Design adaptado ao celular e ao computador",
-      "Botão de WhatsApp em destaque",
-      "Revisão e ajustes antes de ficar pronto"
+      "Site profissional adaptado ao celular",
+      "Configuração de SEO para o Google",
+      "Dados estruturados para as IAs",
+      "Botão de WhatsApp em destaque"
     ],
     "faqs": [
-      {
-        "q": "Quanto custa criar um site?",
-        "a": "O site institucional one page sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular."
-      },
+      priceFaq('criar um site'),
       {
         "q": "O que eu preciso enviar?",
-        "a": "As informações da sua empresa: logo (se tiver), fotos, lista de serviços e contatos. Você manda tudo pelo WhatsApp e a gente monta o site."
+        "a": "As informações da sua empresa: logo (se tiver), fotos, lista de serviços, cidade de atendimento e contatos. Você manda tudo pelo WhatsApp e a gente monta o site."
+      },
+      {
+        "q": "O site já sai aparecendo no Google?",
+        "a": "Ele já sai pronto para o Google ler e indexar. A posição depende da concorrência do seu segmento e da região, e é construída ao longo do tempo — ninguém pode garantir o primeiro lugar."
+      }
+    ]
+  },
+  "otimizacao-de-sites": {
+    "slug": "otimizacao-de-sites",
+    "label": "Otimização de sites",
+    "title": "Otimização de Sites para o Google e para as IAs (SEO) | TopSite",
+    "eyebrow": "Já tem site?",
+    "heading": "Seu site já existe. Agora ele precisa aparecer.",
+    "description": "Otimização de site para aparecer no Google e nas IAs, como ChatGPT e Gemini: ajuste de conteúdo, SEO técnico, velocidade e Google Meu Negócio. Peça seu diagnóstico grátis.",
+    "intro": "Muito site bonito não aparece para ninguém. Analisamos o que você já tem e ajustamos conteúdo, parte técnica e Google Meu Negócio para o seu site começar a aparecer quando o cliente pesquisar — no Google e nas IAs.",
+    "focus": "Aproveite o site que você já tem",
+    "audience": "Para empresas que já têm site, mas não aparecem no Google, não são citadas pelas IAs ou recebem poucos contatos pela internet.",
+    "features": [
+      {
+        "title": "Conteúdo que responde às perguntas",
+        "text": "Reescrevemos e organizamos os textos para responder ao que o seu cliente pesquisa — o mesmo tipo de conteúdo que as IAs usam para indicar empresas."
+      },
+      {
+        "title": "SEO técnico",
+        "text": "Títulos, descrições, estrutura de cabeçalhos, links e indexação revisados para o Google entender do que trata cada página."
+      },
+      {
+        "title": "Velocidade e celular",
+        "text": "Um site lento ou ruim no celular perde posições e perde o cliente. Ajustamos o que pesa e o que atrapalha a navegação."
+      },
+      {
+        "title": "Google Meu Negócio",
+        "text": "Perfil da empresa completo e alinhado ao site, para você aparecer no Google Maps e nas buscas da sua região."
       }
     ],
-    "offerProduct": "Site institucional one page"
+    "deliverables": [
+      "Diagnóstico do site atual",
+      "Ajuste de conteúdo e SEO técnico",
+      "Dados estruturados para as IAs",
+      "Revisão do Google Meu Negócio"
+    ],
+    "faqs": [
+      priceFaq('otimizar um site'),
+      {
+        "q": "Funciona com qualquer site?",
+        "a": "Funciona com a maioria dos sites, inclusive os feitos em WordPress, Wix e outras plataformas. No diagnóstico vemos o que dá para ajustar no seu e se vale mais a pena otimizar ou refazer."
+      },
+      {
+        "q": "Preciso passar o acesso do meu site?",
+        "a": "Para aplicar os ajustes, sim. Para o diagnóstico, não: basta mandar o link do site no WhatsApp."
+      },
+      {
+        "q": "Em quanto tempo vejo resultado?",
+        "a": "Ajustes como o Google Meu Negócio costumam aparecer mais rápido. O posicionamento do site no Google e nas IAs é construído ao longo de semanas e meses, conforme a concorrência do seu segmento."
+      }
+    ]
   },
   "site-institucional": {
     "slug": "site-institucional",
     "label": "Site institucional",
-    "title": "Site Institucional por R$ 97/mês | Site Barato para Empresas | TopSite",
+    "title": "Site Institucional para Aparecer no Google e nas IAs | TopSite",
     "eyebrow": "Sua empresa na internet",
-    "heading": "Site institucional por apenas R$ 97/mês.",
-    "description": "Site institucional one page por apenas R$ 97/mês: apresentação da empresa, serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular. Peça o seu pelo WhatsApp.",
-    "intro": "Reúna a história da empresa, os serviços e os canais de atendimento em uma página profissional, adaptada ao celular e com botão de WhatsApp em destaque — por apenas R$ 97/mês.",
-    "focus": "Credibilidade por R$ 97/mês",
-    "audience": "Para empresas que querem passar confiança na internet com uma apresentação profissional, sem pagar caro.",
+    "heading": "Site institucional que aparece quando procuram a sua empresa.",
+    "description": "Site institucional com a apresentação da empresa, serviços e contatos, pensado para aparecer no Google e ser citado pelas IAs. Peça seu diagnóstico grátis pelo WhatsApp.",
+    "intro": "Reúna a história da empresa, os serviços e os canais de atendimento em um site profissional, organizado para o Google e para as IAs entenderem quem você é, o que faz e onde atende.",
+    "focus": "Credibilidade para quem pesquisa",
+    "audience": "Para empresas que querem passar confiança para quem pesquisa o nome delas — e aparecer para quem ainda não conhece.",
     "features": [
       {
         "title": "Sobre a empresa",
-        "text": "Apresente sua trajetória, equipe e forma de trabalhar com informações que ajudem o visitante a entender quem está por trás do negócio e por que confiar."
+        "text": "Trajetória, equipe e forma de trabalhar apresentadas com clareza — informações que o cliente procura e que as IAs usam para descrever o seu negócio."
       },
       {
         "title": "Serviços bem explicados",
-        "text": "Páginas e seções próprias para descrever o que a empresa oferece, para quem e como funciona o atendimento — respondendo antes que o cliente precise perguntar."
+        "text": "Seções próprias para cada serviço, com o que é, para quem é e como funciona, respondendo à pesquisa antes que o cliente precise perguntar."
       },
       {
         "title": "Portfólio e referências",
-        "text": "Organize projetos, fotos e depoimentos autorizados que demonstrem o seu trabalho e sustentem a credibilidade da empresa."
+        "text": "Projetos, fotos e depoimentos autorizados que demonstram o seu trabalho e sustentam a credibilidade da empresa."
       },
       {
         "title": "Canais de atendimento",
-        "text": "Facilite a localização de telefone, WhatsApp, formulário, endereço e horário — para que quem chegou ao site consiga dar o próximo passo."
+        "text": "Telefone, WhatsApp, endereço e horário fáceis de encontrar — para quem chegou pela busca dar o próximo passo."
       }
     ],
     "deliverables": [
-      "Arquitetura de conteúdo institucional",
-      "Páginas e seções acordadas na proposta",
+      "Conteúdo institucional organizado para a busca",
+      "Configuração de SEO e dados para as IAs",
       "Layout alinhado à identidade da empresa",
       "Navegação e contatos adaptados ao celular"
     ],
     "faqs": [
-      {
-        "q": "Quanto custa o site institucional?",
-        "a": "O site institucional one page sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses. Ele reúne em uma página a apresentação da sua empresa, seus serviços, fotos, contatos e botão de WhatsApp, adaptado ao celular."
-      },
+      priceFaq('um site institucional'),
       {
         "q": "Preciso enviar textos e imagens?",
-        "a": "Sim: logo (se tiver), fotos, lista de serviços e contatos. Você manda tudo pelo WhatsApp e a gente monta o site."
+        "a": "Envie o que tiver: logo, fotos, lista de serviços e contatos. Organizamos o conteúdo com as palavras que o seu cliente usa para pesquisar."
       },
       {
         "q": "Posso ampliar o site depois?",
-        "a": "Novas páginas e seções podem ser avaliadas conforme a evolução do negócio. O escopo e o investimento dessa ampliação são combinados antes do desenvolvimento."
+        "a": "Sim. Novas páginas e seções podem entrar conforme o negócio evolui — e cada página nova é mais uma chance de aparecer na busca."
       }
-    ],
-    "offerProduct": "Site institucional one page"
+    ]
   },
   "landing-page": {
     "slug": "landing-page",
     "label": "Landing pages",
-    "title": "Landing Page por R$ 97/mês | Criação de Landing Page Barata | TopSite",
+    "title": "Landing Page para Aparecer no Google e nas IAs | TopSite",
     "eyebrow": "Uma oferta, um objetivo",
-    "heading": "Landing page por apenas R$ 97/mês.",
-    "description": "Criação de landing page por apenas R$ 97/mês: página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque. Peça a sua pelo WhatsApp.",
-    "intro": "Tem um serviço, produto ou campanha para divulgar? Criamos uma landing page com mensagem clara e botão de WhatsApp em destaque, adaptada ao celular — por apenas R$ 97/mês.",
-    "focus": "Sua oferta em uma página, por R$ 97/mês",
-    "audience": "Para divulgar um serviço, apresentar um lançamento ou captar interessados em uma oferta específica — de forma orgânica ou com apoio de anúncios.",
+    "heading": "Landing page para quem pesquisa exatamente o que você oferece.",
+    "description": "Criação de landing page focada em uma oferta, pensada para aparecer no Google e nas IAs e levar o visitante para o WhatsApp. Peça seu diagnóstico grátis.",
+    "intro": "Tem um serviço, produto ou campanha para divulgar? Criamos uma landing page que responde à busca de quem procura exatamente isso — com mensagem clara e WhatsApp em destaque.",
+    "focus": "Uma página para cada busca importante",
+    "audience": "Para divulgar um serviço, apresentar um lançamento ou captar interessados em uma oferta específica — pela busca orgânica ou com apoio de anúncios.",
     "features": [
       {
         "title": "Mensagem que responde à busca",
-        "text": "Organizamos o título e a apresentação para dar continuidade ao que trouxe o visitante até a página — seja uma busca no Google ou um anúncio."
+        "text": "O título e a apresentação continuam o que o visitante pesquisou — seja no Google, numa IA ou num anúncio."
       },
       {
         "title": "Oferta fácil de entender",
-        "text": "Benefícios, funcionamento e dúvidas frequentes ajudam o visitante a avaliar se a solução atende à sua necessidade sem precisar entrar em contato para entender."
+        "text": "Benefícios, funcionamento e dúvidas frequentes respondidos na própria página, do jeito que o Google e as IAs gostam de encontrar."
       },
       {
         "title": "Chamada para a próxima ação",
-        "text": "Formulários, WhatsApp ou links de inscrição podem compor o caminho de contato, conforme o objetivo da campanha."
+        "text": "WhatsApp, formulário ou link de inscrição posicionados para quem chegou dar o próximo passo."
       },
       {
         "title": "Medição planejada",
-        "text": "Definimos quais ações precisam ser acompanhadas e avaliamos as ferramentas de medição que farão parte do projeto."
+        "text": "Definimos quais ações acompanhar para você saber quantos contatos a página está trazendo."
       }
     ],
     "deliverables": [
-      "Estrutura focada na oferta da campanha",
-      "Layout responsivo e chamadas para ação",
-      "Formulário ou canal de contato conforme escopo",
-      "Revisão do caminho de conversão antes da publicação"
+      "Página focada em uma oferta",
+      "Configuração de SEO para a busca da oferta",
+      "Chamadas para o WhatsApp",
+      "Design adaptado ao celular"
     ],
     "faqs": [
-      {
-        "q": "Quanto custa uma landing page?",
-        "a": "A landing page sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses: uma página focada na sua oferta, adaptada ao celular e com botão de WhatsApp em destaque."
-      },
+      priceFaq('uma landing page'),
       {
         "q": "A landing page substitui o site institucional?",
-        "a": "Ela atende bem a uma oferta específica. Se você precisa apresentar diferentes serviços, equipe e histórico da empresa, um site institucional pode complementar essa página."
+        "a": "Ela atende bem a uma oferta específica. Se você precisa apresentar vários serviços, equipe e histórico da empresa, um site institucional complementa essa página."
       },
       {
         "q": "A criação inclui gestão de anúncios?",
-        "a": "A página e a gestão da campanha são atividades distintas. A proposta de desenvolvimento informa o que será entregue e quais configurações de medição estão incluídas."
-      },
-      {
-        "q": "É possível integrar com meu CRM?",
-        "a": "A integração depende da ferramenta e dos acessos disponíveis. Informe qual CRM você usa para avaliarmos a viabilidade, o escopo e o prazo."
+        "a": "Não: a página e a gestão da campanha são serviços diferentes. A página, porém, já fica pronta para receber o tráfego dos anúncios."
       }
     ],
-    "offerProduct": "Landing page"
+    "product": "Landing page"
   },
   "loja-virtual": {
     "slug": "loja-virtual",
     "label": "Lojas virtuais",
-    "title": "Criação de Lojas Virtuais | TopSite",
+    "title": "Loja Virtual para Aparecer no Google e nas IAs | TopSite",
     "eyebrow": "Seu catálogo na internet",
-    "heading": "Lojas virtuais para quem quer vender para quem já busca o que você oferece.",
-    "description": "Criamos lojas virtuais e catálogos online para empresas que querem vender pela internet. Planejamento do catálogo, jornada de compra e integrações. Solicite uma proposta à TopSite.",
-    "intro": "Uma loja virtual começa pelo entendimento da sua operação e de como seus clientes pesquisam o que você vende. Planejamos a apresentação dos produtos e o caminho da compra para que quem chega já chegue pronto para comprar.",
-    "focus": "Do produto ao pedido — para quem já estava procurando",
-    "audience": "Para negócios que querem apresentar um catálogo online ou estruturar vendas com carrinho, pagamento e acompanhamento de pedidos.",
+    "heading": "Loja virtual para vender para quem já procura o que você vende.",
+    "description": "Criação de loja virtual e catálogo online com produtos organizados para aparecer no Google e nas IAs. Peça seu diagnóstico grátis pelo WhatsApp.",
+    "intro": "Uma loja virtual começa pelo entendimento de como os seus clientes pesquisam o que você vende. Organizamos produtos, categorias e descrições para eles aparecerem na busca — e para quem chega já chegar pronto para comprar.",
+    "focus": "Produtos que aparecem na busca",
+    "audience": "Para negócios que querem apresentar um catálogo online ou vender com carrinho, pagamento e acompanhamento de pedidos.",
     "features": [
       {
-        "title": "Catálogo organizado",
-        "text": "Categorias, fotos, descrições e variações ajudam o cliente a encontrar e comparar os produtos. Definimos a estrutura conforme o catálogo."
+        "title": "Catálogo organizado para a busca",
+        "text": "Categorias, fotos e descrições escritas com as palavras que o cliente usa para procurar cada produto."
       },
       {
         "title": "Compra no celular",
-        "text": "Navegação e ações pensadas para consultar produtos e avançar no pedido em diferentes tamanhos de tela."
+        "text": "Navegação pensada para consultar produtos e avançar no pedido em qualquer tamanho de tela."
       },
       {
         "title": "Atendimento ou checkout",
-        "text": "Avaliamos se o melhor caminho é concluir a venda pelo WhatsApp ou usar um checkout com os recursos necessários."
+        "text": "Avaliamos se o melhor caminho é fechar a venda pelo WhatsApp ou usar um checkout com pagamento online."
       },
       {
         "title": "Integrações da operação",
-        "text": "Pagamento, entrega e estoque entram no planejamento de acordo com as ferramentas usadas pela empresa e sua viabilidade de integração."
+        "text": "Pagamento, entrega e estoque entram no planejamento de acordo com as ferramentas que a empresa já usa."
       }
     ],
     "deliverables": [
-      "Planejamento do catálogo e da jornada de compra",
-      "Páginas responsivas de acordo com o escopo",
+      "Catálogo planejado para a busca",
+      "Páginas de produto com SEO",
       "Recursos e integrações definidos na proposta",
-      "Validação dos fluxos contratados antes da publicação"
+      "Design adaptado ao celular"
     ],
     "faqs": [
-      {
-        "q": "Quanto custa uma loja virtual?",
-        "a": "A loja virtual tem orçamento sob medida, porque depende da quantidade de produtos, da forma de pagamento e das integrações. Conte no WhatsApp o que você vende e passamos o valor. Se você precisa só apresentar a empresa e os produtos, o site institucional one page sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses."
-      },
+      priceFaq('uma loja virtual'),
       {
         "q": "Preciso de pagamento online?",
-        "a": "Depende da operação. Um catálogo com atendimento pelo WhatsApp pode atender vendas consultivas. Compras diretas podem exigir carrinho, pagamento e cálculo de entrega."
+        "a": "Depende da operação. Um catálogo com atendimento pelo WhatsApp atende bem vendas consultivas; compras diretas pedem carrinho, pagamento e cálculo de entrega."
       },
       {
         "q": "Qual é o prazo de entrega?",
-        "a": "O cronograma é definido após avaliar os produtos, materiais e integrações. Você recebe essa previsão na proposta antes de iniciar o projeto."
+        "a": "O cronograma é definido depois de avaliar os produtos, os materiais e as integrações. Você recebe essa previsão na proposta, antes de começar."
       }
     ]
   },
   "pagina-de-vendas": {
     "slug": "pagina-de-vendas",
     "label": "Página de vendas",
-    "title": "Página de Vendas por R$ 97/mês | Criação de Página de Vendas Barata | TopSite",
+    "title": "Página de Vendas para Aparecer no Google e nas IAs | TopSite",
     "eyebrow": "Venda o seu produto ou serviço",
-    "heading": "Página de vendas por apenas R$ 97/mês.",
-    "description": "Criação de página de vendas por apenas R$ 97/mês: apresente seu produto ou serviço com benefícios, depoimentos e botão de WhatsApp, adaptada ao celular. Peça a sua pelo WhatsApp.",
-    "intro": "Uma página feita para vender um produto ou serviço específico: mostra os benefícios, responde às dúvidas e leva o cliente direto para o WhatsApp — tudo adaptado ao celular, por apenas R$ 97/mês.",
-    "focus": "Sua oferta pronta para vender, por R$ 97/mês",
+    "heading": "Página de vendas que aparece para quem está pronto para comprar.",
+    "description": "Criação de página de vendas com benefícios, depoimentos e pedido pelo WhatsApp, pensada para aparecer no Google e nas IAs. Peça seu diagnóstico grátis.",
+    "intro": "Uma página feita para vender um produto ou serviço: aparece para quem pesquisa por ele, mostra os benefícios, responde às dúvidas e leva o cliente direto para o WhatsApp.",
+    "focus": "Sua oferta para quem já está procurando",
     "audience": "Para quem quer divulgar um produto, serviço, curso ou pacote e receber os pedidos pelo WhatsApp.",
     "features": [
       {
-        "title": "Título que chama atenção",
-        "text": "A primeira coisa que o visitante lê já mostra o que você vende e por que vale a pena."
+        "title": "Título que responde à busca",
+        "text": "A primeira coisa que o visitante lê confirma que ele achou o que pesquisou — e por que vale a pena."
       },
       {
         "title": "Benefícios bem explicados",
@@ -240,24 +282,21 @@ export const serviceContent = {
       },
       {
         "title": "Depoimentos e garantias",
-        "text": "Espaço para avaliações de clientes, fotos e garantias que ajudam a convencer quem ainda está em dúvida."
+        "text": "Avaliações de clientes, fotos e garantias que ajudam a convencer quem ainda está em dúvida."
       },
       {
         "title": "Pedido pelo WhatsApp",
-        "text": "Botões de compra ao longo da página levam o cliente direto para a conversa com você."
+        "text": "Botões ao longo da página levam o cliente direto para a conversa com você."
       }
     ],
     "deliverables": [
       "Página de vendas completa",
-      "Seções de benefícios, depoimentos e dúvidas",
+      "Configuração de SEO para a busca do produto",
       "Botões de WhatsApp ao longo da página",
       "Design adaptado ao celular"
     ],
     "faqs": [
-      {
-        "q": "Quanto custa uma página de vendas?",
-        "a": "A página de vendas sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses: uma página completa para apresentar o seu produto ou serviço, adaptada ao celular e com botões de WhatsApp."
-      },
+      priceFaq('uma página de vendas'),
       {
         "q": "Posso vender qualquer produto ou serviço?",
         "a": "Sim. A página serve para produtos físicos, serviços, cursos, pacotes e consultas — você conta o que vende e a gente monta."
@@ -267,72 +306,69 @@ export const serviceContent = {
         "a": "O caminho principal é o WhatsApp, onde você fecha a venda. Se você já usa um link de pagamento, ele pode entrar nos botões da página."
       }
     ],
-    "offerProduct": "Página de vendas"
+    "product": "Página de vendas"
   },
   "pagina-de-lancamento": {
     "slug": "pagina-de-lancamento",
     "label": "Página de lançamento",
-    "title": "Página de Lançamento por R$ 97/mês | Página para Lançar Produto ou Evento | TopSite",
+    "title": "Página de Lançamento para Aparecer no Google e nas IAs | TopSite",
     "eyebrow": "Lance com uma página própria",
-    "heading": "Página de lançamento por apenas R$ 97/mês.",
-    "description": "Criação de página de lançamento por apenas R$ 97/mês: divulgue um produto, curso, evento ou inauguração com uma página própria, adaptada ao celular e com WhatsApp. Peça pelo WhatsApp.",
-    "intro": "Vai lançar um produto, curso, evento ou inaugurar um espaço? Criamos uma página própria para o lançamento, com data, detalhes e botão de WhatsApp em destaque — por apenas R$ 97/mês.",
-    "focus": "Seu lançamento com página própria, por R$ 97/mês",
+    "heading": "Página de lançamento para a sua novidade ser encontrada.",
+    "description": "Criação de página de lançamento para produto, curso, evento ou inauguração, pensada para aparecer no Google e nas IAs. Peça seu diagnóstico grátis pelo WhatsApp.",
+    "intro": "Vai lançar um produto, curso ou evento, ou inaugurar um espaço? Criamos uma página própria com data, detalhes e WhatsApp em destaque — organizada para aparecer quando procurarem pela novidade.",
+    "focus": "Sua novidade com endereço próprio",
     "audience": "Para quem vai lançar um produto, abrir as inscrições de um curso, divulgar um evento ou anunciar uma inauguração.",
     "features": [
       {
         "title": "Data e detalhes em destaque",
-        "text": "O que está sendo lançado, quando e onde, logo no topo da página."
+        "text": "O que está sendo lançado, quando e onde, logo no topo — as informações que o Google e as IAs mostram primeiro."
       },
       {
         "title": "Lista de espera ou inscrição",
-        "text": "Quem se interessar entra em contato pelo WhatsApp para garantir a vaga ou ser avisado primeiro."
+        "text": "Quem se interessar chama no WhatsApp para garantir a vaga ou ser avisado primeiro."
       },
       {
         "title": "Fotos e vídeo",
-        "text": "Espaço para imagens e vídeo de apresentação que mostram o lançamento antes mesmo de ele acontecer."
+        "text": "Imagens e vídeo de apresentação que mostram o lançamento antes mesmo de ele acontecer."
       },
       {
         "title": "Pronta para divulgar",
-        "text": "Um link próprio para colocar na bio do Instagram, nos anúncios e nos grupos de WhatsApp."
+        "text": "Um link próprio para a bio do Instagram, os anúncios e os grupos de WhatsApp."
       }
     ],
     "deliverables": [
       "Página de lançamento completa",
-      "Data, detalhes e fotos em destaque",
+      "Configuração de SEO para a busca do lançamento",
       "Botão de WhatsApp para inscrições",
       "Design adaptado ao celular"
     ],
     "faqs": [
-      {
-        "q": "Quanto custa uma página de lançamento?",
-        "a": "A página de lançamento sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses: uma página própria para o seu lançamento, adaptada ao celular e com botão de WhatsApp em destaque."
-      },
+      priceFaq('uma página de lançamento'),
       {
         "q": "Serve para evento ou inauguração?",
-        "a": "Sim. A página de lançamento serve para produtos, cursos, eventos, inaugurações e qualquer novidade que você queira divulgar com um link próprio."
+        "a": "Sim. Serve para produtos, cursos, eventos, inaugurações e qualquer novidade que você queira divulgar com um link próprio."
       },
       {
         "q": "Depois do lançamento a página pode virar página de vendas?",
-        "a": "Pode. Depois do lançamento, a página pode ser ajustada para continuar vendendo — combine os ajustes pelo WhatsApp."
+        "a": "Pode. Depois do lançamento, a página pode ser ajustada para continuar vendendo — e continuar aparecendo na busca."
       }
     ],
-    "offerProduct": "Página de lançamento"
+    "product": "Página de lançamento"
   },
   "pagina-de-captura": {
     "slug": "pagina-de-captura",
     "label": "Página de captura",
-    "title": "Página de Captura por R$ 97/mês | Página para Captar Contatos | TopSite",
+    "title": "Página de Captura para Aparecer no Google e nas IAs | TopSite",
     "eyebrow": "Capte contatos de clientes",
-    "heading": "Página de captura por apenas R$ 97/mês.",
-    "description": "Criação de página de captura por apenas R$ 97/mês: uma página simples e direta para captar contatos de interessados, adaptada ao celular e com WhatsApp. Peça a sua pelo WhatsApp.",
-    "intro": "Uma página simples e direta, feita para transformar visitantes em contatos: o interessado chama no WhatsApp para receber o que você oferece — por apenas R$ 97/mês.",
-    "focus": "Mais contatos de interessados, por R$ 97/mês",
-    "audience": "Para quem quer montar uma lista de interessados, oferecer um material gratuito, um cupom ou uma avaliação, e falar com eles depois.",
+    "heading": "Página de captura que transforma quem pesquisa em contato.",
+    "description": "Criação de página de captura simples e direta para transformar quem pesquisa em contato pelo WhatsApp, pensada para o Google e as IAs. Peça seu diagnóstico grátis.",
+    "intro": "Uma página simples e direta, feita para transformar quem chega pela busca em contato: o interessado chama no WhatsApp para receber o que você oferece.",
+    "focus": "Mais contatos de quem pesquisa",
+    "audience": "Para quem quer montar uma lista de interessados, oferecer um material gratuito, um cupom ou uma avaliação, e conversar com eles depois.",
     "features": [
       {
         "title": "Oferta que atrai",
-        "text": "Um material gratuito, cupom, avaliação ou aula: a página deixa claro o que o visitante ganha ao entrar em contato."
+        "text": "Material gratuito, cupom, avaliação ou aula: a página deixa claro o que o visitante ganha ao entrar em contato."
       },
       {
         "title": "Direta ao ponto",
@@ -340,11 +376,11 @@ export const serviceContent = {
       },
       {
         "title": "Contato pelo WhatsApp",
-        "text": "O interessado chama você no WhatsApp com a mensagem pronta, e a conversa já começa ali."
+        "text": "O interessado chama no WhatsApp com a mensagem pronta, e a conversa já começa ali."
       },
       {
-        "title": "Ideal para anúncios",
-        "text": "Um link próprio e leve para usar nos anúncios do Instagram, Facebook e Google."
+        "title": "Leve e rápida",
+        "text": "Carrega rápido no celular — o que ajuda tanto na busca do Google quanto nos anúncios."
       }
     ],
     "deliverables": [
@@ -354,19 +390,16 @@ export const serviceContent = {
       "Design adaptado ao celular"
     ],
     "faqs": [
-      {
-        "q": "Quanto custa uma página de captura?",
-        "a": "A página de captura sai por R$ 97/mês, com a primeira parcela só após 30 dias e duração de 12 meses: uma página simples e direta para captar contatos, adaptada ao celular e com botão de WhatsApp."
-      },
+      priceFaq('uma página de captura'),
       {
         "q": "Qual a diferença para uma página de vendas?",
         "a": "A página de captura busca o contato do interessado para você conversar depois. A página de vendas apresenta o produto completo para fechar a venda."
       },
       {
         "q": "Funciona com anúncios?",
-        "a": "Sim. Por ser simples e leve, a página de captura é uma ótima opção para usar nos anúncios do Instagram, Facebook e Google."
+        "a": "Sim. Por ser simples e leve, a página de captura funciona bem tanto na busca orgânica quanto nos anúncios do Instagram, Facebook e Google."
       }
     ],
-    "offerProduct": "Página de captura"
+    "product": "Página de captura"
   }
 } satisfies Record<string, ServiceContent>

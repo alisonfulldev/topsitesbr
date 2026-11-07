@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { BRAND_DESCRIPTION, SITE_URL, marketingMetadata, organizationSchema, marketingServices } from '@/lib/marketing'
 import { MarketingLayout } from '@/components/marketing/MarketingSections'
-import { WhySection, ServicesSection, ProcessSection, LandingPricingSection, FaqSection, ContactFormSection } from '@/components/marketing/HomeSections'
+import { WhySection, ServicesSection, ProcessSection, DiagnosticHomeSection, FaqSection, ContactFormSection } from '@/components/marketing/HomeSections'
 import { AnimatedHero } from '@/components/marketing/AnimatedHero'
 
 export const metadata = marketingMetadata(
-  'Criação de Site Profissional por R$ 97/mês | TopSite',
-  'Site profissional com a Top Site: página de captura por R$ 97/mês, com a primeira parcela só após 30 dias, configuração de SEO e Google Meu Negócio. Fale pelo WhatsApp.',
+  'Seu Site no Google e nas IAs | Criação e Otimização de Sites | TopSite',
+  'Criamos ou otimizamos seu site para aparecer no Google e nas IAs, como ChatGPT e Gemini, quando seu cliente pesquisar. Peça seu diagnóstico grátis pelo WhatsApp.',
 )
 
 const schema = {
@@ -29,7 +29,7 @@ export default function HomePage() {
       <WhySection />
       <ServicesSection />
       <ProcessSection />
-      <LandingPricingSection />
+      <DiagnosticHomeSection />
       <FaqSection />
       <ContactFormSection />
 
@@ -39,14 +39,14 @@ export default function HomePage() {
           <div className="grid gap-10 text-center sm:grid-cols-2">
             <div>
               <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-black">Criação de sites por cidade</p>
-              <p className="mx-auto mb-4 max-w-sm text-sm text-black/65">Atendemos todo o Brasil. Veja como desenvolvemos sites para empresas em cada cidade.</p>
+              <p className="mx-auto mb-4 max-w-sm text-sm text-black/65">Atendemos todo o Brasil. Veja como ajudamos empresas de cada cidade a aparecer para quem pesquisa na região.</p>
               <Link href="/criacao-de-sites" className="text-sm font-semibold text-black underline decoration-[#FDD900] decoration-2 underline-offset-4 hover:decoration-black">
                 Ver todas as cidades →
               </Link>
             </div>
             <div>
               <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-black">Sites por segmento de negócio</p>
-              <p className="mx-auto mb-4 max-w-sm text-sm text-black/65">Desenvolvemos sites para mais de 150 tipos de negócio — clínicas, restaurantes, advogados e muito mais.</p>
+              <p className="mx-auto mb-4 max-w-sm text-sm text-black/65">Sites feitos para aparecer na busca de mais de 150 tipos de negócio — clínicas, restaurantes, advogados e muito mais.</p>
               <Link href="/site-para" className="text-sm font-semibold text-black underline decoration-[#FDD900] decoration-2 underline-offset-4 hover:decoration-black">
                 Ver todos os segmentos →
               </Link>

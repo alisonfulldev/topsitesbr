@@ -2,11 +2,11 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { niches } from '@/lib/seo/niches'
 import { SITE_URL, marketingMetadata, organizationSchema } from '@/lib/marketing'
-import { MarketingLayout, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, CTABand, DiagnosticSection } from '@/components/marketing/MarketingSections'
 
 export const metadata: Metadata = marketingMetadata(
-  'Site por R$ 97/mês para Todo Tipo de Negócio | Sites por Segmento | TopSite',
-  'Site profissional por apenas R$ 97/mês para mais de 150 tipos de negócio em todo o Brasil. Clínicas, restaurantes, advogados, construtoras e muito mais.',
+  'Sites que Aparecem no Google e nas IAs para Todo Tipo de Negócio | TopSite',
+  'Sites que aparecem no Google e nas IAs para mais de 150 tipos de negócio em todo o Brasil. Clínicas, restaurantes, advogados, construtoras e muito mais. Diagnóstico grátis.',
   '/site-para'
 )
 
@@ -44,13 +44,13 @@ export default function Page() {
           </nav>
           <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-black/55">Todos os segmentos</p>
           <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">
-            Site para o seu negócio por apenas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">R$ 97/mês</span>
+            Seu negócio no <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">Google</span> e nas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">IAs</span>.
           </h1>
           <p className="mb-4 max-w-2xl text-lg leading-relaxed text-black/70">
-            Criamos sites para mais de 150 tipos de negócio em todo o Brasil, cada um com o conteúdo e o visual que fazem sentido para o segmento — por apenas R$ 97/mês.
+            Criamos sites para mais de 150 tipos de negócio em todo o Brasil, cada um com o conteúdo que o cliente daquele segmento pesquisa — no Google e nas IAs.
           </p>
           <p className="max-w-2xl leading-relaxed text-black/55">
-            Encontre o segmento da sua empresa abaixo e peça o seu site pelo WhatsApp.
+            Encontre o segmento da sua empresa abaixo e peça o seu diagnóstico grátis pelo WhatsApp.
           </p>
         </div>
       </section>
@@ -86,7 +86,7 @@ export default function Page() {
           </nav>
         </div>
       </section>
-      <PricingSection />
+      <DiagnosticSection />
     </MarketingLayout>
   )
 }

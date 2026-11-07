@@ -50,7 +50,7 @@ export function NewsletterForm() {
       <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
         <input id="newsletter-email" name="email" type="email" required autoComplete="email" placeholder="seu@email.com.br" maxLength={160} aria-invalid={status === 'invalid' || undefined} aria-describedby="newsletter-feedback" className="h-12 w-full min-w-0 rounded-lg border sm:flex-1 border-white/30 bg-white/[0.06] px-4 text-base text-white placeholder:text-white/55 transition-colors hover:border-white/50 focus:border-[#FDD900] focus:outline-none focus:ring-2 focus:ring-[#FDD900]/25" />
         <button type="submit" disabled={status === 'sending'} className="h-12 w-full shrink-0 rounded-lg bg-[#FDD900] px-5 text-sm font-semibold text-black transition-colors hover:bg-[#E8C700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FDD900] focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-wait disabled:opacity-70 sm:w-auto">
-          {status === 'sending' ? 'Enviando…' : 'Quero receber novidades'}
+          {status === 'sending' ? 'Enviando…' : 'Quero receber as dicas'}
         </button>
       </div>
       <label className="mx-auto mt-4 flex max-w-md items-start justify-center gap-3 text-left text-xs leading-relaxed text-white">

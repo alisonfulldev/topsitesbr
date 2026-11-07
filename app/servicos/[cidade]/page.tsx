@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { cities, getCityBySlug } from '@/lib/seo/cities'
 import { niches } from '@/lib/seo/niches'
 import { SITE_URL, marketingMetadata, organizationSchema } from '@/lib/marketing'
-import { MarketingLayout, PriceTag, CTABand, PricingSection } from '@/components/marketing/MarketingSections'
+import { MarketingLayout, DiagnosticTag, CTABand, DiagnosticSection } from '@/components/marketing/MarketingSections'
 
 export const dynamicParams = false
 
@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: { params: Promise<{ cidade: s
   const city = getCityBySlug(cidade)
   if (!city) return marketingMetadata('Página não encontrada', '', '/servicos/' + cidade)
   return marketingMetadata(
-    `Sites em ${city.name} por R$ 97/mês — Todos os Segmentos | TopSite`,
-    `Site profissional por apenas R$ 97/mês para mais de 150 segmentos de negócio em ${city.name} (${city.stateAbbr}). Clínicas, restaurantes, advogados, construtoras e muito mais.`,
+    `Sites em ${city.name} no Google e nas IAs — Todos os Segmentos | TopSite`,
+    `Sites que aparecem no Google e nas IAs para mais de 150 segmentos de negócio em ${city.name} (${city.stateAbbr}). Clínicas, restaurantes, advogados e muito mais. Diagnóstico grátis.`,
     `/servicos/${city.slug}`
   )
 }
@@ -64,14 +64,14 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </nav>
           <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-black/55">{city.name} — {city.stateAbbr}</p>
           <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">
-            Sites para todos os segmentos em {city.name} por apenas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">R$ 97/mês</span>
+            Sites para todos os segmentos em {city.name} no <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">Google</span> e nas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">IAs</span>
           </h1>
-          <PriceTag className="mb-6" />
+          <DiagnosticTag className="mb-6" />
           <p className="mb-4 max-w-2xl text-lg leading-relaxed text-black/70">
-            Criamos sites profissionais para empresas de {city.name} e região. {city.context}
+            Criamos ou otimizamos sites para empresas de {city.name} e região aparecerem quando o cliente pesquisa. {city.context}
           </p>
           <p className="mb-10 max-w-2xl leading-relaxed text-black/55">
-            Abaixo, todos os segmentos para os quais criamos sites em {city.name}. Escolha o seu e peça o seu site por R$ 97/mês pelo WhatsApp.
+            Abaixo, todos os segmentos para os quais criamos sites em {city.name}. Escolha o seu e peça o diagnóstico grátis pelo WhatsApp.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
@@ -114,7 +114,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           ))}
         </div>
       </section>
-      <PricingSection />
+      <DiagnosticSection />
     </MarketingLayout>
   )
 }

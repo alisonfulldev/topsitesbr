@@ -6,10 +6,10 @@ import { CONTACT_EMAIL, homeAnchors, marketingServices, projectContact } from '@
 
 // Âncoras com "/" na frente: funcionam a partir de qualquer página do site
 const homeNav = [
-  [homeAnchors.why, 'Por que escolher a Top Site?'],
-  [homeAnchors.services, 'O que a Top Site entrega?'],
-  [homeAnchors.process, 'Como a Top Site trabalha?'],
-  [homeAnchors.pricing, 'Preços'],
+  [homeAnchors.why, 'Por que aparecer no Google e nas IAs'],
+  [homeAnchors.services, 'O que a Top Site faz'],
+  [homeAnchors.process, 'Como funciona'],
+  [homeAnchors.pricing, 'Diagnóstico grátis'],
   [homeAnchors.faq, 'Perguntas frequentes'],
   [homeAnchors.contact, 'Contato'],
 ]
@@ -28,8 +28,8 @@ export function MarketingFooter() {
             <Image src="/logo.png" alt="TopSite" width={48} height={48} className="h-11 w-11 object-contain" />
           </Link>
           <p className="mx-auto mt-6 max-w-xl text-pretty text-sm leading-relaxed text-white">
-            A Top Site desenvolve sites profissionais para empresas que desejam fortalecer sua presença digital,
-            apresentar seus serviços e criar novas oportunidades de negócio.
+            A Top Site cria ou otimiza sites para aparecer no Google e nas IAs quando o seu cliente pesquisar.
+            Comece por um diagnóstico grátis pelo WhatsApp.
           </p>
         </div>
 
@@ -70,9 +70,9 @@ export function MarketingFooter() {
 
         {/* Newsletter — caixa centralizada com borda amarela */}
         <div className="mx-auto mt-16 w-full max-w-2xl rounded-2xl border border-[#FDD900] px-5 py-8 sm:px-10 sm:py-10">
-          <h2 className="text-lg font-semibold tracking-tight text-[#FDD900]">Tecnologia que move empresas.</h2>
+          <h2 className="text-lg font-semibold tracking-tight text-[#FDD900]">Apareça para quem pesquisa.</h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-white">
-            Receba novidades sobre tecnologia, presença digital, sites e soluções que ajudam empresas a evoluir.
+            Receba dicas sobre Google, IAs e sites que ajudam o seu negócio a ser encontrado.
           </p>
           <div className="mt-6">
             <NewsletterForm />

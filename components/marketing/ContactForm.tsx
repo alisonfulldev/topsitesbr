@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, type FormEvent } from 'react'
-import { SITE_TYPES } from '@/lib/marketing'
+import { SITE_TYPES, ctaLabels } from '@/lib/marketing'
 import { requestContactAction } from '@/lib/marketing-actions'
 
 type Status = 'idle' | 'sending' | 'success' | 'error'
@@ -27,7 +27,7 @@ function validate(data: Record<Field, string>) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) errors.email = 'Informe um e-mail válido.'
   const digits = data.phone.replace(/\D/g, '').length
   if (digits < 10 || digits > 15) errors.phone = 'Informe um telefone com DDD (ou com código do país).'
-  if (!SITE_TYPES.includes(data.siteType as (typeof SITE_TYPES)[number])) errors.siteType = 'Escolha o tipo de site.'
+  if (!SITE_TYPES.includes(data.siteType as (typeof SITE_TYPES)[number])) errors.siteType = 'Escolha o que você precisa.'
   if (data.message.trim().length < 10) errors.message = 'Conte um pouco mais sobre o projeto (mínimo de 10 caracteres).'
   return errors
 }
@@ -88,8 +88,8 @@ export function ContactForm() {
   if (status === 'success') {
     return (
       <div role="status" className="rounded-2xl border border-black/10 bg-[#FAFAF7] p-8 text-center sm:p-10">
-        <p className="text-xl font-semibold text-black">Recebemos o seu pedido.</p>
-        <p className="mt-3 leading-relaxed text-black/70">Em breve entraremos em contato pelo telefone ou e-mail informado para conversar sobre o seu projeto.</p>
+        <p className="text-xl font-semibold text-black">Recebemos o seu pedido de diagnóstico.</p>
+        <p className="mt-3 leading-relaxed text-black/70">Em breve entraremos em contato pelo telefone ou e-mail informado para conversar sobre o seu diagnóstico.</p>
         <button type="button" onClick={() => { startedAt.current = Date.now(); setStatus('idle') }} className="mt-6 text-sm font-semibold text-black underline underline-offset-4 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40">
           Enviar outro pedido
         </button>
@@ -121,7 +121,7 @@ export function ContactForm() {
         {fieldError('phone')}
       </div>
       <div>
-        <label htmlFor="contato-siteType" className={labelClass}>Qual tipo de site você deseja?</label>
+        <label htmlFor="contato-siteType" className={labelClass}>O que você precisa?</label>
         <select {...fieldProps('siteType')} required defaultValue="" className={inputClass + ' appearance-none bg-[length:1rem] bg-[right_1rem_center] bg-no-repeat pr-11'} style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")" }}>
           <option value="" disabled>Selecione uma opção</option>
           {SITE_TYPES.map((type) => <option key={type} value={type}>{type === 'Outro' ? 'Outros' : type}</option>)}
@@ -129,14 +129,14 @@ export function ContactForm() {
         {fieldError('siteType')}
       </div>
       <div>
-        <label htmlFor="contato-message" className={labelClass}>Conte sobre seu projeto</label>
-        <textarea {...fieldProps('message')} required rows={5} maxLength={2000} placeholder="Conte um pouco sobre sua empresa, o que deseja apresentar e quais são seus objetivos com o site." className={inputClass + ' resize-y'} />
+        <label htmlFor="contato-message" className={labelClass}>Conte sobre o seu negócio</label>
+        <textarea {...fieldProps('message')} required rows={5} maxLength={2000} placeholder="O que a sua empresa faz, em qual cidade atende e o link do seu site, se já tiver." className={inputClass + ' resize-y'} />
         {fieldError('message')}
       </div>
 
       <div className="flex flex-col items-center gap-4 text-center">
         <button type="submit" disabled={status === 'sending'} className="inline-flex h-14 w-full items-center justify-center rounded-xl bg-[#FDD900] px-8 text-base font-semibold text-black transition-colors hover:bg-[#E8C700] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait disabled:opacity-70 sm:w-auto">
-          {status === 'sending' ? 'Enviando…' : 'Solicitar contato'}
+          {status === 'sending' ? 'Enviando…' : ctaLabels.form}
         </button>
         <p role="alert" className="text-sm font-medium text-red-800">
           {status === 'error' && 'Não foi possível enviar agora. Verifique sua conexão e tente novamente.'}

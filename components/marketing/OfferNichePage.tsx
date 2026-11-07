@@ -1,19 +1,19 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { MarketingIcon } from './MarketingIcon'
-import { MarketingLayout, ProjectCTA, PriceTag, ProcessSteps, CTABand, PricingSection } from './MarketingSections'
+import { MarketingLayout, ProjectCTA, DiagnosticTag, ProcessSteps, CTABand, DiagnosticSection } from './MarketingSections'
 import { RelatedLinksSection } from './RelatedLinksSection'
-import { SITE_URL, marketingMetadata, organizationSchema, monthlyOfferSchema } from '@/lib/marketing'
+import { SITE_URL, ctaNote, marketingMetadata, offerPriceAnswer, organizationSchema } from '@/lib/marketing'
 import { serviceContent, nicheOfferServices, type NicheOfferService } from '@/lib/marketing-services'
 import { niches, getNichesBySector, type NicheData } from '@/lib/seo/niches'
 
-// Páginas programáticas serviço × nicho (ex: /pagina-de-vendas/dentista) — todas por R$ 97/mês
+// Páginas programáticas serviço × nicho (ex: /pagina-de-vendas/dentista) — oferta de entrada: diagnóstico grátis
 
 const nicheIntro: Record<NicheOfferService, (plural: string) => string> = {
-  'landing-page': (plural) => `Uma landing page para ${plural} divulgarem um serviço, uma promoção ou uma campanha com mensagem clara e botão de WhatsApp em destaque — por apenas R$ 97/mês.`,
-  'pagina-de-vendas': (plural) => `Uma página de vendas para ${plural} apresentarem um serviço ou pacote com benefícios, depoimentos e pedido direto pelo WhatsApp — por apenas R$ 97/mês.`,
-  'pagina-de-lancamento': (plural) => `Uma página de lançamento para ${plural} divulgarem uma novidade, inauguração, evento ou serviço novo com um link próprio — por apenas R$ 97/mês.`,
-  'pagina-de-captura': (plural) => `Uma página de captura para ${plural} atraírem novos contatos com uma oferta, cupom ou avaliação, e conversarem com eles pelo WhatsApp — por apenas R$ 97/mês.`,
+  'landing-page': (plural) => `Uma landing page para ${plural} divulgarem um serviço, uma promoção ou uma campanha com mensagem clara e WhatsApp em destaque, organizada para aparecer no Google e nas IAs.`,
+  'pagina-de-vendas': (plural) => `Uma página de vendas para ${plural} apresentarem um serviço ou pacote com benefícios, depoimentos e pedido direto pelo WhatsApp, para quem pesquisa e já está pronto para comprar.`,
+  'pagina-de-lancamento': (plural) => `Uma página de lançamento para ${plural} divulgarem uma novidade, inauguração, evento ou serviço novo com um link próprio, organizado para ser encontrado na busca.`,
+  'pagina-de-captura': (plural) => `Uma página de captura para ${plural} atraírem novos contatos com uma oferta, cupom ou avaliação, e conversarem com eles pelo WhatsApp — começando por quem já pesquisa pelo serviço.`,
 }
 
 // Resumo curto para a meta description (cabe nos ~160 caracteres do Google)
@@ -29,7 +29,7 @@ export function offerNicheParams() {
 }
 
 function productOf(service: NicheOfferService) {
-  return serviceContent[service].offerProduct
+  return serviceContent[service].product
 }
 
 export function offerNicheMetadata(service: NicheOfferService, niche: NicheData | undefined, nicho: string): Metadata {
@@ -37,8 +37,8 @@ export function offerNicheMetadata(service: NicheOfferService, niche: NicheData 
   if (!niche) return marketingMetadata('Página não encontrada', 'Página não encontrada', path)
   const product = productOf(service)
   return marketingMetadata(
-    `${product} para ${niche.name} por R$ 97/mês | TopSite`,
-    `${product} para ${niche.name.toLowerCase()} por apenas R$ 97/mês: ${nicheBlurb[service]}. Adaptada ao celular e com WhatsApp em destaque.`,
+    `${product} para ${niche.name} no Google e nas IAs | TopSite`,
+    `${product} para ${niche.name.toLowerCase()}: ${nicheBlurb[service]} e apareça no Google e nas IAs. Peça seu diagnóstico grátis pelo WhatsApp.`,
     path,
   )
 }
@@ -49,7 +49,7 @@ export function OfferNichePage({ service, niche }: { service: NicheOfferService;
   const productLower = product.toLowerCase()
   const nicheLower = niche.name.toLowerCase()
   const url = `${SITE_URL}/${service}/${niche.slug}`
-  const message = `Olá! Quero uma ${productLower} para ${nicheLower} por R$ 97/mês.`
+  const message = niche.ctaMessage + ` Tenho interesse em: ${productLower}.`
   const intro = nicheIntro[service](niche.plural.toLowerCase()) + ' ' + niche.intro
 
   const relatedGroups = [
@@ -76,11 +76,10 @@ export function OfferNichePage({ service, niche }: { service: NicheOfferService;
         '@type': 'Service',
         '@id': url + '/#service',
         name: `${product} para ${niche.name}`,
-        description: `Criação de ${productLower} para ${niche.plural.toLowerCase()} por R$ 97/mês.`,
+        description: `Criação de ${productLower} para ${niche.plural.toLowerCase()}, pensada para aparecer no Google e nas IAs.`,
         url,
         provider: { '@id': SITE_URL + '/#organization' },
         areaServed: { '@type': 'Country', name: 'Brazil' },
-        offers: monthlyOfferSchema,
       },
       {
         '@type': 'BreadcrumbList',
@@ -94,7 +93,7 @@ export function OfferNichePage({ service, niche }: { service: NicheOfferService;
   }
 
   const faqs = [
-    { q: `Quanto custa uma ${productLower} para ${nicheLower}?`, a: content.faqs[0].a },
+    { q: `Quanto custa uma ${productLower} para ${nicheLower}?`, a: offerPriceAnswer },
     ...content.faqs.slice(1, 2),
     ...niche.faqs.slice(0, 2),
   ]
@@ -112,15 +111,15 @@ export function OfferNichePage({ service, niche }: { service: NicheOfferService;
           <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
             <div>
               <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-black/55">{product} · {niche.sector}</p>
-              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">{product} para {nicheLower} por apenas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">R$ 97/mês</span></h1>
-              <PriceTag product={product} className="mb-6" />
+              <h1 className="mb-6 text-4xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">{product} para {nicheLower} no <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">Google</span> e nas <span className="underline decoration-[#FDD900] decoration-[0.12em] underline-offset-[0.14em] [text-decoration-skip-ink:none]">IAs</span></h1>
+              <DiagnosticTag className="mb-6" />
               <p className="mb-8 max-w-2xl text-lg leading-relaxed text-black/70">{intro}</p>
-              <ProjectCTA message={message} label={'Quero minha ' + productLower + ' por R$ 97/mês'} />
-              <p className="mt-5 text-sm text-black/55">Resposta rápida no WhatsApp · Atendimento em todo o Brasil</p>
+              <ProjectCTA message={message} />
+              <p className="mt-5 text-sm text-black/55">{ctaNote}</p>
             </div>
             <aside className="rounded-3xl border border-[#FDD900] bg-[#FFFBE0] p-7 sm:p-10">
               <p className="mb-5 text-xs uppercase tracking-widest text-black/55">Feito para {niche.plural.toLowerCase()}</p>
-              <h2 className="mb-4 text-2xl font-semibold">Tudo isso por R$ 97/mês</h2>
+              <h2 className="mb-4 text-2xl font-semibold">{content.focus}</h2>
               <p className="mb-8 leading-relaxed text-black/70">{content.audience}</p>
               <ul className="space-y-4">
                 {content.deliverables.map((item) => (
@@ -149,7 +148,7 @@ export function OfferNichePage({ service, niche }: { service: NicheOfferService;
         </div>
       </section>
 
-      <CTABand message={message} title={`${product} para ${nicheLower} por apenas R$ 97/mês.`} label={'Quero minha ' + productLower} />
+      <CTABand message={message} title={`Descubra como ${niche.plural.toLowerCase()} aparecem no Google e nas IAs. O diagnóstico é grátis.`} />
 
       <section className="px-4 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
@@ -171,7 +170,7 @@ export function OfferNichePage({ service, niche }: { service: NicheOfferService;
           <h2 className="text-balance text-center mb-10 text-3xl font-semibold sm:text-4xl">Como funciona</h2>
           <ProcessSteps />
           <div className="mt-12 text-center">
-            <ProjectCTA message={message} label={'Quero minha ' + productLower + ' por R$ 97/mês'} />
+            <ProjectCTA message={message} />
           </div>
         </div>
       </section>
@@ -193,13 +192,13 @@ export function OfferNichePage({ service, niche }: { service: NicheOfferService;
         </div>
       </section>
 
-      <PricingSection message={message} product={product} />
+      <DiagnosticSection message={message} />
       <RelatedLinksSection groups={relatedGroups} />
       <section className="px-4 py-20 text-center sm:px-8">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Sua {productLower} para {nicheLower} por apenas R$ 97/mês</h2>
-          <p className="mb-8 text-lg text-black/70">Chame no WhatsApp, conte sobre o seu negócio e a gente monta a sua página.</p>
-          <ProjectCTA message={message} label={'Quero minha ' + productLower + ' por R$ 97/mês'} />
+          <h2 className="mb-5 text-3xl font-semibold sm:text-4xl">Sua {productLower} para {nicheLower} no Google e nas IAs</h2>
+          <p className="mb-8 text-lg text-black/70">Comece pelo diagnóstico grátis: conte sobre o seu negócio no WhatsApp e veja como você aparece hoje.</p>
+          <ProjectCTA message={message} />
         </div>
       </section>
     </MarketingLayout>
