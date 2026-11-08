@@ -55,14 +55,14 @@ export async function createProspect(data: ParsedProspect) {
   })
 }
 
-// Agenda os 5 e-mails: o 1º agora (ou no próximo início de janela) e os demais pela cadência, só em dias úteis
+// Agenda os 5 e-mails: o 1º sai na hora (o cliente acabou de pedir pelo WhatsApp, a qualquer dia e horário)
+// e os demais seguem a cadência, só em dias úteis e dentro da janela
 export async function activateProspect(prospectId: string, now = new Date()) {
   const config = await getProspectingConfig()
   const prospect = await prisma.prospect.findUnique({ where: { id: prospectId } })
   if (!prospect || (prospect.status !== 'rascunho' && prospect.status !== 'pausado')) return
 
-  const first = firstSendAt(now, config)
-  const dates = [{ step: 1, at: first }, ...scheduleFrom(first, 1, config.cadenceDays, config)]
+  const dates = [{ step: 1, at: now }, ...scheduleFrom(now, 1, config.cadenceDays, config)]
 
   await prisma.$transaction([
     ...dates.map(({ step, at }) =>
@@ -70,10 +70,9 @@ export async function activateProspect(prospectId: string, now = new Date()) {
     ),
     prisma.prospect.update({ where: { id: prospectId }, data: { status: 'ativo', activatedAt: now, stoppedAt: null, stopReason: null } }),
   ])
-  await recordEvent(prospectId, 'ativado', `1º envio previsto para ${first.toISOString()}`)
+  await recordEvent(prospectId, 'ativado')
 
-  // Dentro da janela, o e-mail 1 sai na hora (o cron diário só passa uma vez por dia)
-  if (config.liveMode && isWithinSendWindow(now, config)) await processQueue({ prospectId, now })
+  if (config.liveMode) await processQueue({ prospectId, now, ignoreWindow: true })
 }
 
 // Retomar depois de pausar: o próximo e-mail não enviado sai agora (ou no próximo início de janela)
@@ -165,11 +164,12 @@ export interface QueueResult {
 // Job da fila: envia os e-mails agendados para hoje (data <= fim do dia), na ordem, até o limite diário.
 // Idempotente: cada e-mail é "reservado" com um UPDATE condicional antes do envio, então duas execuções
 // simultâneas nunca enviam o mesmo e-mail; a chave de idempotência do Resend cobre falhas no meio do caminho.
-export async function processQueue({ prospectId, now = new Date() }: { prospectId?: string; now?: Date } = {}): Promise<QueueResult> {
+// ignoreWindow: só na ativação, para o e-mail 1 sair na hora mesmo à noite ou no fim de semana
+export async function processQueue({ prospectId, now = new Date(), ignoreWindow = false }: { prospectId?: string; now?: Date; ignoreWindow?: boolean } = {}): Promise<QueueResult> {
   const config = await getProspectingConfig()
   const result: QueueResult = { sent: 0, failed: 0, remainingToday: 0 }
   if (!config.liveMode) return { ...result, skipped: 'Modo teste ativo: nenhum envio real para prospects.' }
-  if (!isWithinSendWindow(now, config)) return { ...result, skipped: 'Fora da janela de envio (dias úteis, ' + config.windowStart + '–' + config.windowEnd + ').' }
+  if (!ignoreWindow && !isWithinSendWindow(now, config)) return { ...result, skipped: 'Fora da janela de envio (dias úteis, ' + config.windowStart + '–' + config.windowEnd + ').' }
 
   const today = spDayBounds(now)
   const sentToday = await prisma.prospectEmail.count({ where: { status: 'enviado', sentAt: { gte: today.start, lt: today.end } } })
