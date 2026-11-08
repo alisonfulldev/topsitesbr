@@ -34,6 +34,14 @@ export function whatsappUrl(config: ProspectingConfig, prospect: { name: string;
   return `https://wa.me/${config.whatsappNumber}?text=${encodeURIComponent(text)}`
 }
 
+// No HTML, o {{link_whatsapp}} vira um botão; no texto puro continua sendo o endereço
+const WHATSAPP_BUTTON_MARK = '%%BOTAO_WHATSAPP%%'
+
+function whatsappButton(url: string) {
+  return '<br><a href="' + url + '" style="display:inline-block;margin-top:12px;padding:12px 24px;border-radius:10px;'
+    + 'background:#25D366;color:#ffffff;font-weight:700;font-size:15px;text-decoration:none;">Chamar no WhatsApp</a>'
+}
+
 function escapeHtml(text: string) {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
@@ -68,6 +76,8 @@ export function renderProspectEmail({ config, prospect, email, test = false }: R
   }
   const subject = fillVariables(email.subject, vars)
   const body = fillVariables(email.body, vars)
+  const htmlBody = textToHtml(fillVariables(email.body, { ...vars, link_whatsapp: WHATSAPP_BUTTON_MARK }))
+    .split(WHATSAPP_BUTTON_MARK).join(whatsappButton(vars.link_whatsapp))
 
   const footerText = [
     '--',
@@ -82,7 +92,7 @@ export function renderProspectEmail({ config, prospect, email, test = false }: R
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
 <body style="margin:0;padding:24px 16px;background:#ffffff;">
 <div style="max-width:600px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;line-height:1.6;color:#111827;">
-${textToHtml(body)}
+${htmlBody}
 <div style="margin-top:32px;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12px;line-height:1.6;color:#6b7280;">
 ${escapeHtml(config.senderName)} · ${escapeHtml(config.company)}<br>
 ${escapeHtml(config.contactLine)}<br>
