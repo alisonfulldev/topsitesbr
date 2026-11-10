@@ -11,4 +11,6 @@ export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000
 // ── Terms version ─────────────────────────────────────────────────────────────
 // Bump this string whenever the Terms of Service or Privacy Policy changes,
 // so we can track which version each client accepted.
-export const TERMS_VERSION = '1.2'
+export const TERMS_VERSION = '1.3'
+// Reativações de clientes antigos (assinatura comum Pix/boleto/cartão) continuam na versão anterior
+export const LEGACY_TERMS_VERSION = '1.2'

@@ -178,7 +178,7 @@ export default async function PainelPage({
             clientName={client.name}
             clientEmail={client.email}
             activationFlow={(client.activationFlow as 'quente' | 'frio') ?? 'frio'}
-            monthlyPrice={29}
+            monthlyPrice={client.monthlyPrice != null ? Number(client.monthlyPrice) : 29}
           />
         )
       }
@@ -214,6 +214,7 @@ export default async function PainelPage({
         clientName={client.name}
         clientEmail={client.email}
         activationFlow={(client.activationFlow as 'quente' | 'frio') ?? 'frio'}
+        monthlyPrice={client.monthlyPrice != null ? Number(client.monthlyPrice) : 29}
       />
     )
   }
@@ -339,6 +340,17 @@ export default async function PainelPage({
       }
     : null
 
+  // Novos clientes do Site no Ar: mensalidade em aberto paga por Pix (com débito automático)
+  const hasOpenPix =
+    !!subscription?.pixAutomaticAuthorizationId &&
+    !subscription.asaasSubscriptionId &&
+    (subscription.status === 'active' || subscription.status === 'overdue')
+  const pixNow = hasOpenPix ? await getMonthlyPix(clientId).catch(() => null) : null
+  const openPix =
+    pixNow && pixNow.status !== 'ACTIVE'
+      ? { pix: pixNow, dueDate: subscription?.nextDueDate?.toISOString() ?? null }
+      : null
+
   const events = recentEvents.map((n) => ({
     id: n.id,
     title: n.title,
@@ -354,6 +366,7 @@ export default async function PainelPage({
       ticketsUsedThisMonth={ticketsUsedThisMonth}
       recentEvents={events}
       contextualOffer={contextualOffer}
+      openPix={openPix}
     />
   )
 }

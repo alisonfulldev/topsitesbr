@@ -170,7 +170,7 @@ export async function createClient(data: {
       document: data.document?.trim() || null,
       referralCode: newReferralCode,
       siteEntryFee: data.siteEntryFee != null ? data.siteEntryFee : null,
-      monthlyPrice: data.entryFlow === 'mensal' && data.monthlyPrice != null ? data.monthlyPrice : null,
+      monthlyPrice: data.monthlyPrice != null && data.monthlyPrice > 0 ? data.monthlyPrice : null,
       activationFlow: data.activationFlow ?? 'frio',
       entryFlow: data.entryFlow ?? 'whatsapp',
     },
@@ -362,6 +362,21 @@ export async function updateClient(
       ...(data.entryFlow !== undefined && { entryFlow: data.entryFlow }),
     },
   })
+
+  // Assinatura nova (Pix) ainda sem Pix gerado: o valor alterado vale já para a próxima mensalidade.
+  // Assinaturas antigas (Asaas) ou com débito automático autorizado mantêm o valor atual.
+  if (data.monthlyPrice !== undefined && data.monthlyPrice > 0) {
+    await prisma.subscription.updateMany({
+      where: {
+        clientId: id,
+        status: { in: ['active', 'overdue'] },
+        customPrice: { not: null },
+        asaasSubscriptionId: null,
+        pixAutomaticAuthorizationId: null,
+      },
+      data: { customPrice: data.monthlyPrice },
+    })
+  }
 
   // E-mail corrigido: o login acompanha e o e-mail inicial é reenviado pro endereço novo
   let resentTo: string | undefined

@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { PixStep } from './MonthlyOnboarding'
+import type { MonthlyPix } from '@/lib/monthly-plan-service'
 import { Card, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -484,12 +486,15 @@ export function Dashboard({
   ticketsUsedThisMonth,
   recentEvents,
   contextualOffer,
+  openPix,
 }: {
   sites: SiteData[]
   subscription: SubscriptionData | null
   ticketsUsedThisMonth: number
   recentEvents: EventData[]
   contextualOffer: ContextualOffer
+  /** Mensalidade em aberto paga por Pix (novos clientes do Site no Ar) */
+  openPix?: { pix: MonthlyPix; dueDate: string | null } | null
 }) {
   const primarySite = sites[0] ?? null
 
@@ -513,6 +518,16 @@ export function Dashboard({
 
   return (
     <div className="max-w-2xl lg:max-w-4xl space-y-4">
+      {/* Mensalidade em aberto: Pix com débito automático das próximas */}
+      {openPix && (
+        <div className="max-w-md">
+          <p className="mb-2 text-sm font-semibold text-gray-900">
+            Pague sua mensalidade{openPix.dueDate ? ` — vence em ${fmtDate(openPix.dueDate)}` : ''}
+          </p>
+          <PixStep initialPix={openPix.pix} monthlyPrice={subscription.planPrice} label="Mensalidade" />
+        </div>
+      )}
+
       {/* 1. Status do site */}
       {primarySite && <SiteStatusCard site={primarySite} />}
 

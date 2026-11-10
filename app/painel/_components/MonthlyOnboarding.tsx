@@ -44,7 +44,7 @@ export function MonthlyOnboarding({ clientName, monthlyPrice, fidelityMonths, co
       </ol>
 
       {signed ? (
-        <PixStep initialPix={initialPix} monthlyPrice={monthlyPrice} />
+        <PixStep initialPix={initialPix} monthlyPrice={monthlyPrice} label="Primeira mensalidade" />
       ) : (
         <ContractStep monthlyPrice={monthlyPrice} fidelityMonths={fidelityMonths} contractHtml={contractHtml} />
       )}
@@ -138,7 +138,7 @@ function ContractStep({ monthlyPrice, fidelityMonths, contractHtml }: { monthlyP
   )
 }
 
-function PixStep({ initialPix, monthlyPrice }: { initialPix: MonthlyPix | null; monthlyPrice: number }) {
+export function PixStep({ initialPix, monthlyPrice, label }: { initialPix: MonthlyPix | null; monthlyPrice: number; label: string }) {
   const router = useRouter()
   const [pix, setPix] = useState<MonthlyPix | null>(initialPix)
   const [copied, setCopied] = useState(false)
@@ -184,7 +184,7 @@ function PixStep({ initialPix, monthlyPrice }: { initialPix: MonthlyPix | null; 
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 text-center">
-      <p className="text-sm text-gray-500">Primeira mensalidade</p>
+      <p className="text-sm text-gray-500">{label}</p>
       <p className="mt-1 text-3xl font-bold text-gray-900">{brl(monthlyPrice)}</p>
 
       {pix.qrCodeImage && (

@@ -69,7 +69,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
     initialData?.siteEntryFee != null ? String(initialData.siteEntryFee) : ''
   )
   const [monthlyPrice, setMonthlyPrice] = useState(
-    initialData?.monthlyPrice != null ? String(initialData.monthlyPrice) : ''
+    initialData?.monthlyPrice != null ? String(initialData.monthlyPrice) : mode === 'create' ? '29' : ''
   )
   const [activationFlow, setActivationFlow] = useState<'quente' | 'frio'>(
     initialData?.activationFlow ?? 'frio'
@@ -169,7 +169,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           referralCode: referralCode.trim() || undefined,
           createUserPassword: entryFlow === 'proposta' ? undefined : (createLogin || entryFlow === 'mensal' ? loginPassword : undefined),
           siteEntryFee: entryFlow === 'proposta' || entryFlow === 'mensal' ? undefined : (siteEntryFee ? parseFloat(siteEntryFee) : undefined),
-          monthlyPrice: entryFlow === 'mensal' ? parseFloat(monthlyPrice) : undefined,
+          monthlyPrice: monthlyPrice ? parseFloat(monthlyPrice) : undefined,
           activationFlow,
           entryFlow,
           ...(entryFlow === 'proposta' && {
@@ -195,7 +195,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           phone: phone || undefined,
           document: document || undefined,
           siteEntryFee: siteEntryFee ? parseFloat(siteEntryFee) : undefined,
-          monthlyPrice: entryFlow === 'mensal' && monthlyPrice ? parseFloat(monthlyPrice) : undefined,
+          monthlyPrice: monthlyPrice ? parseFloat(monthlyPrice) : undefined,
           activationFlow,
           entryFlow,
         })
@@ -320,6 +320,29 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
                 value={monthlyPrice}
                 onChange={(e) => setMonthlyPrice(e.target.value)}
                 placeholder="67,00"
+                className={`${INPUT} pl-9`}
+              />
+            </div>
+          </Field>
+        )}
+
+        {/* Mensalidade do Site no Ar — novos clientes pagam só por Pix, após o 1º mês grátis */}
+        {entryFlow !== 'mensal' && (
+          <Field
+            label="Valor da mensalidade (R$)"
+            hint="Padrão R$ 29. Cobrado por Pix todo mês após o 1º mês grátis. Clientes que já têm assinatura ativa mantêm o valor atual."
+          >
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
+                R$
+              </span>
+              <input
+                type="number"
+                min="1"
+                step="0.01"
+                value={monthlyPrice}
+                onChange={(e) => setMonthlyPrice(e.target.value)}
+                placeholder="29,00"
                 className={`${INPUT} pl-9`}
               />
             </div>

@@ -6,6 +6,69 @@ import { TERMS_VERSION } from '@/lib/config'
 // a nova chave aqui. O conteúdo gravado aqui é o que o cliente efetivamente leu.
 
 const TERMS_SNAPSHOTS: Record<string, string> = {
+  '1.3': `
+<p style="color:#6b7280;font-size:13px;margin:0 0 24px;"><strong>Última atualização:</strong> novembro de 2026</p>
+
+<h3>1. Objeto e Partes</h3>
+<p>Estes Termos de Uso regulam a prestação de serviços de hospedagem, manutenção e suporte de sites oferecidos por <strong>TOP SITE</strong>, CNPJ 64.470.641/0001-92, ao cliente que contratou os serviços por meio do painel de gestão ou por contato direto via WhatsApp. Ao ativar sua assinatura e marcar o aceite neste instrumento, o cliente concorda integralmente com todas as disposições abaixo.</p>
+
+<h3>2. Plano e Assinatura</h3>
+<ul>
+  <li>Plano <strong>Site no Ar</strong>, com mensalidade no valor informado ao cliente no cadastro e exibido no painel, sem contrato de fidelidade.</li>
+  <li>Primeiro mês gratuito para novos clientes. A primeira mensalidade vence 30 dias após a ativação.</li>
+  <li>Os pagamentos são feitos <strong>exclusivamente por Pix</strong>. Ao pagar a primeira mensalidade, o cliente pode autorizar no próprio banco o débito das mensalidades seguintes, que passam a ser pagas automaticamente todo mês.</li>
+  <li>Renovação automática mensal até o cancelamento.</li>
+</ul>
+
+<h3>3. O que está incluído</h3>
+<ul>
+  <li>Site no ar com hospedagem e certificado de segurança (SSL)</li>
+  <li>Monitoramento do site</li>
+  <li><strong>Correções ilimitadas e gratuitas</strong>: erros de digitação, links quebrados, dados desatualizados (telefone, endereço)</li>
+  <li>Suporte pelo painel e pelo WhatsApp</li>
+</ul>
+
+<h3>4. Correções × Alterações de Conteúdo</h3>
+<p><strong>Correção</strong>: ajuste de erro pré-existente — texto errado, link quebrado, dado desatualizado. Ilimitada e gratuita.</p>
+<p><strong>Alteração de conteúdo</strong>: substituição intencional de texto ou imagem por novo conteúdo escolhido pelo cliente. As alterações de conteúdo são cobradas avulso, conforme a tabela vigente exibida no painel no momento da solicitação.</p>
+
+<h3>5. Inadimplência</h3>
+<p>Em caso de atraso, a TOP SITE notificará o cliente por e-mail e pelo painel:</p>
+<ul>
+  <li><strong>Dia 0:</strong> aviso com o Pix para pagamento</li>
+  <li><strong>Dia 5:</strong> alerta de que o site sairá do ar em 5 dias</li>
+  <li><strong>Dia 10:</strong> site temporariamente despublicado</li>
+</ul>
+<p>Após a regularização, o site é republicado sem taxa de reativação.</p>
+
+<h3>6. Propriedade do Site</h3>
+<p>Os arquivos do site pertencem ao cliente. A TOP SITE não retém nem revende o site.</p>
+
+<h3>7. Cancelamento</h3>
+<p>O cliente pode cancelar a assinatura a qualquer momento pelo WhatsApp ou pelo painel, sem multa. O cancelamento também encerra o débito mensal por Pix. Valores já pagos não são reembolsados, exceto nos casos previstos em lei.</p>
+
+<h3>8. Direito de Arrependimento</h3>
+<p>Conforme o Código de Defesa do Consumidor (art. 49), o cliente pode cancelar em até 7 dias corridos da contratação, com devolução integral dos valores pagos. Para exercer esse direito: contato@topsitebr.com.br ou pelo WhatsApp.</p>
+
+<h3>9. Disponibilidade</h3>
+<p>A TOP SITE envidará seus melhores esforços para manter o site online de forma contínua. Eventuais indisponibilidades técnicas não gerarão direito a desconto ou reembolso, salvo comprovada negligência do prestador.</p>
+
+<h3>10. Responsabilidades do Cliente</h3>
+<ul>
+  <li>Manter dados cadastrais atualizados (CPF/CNPJ, e-mail, telefone)</li>
+  <li>Garantir que os conteúdos enviados não violam direitos de terceiros e não são difamatórios ou ilegais</li>
+  <li>Manter a senha de acesso ao painel em sigilo</li>
+</ul>
+
+<h3>11. Alteração dos Termos</h3>
+<p>A TOP SITE pode atualizar estes Termos a qualquer momento. O cliente será notificado por e-mail e no painel. O uso continuado dos serviços após a comunicação implica aceite das novas condições.</p>
+
+<h3>12. Lei Aplicável e Foro</h3>
+<p>Estes Termos são regidos pelas leis da República Federativa do Brasil. Foro eleito: Comarca de São Paulo/SP, ressalvado o direito do consumidor de propor ação no foro do próprio domicílio.</p>
+
+<h3>13. Contato</h3>
+<p>contato@topsitebr.com.br | WhatsApp: +55 18 99674-2364</p>
+`,
   '1.2': `
 <p style="color:#6b7280;font-size:13px;margin:0 0 24px;"><strong>Última atualização:</strong> outubro de 2026</p>
 

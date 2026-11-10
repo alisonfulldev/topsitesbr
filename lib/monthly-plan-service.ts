@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { getPaymentProvider } from '@/lib/payments/provider'
 import type { PixAutomaticAuthorization } from '@/lib/payments/provider'
 import { sendEmail } from '@/lib/integrations/resend'
-import { buildHtml, sendNotification } from '@/lib/notifications'
+import { buildHtml, sendNotification, sendOverdueDay0, sendPaymentRegularized } from '@/lib/notifications'
 import { ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
 import {
   FIDELITY_MONTHS,
@@ -41,16 +41,25 @@ async function createAuthorization(params: {
   customerId: string
   clientId: string
   monthlyPrice: number
+  /** Início das cobranças automáticas. Padrão: um mês a partir de hoje. */
+  recurringStart?: Date
 }) {
   const now = new Date()
   return getPaymentProvider().createPixAutomaticAuthorization({
     customerId: params.customerId,
     value: params.monthlyPrice,
     contractId: `TS-${params.clientId.slice(0, 8)}-${now.getTime().toString(36)}`,
-    description: 'Site mensal - TopSite',
-    // O QR Code imediato cobra o 1º mês; a recorrência começa no mês seguinte
-    recurringStartDate: ymd(addMonths(now, 1)),
+    description: 'Mensalidade do site - TopSite',
+    // O QR Code imediato cobra a mensalidade atual; a recorrência começa no mês seguinte
+    recurringStartDate: ymd(params.recurringStart ?? addMonths(now, 1)),
   })
+}
+
+// Mensalidade do ciclo atual (Site no Ar com Pix Automático): a recorrência começa um mês após o vencimento
+function cycleRecurringStart(nextDueDate: Date | null) {
+  const now = new Date()
+  const base = nextDueDate && nextDueDate > now ? nextDueDate : now
+  return addMonths(base, 1)
 }
 
 /**
@@ -174,10 +183,18 @@ async function sendContractCopies(params: {
   })
 }
 
-/** Pix do primeiro mês da assinatura pendente (gera um novo se o anterior expirou ou foi recusado). */
+/**
+ * Pix em aberto que autoriza o Pix Automático: o 1º mês do plano mensal ou a mensalidade dos
+ * novos clientes do Site no Ar. Gera um novo se o anterior expirou ou foi recusado.
+ */
 export async function getMonthlyPix(clientId: string): Promise<MonthlyPix | null> {
   const subscription = await prisma.subscription.findFirst({
-    where: { clientId, status: 'pending', pixAutomaticAuthorizationId: { not: null } },
+    where: {
+      clientId,
+      status: { in: ['pending', 'active', 'overdue'] },
+      pixAutomaticAuthorizationId: { not: null },
+      asaasSubscriptionId: null,
+    },
     orderBy: { createdAt: 'desc' },
   })
   if (!subscription?.pixAutomaticAuthorizationId) return null
@@ -186,7 +203,7 @@ export async function getMonthlyPix(clientId: string): Promise<MonthlyPix | null
   let auth = await provider.getPixAutomaticAuthorization(subscription.pixAutomaticAuthorizationId)
 
   if (auth.status === 'ACTIVE') {
-    await activateMonthlySubscription(subscription.id, auth.subscriptionId)
+    await activatePixAutomatic(subscription.id, auth.subscriptionId)
     return { ...auth, isMock: false }
   }
 
@@ -197,6 +214,7 @@ export async function getMonthlyPix(clientId: string): Promise<MonthlyPix | null
       customerId: client.asaasCustomerId,
       clientId,
       monthlyPrice: Number(subscription.customPrice),
+      recurringStart: subscription.status === 'pending' ? undefined : cycleRecurringStart(subscription.nextDueDate),
     })
     await prisma.subscription.update({
       where: { id: subscription.id },
@@ -211,6 +229,76 @@ export async function getMonthlyPix(clientId: string): Promise<MonthlyPix | null
     expiresAt: auth.expiresAt,
     isMock: auth.authorizationId.startsWith('mockpix_'),
   }
+}
+
+/** Autorização ACTIVE: 1º mês do plano mensal (assinatura pendente) ou mensalidade do Site no Ar. */
+export async function activatePixAutomatic(subscriptionId: string, asaasSubscriptionId: string | null) {
+  const sub = await prisma.subscription.findUnique({ where: { id: subscriptionId }, select: { status: true } })
+  if (!sub) return false
+  if (sub.status === 'pending') return activateMonthlySubscription(subscriptionId, asaasSubscriptionId)
+  return activateCycleSubscription(subscriptionId, asaasSubscriptionId)
+}
+
+/**
+ * Site no Ar (novos clientes): a mensalidade em aberto foi paga pelo Pix que autoriza o débito
+ * automático. A partir daqui o Asaas gera as próximas cobranças. Idempotente.
+ */
+async function activateCycleSubscription(subscriptionId: string, asaasSubscriptionId: string | null) {
+  const current = await prisma.subscription.findUnique({
+    where: { id: subscriptionId },
+    include: {
+      plan: { select: { name: true } },
+      client: { select: { id: true, name: true, email: true, asaasCustomerId: true } },
+      invoices: { where: { status: { in: ['pending', 'overdue'] }, asaasChargeId: null }, orderBy: { dueDate: 'asc' }, take: 1 },
+    },
+  })
+  if (!current) return false
+  const openInvoice = current.invoices[0] ?? null
+  // Sem mensalidade em aberto não há pagamento a registrar: só completa o vínculo com o Asaas
+  if (!openInvoice) {
+    if (asaasSubscriptionId && !current.asaasSubscriptionId) {
+      await prisma.subscription.update({ where: { id: subscriptionId }, data: { asaasSubscriptionId } })
+    }
+    return false
+  }
+  const now = new Date()
+  const baseDue = openInvoice.dueDate
+  const wasOverdue = current.status === 'overdue' || openInvoice.status === 'overdue'
+
+  const { count } = await prisma.subscription.updateMany({
+    where: { id: subscriptionId, asaasSubscriptionId: null, status: { in: ['active', 'overdue'] } },
+    data: {
+      status: 'active',
+      nextDueDate: addMonths(baseDue, 1),
+      ...(asaasSubscriptionId ? { asaasSubscriptionId } : {}),
+    },
+  })
+  if (count === 0) return false
+
+  const chargeId = current.client.asaasCustomerId
+    ? await getPaymentProvider().findLatestReceivedPixCharge(current.client.asaasCustomerId)
+    : null
+  await prisma.invoice.update({
+    where: { id: openInvoice.id },
+    data: { status: 'paid', paidAt: now, asaasChargeId: chargeId },
+  })
+
+  await sendNotification(
+    current.client.id,
+    'Pagamento confirmado',
+    `Recebemos o pagamento da sua mensalidade do plano ${current.plan.name}. Obrigado!`,
+    'painel',
+    'payment-confirmed',
+  )
+  if (wasOverdue) {
+    if (current.client.email) await sendPaymentRegularized(current.client.email, current.client.name)
+    await sendNotification(
+      null,
+      `Republicar site de ${current.client.name} — pagamento regularizado`,
+      `Cliente ${current.client.name} regularizou o pagamento. Publique o site e marque o status como "online" no painel.`,
+    )
+  }
+  return true
 }
 
 /**
@@ -321,8 +409,8 @@ export async function handlePixAutomaticAuthorizationEvent(event: string, author
 
   if (event === 'PIX_AUTOMATIC_RECURRING_AUTHORIZATION_ACTIVATED') {
     const auth = await getPaymentProvider().getPixAutomaticAuthorization(authorizationId)
-    const activated = await activateMonthlySubscription(subscription.id, auth.subscriptionId)
-    return { ok: true, message: activated ? `Plano mensal de ${subscription.client.name} ativado.` : 'Já estava ativo.' }
+    const activated = await activatePixAutomatic(subscription.id, auth.subscriptionId)
+    return { ok: true, message: activated ? `Pix Automático de ${subscription.client.name} ativado.` : 'Já estava ativo.' }
   }
 
   // Cliente revogou o Pix Automático no banco: o contrato continua — cobranças passam a ser Pix comum
@@ -335,4 +423,112 @@ export async function handlePixAutomaticAuthorizationEvent(event: string, author
   }
 
   return { ok: true, message: `Evento ${event} registrado.` }
+}
+
+// ─── Ciclo diário (cron sync-subscriptions) ───────────────────────────────────
+const DAYS_BEFORE_DUE = 5
+
+/**
+ * Novos clientes do Site no Ar (assinatura com valor próprio e sem assinatura no Asaas):
+ * 1) a poucos dias do vencimento, gera o Pix da mensalidade, que já autoriza o débito automático;
+ * 2) confere as autorizações em aberto e marca atraso quando o vencimento passa sem pagamento.
+ */
+export async function processPixAutomaticCycles(): Promise<{ created: number; activated: number; overdue: number; errors: number }> {
+  const now = new Date()
+  const limit = new Date(now.getTime() + DAYS_BEFORE_DUE * 86_400_000)
+  const today = new Date(now)
+  today.setHours(0, 0, 0, 0)
+  const result = { created: 0, activated: 0, overdue: 0, errors: 0 }
+  const provider = getPaymentProvider()
+
+  // 1) Mensalidade chegando: gera o Pix
+  const dueSoon = await prisma.subscription.findMany({
+    where: {
+      status: 'active',
+      customPrice: { not: null },
+      asaasSubscriptionId: null,
+      pixAutomaticAuthorizationId: null,
+      nextDueDate: { lte: limit },
+    },
+    include: { client: true },
+  })
+  for (const sub of dueSoon) {
+    try {
+      const { client } = sub
+      const customerId =
+        client.asaasCustomerId ??
+        (await provider.createCustomer({ name: client.name, email: client.email, document: client.document, phone: client.phone })).customerId
+      if (!client.asaasCustomerId) {
+        await prisma.client.update({ where: { id: client.id }, data: { asaasCustomerId: customerId } })
+      }
+      const price = Number(sub.customPrice)
+      const dueDate = sub.nextDueDate ?? now
+      const auth = await createAuthorization({
+        customerId,
+        clientId: client.id,
+        monthlyPrice: price,
+        recurringStart: cycleRecurringStart(dueDate),
+      })
+      await prisma.$transaction([
+        prisma.subscription.update({ where: { id: sub.id }, data: { pixAutomaticAuthorizationId: auth.authorizationId } }),
+        prisma.invoice.create({ data: { subscriptionId: sub.id, amount: price, status: 'pending', dueDate } }),
+      ])
+      await sendNotification(
+        client.id,
+        'Sua mensalidade está disponível para pagamento',
+        `Sua mensalidade de ${formatBRL(price)} vence em ${dueDate.toLocaleDateString('pt-BR')}. Pague por Pix no seu painel: ao pagar, seu banco pode pedir para autorizar o débito das próximas mensalidades.`,
+        'email',
+        'charge-created',
+      )
+      result.created++
+    } catch (err) {
+      console.error('[pix-ciclo] erro ao gerar Pix', sub.id, err)
+      result.errors++
+    }
+  }
+
+  // 2) Pix em aberto: pagamento confirmado ou atraso
+  const open = await prisma.subscription.findMany({
+    where: {
+      status: { in: ['active', 'overdue'] },
+      customPrice: { not: null },
+      asaasSubscriptionId: null,
+      pixAutomaticAuthorizationId: { not: null },
+    },
+    include: {
+      client: { select: { id: true, name: true, email: true } },
+      plan: { select: { name: true } },
+      invoices: { where: { status: 'pending', asaasChargeId: null, dueDate: { lt: today } }, take: 1 },
+    },
+  })
+  for (const sub of open) {
+    try {
+      const auth = await provider.getPixAutomaticAuthorization(sub.pixAutomaticAuthorizationId!)
+      if (auth.status === 'ACTIVE') {
+        if (await activatePixAutomatic(sub.id, auth.subscriptionId)) result.activated++
+        continue
+      }
+      const late = sub.invoices[0]
+      if (late) {
+        await prisma.$transaction([
+          prisma.invoice.update({ where: { id: late.id }, data: { status: 'overdue', overdueDay0SentAt: now } }),
+          prisma.subscription.update({ where: { id: sub.id }, data: { status: 'overdue' } }),
+        ])
+        await sendNotification(
+          sub.client.id,
+          'Pagamento em atraso',
+          `Identificamos um pagamento em atraso do plano ${sub.plan.name}. Pague pelo Pix no seu painel para manter seu site no ar.`,
+          'painel',
+          'payment-overdue',
+        )
+        if (sub.client.email) await sendOverdueDay0(sub.client.email, sub.client.name, null)
+        result.overdue++
+      }
+    } catch (err) {
+      console.error('[pix-ciclo] erro ao conferir autorização', sub.id, err)
+      result.errors++
+    }
+  }
+
+  return result
 }

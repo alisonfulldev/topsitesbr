@@ -7,7 +7,7 @@ import { getPaymentProvider } from '@/lib/payments/provider'
 import { getAsaasInvoiceUrl } from '@/lib/integrations/asaas'
 import { sendNotification } from '@/lib/notifications'
 import { sendSubscriptionWelcome, sendTermsAcceptanceEmail } from '@/lib/notifications'
-import { TERMS_VERSION, ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
+import { TERMS_VERSION, LEGACY_TERMS_VERSION, ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
 import { ensureTermsVersionSeeded } from '@/lib/terms-content'
 import { revalidatePath } from 'next/cache'
 
@@ -85,6 +85,64 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
     return { error: 'Para ativar o plano é necessário ter CPF ou CNPJ cadastrado. Entre em contato com o suporte para atualizar seu cadastro.' }
   }
 
+  // Novos clientes: mensalidade com o valor do cadastro, só por Pix (débito automático autorizado
+  // no 1º pagamento). O 1º mês continua grátis — o Pix é gerado perto do vencimento (cron diário).
+  // Reativações de clientes antigos seguem no fluxo anterior (assinatura comum no Asaas).
+  if (!hasPriorSubscription) {
+    const price =
+      client.monthlyPrice != null ? Number(client.monthlyPrice) : client.entryFlow === 'apresentacao' ? 19 : Number(plan.price)
+    const now = new Date()
+    const firstDue = new Date(`${firstDueDate}T12:00:00`)
+
+    await prisma.client.update({
+      where: { id: clientId },
+      data: { termsAcceptedAt: now, termsVersion: TERMS_VERSION },
+    })
+    await ensureTermsVersionSeeded()
+    await sendTermsAcceptanceEmail(client.email, client.name, now, TERMS_VERSION)
+    await sendTermsAcceptanceEmail(ADMIN_NOTIFICATION_EMAIL, client.name, now, TERMS_VERSION)
+
+    await prisma.subscription.create({
+      data: {
+        clientId,
+        planId: plan.id,
+        status: 'active',
+        customPrice: price,
+        nextDueDate: firstDue,
+        planActivatedAt: now,
+      },
+    })
+
+    await sendNotification(
+      clientId,
+      'Assinatura ativada com 1 mês grátis!',
+      `Seu plano ${plan.name} foi ativado. O primeiro mês é grátis — sua primeira mensalidade de R$${price.toFixed(2).replace('.', ',')} vence em ${firstDue.toLocaleDateString('pt-BR')} e será paga por Pix pelo painel.`,
+      'painel',
+      'payment-confirmed',
+    )
+    await sendNotification(
+      null,
+      `Publicar site de ${client.name}`,
+      `Cliente ${client.name} ativou o plano ${plan.name} (mês grátis, R$${price.toFixed(2).replace('.', ',')}/mês por Pix). Suba o site e atualize o status para "online".`,
+    )
+    await sendSubscriptionWelcome(client.email, client.name, firstDue)
+
+    const referral = await prisma.referral.findFirst({
+      where: { referredClientId: clientId, status: 'confirmado' },
+      include: { referrerClient: { select: { id: true, name: true } } },
+    })
+    if (referral) {
+      await sendNotification(
+        null,
+        'Indicação: aplicar 1 mês grátis',
+        `Cliente ${client.name}, indicado por ${referral.referrerClient.name}, ativou o plano. Aplique 1 mês grátis para ${referral.referrerClient.name} e marque a indicação como recompensada.`,
+      )
+    }
+
+    revalidatePath('/painel')
+    return { paymentUrl: '/painel?ativado=1' }
+  }
+
   const provider = getPaymentProvider()
 
   const { customerId } = await provider.createCustomer({
@@ -112,16 +170,13 @@ export async function activatePlan(opts?: { termsAccepted?: boolean }): Promise<
     where: { id: clientId },
     data: {
       termsAcceptedAt: now,
-      termsVersion: TERMS_VERSION,
+      termsVersion: LEGACY_TERMS_VERSION,
     },
   })
 
-  // Ensure the accepted version is archived in the DB (idempotent)
-  await ensureTermsVersionSeeded()
-
   // Send terms acceptance proof email — to client and to admin
-  await sendTermsAcceptanceEmail(client.email, client.name, now, TERMS_VERSION)
-  await sendTermsAcceptanceEmail(ADMIN_NOTIFICATION_EMAIL, client.name, now, TERMS_VERSION)
+  await sendTermsAcceptanceEmail(client.email, client.name, now, LEGACY_TERMS_VERSION)
+  await sendTermsAcceptanceEmail(ADMIN_NOTIFICATION_EMAIL, client.name, now, LEGACY_TERMS_VERSION)
 
   const isDeferred = !chargeId // primeira ativação sem cobrança imediata
 
@@ -310,7 +365,7 @@ export async function payNextMonth(): Promise<{ error?: string; paymentUrl?: str
 
   if (!subscription) return { error: 'Nenhuma assinatura ativa encontrada.' }
   if (subscription.customPrice != null) {
-    return { error: 'No plano mensal as mensalidades são cobradas por Pix todo mês, na data do primeiro pagamento.' }
+    return { error: 'Sua mensalidade é paga por Pix pelo painel. O Pix fica disponível alguns dias antes do vencimento.' }
   }
   if (!subscription.nextDueDate) return { error: 'Data de vencimento não encontrada.' }
   if (!subscription.asaasSubscriptionId) {
