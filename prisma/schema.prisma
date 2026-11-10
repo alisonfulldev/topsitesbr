@@ -161,6 +161,7 @@ model Client {
   pushSubscriptions PushSubscription[]
   proposals         Proposal[]
   contractAcceptances ContractAcceptance[]
+  onlineProposals     OnlineProposal[]
 
   @@map("clients")
 }
@@ -833,4 +834,97 @@ model ProspectEvent {
 
   @@index([prospectId, createdAt])
   @@map("prospect_events")
+}
+
+// ─── Proposta online (prospect → prévia → aprovação → contrato → pagamento) ──
+model OnlineProposal {
+  id             String    @id @default(uuid())
+  token          String    @unique
+  name           String
+  company        String?
+  document       String?
+  email          String
+  whatsapp       String?
+  planKey        String    @map("plan_key")
+  planName       String    @map("plan_name")
+  setupPrice     Decimal   @map("setup_price") @db.Decimal(10, 2)
+  monthlyPrice   Decimal   @map("monthly_price") @db.Decimal(10, 2)
+  // Extras oferecidos [{ key, name, price }] e os escolhidos pelo prospect [key]
+  extras         Json      @default("[]")
+  selectedExtras Json      @default("[]") @map("selected_extras")
+  previewUrl     String?   @map("preview_url")
+  previewHtml    String?   @map("preview_html") @db.Text
+  maxRevisions   Int       @default(2) @map("max_revisions")
+  revisionsUsed  Int       @default(0) @map("revisions_used")
+  // prospect | previa_enviada | ajuste_solicitado | aprovada | contrato_assinado | ativo | expirada | cancelada
+  status         String    @default("prospect")
+  expiresAt      DateTime  @map("expires_at")
+  previewSentAt  DateTime? @map("preview_sent_at")
+  approvedAt     DateTime? @map("approved_at")
+  signedAt       DateTime? @map("signed_at")
+  paidAt         DateTime? @map("paid_at")
+  clientId       String?   @map("client_id")
+  // Assinatura eletrônica: texto exato assinado + hash SHA-256, nome, CPF, IP e navegador
+  contractVersion String?  @map("contract_version")
+  contractContent String?  @map("contract_content") @db.Text
+  contractHash    String?  @map("contract_hash")
+  signerName      String?  @map("signer_name")
+  signerDocument  String?  @map("signer_document")
+  signerIp        String?  @map("signer_ip")
+  signerUserAgent String?  @map("signer_user_agent")
+  // Cobrança do setup (Asaas)
+  setupChargeId   String?  @map("setup_charge_id")
+  setupPaymentUrl String?  @map("setup_payment_url")
+  // PIX | CREDIT_CARD
+  setupPaymentMethod String? @map("setup_payment_method")
+  // Sequência de e-mails: descadastro e pausa manual
+  unsubscribedAt  DateTime? @map("unsubscribed_at")
+  sequencePaused  Boolean   @default(false) @map("sequence_paused")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  client Client?               @relation(fields: [clientId], references: [id])
+  events OnlineProposalEvent[]
+  emails OnlineProposalEmail[]
+
+  @@index([status])
+  @@map("online_proposals")
+}
+
+model OnlineProposalEvent {
+  id         String   @id @default(uuid())
+  proposalId String   @map("proposal_id")
+  // mudança de status (to = novo status) ou evento informativo (aberta, extra adicionado...)
+  type       String
+  detail     String?  @db.Text
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  proposal OnlineProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  @@index([proposalId])
+  @@map("online_proposal_events")
+}
+
+// Sequência automática de e-mails da prévia (5 passos)
+model OnlineProposalEmail {
+  id          String    @id @default(uuid())
+  proposalId  String    @map("proposal_id")
+  // Rodada da sequência: aumenta a cada nova prévia enviada (reinício após ajuste)
+  round       Int       @default(1)
+  step        Int
+  scheduledAt DateTime  @map("scheduled_at")
+  // agendado | enviado | cancelado | erro
+  status      String    @default("agendado")
+  subject     String?
+  sentAt      DateTime? @map("sent_at")
+  openedAt    DateTime? @map("opened_at")
+  clickedAt   DateTime? @map("clicked_at")
+  error       String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  proposal OnlineProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  @@unique([proposalId, round, step])
+  @@index([status, scheduledAt])
+  @@map("online_proposal_emails")
 }

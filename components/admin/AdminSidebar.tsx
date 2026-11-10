@@ -20,6 +20,7 @@ const navItems = [
   { href: '/admin/financeiro/custos', label: 'Custos', indent: true },
   { href: '/admin/projetos', label: 'Projetos' },
   { href: '/admin/notificacoes', label: 'Notificações' },
+  { href: '/admin/propostas-online', label: 'Propostas online' },
   { href: '/admin/propostas-lp', label: 'Propostas LP' },
   { href: '/admin/propostas-lp/leads', label: 'Leads LP', indent: true },
   { href: '/admin/orcamentos', label: 'Orçamentos' },

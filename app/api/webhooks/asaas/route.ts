@@ -7,6 +7,7 @@ import {
   handleProposalPayment,
 } from '@/lib/payments/webhook-handlers'
 import { handlePixAutomaticAuthorizationEvent } from '@/lib/monthly-plan-service'
+import { activateOnlineProposal } from '@/lib/online-proposal/service'
 
 // Payload enviado pelo Asaas em cada evento
 interface AsaasWebhookPayload {
@@ -75,7 +76,9 @@ export async function POST(req: NextRequest) {
     if (event === 'PAYMENT_RECEIVED' || event === 'PAYMENT_CONFIRMED') {
       let result: { ok: boolean; message: string }
 
-      if (externalRef.startsWith('proposal:')) {
+      if (externalRef.startsWith('online-proposal:')) {
+        result = await activateOnlineProposal(externalRef.slice('online-proposal:'.length), payment.id)
+      } else if (externalRef.startsWith('proposal:')) {
         const proposalId = externalRef.slice('proposal:'.length)
         result = await handleProposalPayment(proposalId, payment.id)
       } else {

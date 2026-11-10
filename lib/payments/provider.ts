@@ -32,7 +32,7 @@ export interface CreateSingleChargeInput {
   successUrl?: string
   externalReference?: string
   /** "PIX" restringe a cobrança a Pix (plano mensal). Padrão: cliente escolhe. */
-  billingType?: 'PIX' | 'UNDEFINED'
+  billingType?: 'PIX' | 'CREDIT_CARD' | 'UNDEFINED'
   /** Dias até o vencimento. Padrão: 3. */
   dueInDays?: number
 }

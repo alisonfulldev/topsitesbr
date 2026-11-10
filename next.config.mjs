@@ -21,6 +21,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Upload da prévia em HTML nas propostas online (até 3 MB)
+  experimental: {
+    serverActions: { bodySizeLimit: '4mb' },
+  },
   images: {
     remotePatterns: [
       {
