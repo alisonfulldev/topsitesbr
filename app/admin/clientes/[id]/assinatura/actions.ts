@@ -41,26 +41,12 @@ export async function confirmManualPayment(
       // Webhook PAYMENT_RECEIVED chegará em breve, mas processamos localmente
       // de imediato para não depender do timing do webhook
       await handlePaymentReceived(invoice.asaasChargeId)
-    } catch {
-      // Se falhar no Asaas, processa manualmente no banco
-      if (invoice) {
-        const sub = await prisma.subscription.findUnique({ where: { id: subscriptionId } })
-        const nextDueDate = sub?.nextDueDate ? new Date(sub.nextDueDate) : null
-        if (nextDueDate) nextDueDate.setMonth(nextDueDate.getMonth() + 1)
-
-        await prisma.$transaction([
-          prisma.invoice.update({
-            where: { id: invoice.id },
-            data: { status: 'paid', paidAt: new Date() },
-          }),
-          prisma.subscription.update({
-            where: { id: subscriptionId },
-            data: { status: 'active', ...(nextDueDate ? { nextDueDate } : {}) },
-          }),
-        ])
-        await sendPaymentRegularized(client.email, client.name)
-        await sendNotification(clientId, 'Pagamento confirmado', 'Seu pagamento foi confirmado. Obrigado!', 'painel', 'payment-confirmed')
-      }
+    } catch (err) {
+      // Antes o erro era ignorado e a fatura ficava paga só no sistema, com a cobrança ainda aberta no
+      // Asaas (que continuava cobrando o cliente). Agora nada é alterado e o motivo aparece para o admin.
+      const msg = err instanceof Error ? err.message.replace(/^Asaas:\s*/, '') : String(err)
+      console.error('[confirmManualPayment] Asaas recusou a baixa', invoice.asaasChargeId, msg)
+      return { error: `O Asaas não aceitou a baixa da cobrança ${invoice.asaasChargeId}: ${msg}. Nada foi alterado — confira a cobrança no Asaas.` }
     }
   } else if (invoice) {
     // Sem charge no Asaas — atualiza só o banco

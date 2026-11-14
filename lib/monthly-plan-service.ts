@@ -446,7 +446,11 @@ export async function setPixMigrationEnabled(enabled: boolean) {
   await prisma.systemSetting.upsert({ where: { key: MIGRATION_SETTING }, update: { value }, create: { key: MIGRATION_SETTING, value } })
 }
 
-export async function migrateToPixAutomatic(subscriptionId: string): Promise<{ migrated: boolean; reason?: string }> {
+export async function migrateToPixAutomatic(
+  subscriptionId: string,
+  /** Decisão do admin: migra mesmo com o ciclo atual já pago e define o próximo vencimento */
+  opts: { ignorePaidCycle?: boolean; nextDueDate?: Date } = {},
+): Promise<{ migrated: boolean; reason?: string }> {
   const sub = await prisma.subscription.findUnique({
     where: { id: subscriptionId },
     include: { client: { select: { id: true, name: true, email: true, monthlyPrice: true } }, plan: { select: { price: true } } },
@@ -467,13 +471,13 @@ export async function migrateToPixAutomatic(subscriptionId: string): Promise<{ m
 
     if (payments.some((p) => p.status === 'OVERDUE')) return { migrated: false, reason: 'Há cobrança em atraso no Asaas.' }
     // Mensalidade do ciclo já paga (adiantada): migra no próximo ciclo
-    if (payments.some((p) => PAID.includes(p.status) && p.dueDate >= todayStr)) {
+    if (!opts.ignorePaidCycle && payments.some((p) => PAID.includes(p.status) && p.dueDate >= todayStr)) {
       return { migrated: false, reason: 'A mensalidade deste ciclo já foi paga — migra no próximo.' }
     }
 
     price = Number(asaasSub.value) || price
     const pending = payments.filter((p) => p.status === 'PENDING').sort((a, b) => a.dueDate.localeCompare(b.dueDate))
-    dueDate = new Date(`${(pending[0]?.dueDate ?? asaasSub.nextDueDate)}T12:00:00`)
+    dueDate = opts.nextDueDate ?? new Date(`${(pending[0]?.dueDate ?? asaasSub.nextDueDate)}T12:00:00`)
 
     // Remove as cobranças pendentes do ciclo e a assinatura antiga (sem cobrança duplicada)
     for (const p of pending) {
