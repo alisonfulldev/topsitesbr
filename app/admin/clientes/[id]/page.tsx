@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { ProposalCard } from './_components/ProposalCard'
 import { ImpersonateButton } from './_components/ImpersonateButton'
 import { MonthlyPlanCard } from './_components/MonthlyPlanCard'
+import { PixMigrationButton } from './_components/PixMigrationButton'
 import { DOMAIN_ANNUAL_PRICE, earlyTerminationQuote, isMonthlyClient, subscriptionPrice } from '@/lib/monthly-plan'
 
 const STATUS_LABEL: Record<string, string> = {
@@ -193,10 +194,17 @@ export default async function ClientePage({
             label="Plano"
             value={
               subscription ? (
-                <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-brand-100 text-brand-text">
-                  {subscription.plan.name} — R${' '}
-                  {subscriptionPrice(subscription).toFixed(2).replace('.', ',')}
-                  /mês
+                <span className="flex flex-col gap-1.5">
+                  <span className="inline-flex self-start px-2 py-0.5 rounded text-xs font-medium bg-brand-100 text-brand-text">
+                    {subscription.plan.name} — R${' '}
+                    {subscriptionPrice(subscription).toFixed(2).replace('.', ',')}
+                    /mês
+                    {subscription.pixAutomaticAuthorizationId || subscription.customPrice != null ? ' · Pix Automático' : ''}
+                  </span>
+                  {/* Assinatura antiga (Pix/boleto/cartão): migração manual para o Pix Automático */}
+                  {subscription.asaasSubscriptionId && !subscription.pixAutomaticAuthorizationId && subscription.status === 'active' && (
+                    <PixMigrationButton clientId={client.id} />
+                  )}
                 </span>
               ) : (
                 <span className="text-gray-300">Sem assinatura</span>

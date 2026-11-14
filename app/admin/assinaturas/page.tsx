@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import { AssinaturasClient } from './_components/AssinaturasClient'
 import { subscriptionPrice } from '@/lib/monthly-plan'
+import { isPixMigrationEnabled } from '@/lib/monthly-plan-service'
+import { PixMigrationCard } from './_components/PixMigrationCard'
 
 export const metadata = { title: 'Assinaturas — Admin' }
 
@@ -27,7 +29,11 @@ export default async function AssinaturasPage() {
 
   const total = rows.length
   const active = rows.filter((r) => r.status === 'active').length
-  const noAsaas = rows.filter((r) => !r.asaasSubscriptionId).length
+  // Sem assinatura no Asaas e sem Pix Automático: possíveis testes (o fluxo novo fica sem Asaas até o 1º Pix)
+  const noAsaas = subs.filter((s) => !s.asaasSubscriptionId && s.customPrice == null && !s.pixAutomaticAuthorizationId).length
+  const migrationEnabled = await isPixMigrationEnabled()
+  const legacyRemaining = subs.filter((s) => s.status !== 'canceled' && s.asaasSubscriptionId && !s.pixAutomaticAuthorizationId).length
+  const onPix = subs.filter((s) => s.status !== 'canceled' && (s.pixAutomaticAuthorizationId || s.customPrice != null)).length
   const mrr = rows
     .filter((r) => r.status === 'active' || r.status === 'pending')
     .reduce((sum, r) => sum + r.planPrice, 0)
@@ -49,6 +55,8 @@ export default async function AssinaturasPage() {
           <p className="text-xs text-gray-400 mt-0.5">ativas + aguardando pagamento</p>
         </div>
       </div>
+
+      <PixMigrationCard enabled={migrationEnabled} remaining={legacyRemaining} migrated={onPix} />
 
       <AssinaturasClient rows={rows} />
     </div>

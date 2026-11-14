@@ -425,21 +425,124 @@ export async function handlePixAutomaticAuthorizationEvent(event: string, author
   return { ok: true, message: `Evento ${event} registrado.` }
 }
 
+// ─── Migração das assinaturas antigas para o Pix Automático ───────────────────
+// Assinaturas comuns do Asaas (Pix/boleto/cartão a cada mês) passam a ser cobradas por Pix com
+// débito automático a partir da próxima mensalidade: a cobrança pendente do ciclo e a assinatura
+// antiga são removidas no Asaas e o ciclo novo gera o Pix que já autoriza a recorrência.
+
+interface AsaasSubscriptionInfo { id: string; value: number; nextDueDate: string; status: string }
+interface AsaasSubPayment { id: string; status: string; dueDate: string; value: number }
+
+const PAID = ['RECEIVED', 'CONFIRMED', 'RECEIVED_IN_CASH']
+const MIGRATION_SETTING = 'pix_automatic_migration_enabled'
+
+export async function isPixMigrationEnabled() {
+  const row = await prisma.systemSetting.findUnique({ where: { key: MIGRATION_SETTING } })
+  return row?.value === 'true'
+}
+
+export async function setPixMigrationEnabled(enabled: boolean) {
+  const value = enabled ? 'true' : 'false'
+  await prisma.systemSetting.upsert({ where: { key: MIGRATION_SETTING }, update: { value }, create: { key: MIGRATION_SETTING, value } })
+}
+
+export async function migrateToPixAutomatic(subscriptionId: string): Promise<{ migrated: boolean; reason?: string }> {
+  const sub = await prisma.subscription.findUnique({
+    where: { id: subscriptionId },
+    include: { client: { select: { id: true, name: true, email: true, monthlyPrice: true } }, plan: { select: { price: true } } },
+  })
+  if (!sub) return { migrated: false, reason: 'Assinatura não encontrada.' }
+  if (sub.pixAutomaticAuthorizationId) return { migrated: false, reason: 'Já está no Pix Automático.' }
+  if (!sub.asaasSubscriptionId) return { migrated: false, reason: 'Assinatura sem vínculo com o Asaas (já está no fluxo novo).' }
+  if (sub.status !== 'active') return { migrated: false, reason: 'Só migra assinaturas em dia (regularize o atraso primeiro).' }
+
+  let price = sub.customPrice != null ? Number(sub.customPrice) : Number(sub.plan.price)
+  let dueDate = sub.nextDueDate ?? addMonths(new Date(), 1)
+
+  if (process.env.PAYMENT_DRIVER === 'asaas') {
+    const { asaasFetch } = await import('@/lib/integrations/asaas')
+    const asaasSub = await asaasFetch<AsaasSubscriptionInfo>(`/subscriptions/${sub.asaasSubscriptionId}`)
+    const payments = (await asaasFetch<{ data: AsaasSubPayment[] }>(`/subscriptions/${sub.asaasSubscriptionId}/payments?limit=20&offset=0`)).data
+    const todayStr = ymd(new Date())
+
+    if (payments.some((p) => p.status === 'OVERDUE')) return { migrated: false, reason: 'Há cobrança em atraso no Asaas.' }
+    // Mensalidade do ciclo já paga (adiantada): migra no próximo ciclo
+    if (payments.some((p) => PAID.includes(p.status) && p.dueDate >= todayStr)) {
+      return { migrated: false, reason: 'A mensalidade deste ciclo já foi paga — migra no próximo.' }
+    }
+
+    price = Number(asaasSub.value) || price
+    const pending = payments.filter((p) => p.status === 'PENDING').sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+    dueDate = new Date(`${(pending[0]?.dueDate ?? asaasSub.nextDueDate)}T12:00:00`)
+
+    // Remove as cobranças pendentes do ciclo e a assinatura antiga (sem cobrança duplicada)
+    for (const p of pending) {
+      await asaasFetch(`/payments/${p.id}`, { method: 'DELETE' })
+    }
+    await getPaymentProvider().cancelSubscription(sub.asaasSubscriptionId)
+    if (pending.length) {
+      await prisma.invoice.deleteMany({ where: { subscriptionId: sub.id, status: 'pending', asaasChargeId: { in: pending.map((p) => p.id) } } })
+    }
+  }
+
+  await prisma.subscription.update({
+    where: { id: sub.id },
+    data: { asaasSubscriptionId: null, customPrice: price, nextDueDate: dueDate },
+  })
+  if (sub.client.monthlyPrice == null) {
+    await prisma.client.update({ where: { id: sub.client.id }, data: { monthlyPrice: price } })
+  }
+
+  await sendNotification(
+    sub.client.id,
+    'Sua mensalidade agora é paga por Pix',
+    `A partir da mensalidade de ${dueDate.toLocaleDateString('pt-BR')}, o pagamento é feito por Pix pelo seu painel. Ao pagar, seu banco pode pedir para autorizar o débito automático das próximas mensalidades — assim você não precisa se preocupar todo mês. O valor continua ${formatBRL(price)}.`,
+    'email',
+    'charge-created',
+  )
+  await sendNotification(
+    null,
+    `Migrado para Pix Automático — ${sub.client.name}`,
+    `Assinatura antiga encerrada no Asaas. Próxima mensalidade (${formatBRL(price)}, venc. ${dueDate.toLocaleDateString('pt-BR')}) será cobrada por Pix com débito automático.`,
+  )
+  return { migrated: true }
+}
+
 // ─── Ciclo diário (cron sync-subscriptions) ───────────────────────────────────
 const DAYS_BEFORE_DUE = 5
 
 /**
- * Novos clientes do Site no Ar (assinatura com valor próprio e sem assinatura no Asaas):
+ * Pix Automático para todas as assinaturas recorrentes:
+ * 0) assinaturas antigas com vencimento próximo migram (cobrança comum → Pix Automático);
  * 1) a poucos dias do vencimento, gera o Pix da mensalidade, que já autoriza o débito automático;
  * 2) confere as autorizações em aberto e marca atraso quando o vencimento passa sem pagamento.
  */
-export async function processPixAutomaticCycles(): Promise<{ created: number; activated: number; overdue: number; errors: number }> {
+export async function processPixAutomaticCycles(): Promise<{ migrated: number; created: number; activated: number; overdue: number; errors: number }> {
   const now = new Date()
   const limit = new Date(now.getTime() + DAYS_BEFORE_DUE * 86_400_000)
   const today = new Date(now)
   today.setHours(0, 0, 0, 0)
-  const result = { created: 0, activated: 0, overdue: 0, errors: 0 }
+  const result = { migrated: 0, created: 0, activated: 0, overdue: 0, errors: 0 }
   const provider = getPaymentProvider()
+
+  // 0) Assinaturas antigas com a próxima mensalidade chegando: migram para o Pix Automático
+  //    (só com a migração automática ligada no admin — começa desligada até o teste com 1 cliente)
+  const legacy = (await isPixMigrationEnabled())
+    ? await prisma.subscription.findMany({
+        where: { status: 'active', asaasSubscriptionId: { not: null }, pixAutomaticAuthorizationId: null, nextDueDate: { lte: limit } },
+        select: { id: true },
+      })
+    : []
+  for (const sub of legacy) {
+    try {
+      const r = await migrateToPixAutomatic(sub.id)
+      if (r.migrated) result.migrated++
+      else console.log('[pix-ciclo] migração adiada', sub.id, r.reason)
+    } catch (err) {
+      console.error('[pix-ciclo] erro na migração', sub.id, err)
+      result.errors++
+    }
+  }
 
   // 1) Mensalidade chegando: gera o Pix
   const dueSoon = await prisma.subscription.findMany({

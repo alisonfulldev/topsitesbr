@@ -93,6 +93,29 @@ export async function createEarlyTerminationChargeAction(clientId: string): Prom
   }
 }
 
+/** Assinatura antiga → Pix Automático já (teste com 1 cliente antes de ligar a migração automática). */
+export async function migrateClientToPixAction(clientId: string): Promise<{ error?: string; message?: string }> {
+  if (!(await assertAdmin())) return { error: 'Não autorizado.' }
+  try {
+    const sub = await prisma.subscription.findFirst({
+      where: { clientId, status: { not: 'canceled' } },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true },
+    })
+    if (!sub) return { error: 'Cliente sem assinatura.' }
+    const { migrateToPixAutomatic, processPixAutomaticCycles } = await import('@/lib/monthly-plan-service')
+    const r = await migrateToPixAutomatic(sub.id)
+    if (!r.migrated) return { error: r.reason ?? 'Não foi possível migrar agora.' }
+    // Se a mensalidade vence em até 5 dias, o Pix já é gerado agora
+    await processPixAutomaticCycles()
+    revalidatePath(`/admin/clientes/${clientId}`)
+    return { message: 'Migrado. O Pix da próxima mensalidade é gerado 5 dias antes do vencimento e o cliente foi avisado por e-mail.' }
+  } catch (err) {
+    console.error('[pix] erro ao migrar cliente', err)
+    return { error: err instanceof Error ? err.message : 'Erro ao migrar.' }
+  }
+}
+
 /** Domínio próprio: R$ 91 por ano, por Pix (cláusula 4.2 do contrato). */
 export async function createDomainChargeAction(clientId: string): Promise<{ error?: string; paymentUrl?: string }> {
   if (!(await assertAdmin())) return { error: 'Não autorizado.' }
