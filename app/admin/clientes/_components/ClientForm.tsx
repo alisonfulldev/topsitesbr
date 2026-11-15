@@ -277,7 +277,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
               { value: 'whatsapp', label: 'WhatsApp', desc: 'Chegou pelo WhatsApp / tráfego pago' },
               { value: 'proposta', label: 'Proposta', desc: 'Recebe link de proposta por e-mail' },
               { value: 'apresentacao', label: 'Apresentação', desc: 'Comprou pelo link de apresentação (R$97)' },
-              { value: 'mensal', label: 'Mensal sem taxa', desc: 'Só a mensalidade, Pix, fidelidade de 6 meses' },
+              { value: 'mensal', label: 'Mensal sem taxa', desc: 'Só a mensalidade, por Pix, sem fidelidade' },
             ] as const).map((opt) => (
               <label
                 key={opt.value}
@@ -307,7 +307,7 @@ export function ClientForm({ mode, clientId, initialData, recentCodes = [] }: Pr
           <Field
             label="Valor da mensalidade (R$)"
             required
-            hint="Sem taxa de criação. Cobrança só por Pix, com o 1º mês pago na assinatura do contrato e fidelidade de 6 meses."
+            hint="Sem taxa de criação e sem fidelidade. Cobrança só por Pix, com o 1º mês pago na assinatura do contrato."
           >
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">

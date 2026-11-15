@@ -257,7 +257,7 @@ export async function syncSetupPayment(token: string) {
 
 const ADMIN_CHECKLIST = `Checklist de publicação:
 [ ] Conferir o briefing enviado pelo cliente
-[ ] Domínio: próprio (registrar/configurar — R$ 91/ano) ou endereço alternativo do GitHub
+[ ] Domínio: próprio (registrar/configurar — R$ 90/ano, se o cliente pedir) ou nosso subdomínio gratuito
 [ ] DNS apontado e SSL ativo
 [ ] Versão final publicada e enviada para revisão do cliente
 [ ] Marcar o site como "online" após a aprovação`

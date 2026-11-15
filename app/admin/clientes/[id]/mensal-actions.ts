@@ -116,7 +116,7 @@ export async function migrateClientToPixAction(clientId: string): Promise<{ erro
   }
 }
 
-/** Domínio próprio: R$ 91 por ano, por Pix (cláusula 4.2 do contrato). */
+/** Domínio próprio (opcional): R$ 90 por ano, por Pix (cláusula 4.2 do contrato mensal). */
 export async function createDomainChargeAction(clientId: string): Promise<{ error?: string; paymentUrl?: string }> {
   if (!(await assertAdmin())) return { error: 'Não autorizado.' }
   try {

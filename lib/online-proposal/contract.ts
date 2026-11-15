@@ -3,7 +3,7 @@ import { COMPANY_CNPJ, COMPANY_NAME } from '@/lib/config'
 import { CONTACT_EMAIL, CONTACT_WHATSAPP_DISPLAY, DOMAIN_ANNUAL_PRICE, formatBRL } from '@/lib/monthly-plan'
 import type { ProposalExtra } from './config'
 
-export const ONLINE_CONTRACT_VERSION = 'proposta-online-1.0'
+export const ONLINE_CONTRACT_VERSION = 'proposta-online-1.1'
 
 function esc(value: string) {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -70,8 +70,8 @@ export function buildOnlineContract(d: OnlineContractData): string {
 <p>5.3. Após a aprovação final, a CONTRATADA publica o site.</p>
 
 <h3>6. Domínio</h3>
-<p>6.1. O domínio próprio (ex.: www.suaempresa.com.br) <strong>não está incluído</strong> e fica por conta do CONTRATANTE. Se ele quiser, a CONTRATADA registra e configura o domínio por <strong>${formatBRL(DOMAIN_ANNUAL_PRICE)} por ano</strong>, pago por Pix. O domínio fica em nome do CONTRATANTE e pertence a ele.</p>
-<p>6.2. Sem domínio próprio, o site é publicado sem custo em um <strong>endereço alternativo fornecido pelo GitHub</strong>. Esse endereço faz parte do serviço e deixa de funcionar se o contrato for encerrado.</p>
+<p>6.1. O domínio próprio é <strong>opcional</strong> e não está incluído nos valores acima. Se o CONTRATANTE quiser um domínio profissional (ex.: seunegocio.com.br), a CONTRATADA registra e configura o domínio por <strong>${formatBRL(DOMAIN_ANNUAL_PRICE)} por ano</strong>, pago por Pix, a qualquer momento em que ele solicitar. O domínio fica em nome do CONTRATANTE e pertence a ele.</p>
+<p>6.2. Sem domínio próprio, o site é publicado sem custo em um <strong>subdomínio fornecido pela CONTRATADA</strong>. O subdomínio faz parte do serviço e deixa de funcionar se o contrato for encerrado.</p>
 
 <h3>7. Alterações e correções</h3>
 <p>7.1. Correções de erros (link quebrado, erro de digitação, dado desatualizado) são gratuitas.</p>

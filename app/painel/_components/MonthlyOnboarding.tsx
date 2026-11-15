@@ -91,7 +91,7 @@ function ContractStep({ monthlyPrice, fidelityMonths, contractHtml }: { monthlyP
             'Site criado, publicado e mantido no ar, com SSL',
             'Painel para você mesmo editar textos e imagens',
             'Sem taxa de criação',
-            `Fidelidade de ${fidelityMonths} meses`,
+            'Sem fidelidade: cancele quando quiser',
             'Pagamento somente por Pix — o 1º mês é pago agora',
           ].map((item) => (
             <li key={item} className="flex gap-2.5">
@@ -123,7 +123,7 @@ function ContractStep({ monthlyPrice, fidelityMonths, contractHtml }: { monthlyP
             onChange={(e) => setAccepted(e.target.checked)}
             className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300"
           />
-          <span>Li e concordo com o contrato, incluindo a fidelidade de {fidelityMonths} meses e o pagamento somente por Pix.</span>
+          <span>Li e concordo com o contrato, incluindo o pagamento somente por Pix.</span>
         </label>
         {error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}
         <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">

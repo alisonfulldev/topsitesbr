@@ -5,7 +5,6 @@ import { sendEmail } from '@/lib/integrations/resend'
 import { buildHtml, sendNotification, sendOverdueDay0, sendPaymentRegularized } from '@/lib/notifications'
 import { ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
 import {
-  FIDELITY_MONTHS,
   MONTHLY_CONTRACT_VERSION,
   addMonths,
   buildMonthlyContract,
@@ -302,7 +301,7 @@ async function activateCycleSubscription(subscriptionId: string, asaasSubscripti
 }
 
 /**
- * Primeiro pagamento confirmado (autorização ACTIVE): ativa a assinatura, inicia a fidelidade,
+ * Primeiro pagamento confirmado (autorização ACTIVE): ativa a assinatura (sem fidelidade),
  * registra a fatura do primeiro mês e avisa o admin para publicar o site. Idempotente.
  */
 export async function activateMonthlySubscription(subscriptionId: string, asaasSubscriptionId: string | null) {
@@ -312,7 +311,6 @@ export async function activateMonthlySubscription(subscriptionId: string, asaasS
     data: {
       status: 'active',
       planActivatedAt: now,
-      fidelityEndsAt: addMonths(now, FIDELITY_MONTHS),
       nextDueDate: addMonths(now, 1),
       ...(asaasSubscriptionId ? { asaasSubscriptionId } : {}),
     },
@@ -359,7 +357,7 @@ export async function activateMonthlySubscription(subscriptionId: string, asaasS
   await sendNotification(
     null,
     `Plano mensal ativo — ${client.name}`,
-    `Cliente ${client.name} (plano mensal, ${formatBRL(Number(subscription.customPrice))}/mês) pagou a primeira mensalidade. O projeto entrou em "aguardando informações" (briefing). Fidelidade até ${addMonths(now, FIDELITY_MONTHS).toLocaleDateString('pt-BR')}.`,
+    `Cliente ${client.name} (plano mensal, ${formatBRL(Number(subscription.customPrice))}/mês) pagou a primeira mensalidade. O projeto entrou em "aguardando informações" (briefing).`,
   )
 
   const referral = client.referralReceived
@@ -418,7 +416,7 @@ export async function handlePixAutomaticAuthorizationEvent(event: string, author
     await sendNotification(
       null,
       `Pix Automático cancelado — ${subscription.client.name}`,
-      `O cliente ${subscription.client.name} revogou o Pix Automático no banco. O contrato e a fidelidade continuam; as próximas mensalidades precisam ser cobradas por Pix comum. Verifique a assinatura no Asaas.`,
+      `O cliente ${subscription.client.name} revogou o Pix Automático no banco. O contrato continua; as próximas mensalidades precisam ser cobradas por Pix comum. Verifique a assinatura no Asaas.`,
     )
   }
 

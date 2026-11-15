@@ -66,8 +66,8 @@ export function MonthlyPlanCard(props: Props) {
           <dd className="font-medium text-gray-900">{props.paidMonths}</dd>
         </div>
         <div>
-          <dt className="text-xs text-gray-500">Fidelidade até</dt>
-          <dd className="font-medium text-gray-900">{fidelityDate ?? '—'}</dd>
+          <dt className="text-xs text-gray-500">Fidelidade</dt>
+          <dd className="font-medium text-gray-900">{fidelityDate ? `até ${fidelityDate}` : 'Sem fidelidade'}</dd>
         </div>
       </dl>
 
@@ -79,7 +79,7 @@ export function MonthlyPlanCard(props: Props) {
               <span className="text-gray-500">({props.quitacao.remainingMonths} mensalidade(s) restante(s) + 2%)</span>
             </>
           ) : (
-            'Fidelidade cumprida — o cliente pode encerrar sem multa.'
+            fidelityDate ? 'Fidelidade cumprida — o cliente pode encerrar sem multa.' : 'Sem fidelidade — o cliente pode encerrar quando quiser, sem multa.'
           )}
         </div>
       )}
