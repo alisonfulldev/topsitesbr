@@ -148,12 +148,14 @@ export default async function ComprovantePage({
           {/* Alert: inadimplência */}
           {contract ? (
           <div className="mx-8 my-6 bg-red-50 border border-red-200 rounded-xl px-5 py-4">
-            <p className="text-xs font-bold text-red-700 uppercase tracking-wide mb-1">⚠️ {contract.version === 'mensal-1.0' ? 'Fidelidade e cobrança' : 'Cobrança'} — aceitas pelo cliente</p>
+            <p className="text-xs font-bold text-red-700 uppercase tracking-wide mb-1">⚠️ {contract.version === 'mensal-1.0' ? 'Fidelidade e cobrança' : 'Pagamento'} — aceitos pelo cliente</p>
             <p className="text-sm text-red-800 leading-relaxed">
               {contract.version === 'mensal-1.0'
                 ? 'Fidelidade de 6 meses; encerramento antecipado exige o pagamento das mensalidades restantes acrescidas de 2% (cláusula 6). '
                 : 'Sem fidelidade. '}
-              Débitos podem ser cobrados por meios extrajudiciais e judiciais, com inscrição em órgãos de proteção ao crédito e protesto.
+              {['mensal-1.0', 'mensal-1.1', 'proposta-online-1.0', 'proposta-online-1.1'].includes(contract.version)
+                ? 'Débitos podem ser cobrados por meios extrajudiciais e judiciais, com inscrição em órgãos de proteção ao crédito e protesto.'
+                : 'Sem pagamento, o site é retirado do ar no 10º dia de atraso, até a regularização.'}
             </p>
           </div>
           ) : (

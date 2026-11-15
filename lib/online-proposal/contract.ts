@@ -3,7 +3,7 @@ import { COMPANY_CNPJ, COMPANY_NAME } from '@/lib/config'
 import { CONTACT_EMAIL, CONTACT_WHATSAPP_DISPLAY, DOMAIN_ANNUAL_PRICE, formatBRL } from '@/lib/monthly-plan'
 import type { ProposalExtra } from './config'
 
-export const ONLINE_CONTRACT_VERSION = 'proposta-online-1.1'
+export const ONLINE_CONTRACT_VERSION = 'proposta-online-1.2'
 
 function esc(value: string) {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -77,9 +77,8 @@ export function buildOnlineContract(d: OnlineContractData): string {
 <p>7.1. Correções de erros (link quebrado, erro de digitação, dado desatualizado) são gratuitas.</p>
 <p>7.2. Alterações de conteúdo: no plano <strong>Com painel</strong>, o próprio CONTRATANTE faz pelo painel; no plano <strong>Sem painel</strong>, são cobradas à parte, conforme a tabela vigente exibida no painel.</p>
 
-<h3>8. Atraso no pagamento e cobrança</h3>
+<h3>8. Atraso no pagamento</h3>
 <p>8.1. Em caso de atraso da mensalidade, o CONTRATANTE é avisado por e-mail e pelo painel no vencimento e no 5º dia de atraso; no 10º dia, o site é retirado do ar até a regularização, sem taxa de reativação.</p>
-<p>8.2. Valores vencidos e não pagos podem ser cobrados por <strong>meios extrajudiciais e judiciais</strong>, inclusive com <strong>inscrição do nome e do CPF/CNPJ em órgãos de proteção ao crédito</strong> (Serasa, SPC, Boa Vista), após a comunicação prévia exigida por lei, e <strong>protesto em cartório</strong>. Na cobrança judicial, o CONTRATANTE arca com custas e honorários fixados pelo juiz.</p>
 
 <h3>9. Cancelamento</h3>
 <p>9.1. Não há fidelidade. O CONTRATANTE pode cancelar a mensalidade a qualquer momento, pelo painel ou pelo WhatsApp, <strong>sem multa</strong>. O cancelamento vale ao fim do mês já pago, e o site sai do ar.</p>

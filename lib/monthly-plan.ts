@@ -3,12 +3,12 @@ import { COMPANY_CNPJ, COMPANY_NAME } from '@/lib/config'
 
 // ─── Plano mensal sem taxa de criação ─────────────────────────────────────────
 // Cliente cadastrado com entryFlow = "mensal": paga só a mensalidade (valor definido
-// no cadastro), exclusivamente por Pix com Pix Automático, sem fidelidade (desde a versão mensal-1.1).
+// no cadastro), exclusivamente por Pix com Pix Automático, sem fidelidade (desde a mensal-1.1); sem pagamento, o site sai do ar (desde a mensal-1.2).
 // Contratos mensal-1.0 (Angelita, Marcos) mantêm a fidelidade de 6 meses que foi assinada.
 
 export const MONTHLY_ENTRY_FLOW = 'mensal'
 export const MONTHLY_PLAN_NAME = 'Site Mensal'
-export const MONTHLY_CONTRACT_VERSION = 'mensal-1.1'
+export const MONTHLY_CONTRACT_VERSION = 'mensal-1.2'
 // Fidelidade só dos contratos mensal-1.0 (assinados antes da mudança)
 export const FIDELITY_MONTHS = 6
 // Acréscimo sobre o saldo das mensalidades restantes na quitação antecipada
@@ -131,18 +131,9 @@ export function buildMonthlyContract(data: MonthlyContractData): string {
 <p>5.2. <strong>A primeira mensalidade vence no ato da contratação e deve ser paga imediatamente.</strong> O site só é publicado depois da confirmação desse pagamento.</p>
 <p>5.3. As mensalidades seguintes vencem todo mês, na mesma data do primeiro pagamento, e são cobradas por Pix.</p>
 
-<h3>6. Atraso no pagamento e cobrança</h3>
+<h3>6. Atraso no pagamento</h3>
 <p>6.1. Se uma mensalidade não for paga no vencimento, a CONTRATADA avisa o CONTRATANTE por e-mail e pelo painel: no dia do vencimento, com o link de pagamento; no 5º dia de atraso, com o alerta de que o site sairá do ar; e no 10º dia de atraso o site é retirado do ar.</p>
-<p>6.2. A retirada do site do ar não extingue a dívida. Depois de regularizado o pagamento, o site volta ao ar sem taxa de reativação.</p>
-<p>6.3. As mensalidades vencidas e não pagas podem ser cobradas pela CONTRATADA por <strong>meios extrajudiciais e judiciais</strong>, incluindo:</p>
-<ul>
-  <li>cobrança por e-mail, WhatsApp, telefone ou por empresa de cobrança;</li>
-  <li><strong>inscrição do nome e do CPF/CNPJ do CONTRATANTE em órgãos de proteção ao crédito</strong> (como Serasa, SPC e Boa Vista), após a comunicação prévia exigida por lei;</li>
-  <li><strong>protesto</strong> do débito em cartório;</li>
-  <li><strong>ação judicial</strong> de cobrança.</li>
-</ul>
-<p>6.4. Na cobrança judicial, o CONTRATANTE arca com as custas processuais e os honorários advocatícios fixados pelo juiz, além da correção monetária do débito.</p>
-<p>6.5. Pago o débito, a CONTRATADA providencia a retirada do nome do CONTRATANTE dos órgãos de proteção ao crédito no prazo legal.</p>
+<p>6.2. Depois de regularizado o pagamento, o site volta ao ar sem taxa de reativação.</p>
 
 <h3>7. Encerramento e reembolso</h3>
 <p>7.1. <strong>Não há fidelidade.</strong> O CONTRATANTE pode encerrar a assinatura a qualquer momento, pelo painel do cliente ou pelo WhatsApp oficial, <strong>sem multa</strong>. O encerramento vale ao fim do mês já pago, e o site sai do ar.</p>
@@ -167,7 +158,7 @@ export function buildMonthlyContract(data: MonthlyContractData): string {
 <p>A CONTRATADA se esforça para manter o site no ar continuamente. Indisponibilidades técnicas pontuais não geram desconto ou reembolso, salvo negligência comprovada da CONTRATADA.</p>
 
 <h3>12. Dados pessoais</h3>
-<p>Os dados do CONTRATANTE são tratados conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018) e a Política de Privacidade publicada em topsitebr.com.br/privacidade, apenas para prestar o serviço, fazer as cobranças e, em caso de inadimplência, adotar as medidas da cláusula 6.</p>
+<p>Os dados do CONTRATANTE são tratados conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018) e a Política de Privacidade publicada em topsitebr.com.br/privacidade, apenas para prestar o serviço e fazer as cobranças.</p>
 
 <h3>13. Aceite eletrônico e cópia</h3>
 <p>13.1. Ao marcar a caixa de aceite e confirmar no painel, o CONTRATANTE declara que leu e concorda com este contrato. O aceite eletrônico tem validade jurídica (MP 2.200-2/2001, art. 10, § 2º).</p>
