@@ -8,12 +8,14 @@ import { COMPANY_CNPJ, COMPANY_NAME } from '@/lib/config'
 
 export const MONTHLY_ENTRY_FLOW = 'mensal'
 export const MONTHLY_PLAN_NAME = 'Site Mensal'
-export const MONTHLY_CONTRACT_VERSION = 'mensal-1.2'
+export const MONTHLY_CONTRACT_VERSION = 'mensal-1.3'
 // Fidelidade só dos contratos mensal-1.0 (assinados antes da mudança)
 export const FIDELITY_MONTHS = 6
 // Acréscimo sobre o saldo das mensalidades restantes na quitação antecipada
 export const EARLY_TERMINATION_RATE = 0.02
 export const DOMAIN_ANNUAL_PRICE = 90
+// Taxa para reativar o site depois do 10º dia de atraso (cláusula 6.3 do contrato mensal)
+export const REACTIVATION_FEE = 50
 export const CONTACT_EMAIL = 'contato@topsitebr.com.br'
 export const CONTACT_WHATSAPP_DISPLAY = '(18) 99674-2364'
 
@@ -133,7 +135,9 @@ export function buildMonthlyContract(data: MonthlyContractData): string {
 
 <h3>6. Atraso no pagamento</h3>
 <p>6.1. Se uma mensalidade não for paga no vencimento, a CONTRATADA avisa o CONTRATANTE por e-mail e pelo painel: no dia do vencimento, com o link de pagamento; no 5º dia de atraso, com o alerta de que o site sairá do ar; e no 10º dia de atraso o site é retirado do ar.</p>
-<p>6.2. Depois de regularizado o pagamento, o site volta ao ar sem taxa de reativação.</p>
+<p>6.2. Se o pagamento for regularizado <strong>até o 10º dia de atraso</strong>, o CONTRATANTE paga apenas a mensalidade vencida, sem nenhum acréscimo.</p>
+<p>6.3. A partir do 11º dia de atraso, com o site fora do ar, a reativação custa <strong>${formatBRL(REACTIVATION_FEE)}</strong>, pagos junto com <strong>uma</strong> mensalidade vencida.</p>
+<p>6.4. A regra é a mesma por mais tempo que o site fique fora do ar (por exemplo, 3 meses): o CONTRATANTE paga somente <strong>uma mensalidade mais a taxa de reativação</strong>. As mensalidades do período em que o site ficou fora do ar não são cobradas.</p>
 
 <h3>7. Encerramento e reembolso</h3>
 <p>7.1. <strong>Não há fidelidade.</strong> O CONTRATANTE pode encerrar a assinatura a qualquer momento, pelo painel do cliente ou pelo WhatsApp oficial, <strong>sem multa</strong>. O encerramento vale ao fim do mês já pago, e o site sai do ar.</p>
