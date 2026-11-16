@@ -205,7 +205,15 @@ export default async function ClientePage({
                   </span>
                   {/* Mensalidade por Pix do sistema: link sem login para mandar pelo WhatsApp */}
                   {(subscription.pixAutomaticAuthorizationId || subscription.customPrice != null) && subscription.status !== 'canceled' && (
-                    <CopyPaymentLink link={paymentLink(subscription.id)} clientId={client.id} />
+                    <CopyPaymentLink
+                      link={paymentLink(subscription.id)}
+                      clientId={client.id}
+                      clientName={client.name}
+                      phone={client.phone}
+                      amount={subscriptionPrice(subscription).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      dueDate={subscription.nextDueDate ? subscription.nextDueDate.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : null}
+                      overdue={subscription.status === 'overdue'}
+                    />
                   )}
                   {/* Assinatura antiga (Pix/boleto/cartão): migração manual para o Pix Automático */}
                   {subscription.asaasSubscriptionId && !subscription.pixAutomaticAuthorizationId && subscription.status === 'active' && (
