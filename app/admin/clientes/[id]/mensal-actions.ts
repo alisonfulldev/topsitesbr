@@ -116,6 +116,28 @@ export async function migrateClientToPixAction(clientId: string): Promise<{ erro
   }
 }
 
+/** Reenvia ao cliente o e-mail da mensalidade por Pix (link sem login + copia e cola). */
+export async function sendPixChargeEmailAction(clientId: string): Promise<{ error?: string; message?: string }> {
+  if (!(await assertAdmin())) return { error: 'Não autorizado.' }
+  try {
+    const sub = await prisma.subscription.findFirst({
+      where: { clientId, status: { not: 'canceled' } },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, status: true, pixAutomaticAuthorizationId: true, asaasSubscriptionId: true },
+    })
+    if (!sub) return { error: 'Cliente sem assinatura.' }
+    if (!sub.pixAutomaticAuthorizationId || sub.asaasSubscriptionId) {
+      return { error: 'Não há mensalidade em aberto por Pix para este cliente (o Pix é gerado 5 dias antes do vencimento).' }
+    }
+    const { sendPixChargeEmail } = await import('@/lib/monthly-plan-service')
+    await sendPixChargeEmail(sub.id, sub.status === 'overdue' ? 'overdue' : 'charge')
+    return { message: 'E-mail enviado com o link de pagamento e o Pix copia e cola.' }
+  } catch (err) {
+    console.error('[pix] erro ao enviar cobrança', err)
+    return { error: err instanceof Error ? err.message : 'Erro ao enviar.' }
+  }
+}
+
 /** Domínio próprio (opcional): R$ 90 por ano, por Pix (cláusula 4.2 do contrato mensal). */
 export async function createDomainChargeAction(clientId: string): Promise<{ error?: string; paymentUrl?: string }> {
   if (!(await assertAdmin())) return { error: 'Não autorizado.' }

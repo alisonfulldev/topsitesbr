@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: [
         '/admin', '/painel', '/api/', '/login', '/dev/',
-        '/modelos/', '/proposta/', '/proposta-online/', '/p/', '/i/', '/orcamento/',
+        '/modelos/', '/proposta/', '/proposta-online/', '/pagar/', '/p/', '/i/', '/orcamento/',
         '/briefing/obrigado', '/redefinir-senha', '/esqueci-senha',
       ],
     }],

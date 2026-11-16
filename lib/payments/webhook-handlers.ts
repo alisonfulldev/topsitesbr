@@ -317,6 +317,10 @@ export async function checkOverdueSubscriptions(): Promise<void> {
       },
     },
   })
+  const { paymentLink } = await import('@/lib/pix-payment-link')
+  // Mensalidade por Pix do sistema (sem cobrança no Asaas): o e-mail leva o link de pagamento sem login
+  const linkFor = (inv: (typeof overdueInvoices)[number]) =>
+    !inv.asaasChargeId && inv.subscription.pixAutomaticAuthorizationId ? paymentLink(inv.subscriptionId) : null
 
   for (const invoice of overdueInvoices) {
     const { client } = invoice.subscription
@@ -324,7 +328,7 @@ export async function checkOverdueSubscriptions(): Promise<void> {
 
     // Dia 5
     if (daysSinceDue >= 5 && !invoice.overdueDay5SentAt) {
-      if (client.email) await sendOverdueDay5(client.email, client.name, null)
+      if (client.email) await sendOverdueDay5(client.email, client.name, linkFor(invoice))
       await prisma.invoice.update({
         where: { id: invoice.id },
         data: { overdueDay5SentAt: now },
@@ -333,7 +337,7 @@ export async function checkOverdueSubscriptions(): Promise<void> {
 
     // Dia 10
     if (daysSinceDue >= 10 && !invoice.overdueDay10SentAt) {
-      if (client.email) await sendOverdueDay10(client.email, client.name, null)
+      if (client.email) await sendOverdueDay10(client.email, client.name, linkFor(invoice))
       await sendNotification(
         null,
         `Despublicar site de ${client.name} — 10 dias de atraso`,

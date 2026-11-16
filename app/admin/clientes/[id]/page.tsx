@@ -6,6 +6,8 @@ import { ProposalCard } from './_components/ProposalCard'
 import { ImpersonateButton } from './_components/ImpersonateButton'
 import { MonthlyPlanCard } from './_components/MonthlyPlanCard'
 import { PixMigrationButton } from './_components/PixMigrationButton'
+import { CopyPaymentLink } from './_components/CopyPaymentLink'
+import { paymentLink } from '@/lib/pix-payment-link'
 import { DOMAIN_ANNUAL_PRICE, earlyTerminationQuote, isMonthlyClient, subscriptionPrice } from '@/lib/monthly-plan'
 
 const STATUS_LABEL: Record<string, string> = {
@@ -201,6 +203,10 @@ export default async function ClientePage({
                     /mês
                     {subscription.pixAutomaticAuthorizationId || subscription.customPrice != null ? ' · Pix Automático' : ''}
                   </span>
+                  {/* Mensalidade por Pix do sistema: link sem login para mandar pelo WhatsApp */}
+                  {(subscription.pixAutomaticAuthorizationId || subscription.customPrice != null) && subscription.status !== 'canceled' && (
+                    <CopyPaymentLink link={paymentLink(subscription.id)} clientId={client.id} />
+                  )}
                   {/* Assinatura antiga (Pix/boleto/cartão): migração manual para o Pix Automático */}
                   {subscription.asaasSubscriptionId && !subscription.pixAutomaticAuthorizationId && subscription.status === 'active' && (
                     <PixMigrationButton clientId={client.id} />

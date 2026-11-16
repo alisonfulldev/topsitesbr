@@ -4,6 +4,7 @@ import type { PixAutomaticAuthorization } from '@/lib/payments/provider'
 import { sendEmail } from '@/lib/integrations/resend'
 import { buildHtml, sendNotification, sendOverdueDay0, sendPaymentRegularized } from '@/lib/notifications'
 import { ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
+import { paymentLink } from '@/lib/pix-payment-link'
 import {
   MONTHLY_CONTRACT_VERSION,
   addMonths,
@@ -498,7 +499,7 @@ export async function migrateToPixAutomatic(
   await sendNotification(
     sub.client.id,
     'Sua mensalidade agora é paga por Pix',
-    `A partir da mensalidade de ${dueDate.toLocaleDateString('pt-BR')}, o pagamento é feito por Pix pelo seu painel. Ao pagar, seu banco pode pedir para autorizar o débito automático das próximas mensalidades — assim você não precisa se preocupar todo mês. O valor continua ${formatBRL(price)}.`,
+    `A partir da mensalidade de ${dueDate.toLocaleDateString('pt-BR')}, o pagamento é feito por Pix. Alguns dias antes do vencimento você recebe por e-mail o Pix para pagar (sem precisar entrar no painel). Ao pagar, seu banco pode pedir para autorizar o débito automático das próximas mensalidades. O valor continua ${formatBRL(price)}.`,
     'email',
     'charge-created',
   )
@@ -578,13 +579,7 @@ export async function processPixAutomaticCycles(): Promise<{ migrated: number; c
         prisma.subscription.update({ where: { id: sub.id }, data: { pixAutomaticAuthorizationId: auth.authorizationId } }),
         prisma.invoice.create({ data: { subscriptionId: sub.id, amount: price, status: 'pending', dueDate } }),
       ])
-      await sendNotification(
-        client.id,
-        'Sua mensalidade está disponível para pagamento',
-        `Sua mensalidade de ${formatBRL(price)} vence em ${dueDate.toLocaleDateString('pt-BR')}. Pague por Pix no seu painel: ao pagar, seu banco pode pedir para autorizar o débito das próximas mensalidades.`,
-        'email',
-        'charge-created',
-      )
+      await sendPixChargeEmail(sub.id, 'charge')
       result.created++
     } catch (err) {
       console.error('[pix-ciclo] erro ao gerar Pix', sub.id, err)
@@ -619,14 +614,7 @@ export async function processPixAutomaticCycles(): Promise<{ migrated: number; c
           prisma.invoice.update({ where: { id: late.id }, data: { status: 'overdue', overdueDay0SentAt: now } }),
           prisma.subscription.update({ where: { id: sub.id }, data: { status: 'overdue' } }),
         ])
-        await sendNotification(
-          sub.client.id,
-          'Pagamento em atraso',
-          `Identificamos um pagamento em atraso do plano ${sub.plan.name}. Pague pelo Pix no seu painel para manter seu site no ar.`,
-          'painel',
-          'payment-overdue',
-        )
-        if (sub.client.email) await sendOverdueDay0(sub.client.email, sub.client.name, null)
+        await sendPixChargeEmail(sub.id, 'overdue')
         result.overdue++
       }
     } catch (err) {
@@ -636,4 +624,50 @@ export async function processPixAutomaticCycles(): Promise<{ migrated: number; c
   }
 
   return result
+}
+
+// ─── E-mail de cobrança com o Pix (sem login) ─────────────────────────────────
+
+function escapeHtml(value: string) {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+/**
+ * Mensalidade em aberto por Pix: avisa no painel e por e-mail com o link de pagamento (sem login)
+ * e o Pix copia e cola. "charge" = mensalidade disponível; "overdue" = vencida (dia 0 do atraso).
+ */
+export async function sendPixChargeEmail(subscriptionId: string, kind: 'charge' | 'overdue') {
+  const sub = await prisma.subscription.findUnique({
+    where: { id: subscriptionId },
+    include: { client: { select: { id: true, name: true, email: true } }, plan: { select: { name: true } } },
+  })
+  if (!sub) return
+  const price = formatBRL(Number(sub.customPrice ?? 0))
+  const due = sub.nextDueDate ? sub.nextDueDate.toLocaleDateString('pt-BR') : ''
+  const link = paymentLink(sub.id)
+  const pix = await getMonthlyPix(sub.client.id).catch(() => null)
+
+  const title = kind === 'charge' ? 'Sua mensalidade está disponível para pagamento' : 'Pagamento em atraso'
+  const message =
+    kind === 'charge'
+      ? `Olá, ${sub.client.name.split(' ')[0]}! Sua mensalidade de ${price} vence em ${due}. Pague pelo Pix: é só abrir o link abaixo ou usar o código copia e cola. Ao pagar, seu banco pode pedir para autorizar o débito automático das próximas mensalidades.`
+      : `Olá, ${sub.client.name.split(' ')[0]}! Sua mensalidade de ${price} venceu${due ? ` em ${due}` : ''} e ainda não identificamos o pagamento. Regularize pelo Pix para manter seu site no ar — é só abrir o link abaixo ou usar o código copia e cola.`
+
+  const copyBlock = pix?.qrCodePayload && pix.status !== 'ACTIVE'
+    ? `<div style="margin:0 0 24px;padding:14px;border:1px dashed #d1d5db;border-radius:8px;background:#f9fafb;">
+        <p style="margin:0 0 6px;font-size:12px;color:#6b7280;">Pix copia e cola (válido por 24 h; depois, use o link para gerar outro):</p>
+        <p style="margin:0;font-family:monospace;font-size:12px;color:#111827;word-break:break-all;">${escapeHtml(pix.qrCodePayload)}</p>
+      </div>`
+    : ''
+
+  await prisma.notification.create({ data: { clientId: sub.client.id, title, message: `${message}\n\nPagar: ${link}`, channel: 'email' } })
+  try {
+    await sendEmail({
+      to: sub.client.email,
+      subject: title,
+      html: buildHtml(title, message, kind === 'charge' ? 'charge-created' : 'payment-overdue', copyBlock, link, 'Pagar com Pix'),
+    })
+  } catch (err) {
+    console.error('[pix] falha ao enviar e-mail de cobrança', sub.id, err)
+  }
 }
