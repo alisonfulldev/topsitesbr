@@ -83,20 +83,41 @@ function asaasError(context: string, err: unknown): never {
   throw new Error(`Pagamento (${context}): ${msg}`)
 }
 
+// Avisos de atraso do Asaas também por WhatsApp (vem desligado por padrão). Falha aqui não
+// impede a cobrança: só registra no log.
+async function enableOverdueWhatsapp(customerId: string) {
+  try {
+    const notifs = await asaasFetch<{ data: { id: string; event: string }[] }>(`/customers/${customerId}/notifications`)
+    const overdue = notifs.data.filter((n) => n.event === 'PAYMENT_OVERDUE')
+    if (!overdue.length) return
+    await asaasFetch('/notifications/batch', {
+      method: 'PUT',
+      body: JSON.stringify({ customer: customerId, notifications: overdue.map((n) => ({ id: n.id, whatsappEnabledForCustomer: true })) }),
+    })
+  } catch (err) {
+    console.error('[asaas] não foi possível ligar o WhatsApp nos avisos de atraso', customerId, err)
+  }
+}
+
 // ── Provider ──────────────────────────────────────────────────────────────────
 
 export class AsaasPaymentProvider implements PaymentProvider {
   async createCustomer(input: CreateCustomerInput): Promise<{ customerId: string }> {
     try {
+      const phone = only(input.phone)
+      // Celular (DDD + número, sem +55): o Asaas só manda WhatsApp/SMS para mobilePhone
+      const mobile = phone?.startsWith('55') && phone.length >= 12 ? phone.slice(2) : phone
       const customer = await asaasFetch<AsaasCustomer>('/customers', {
         method: 'POST',
         body: JSON.stringify({
           name: input.name,
           email: input.email,
           cpfCnpj: only(input.document),
-          phone: only(input.phone),
+          phone,
+          ...(mobile && (mobile.length === 10 || mobile.length === 11) ? { mobilePhone: mobile } : {}),
         }),
       })
+      if (mobile) await enableOverdueWhatsapp(customer.id)
       return { customerId: customer.id }
     } catch (err) {
       asaasError('createCustomer', err)
