@@ -71,12 +71,16 @@ export async function updateProposalAdmin(
 ): Promise<{ error?: string; success?: boolean }> {
   const proposal = await prisma.proposal.findUnique({
     where: { id: proposalId },
-    select: { id: true, clientId: true },
+    select: { id: true, clientId: true, status: true },
   })
   if (!proposal) return { error: 'Proposta não encontrada.' }
 
-  if (data.creationPrice !== undefined && (isNaN(data.creationPrice) || data.creationPrice < 5)) {
-    return { error: 'O valor mínimo para cobrança é R$ 5,00.' }
+  // O mínimo de R$ 5 só vale enquanto a proposta ainda vai gerar cobrança. Projetos já pagos
+  // (e os do plano mensal, que não têm taxa de criação) aceitam R$ 0.
+  if (data.creationPrice !== undefined) {
+    const willCharge = ['rascunho', 'enviada', 'aprovada'].includes(proposal.status)
+    if (isNaN(data.creationPrice) || data.creationPrice < 0) return { error: 'Informe um valor de criação válido.' }
+    if (willCharge && data.creationPrice < 5) return { error: 'O valor mínimo para cobrança é R$ 5,00.' }
   }
 
   await prisma.proposal.update({

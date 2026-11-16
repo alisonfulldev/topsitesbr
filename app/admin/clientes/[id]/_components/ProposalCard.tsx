@@ -60,6 +60,7 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
   const [siteId, setSiteId] = useState(proposal.siteId ?? '')
   const [creationPrice, setCreationPrice] = useState(String(proposal.creationPrice))
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle')
+  const [saveError, setSaveError] = useState('')
   const [transitionStatus, setTransitionStatus] = useState<'idle' | 'pending' | 'done' | 'error'>('idle')
   const [transitionError, setTransitionError] = useState('')
   const [resetStatus, setResetStatus] = useState<'idle' | 'pending' | 'done' | 'error'>('idle')
@@ -105,8 +106,9 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
         creationPrice: parseFloat(creationPrice.replace(',', '.')),
       })
       if (result.error) {
+        setSaveError(result.error)
         setSaveStatus('error')
-        setTimeout(() => setSaveStatus('idle'), 3000)
+        setTimeout(() => setSaveStatus('idle'), 5000)
       } else {
         setSaveStatus('saved')
         setEditMode(false)
@@ -383,7 +385,7 @@ export function ProposalCard({ proposal, sites, clientId }: Props) {
             </button>
           </div>
           {saveStatus === 'error' && (
-            <p className="text-xs text-red-600">Erro ao salvar.</p>
+            <p className="text-xs text-red-600">Erro ao salvar: {saveError}</p>
           )}
         </div>
       )}
