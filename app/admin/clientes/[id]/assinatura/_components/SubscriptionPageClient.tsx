@@ -12,6 +12,8 @@ type SubscriptionInfo = {
   nextDueDate: string | null
   planActivatedAt: string
   asaasSubscriptionId: string | null
+  /** Mensalidade por Pix do sistema (Pix Automático / plano mensal): sem troca de plano nem assinatura comum no Asaas */
+  pixFlow?: boolean
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -315,7 +317,8 @@ export function SubscriptionPageClient({
               </div>
             )}
           </div>
-          {/* Recriar assinatura no Asaas — para IDs inválidos / ambiente mock */}
+          {/* Recriar assinatura no Asaas — para IDs inválidos / ambiente mock (não vale para quem paga por Pix Automático) */}
+          {!subscription.pixFlow && (
           <div className="mt-4 pt-4 border-t border-gray-100">
             {recreateSuccess && (
               <p className="text-xs text-green-700 mb-2">{recreateSuccess}</p>
@@ -360,11 +363,12 @@ export function SubscriptionPageClient({
               </div>
             )}
           </div>
+          )}
         </div>
       ) : null}
 
-      {/* Trocar de Plano — só aparece quando já existe assinatura */}
-      {subscription && plans && plans.length > 1 && (
+      {/* Trocar de Plano — só aparece quando já existe assinatura (não vale para quem paga por Pix Automático) */}
+      {subscription && !subscription.pixFlow && plans && plans.length > 1 && (
         <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-3">
           <h3 className="text-sm font-semibold text-gray-700">Trocar de Plano</h3>
 

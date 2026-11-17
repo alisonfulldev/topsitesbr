@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { SubscriptionPageClient } from './_components/SubscriptionPageClient'
-import { subscriptionPrice } from '@/lib/monthly-plan'
+import { MONTHLY_PLAN_NAME, subscriptionPrice } from '@/lib/monthly-plan'
 
 export default async function AssinaturaPage({
   params,
@@ -20,7 +20,8 @@ export default async function AssinaturaPage({
         },
       },
     }),
-    prisma.plan.findMany({ orderBy: { price: 'asc' } }),
+    // O plano interno do plano mensal (valor fica em cada assinatura) não aparece como opção
+    prisma.plan.findMany({ where: { name: { not: MONTHLY_PLAN_NAME } }, orderBy: { price: 'asc' } }),
   ])
 
   if (!client) notFound()
@@ -62,6 +63,7 @@ export default async function AssinaturaPage({
                 nextDueDate: sub.nextDueDate?.toISOString() ?? null,
                 planActivatedAt: sub.planActivatedAt.toISOString(),
                 asaasSubscriptionId: sub.asaasSubscriptionId,
+                pixFlow: sub.customPrice != null || !!sub.pixAutomaticAuthorizationId,
               }
             : null
         }

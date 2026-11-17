@@ -37,6 +37,7 @@ interface AsaasPixAutomaticAuthorization {
   id: string
   status: PixAutomaticStatus
   subscriptionId?: string | null
+  startDate?: string | null
   payload?: string | null
   encodedImage?: string | null
   immediateQrCode?: {
@@ -54,6 +55,7 @@ function toPixAutomatic(a: AsaasPixAutomaticAuthorization): PixAutomaticAuthoriz
     qrCodePayload: a.immediateQrCode?.payload ?? a.payload ?? null,
     qrCodeImage: a.immediateQrCode?.encodedImage ?? a.encodedImage ?? null,
     expiresAt: a.immediateQrCode?.expirationDate ?? null,
+    startDate: a.startDate ?? null,
   }
 }
 

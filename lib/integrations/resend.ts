@@ -4,6 +4,13 @@ interface SendEmailOptions {
   html: string
 }
 
+// Trava: e-mail real nunca sai com link de localhost (scripts rodados na máquina local usam o .env de
+// desenvolvimento, em que o endereço do site cai em http://localhost:3000)
+const PUBLIC_SITE_URL = 'https://topsitebr.com.br'
+export function publicLinks(content: string) {
+  return content.replace(/https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/g, PUBLIC_SITE_URL)
+}
+
 export async function sendEmail(options: SendEmailOptions): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey || apiKey === 'mock') {
@@ -27,7 +34,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
       from,
       to: options.to,
       subject: options.subject,
-      html: options.html,
+      html: publicLinks(options.html),
       ...(bcc ? { bcc } : {}),
     }),
   })
@@ -74,8 +81,8 @@ export async function sendProspectingEmail(options: ProspectingEmailOptions): Pr
       from: options.from,
       to: options.to,
       subject: options.subject,
-      html: options.html,
-      text: options.text,
+      html: publicLinks(options.html),
+      text: publicLinks(options.text),
       headers: options.headers,
       ...(options.replyTo ? { reply_to: options.replyTo } : {}),
     }),

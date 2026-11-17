@@ -118,6 +118,11 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
       return handlePresentationPayment(chargeId)
     }
 
+    // Webhook repetido do Asaas: o pedido já foi confirmado
+    if (order.status === 'paid') {
+      return { ok: true, message: `Pedido ${chargeId} já estava pago.` }
+    }
+
     await prisma.order.update({
       where: { id: order.id },
       data: { status: 'paid' },
@@ -163,6 +168,12 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
     return d
   })()
 
+  // Se outra fatura da assinatura continua vencida (ex.: o cliente pagou a cobrança do mês seguinte,
+  // gerada adiantada, em vez da atual), a assinatura segue em atraso — senão a dívida some do sistema
+  const otherOverdue = await prisma.invoice.count({
+    where: { subscriptionId: subscription.id, status: 'overdue', id: { not: invoice.id } },
+  })
+
   await prisma.$transaction([
     prisma.invoice.update({
       where: { id: invoice.id },
@@ -171,11 +182,19 @@ export async function handlePaymentReceived(chargeId: string): Promise<{
     prisma.subscription.update({
       where: { id: subscription.id },
       data: {
-        status: 'active',
+        status: otherOverdue > 0 ? 'overdue' : 'active',
         ...(advancedNextDueDate ? { nextDueDate: advancedNextDueDate } : {}),
       },
     }),
   ])
+
+  if (otherOverdue > 0) {
+    await sendNotification(
+      null,
+      `Pagou a cobrança errada? — ${client.name}`,
+      `${client.name} pagou a cobrança com vencimento em ${invoice.dueDate.toLocaleDateString('pt-BR')}, mas ainda há ${otherOverdue} cobrança(s) vencida(s) anterior(es). Confira no Asaas e no admin.`,
+    )
+  }
 
   await sendNotification(
     client.id,
@@ -268,6 +287,16 @@ export async function handlePaymentOverdue(chargeId: string): Promise<{
     return { ok: false, message: `Fatura não encontrada para chargeId: ${chargeId}` }
   }
 
+  // Já paga no sistema (ex.: baixa manual) mas vencida no Asaas: não volta a cobrar o cliente
+  if (invoice.status === 'paid') {
+    console.warn(`[webhook:asaas] PAYMENT_OVERDUE de fatura já paga no sistema: ${chargeId}`)
+    return { ok: true, message: `Fatura ${chargeId} já estava paga no sistema — atraso ignorado.` }
+  }
+  // Webhook repetido: o aviso do dia 0 já saiu
+  if (invoice.status === 'overdue') {
+    return { ok: true, message: `Fatura ${chargeId} já estava em atraso.` }
+  }
+
   const { subscription } = invoice
   const { client } = subscription
 
@@ -308,7 +337,7 @@ export async function checkOverdueSubscriptions(): Promise<void> {
   const DAY_MS = 24 * 60 * 60 * 1000
 
   const overdueInvoices = await prisma.invoice.findMany({
-    where: { status: 'overdue' },
+    where: { status: 'overdue', subscription: { status: { not: 'canceled' } } },
     include: {
       subscription: {
         include: {

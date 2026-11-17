@@ -22,9 +22,10 @@ export async function confirmManualPayment(
 ): Promise<{ error?: string; success?: boolean }> {
   const [client, invoice] = await Promise.all([
     prisma.client.findUnique({ where: { id: clientId }, select: { name: true, email: true } }),
+    // A baixa vai na cobrança em aberto mais antiga (quita primeiro a dívida mais velha)
     prisma.invoice.findFirst({
       where: { subscriptionId, status: { in: ['pending', 'overdue'] } },
-      orderBy: { dueDate: 'desc' },
+      orderBy: { dueDate: 'asc' },
     }),
   ])
 
@@ -53,6 +54,8 @@ export async function confirmManualPayment(
     const sub = await prisma.subscription.findUnique({ where: { id: subscriptionId } })
     const nextDueDate = sub?.nextDueDate ? new Date(sub.nextDueDate) : null
     if (nextDueDate) nextDueDate.setMonth(nextDueDate.getMonth() + 1)
+    // Mensalidade pelo Pix do sistema paga por fora: fecha o Pix em aberto (o próximo ciclo gera outro)
+    const closePix = !!sub && !sub.asaasSubscriptionId && !!sub.pixAutomaticAuthorizationId
 
     await prisma.$transaction([
       prisma.invoice.update({
@@ -61,7 +64,7 @@ export async function confirmManualPayment(
       }),
       prisma.subscription.update({
         where: { id: subscriptionId },
-        data: { status: 'active', ...(nextDueDate ? { nextDueDate } : {}) },
+        data: { status: 'active', ...(nextDueDate ? { nextDueDate } : {}), ...(closePix ? { pixAutomaticAuthorizationId: null } : {}) },
       }),
     ])
     await sendPaymentRegularized(client.email, client.name)

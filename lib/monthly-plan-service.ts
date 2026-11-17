@@ -203,7 +203,7 @@ export async function getMonthlyPix(clientId: string): Promise<MonthlyPix | null
   let auth = await provider.getPixAutomaticAuthorization(subscription.pixAutomaticAuthorizationId)
 
   if (auth.status === 'ACTIVE') {
-    await activatePixAutomatic(subscription.id, auth.subscriptionId)
+    await activatePixAutomatic(subscription.id, auth.subscriptionId, auth.startDate)
     return { ...auth, isMock: false }
   }
 
@@ -232,18 +232,24 @@ export async function getMonthlyPix(clientId: string): Promise<MonthlyPix | null
 }
 
 /** Autorização ACTIVE: 1º mês do plano mensal (assinatura pendente) ou mensalidade do Site no Ar. */
-export async function activatePixAutomatic(subscriptionId: string, asaasSubscriptionId: string | null) {
+export async function activatePixAutomatic(subscriptionId: string, asaasSubscriptionId: string | null, startDate: string | null = null) {
   const sub = await prisma.subscription.findUnique({ where: { id: subscriptionId }, select: { status: true } })
   if (!sub) return false
-  if (sub.status === 'pending') return activateMonthlySubscription(subscriptionId, asaasSubscriptionId)
-  return activateCycleSubscription(subscriptionId, asaasSubscriptionId)
+  if (sub.status === 'pending') return activateMonthlySubscription(subscriptionId, asaasSubscriptionId, startDate)
+  return activateCycleSubscription(subscriptionId, asaasSubscriptionId, startDate)
 }
 
 /**
  * Site no Ar (novos clientes): a mensalidade em aberto foi paga pelo Pix que autoriza o débito
  * automático. A partir daqui o Asaas gera as próximas cobranças. Idempotente.
  */
-async function activateCycleSubscription(subscriptionId: string, asaasSubscriptionId: string | null) {
+// O próximo vencimento é o início das cobranças automáticas no Asaas (definido na autorização):
+// assim o sistema e o débito do banco andam juntos, inclusive quando o cliente paga atrasado.
+function dueFromStart(startDate: string | null, fallback: Date) {
+  return startDate ? new Date(`${startDate.slice(0, 10)}T12:00:00`) : fallback
+}
+
+async function activateCycleSubscription(subscriptionId: string, asaasSubscriptionId: string | null, startDate: string | null = null) {
   const current = await prisma.subscription.findUnique({
     where: { id: subscriptionId },
     include: {
@@ -269,7 +275,7 @@ async function activateCycleSubscription(subscriptionId: string, asaasSubscripti
     where: { id: subscriptionId, asaasSubscriptionId: null, status: { in: ['active', 'overdue'] } },
     data: {
       status: 'active',
-      nextDueDate: addMonths(baseDue, 1),
+      nextDueDate: dueFromStart(startDate, addMonths(baseDue, 1)),
       ...(asaasSubscriptionId ? { asaasSubscriptionId } : {}),
     },
   })
@@ -305,14 +311,14 @@ async function activateCycleSubscription(subscriptionId: string, asaasSubscripti
  * Primeiro pagamento confirmado (autorização ACTIVE): ativa a assinatura (sem fidelidade),
  * registra a fatura do primeiro mês e avisa o admin para publicar o site. Idempotente.
  */
-export async function activateMonthlySubscription(subscriptionId: string, asaasSubscriptionId: string | null) {
+export async function activateMonthlySubscription(subscriptionId: string, asaasSubscriptionId: string | null, startDate: string | null = null) {
   const now = new Date()
   const { count } = await prisma.subscription.updateMany({
     where: { id: subscriptionId, status: 'pending' },
     data: {
       status: 'active',
       planActivatedAt: now,
-      nextDueDate: addMonths(now, 1),
+      nextDueDate: dueFromStart(startDate, addMonths(now, 1)),
       ...(asaasSubscriptionId ? { asaasSubscriptionId } : {}),
     },
   })
@@ -408,7 +414,9 @@ export async function handlePixAutomaticAuthorizationEvent(event: string, author
 
   if (event === 'PIX_AUTOMATIC_RECURRING_AUTHORIZATION_ACTIVATED') {
     const auth = await getPaymentProvider().getPixAutomaticAuthorization(authorizationId)
-    const activated = await activatePixAutomatic(subscription.id, auth.subscriptionId)
+    // Evento forjado ou fora de ordem: só ativa o que o Asaas confirma como ativo
+    if (auth.status !== 'ACTIVE') return { ok: false, message: `Autorização ${authorizationId} não está ativa no Asaas (${auth.status}).` }
+    const activated = await activatePixAutomatic(subscription.id, auth.subscriptionId, auth.startDate)
     return { ok: true, message: activated ? `Pix Automático de ${subscription.client.name} ativado.` : 'Já estava ativo.' }
   }
 
@@ -528,11 +536,12 @@ export async function processPixAutomaticCycles(): Promise<{ migrated: number; c
   const result = { migrated: 0, created: 0, activated: 0, overdue: 0, errors: 0 }
   const provider = getPaymentProvider()
 
-  // 0) Assinaturas antigas com a próxima mensalidade chegando: migram para o Pix Automático
-  //    (só com a migração automática ligada no admin — começa desligada até o teste com 1 cliente)
+  // 0) Assinaturas antigas em dia migram na hora para o Pix Automático: nelas o Asaas gera a cobrança
+  //    do mês seguinte ~30 dias antes e o cliente acaba pagando a cobrança errada (a futura), deixando
+  //    a atual vencida. Quem está em atraso migra quando regularizar. (Só com a migração ligada no admin.)
   const legacy = (await isPixMigrationEnabled())
     ? await prisma.subscription.findMany({
-        where: { status: 'active', asaasSubscriptionId: { not: null }, pixAutomaticAuthorizationId: null, nextDueDate: { lte: limit } },
+        where: { status: 'active', asaasSubscriptionId: { not: null }, pixAutomaticAuthorizationId: null },
         select: { id: true },
       })
     : []
@@ -605,7 +614,7 @@ export async function processPixAutomaticCycles(): Promise<{ migrated: number; c
     try {
       const auth = await provider.getPixAutomaticAuthorization(sub.pixAutomaticAuthorizationId!)
       if (auth.status === 'ACTIVE') {
-        if (await activatePixAutomatic(sub.id, auth.subscriptionId)) result.activated++
+        if (await activatePixAutomatic(sub.id, auth.subscriptionId, auth.startDate)) result.activated++
         continue
       }
       const late = sub.invoices[0]

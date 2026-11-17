@@ -1,3 +1,4 @@
+import { AsaasPaymentProvider } from './asaas-provider'
 export interface CreateCustomerInput {
   name: string
   email: string
@@ -67,6 +68,8 @@ export interface PixAutomaticAuthorization {
   /** Imagem do QR Code em base64 (PNG) */
   qrCodeImage: string | null
   expiresAt: string | null
+  /** Início das cobranças automáticas (YYYY-MM-DD) — vira o próximo vencimento após o pagamento */
+  startDate: string | null
 }
 
 export interface PaymentProvider {
@@ -178,6 +181,7 @@ const mockProvider: PaymentProvider = {
       qrCodePayload: MOCK_PIX_PAYLOAD,
       qrCodeImage: null,
       expiresAt: addDays(1).toISOString(),
+      startDate: input.recurringStartDate,
     }
   },
 
@@ -189,6 +193,7 @@ const mockProvider: PaymentProvider = {
       qrCodePayload: MOCK_PIX_PAYLOAD,
       qrCodeImage: null,
       expiresAt: addDays(1).toISOString(),
+      startDate: null,
     }
   },
 
@@ -204,9 +209,6 @@ let _provider: PaymentProvider | undefined
 export function getPaymentProvider(): PaymentProvider {
   if (_provider) return _provider
   if (process.env.PAYMENT_DRIVER === 'asaas') {
-    const { AsaasPaymentProvider } = require('./asaas-provider') as {
-      AsaasPaymentProvider: new () => PaymentProvider
-    }
     _provider = new AsaasPaymentProvider()
   } else {
     _provider = mockProvider

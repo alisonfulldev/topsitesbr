@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateAsaasWebhook } from '@/lib/integrations/asaas'
+import { asaasFetch, validateAsaasWebhook as _validate } from '@/lib/integrations/asaas'
 import { sendNotification } from '@/lib/notifications'
 import {
   handlePaymentReceived,
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   const token = req.headers.get('asaas-access-token') ?? ''
 
   // Token presente mas inválido → rejeita. Sem token = health check do Asaas.
-  if (token && !validateAsaasWebhook(token)) {
+  if (token && !_validate(token)) {
     console.warn('[webhook:asaas] Token inválido recebido.')
     return NextResponse.json({ error: 'Token inválido.' }, { status: 401 })
   }
@@ -72,6 +72,17 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    // Segurança: o webhook pode chegar sem token. Antes de dar baixa ou marcar atraso, confere o
+    // status real da cobrança no Asaas — um aviso forjado não muda nada.
+    if ((event === 'PAYMENT_RECEIVED' || event === 'PAYMENT_CONFIRMED' || event === 'PAYMENT_OVERDUE') && process.env.PAYMENT_DRIVER === 'asaas') {
+      const real = await asaasFetch<{ status: string }>(`/payments/${payment.id}`).catch(() => null)
+      const expected = event === 'PAYMENT_OVERDUE' ? ['OVERDUE'] : ['RECEIVED', 'CONFIRMED', 'RECEIVED_IN_CASH']
+      if (!real || !expected.includes(real.status)) {
+        console.warn(`[webhook:asaas] ${event} não confere com o Asaas (status real: ${real?.status ?? 'não encontrado'}) — ignorado. chargeId=${payment.id}`)
+        return NextResponse.json({ ok: true, message: 'Evento não confere com o Asaas — ignorado.' })
+      }
+    }
+
     // ── PAYMENT_RECEIVED / PAYMENT_CONFIRMED ──────────────────────────────────
     if (event === 'PAYMENT_RECEIVED' || event === 'PAYMENT_CONFIRMED') {
       let result: { ok: boolean; message: string }
