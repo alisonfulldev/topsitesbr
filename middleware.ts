@@ -1,7 +1,12 @@
-import { withAuth } from 'next-auth/middleware'
-import { NextResponse } from 'next/server'
+import { withAuth, type NextRequestWithAuth } from 'next-auth/middleware'
+import { NextResponse, type NextFetchEvent, type NextRequest } from 'next/server'
 
-export default withAuth(
+// Crawlers de IA / SEO bloqueados em todo o site (antes ficava no vercel.json,
+// que só vale na Vercel).
+const BLOCKED_BOTS =
+  /(GPTBot|ClaudeBot|anthropic-ai|CCBot|Bytespider|meta-externalagent|Amazonbot|cohere-ai|Diffbot|ImagesiftBot|Timpibot|omgili|img2dataset|PanguBot|AhrefsBot|SemrushBot|MJ12bot|DotBot|BLEXBot|DataForSeoBot|Barkrowler|serpstatbot|SeekportBot|MegaIndex|PetalBot|YandexBot|YandexImages|Baiduspider|Sogou|360Spider|Yeti\/|SeznamBot|coccocbot)/i
+
+const authMiddleware = withAuth(
   function middleware(req) {
     const { pathname } = req.nextUrl
     const token = req.nextauth.token
@@ -48,6 +53,20 @@ export default withAuth(
   }
 )
 
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  if (BLOCKED_BOTS.test(req.headers.get('user-agent') ?? '')) {
+    return new NextResponse(null, { status: 403 })
+  }
+
+  const { pathname } = req.nextUrl
+  if (pathname.startsWith('/admin') || pathname.startsWith('/painel')) {
+    return authMiddleware(req as NextRequestWithAuth, event)
+  }
+
+  return NextResponse.next()
+}
+
 export const config = {
-  matcher: ['/admin/:path*', '/painel/:path*'],
+  // Tudo, exceto assets estáticos do Next (o bloqueio de bots vale para o site inteiro)
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }

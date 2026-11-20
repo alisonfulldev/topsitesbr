@@ -1,0 +1,49 @@
+# Instalação leve na VPS: Caddy (HTTPS automático) + os apps. Sem painel.
+# Fica em /opt/apps na VPS. Comandos úteis (rodar em /opt/apps):
+#   docker compose ps                      → status
+#   docker compose logs -f topsites        → logs ao vivo
+#   docker compose pull topsites && docker compose up -d topsites   → atualizar
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  caddy:
+    image: caddy:2.8
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    logging: *logging
+
+  topsites:
+    image: ghcr.io/alisonfulldev/topsitesbr:latest
+    restart: unless-stopped
+    env_file: ./topsites.env
+    environment:
+      # Limita a memória do Node para caber na VPS de 2 GB junto com o agendamo
+      NODE_OPTIONS: --max-old-space-size=640
+    mem_limit: 900m
+    logging: *logging
+
+  # agendamo (meetchat.com.br): descomentar quando a imagem dele estiver pronta
+  # agendamo:
+  #   image: ghcr.io/alisonfulldev/agendamo:latest
+  #   restart: unless-stopped
+  #   env_file: ./agendamo.env
+  #   environment:
+  #     NODE_OPTIONS: --max-old-space-size=640
+  #   mem_limit: 900m
+  #   logging: *logging
+
+volumes:
+  caddy_data:
+  caddy_config:

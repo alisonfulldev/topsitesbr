@@ -1,5 +1,7 @@
 generator client {
   provider = "prisma-client-js"
+  // native = máquina local; os outros dois = imagem Docker x86 e ARM (Oracle Ampere)
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {

@@ -1,0 +1,7 @@
+# Contexto do Dockerfile.ci: só o que a imagem copia (o build já rodou no runner)
+*
+!public
+!.next/standalone
+!.next/static
+!node_modules/.prisma
+!scripts/run-cron.mjs

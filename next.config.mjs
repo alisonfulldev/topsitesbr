@@ -2,8 +2,9 @@
 // Cabeçalhos básicos de segurança. A CSP é propositalmente mínima: só impede o
 // site de ser embutido por terceiros (clickjacking), plugins e troca de <base>,
 // sem restringir scripts — o Meta Pixel e os scripts inline do Next continuam.
-// HSTS já é enviado pela Vercel.
+// HSTS enviado aqui porque, fora da Vercel, ninguém mais o adiciona.
 const securityHeaders = [
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
@@ -12,6 +13,8 @@ const securityHeaders = [
 ]
 
 const nextConfig = {
+  // Gera .next/standalone (servidor Node enxuto) usado pelo Dockerfile da VPS
+  output: 'standalone',
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
   },

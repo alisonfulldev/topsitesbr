@@ -1,0 +1,20 @@
+# Caddy emite e renova o SSL (Let's Encrypt) sozinho assim que o DNS apontar para a VPS.
+
+topsitebr.com.br {
+	encode zstd gzip
+	reverse_proxy topsites:3000
+}
+
+www.topsitebr.com.br {
+	redir https://topsitebr.com.br{uri} permanent
+}
+
+# agendamo: descomentar junto com o serviço no docker-compose.yml
+# meetchat.com.br {
+# 	encode zstd gzip
+# 	reverse_proxy agendamo:3000
+# }
+#
+# www.meetchat.com.br {
+# 	redir https://meetchat.com.br{uri} permanent
+# }

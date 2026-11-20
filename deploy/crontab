@@ -1,0 +1,9 @@
+# Crons do TopSitesAdm (substituem os do vercel.json). Horários em UTC.
+# Instalado pelo setup-vps.sh em /etc/cron.d/apps. Log: /var/log/apps-cron.log
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# 08h Brasília
+0 11 * * * root cd /opt/apps && docker compose exec -T topsites node scripts/run-cron.mjs due-date-reminder >> /var/log/apps-cron.log 2>&1
+# 09h Brasília
+0 12 * * * root cd /opt/apps && docker compose exec -T topsites node scripts/run-cron.mjs sync-subscriptions >> /var/log/apps-cron.log 2>&1

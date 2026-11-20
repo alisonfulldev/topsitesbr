@@ -1,0 +1,4 @@
+# Arquivos que rodam no Linux da VPS: sempre LF (CRLF quebra bash/cron)
+deploy/** text eol=lf
+*.sh text eol=lf
+Dockerfile* text eol=lf
