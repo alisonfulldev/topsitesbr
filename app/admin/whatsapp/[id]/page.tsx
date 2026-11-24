@@ -8,6 +8,7 @@ import { Badge, Card } from '@/components/ui'
 import { windowOpen } from '@/lib/whatsapp/rules'
 import { WA_AUTHOR, WA_CATEGORY, WA_KIND, WA_MESSAGE_STATUS, fmtDateTimeSP } from '@/lib/whatsapp/labels'
 import { ContactControls } from './ContactControls'
+import { ReplyBox } from './ReplyBox'
 
 export const dynamic = 'force-dynamic'
 
@@ -72,6 +73,7 @@ export default async function WhatsappContactPage({ params }: { params: { id: st
               )
             })}
           </div>
+          <ReplyBox contactId={contact.id} windowOpen={windowOpen(contact, now)} blocked={!!contact.optedOutAt} />
         </Card>
 
         <div className="order-1 space-y-4 lg:order-2">

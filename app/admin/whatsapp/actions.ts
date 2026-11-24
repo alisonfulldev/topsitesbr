@@ -6,8 +6,8 @@ import { z } from 'zod'
 import type { WaCategory } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { exchangeCode, listPhoneNumbers, phoneStatus, requestSync, saveConnection, subscribeApp } from '@/lib/whatsapp/cloud-api'
-import { saveWaConfig, templateVarCount, waConfigSchema, type WaConfig } from '@/lib/whatsapp/config'
+import { exchangeCode, listPhoneNumbers, phoneStatus, requestSync, saveConnection, sendText, subscribeApp } from '@/lib/whatsapp/cloud-api'
+import { getWaConfig, saveWaConfig, templateVarCount, waConfigSchema, type WaConfig } from '@/lib/whatsapp/config'
 import { reanalyzeContact, runWhatsappAi, type RunResult } from '@/lib/whatsapp/engine'
 
 type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string }
@@ -54,6 +54,39 @@ export async function setPausedAction(contactId: string, paused: boolean): Promi
 export async function setOptOutAction(contactId: string, optedOut: boolean): Promise<Result> {
   if (!(await requireAdmin())) return { ok: false, error: 'Não autorizado.' }
   await prisma.waContact.update({ where: { id: contactId }, data: { optedOutAt: optedOut ? new Date() : null } })
+  refresh(contactId)
+  return { ok: true }
+}
+
+// Resposta manual pelo painel: sempre envia de verdade (a trava de simulação é só para a IA)
+export async function sendManualAction(contactId: string, text: string): Promise<Result> {
+  if (!(await requireAdmin())) return { ok: false, error: 'Não autorizado.' }
+  const body = text.trim()
+  if (!body) return { ok: false, error: 'Mensagem vazia.' }
+  if (body.length > 4000) return { ok: false, error: 'Mensagem longa demais (máx. 4.000 caracteres).' }
+  const contact = await prisma.waContact.findUnique({ where: { id: contactId } })
+  if (!contact) return { ok: false, error: 'Contato não encontrado.' }
+  if (!contact.lastInboundAt || Date.now() - contact.lastInboundAt.getTime() >= 24 * 60 * 60 * 1000) {
+    return { ok: false, error: 'Janela de 24h fechada: só dá para enviar modelo aprovado.' }
+  }
+  const config = await getWaConfig()
+  let waMessageId: string | null = null
+  try {
+    waMessageId = await sendText(contact.waId, body)
+  } catch (err) {
+    return { ok: false, error: 'O WhatsApp recusou: ' + errorText(err) }
+  }
+  const now = new Date()
+  await prisma.waMessage.create({
+    data: { contactId, waMessageId, direction: 'out', author: 'voce', type: 'text', body, status: 'enviada', sentAt: now },
+  })
+  await prisma.waContact.update({
+    where: { id: contactId },
+    data: {
+      lastOutboundAt: now, lastMessageAt: now, awaitingReply: false, followUpCount: 0,
+      humanUntil: new Date(now.getTime() + config.humanTakeoverHours * 60 * 60 * 1000),
+    },
+  })
   refresh(contactId)
   return { ok: true }
 }
