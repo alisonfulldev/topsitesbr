@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { getTermsSnapshot } from '@/lib/terms-content'
+import { PRESENTATION_TERMS_VERSION } from '@/lib/config'
 import LeadPage from './_components/LeadPage'
 
 export default async function ModelosTokenPage({ params }: { params: { token: string } }) {
@@ -12,7 +13,7 @@ export default async function ModelosTokenPage({ params }: { params: { token: st
   if (!p || p.status === 'cancelado') notFound()
 
   const contractName = p.leadPersonName?.trim() || p.leadName.trim()
-  const contractHtml = getTermsSnapshot('apresentacao-1.0').replace('{{NOME}}', contractName)
+  const contractHtml = getTermsSnapshot(PRESENTATION_TERMS_VERSION).replace('{{NOME}}', contractName)
 
   return (
     <LeadPage

@@ -6,9 +6,8 @@ import { getPaymentProvider } from '@/lib/payments/provider'
 import { validateDocument } from '@/lib/cpf'
 import { sendPresentationGateEmail } from '@/lib/emails/presentation'
 import { sendEmail } from '@/lib/integrations/resend'
-import { APP_URL, ADMIN_NOTIFICATION_EMAIL } from '@/lib/config'
+import { APP_URL, ADMIN_NOTIFICATION_EMAIL, PRESENTATION_TERMS_VERSION } from '@/lib/config'
 
-const PRESENTATION_TERMS_VERSION = 'apresentacao-1.0'
 
 function slugify(name: string): string {
   const base = name

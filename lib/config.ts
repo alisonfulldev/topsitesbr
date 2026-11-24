@@ -14,3 +14,5 @@ export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000
 export const TERMS_VERSION = '1.3'
 // Reativações de clientes antigos (assinatura comum Pix/boleto/cartão) continuam na versão anterior
 export const LEGACY_TERMS_VERSION = '1.2'
+// Contrato aceito na página /modelos/[token] (apresentação de modelos)
+export const PRESENTATION_TERMS_VERSION = 'apresentacao-1.1'
