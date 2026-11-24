@@ -7,3 +7,5 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 0 11 * * * root cd /opt/apps && docker compose exec -T topsites node scripts/run-cron.mjs due-date-reminder >> /var/log/apps-cron.log 2>&1
 # 09h Brasília
 0 12 * * * root cd /opt/apps && docker compose exec -T topsites node scripts/run-cron.mjs sync-subscriptions >> /var/log/apps-cron.log 2>&1
+# IA do WhatsApp: a cada minuto (respostas, follow-ups, campanhas). Só os erros vão para o log.
+* * * * * root cd /opt/apps && docker compose exec -T topsites node scripts/run-cron.mjs whatsapp-ia > /dev/null 2>> /var/log/apps-cron.log

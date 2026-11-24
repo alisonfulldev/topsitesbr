@@ -26,6 +26,7 @@ const navItems = [
   { href: '/admin/orcamentos', label: 'Orçamentos' },
   { href: '/admin/apresentacoes', label: 'Apresentações' },
   { href: '/admin/prospeccao', label: 'Prospecção' },
+  { href: '/admin/whatsapp', label: 'WhatsApp IA' },
   { href: '/admin/site', label: 'Site' },
 ]
 

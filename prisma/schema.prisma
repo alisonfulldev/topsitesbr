@@ -164,6 +164,7 @@ model Client {
   proposals         Proposal[]
   contractAcceptances ContractAcceptance[]
   onlineProposals     OnlineProposal[]
+  waContacts          WaContact[]
 
   @@map("clients")
 }
@@ -929,4 +930,118 @@ model OnlineProposalEmail {
   @@unique([proposalId, round, step])
   @@index([status, scheduledAt])
   @@map("online_proposal_emails")
+}
+
+// ─── WhatsApp com IA (follow-up e ofertas pela Cloud API, número em coexistência) ──
+
+enum WaCategory {
+  nao_classificado
+  cliente
+  lead
+  pessoal
+  revisar
+}
+
+model WaContact {
+  id              String     @id @default(uuid())
+  // Número como o WhatsApp manda: só dígitos, com DDI (ex: 5518996742364)
+  waId            String     @unique @map("wa_id")
+  name            String?
+  category        WaCategory @default(nao_classificado)
+  // true = você definiu a categoria no painel; a IA não muda mais
+  categoryByAdmin Boolean    @default(false) @map("category_by_admin")
+  summary         String?    @db.Text
+  interest        String?
+  clientId        String?    @map("client_id")
+  aiPaused        Boolean    @default(false) @map("ai_paused")
+  // Você respondeu pelo celular: a IA fica quieta com esse contato até esta data
+  humanUntil      DateTime?  @map("human_until")
+  optedOutAt      DateTime?  @map("opted_out_at")
+  lastInboundAt   DateTime?  @map("last_inbound_at")
+  lastOutboundAt  DateTime?  @map("last_outbound_at")
+  lastMessageAt   DateTime?  @map("last_message_at")
+  // A última mensagem é do contato e ainda não foi respondida
+  awaitingReply   Boolean    @default(false) @map("awaiting_reply")
+  // Follow-ups enviados desde a última mensagem do contato
+  followUpCount   Int        @default(0) @map("follow_up_count")
+  lastOfferAt     DateTime?  @map("last_offer_at")
+  needsAnalysis   Boolean    @default(true) @map("needs_analysis")
+  analyzedAt      DateTime?  @map("analyzed_at")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+
+  client        Client?          @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  messages      WaMessage[]
+  campaignSends WaCampaignSend[]
+
+  @@index([category])
+  @@index([awaitingReply])
+  @@index([needsAnalysis])
+  @@index([lastMessageAt])
+  @@map("wa_contacts")
+}
+
+model WaMessage {
+  id          String   @id @default(uuid())
+  contactId   String   @map("contact_id")
+  waMessageId String?  @unique @map("wa_message_id")
+  // in = do contato; out = seu (celular), da IA ou de campanha
+  direction   String
+  // contato | voce | ia | sistema
+  author      String
+  // resposta | follow_up | oferta | descadastro (só nas mensagens da IA/sistema)
+  kind        String?
+  type        String   @default("text")
+  body        String   @db.Text
+  // recebida | historico | enviada | entregue | lida | falhou | simulada
+  status      String
+  error       String?
+  aiReason    String?  @map("ai_reason") @db.Text
+  campaignId  String?  @map("campaign_id")
+  sentAt      DateTime @map("sent_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  contact WaContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@index([contactId, sentAt])
+  @@index([author, sentAt])
+  @@map("wa_messages")
+}
+
+model WaCampaign {
+  id               String       @id @default(uuid())
+  name             String
+  // Descrição da oferta para a IA: o que é, preço, prazo, para quem faz sentido
+  offer            String       @db.Text
+  categories       WaCategory[]
+  // Modelo aprovado na Meta, usado quando a janela de 24h está fechada
+  templateName     String?      @map("template_name")
+  templateLanguage String       @default("pt_BR") @map("template_language")
+  // Texto do modelo com {{1}}, {{2}}... (a IA preenche as variáveis)
+  templateBody     String?      @map("template_body") @db.Text
+  // rascunho | ativa | pausada | concluida
+  status           String       @default("rascunho")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  sends WaCampaignSend[]
+
+  @@map("wa_campaigns")
+}
+
+model WaCampaignSend {
+  id         String   @id @default(uuid())
+  campaignId String   @map("campaign_id")
+  contactId  String   @map("contact_id")
+  // enviado | simulado | pulado | falhou
+  status     String
+  reason     String?  @db.Text
+  messageId  String?  @map("message_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  campaign WaCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  contact  WaContact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, contactId])
+  @@map("wa_campaign_sends")
 }

@@ -26,7 +26,7 @@ export async function setup() {
   const TEST_DB_URL = `postgresql://postgres:postgres@127.0.0.1:${PORT}/topsite_test`
   const dataDir = path.join(os.tmpdir(), `topsite-test-pg-${process.pid}`)
   fs.rmSync(dataDir, { recursive: true, force: true })
-  pg = new EmbeddedPostgres({ databaseDir: dataDir, user: 'postgres', password: 'postgres', port: PORT, persistent: true, onLog: () => {}, onError: () => {} })
+  pg = new EmbeddedPostgres({ databaseDir: dataDir, user: 'postgres', password: 'postgres', port: PORT, persistent: true, initdbFlags: ['--encoding=UTF8', '--locale=C'], onLog: () => {}, onError: () => {} })
   await pg.initialise()
   await pg.start()
   await pg.createDatabase('topsite_test')
