@@ -35,7 +35,7 @@ const ts = (d: Date) => String(Math.floor(d.getTime() / 1000))
 
 const decision = (over: Partial<Decision> = {}): Decision => ({
   categoria: 'lead', resumo: 'Quer um site para a barbearia', interesse: 'mini site', acao: 'enviar',
-  mensagem: 'Oi! Faço sim, o mini site sai por R$ 97.', parametros: [], motivo: 'Respondeu a dúvida de preço', ...over,
+  mensagem: 'Oi! Faço sim, sites para barbearia. Quer ver uns modelos?', parametros: [], motivo: 'Respondeu a dúvida', ...over,
 })
 
 let seq = 0
@@ -83,7 +83,7 @@ describe('resposta automática', () => {
     c = await contactOf('5518911112222')
     expect(c.category).toBe('lead')
     expect(c.awaitingReply).toBe(false)
-    expect(c.messages.at(-1)).toMatchObject({ author: 'ia', kind: 'resposta', status: 'simulada', body: 'Oi! Faço sim, o mini site sai por R$ 97.' })
+    expect(c.messages.at(-1)).toMatchObject({ author: 'ia', kind: 'resposta', status: 'simulada', body: 'Oi! Faço sim, sites para barbearia. Quer ver uns modelos?' })
   })
 
   it('espera o contato terminar de digitar antes de responder', async () => {
@@ -97,7 +97,7 @@ describe('resposta automática', () => {
     await inbound('5518911112222', 'Oi, quanto custa um site?')
     decideMock.mockResolvedValueOnce(decision())
     await runWhatsappAi()
-    expect(sendText).toHaveBeenCalledWith('5518911112222', 'Oi! Faço sim, o mini site sai por R$ 97.')
+    expect(sendText).toHaveBeenCalledWith('5518911112222', 'Oi! Faço sim, sites para barbearia. Quer ver uns modelos?')
 
     const out = (await contactOf('5518911112222')).messages.at(-1)!
     expect(out.status).toBe('enviada')
@@ -179,6 +179,35 @@ describe('resposta automática', () => {
     const c = await contactOf('551895556666')
     expect(c.clientId).toBe(cli.id)
     expect(c.category).toBe('cliente')
+  })
+})
+
+describe('valores', () => {
+  it('a IA escreveu um preço: não envia, manda o aviso fixo e passa para você', async () => {
+    await inbound('5518911112222', 'Quanto custa?')
+    decideMock.mockResolvedValueOnce(decision({ mensagem: 'Sai por R$ 197 + R$ 29/mês!' }))
+    expect((await runWhatsappAi()).chamarHumano).toBe(1)
+    const c = await contactOf('5518911112222')
+    const out = c.messages.filter((m) => m.direction === 'out')
+    expect(out).toHaveLength(1)
+    expect(out[0].body).not.toMatch(/197|29/)
+    expect(c.humanUntil!.getTime()).toBeGreaterThan(NOW.getTime())
+    expect(await prisma.notification.count({ where: { title: { contains: 'precisa de você' } } })).toBe(1)
+  })
+
+  it('follow-up com preço não sai', async () => {
+    await prisma.waContact.create({ data: { waId: '5518955559999', category: 'lead', needsAnalysis: false, lastInboundAt: ago(22 * HOUR), lastMessageAt: ago(21 * HOUR) } })
+    decideMock.mockResolvedValue(decision({ mensagem: 'Só 197 reais, aproveita!' }))
+    await runWhatsappAi()
+    expect(await prisma.waMessage.count({ where: { kind: 'follow_up' } })).toBe(0)
+  })
+
+  it('com a opção desligada, a IA pode falar valores', async () => {
+    await saveWaConfig({ ...DEFAULT_WA_CONFIG, priceToHuman: false })
+    await inbound('5518911112222', 'Quanto custa?')
+    decideMock.mockResolvedValueOnce(decision({ mensagem: 'Sai por R$ 197.' }))
+    await runWhatsappAi()
+    expect((await contactOf('5518911112222')).messages.at(-1)!.body).toBe('Sai por R$ 197.')
   })
 })
 

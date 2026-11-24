@@ -69,9 +69,23 @@ export function ConfigForm({ initial }: { initial: WaConfig }) {
         <h3 className="mb-4 text-sm font-semibold text-gray-900">O que a IA sabe sobre o negócio</h3>
         <div className="space-y-4">
           <Field label="Nome que a IA usa"><input className={field} value={config.assistantName} onChange={(e) => set('assistantName', e.target.value)} /></Field>
-          <Field label="Produtos, preços e regras" hint="A IA só fala o que está aqui: não inventa preço, prazo ou desconto. Quando não souber, chama você.">
-            <textarea className={field} rows={14} value={config.businessContext} onChange={(e) => set('businessContext', e.target.value)} />
+          <Field label="Produtos, serviços e regras" hint="A IA só fala o que está aqui: não inventa prazo, desconto nem promessa. Quando não souber, chama você.">
+            <textarea className={field} rows={12} value={config.businessContext} onChange={(e) => set('businessContext', e.target.value)} />
           </Field>
+          <Check
+            checked={config.priceToHuman}
+            onChange={(v) => set('priceToHuman', v)}
+            title="A IA não fala de valores: quando perguntarem preço, ela passa para você"
+            hint="Ela avisa que o responsável vai passar os valores, pausa naquele contato e te notifica. Mensagens com “R$”, “reais” ou “/mês” são bloqueadas mesmo se a IA errar."
+          />
+        </div>
+      </Card>
+
+      <Card>
+        <h3 className="mb-4 text-sm font-semibold text-gray-900">Para revisar antes de ligar os envios</h3>
+        <div className="space-y-2 text-xs text-gray-600">
+          <p>A IA lê as datas e as mensagens que você mandou pelo celular: se você já respondeu, já passou orçamento ou estava negociando, ela não repete nem contradiz.</p>
+          <p>Quando você responde um contato pelo celular, ela fica quieta com ele pelo tempo definido em Respostas.</p>
         </div>
       </Card>
 

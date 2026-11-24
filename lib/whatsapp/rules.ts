@@ -115,6 +115,20 @@ export function offerAllowed(c: ContactState, now: Date, categories: WaCategory[
   return true
 }
 
+// Trava de segurança do "a IA não fala de valores": qualquer menção a dinheiro bloqueia o envio,
+// mesmo que a IA tenha ignorado a instrução.
+const PRICE_PATTERNS = [
+  /r\$\s*\d/i,
+  /\d[\d.,]*\s*(reais|real|conto|contos|pila)\b/i,
+  /\d[\d.,]*\s*(\/|por|ao)\s*m[eê]s\b/i,
+  /\d[\d.,]*\s*mensa(is|l|lidade)\b/i,
+  /\b\d{1,3}(\.\d{3})*,\d{2}\b/,
+]
+
+export function mentionsPrice(text: string) {
+  return PRICE_PATTERNS.some((re) => re.test(text))
+}
+
 // Valores de variáveis de modelo: a Meta recusa quebra de linha, tab e mais de 4 espaços seguidos
 export function cleanTemplateParam(value: string) {
   return value.replace(/[\r\n\t]+/g, ' ').replace(/ {2,}/g, ' ').trim().slice(0, 300)

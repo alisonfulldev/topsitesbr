@@ -11,7 +11,7 @@ import { AiRefusal, aiConfigured, decide, type Decision, type Task, type Templat
 import { sendTemplate, sendText } from './cloud-api'
 import { renderTemplate, templateVarCount, type WaConfig, getWaConfig } from './config'
 import {
-  DAY_MS, HOUR_MS, REPLY_DEBOUNCE_MS, WINDOW_MS, blockReason, cleanTemplateParam, followUpDue, offerAllowed, phoneVariants, samePhone, windowOpen,
+  DAY_MS, HOUR_MS, REPLY_DEBOUNCE_MS, WINDOW_MS, blockReason, cleanTemplateParam, followUpDue, mentionsPrice, offerAllowed, phoneVariants, samePhone, windowOpen,
 } from './rules'
 
 const LOCK_KEY = 'whatsapp_ai_lock'
@@ -159,6 +159,14 @@ function contentFrom(decision: Decision, template: (TemplateInfo & { language: s
   return text ? { text } : null
 }
 
+// "A IA não fala de valores": bloqueia qualquer conteúdo com dinheiro, mesmo que a IA tenha ignorado a instrução
+function priceBlocked(content: Content, config: WaConfig) {
+  if (!config.priceToHuman) return false
+  return mentionsPrice('text' in content ? content.text : content.template.params.join(' '))
+}
+
+const PRICE_HANDOFF_TEXT = 'Vou pedir pro responsável te passar isso certinho, ele já te chama por aqui! 🙂'
+
 async function handOff(contact: WaContact, decision: Decision, config: WaConfig) {
   await prisma.waContact.update({
     where: { id: contact.id },
@@ -255,14 +263,17 @@ async function processReplies(ctx: Ctx) {
         await optOut(contact, config, now)
         continue
       }
-      if (decision.acao === 'chamar_humano') {
+      const content = decision.acao === 'enviar' || decision.acao === 'chamar_humano' ? contentFrom(decision, null) : null
+      // A IA escreveu um valor (contra a regra): não envia; avisa o contato com um texto fixo e passa para você
+      const priced = !!content && priceBlocked(content, config)
+      if (decision.acao === 'chamar_humano' || priced) {
         ctx.result.chamarHumano++
-        const content = contentFrom(decision, null)
-        if (content && !blockReason(contact, now)) await deliver(contact, content, { author: 'ia', kind: 'resposta', reason: decision.motivo }, config)
-        await handOff(contact, decision, config)
+        const safe: Content | null = priced ? { text: PRICE_HANDOFF_TEXT } : content
+        const reason = priced ? `Assunto de valores: a IA não fala de preço. ${decision.motivo}` : decision.motivo
+        if (safe && !blockReason(contact, now)) await deliver(contact, safe, { author: 'ia', kind: 'resposta', reason }, config)
+        await handOff(contact, { ...decision, motivo: reason }, config)
         continue
       }
-      const content = decision.acao === 'enviar' ? contentFrom(decision, null) : null
       if (content && !blockReason(contact, now)) {
         await deliver(contact, content, { author: 'ia', kind: 'resposta', reason: decision.motivo }, config)
         ctx.result.respostas++
@@ -358,7 +369,8 @@ async function processFollowUps(ctx: Ctx) {
         await handOff(contact, decision, config)
         continue
       }
-      const content = decision.acao === 'enviar' ? contentFrom(decision, tpl) : null
+      const draft = decision.acao === 'enviar' ? contentFrom(decision, tpl) : null
+      const content = draft && !priceBlocked(draft, config) ? draft : null // com valor: não envia
       if (content && !blockReason(contact, now)) {
         await deliver(contact, content, { author: 'ia', kind: 'follow_up', reason: decision.motivo }, config)
         await prisma.waContact.update({ where: { id: contact.id }, data: { followUpCount: { increment: 1 } } })
@@ -420,7 +432,8 @@ async function processCampaign(ctx: Ctx, campaign: WaCampaign) {
         await prisma.waCampaignSend.create({ data: { campaignId: campaign.id, contactId: c.id, status: 'pulado', reason: decision.motivo } })
         continue
       }
-      const content = decision.acao === 'enviar' ? contentFrom(decision, tpl) : null
+      const draft = decision.acao === 'enviar' ? contentFrom(decision, tpl) : null
+      const content = draft && !priceBlocked(draft, config) ? draft : null // com valor: não envia
       if (content && offerAllowed(contact, now, campaign.categories, config.offerMinIntervalDays)) {
         const sent = await deliver(contact, content, { author: 'ia', kind: 'oferta', reason: decision.motivo, campaignId: campaign.id }, config)
         await prisma.waContact.update({ where: { id: contact.id }, data: { lastOfferAt: now, followUpCount: 0 } })

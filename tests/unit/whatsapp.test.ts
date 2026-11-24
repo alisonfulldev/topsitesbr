@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  blockReason, cleanTemplateParam, followUpDue, isOptOut, offerAllowed, phoneVariants, replyDue, samePhone, windowOpen, type ContactState,
+  blockReason, cleanTemplateParam, followUpDue, isOptOut, mentionsPrice, offerAllowed, phoneVariants, replyDue, samePhone, windowOpen, type ContactState,
 } from '@/lib/whatsapp/rules'
 import { renderTemplate, templateVarCount } from '@/lib/whatsapp/config'
 import { messageText } from '@/lib/whatsapp/webhook'
@@ -102,4 +102,9 @@ describe('conteúdo das mensagens recebidas', () => {
     expect(messageText({ id: '1', timestamp: '0', type: 'interactive', interactive: { button_reply: { title: 'Quero' } } })).toBe('Quero')
     expect(messageText({ id: '1', timestamp: '0', type: 'system' })).toBeNull()
   })
+})
+
+describe('trava de valores', () => {
+  it.each(['Sai por R$ 197', 'r$197,00', '197 reais', '29/mês', '29 por mês', '29 mensais', 'fica 1.197,00'])('bloqueia "%s"', (t) => expect(mentionsPrice(t)).toBe(true))
+  it.each(['Faço sim! Quer ver modelos?', 'Atendo 24 horas', 'Em 7 dias fica pronto', 'São 3 páginas', 'Meu número é 18 99674-2364'])('libera "%s"', (t) => expect(mentionsPrice(t)).toBe(false))
 })
