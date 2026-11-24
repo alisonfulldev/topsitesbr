@@ -11,6 +11,7 @@
 //   WHATSAPP_APP_ID / WHATSAPP_APP_SECRET   app da Meta (troca do código do cadastro incorporado)
 
 import { prisma } from '@/lib/prisma'
+import { telnyxConfigured, telnyxSendTemplate, telnyxSendText } from './telnyx'
 
 export const CONNECTION_KEY = 'whatsapp_connection'
 
@@ -23,10 +24,11 @@ export interface WaConnection {
   tokenExpiresAt: string | null
 }
 
-type Provider = 'meta' | '360dialog'
+type Provider = 'meta' | '360dialog' | 'telnyx'
 
-function provider(): Provider {
-  return process.env.WHATSAPP_PROVIDER === '360dialog' ? '360dialog' : 'meta'
+export function provider(): Provider {
+  const p = process.env.WHATSAPP_PROVIDER
+  return p === '360dialog' || p === 'telnyx' ? p : 'meta'
 }
 
 export function graphVersion() {
@@ -69,6 +71,7 @@ async function credentials(): Promise<{ token: string; phoneNumberId: string } |
 }
 
 export async function whatsappConfigured() {
+  if (provider() === 'telnyx') return telnyxConfigured()
   return !!(await credentials())
 }
 
@@ -105,6 +108,7 @@ function messageId(data: Record<string, unknown>) {
 }
 
 export async function sendText(to: string, body: string) {
+  if (provider() === 'telnyx') return telnyxSendText(to, body)
   const data = await post('messages', {
     messaging_product: 'whatsapp',
     recipient_type: 'individual',
@@ -116,6 +120,7 @@ export async function sendText(to: string, body: string) {
 }
 
 export async function sendTemplate(to: string, name: string, language: string, params: string[]) {
+  if (provider() === 'telnyx') return telnyxSendTemplate(to, name, language, params)
   const data = await post('messages', {
     messaging_product: 'whatsapp',
     recipient_type: 'individual',

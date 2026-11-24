@@ -74,7 +74,7 @@ const at = (ts: string) => new Date(Number(ts) * 1000)
 
 // ── Handlers ────────────────────────────────────────────────────────────────
 
-async function handleInbound(m: WaRawMessage, profileName: string | undefined) {
+export async function handleInbound(m: WaRawMessage, profileName: string | undefined) {
   if (!m.from) return
   const body = messageText(m)
   if (body === null) return
@@ -111,7 +111,7 @@ async function handleInbound(m: WaRawMessage, profileName: string | undefined) {
 }
 
 // Mensagem que VOCÊ mandou pelo app no celular: a IA sai de cena com esse contato por um tempo
-async function handleEcho(m: WaRawMessage, humanTakeoverHours: number) {
+export async function handleEcho(m: WaRawMessage, humanTakeoverHours: number) {
   if (!m.to) return
   const body = messageText(m)
   if (body === null) return
@@ -138,7 +138,7 @@ async function handleEcho(m: WaRawMessage, humanTakeoverHours: number) {
 const STATUS_RANK: Record<string, number> = { simulada: 0, enviada: 1, entregue: 2, lida: 3 }
 const STATUS_MAP: Record<string, string> = { sent: 'enviada', delivered: 'entregue', read: 'lida', failed: 'falhou' }
 
-async function handleStatus(s: WaStatus) {
+export async function handleStatus(s: WaStatus) {
   const next = STATUS_MAP[s.status]
   if (!next) return
   const msg = await prisma.waMessage.findUnique({ where: { waMessageId: s.id }, select: { id: true, status: true } })
@@ -231,4 +231,72 @@ export async function handleWhatsappWebhook(payload: WaWebhookPayload) {
         break
     }
   }
+}
+
+// ── Telnyx (WHATSAPP_PROVIDER=telnyx) ────────────────────────────────────────
+// Eventos: message.received, message.echo (enviado por você no app do celular), message.sent,
+// message.finalized, message.read. O corpo da mensagem segue o formato da Meta em payload.body.
+
+interface TelnyxEvent {
+  data?: {
+    id?: string
+    event_type?: string
+    occurred_at?: string
+    payload?: Record<string, unknown>
+  }
+}
+
+const digitsOf = (v: unknown) => String(v ?? '').replace(/\D/g, '')
+
+function telnyxBody(p: Record<string, unknown>) {
+  const body = (p.body ?? p.whatsapp_message ?? null) as Record<string, unknown> | null
+  if (body && typeof body === 'object') return body
+  // Formato tipo SMS: texto direto em payload.text
+  return typeof p.text === 'string' ? { type: 'text', text: { body: p.text } } : {}
+}
+
+function telnyxTimestamp(p: Record<string, unknown>, fallback?: string) {
+  const iso = (p.received_at ?? p.sent_at ?? fallback ?? new Date().toISOString()) as string
+  return String(Math.floor(new Date(iso).getTime() / 1000))
+}
+
+const TELNYX_STATUS: Record<string, string> = { delivered: 'delivered', read: 'read', delivery_failed: 'failed', sending_failed: 'failed' }
+
+export async function handleTelnyxEvent(event: TelnyxEvent) {
+  const type = event.data?.event_type
+  const p = (event.data?.payload ?? {}) as Record<string, unknown>
+  const body = telnyxBody(p)
+
+  if (type === 'message.received') {
+    const from = digitsOf((p.from as { phone_number?: string } | undefined)?.phone_number)
+    if (!from) return
+    const msg = { ...body, from, id: String(p.id ?? event.data?.id), timestamp: telnyxTimestamp(p, event.data?.occurred_at), type: String(body.type ?? 'text') } as WaRawMessage
+    const name = ((p.from as { name?: string } | undefined)?.name) || undefined
+    await handleInbound(msg, name)
+    return
+  }
+
+  if (type === 'message.echo') {
+    const rawTo = Array.isArray(p.to) ? (p.to[0] as { phone_number?: string })?.phone_number : p.to
+    const to = digitsOf(rawTo)
+    if (!to) return
+    const id = String((body.foreign_id as string | undefined) ?? p.id ?? event.data?.id)
+    const config = await getWaConfig()
+    await handleEcho({ ...body, to, id, timestamp: telnyxTimestamp(p, event.data?.occurred_at), type: String(body.type ?? 'text') } as WaRawMessage, config.humanTakeoverHours)
+    return
+  }
+
+  if (type === 'message.sent' || type === 'message.finalized' || type === 'message.read') {
+    const id = String(p.id ?? '')
+    if (!id) return
+    const toStatus = Array.isArray(p.to) ? (p.to[0] as { status?: string })?.status : undefined
+    const status = type === 'message.sent' ? 'sent' : type === 'message.read' ? 'read' : TELNYX_STATUS[toStatus ?? '']
+    if (!status) return
+    const errors = (p.errors as { code?: string | number; title?: string; detail?: string }[] | undefined) ?? []
+    await handleStatus({ id, status, errors: errors.map((e) => ({ code: Number(e.code) || undefined, title: e.title, message: e.detail })) })
+    return
+  }
+
+  // Outros eventos (whatsapp.account.update etc.): só registra o tipo
+  if (type) console.log('[webhooks/telnyx] evento ignorado:', type)
 }

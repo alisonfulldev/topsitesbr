@@ -21,7 +21,7 @@ vi.mock('@/lib/whatsapp/cloud-api', () => ({
   whatsappConfigured: () => true,
 }))
 
-const { handleWhatsappWebhook } = await import('@/lib/whatsapp/webhook')
+const { handleWhatsappWebhook, handleTelnyxEvent } = await import('@/lib/whatsapp/webhook')
 const { runWhatsappAi } = await import('@/lib/whatsapp/engine')
 const { saveWaConfig, DEFAULT_WA_CONFIG } = await import('@/lib/whatsapp/config')
 const { POST } = await import('@/app/api/webhooks/whatsapp/route')
@@ -347,5 +347,47 @@ describe('rota do webhook', () => {
     expect((await POST(req('sha256=errada'))).status).toBe(401)
     const good = 'sha256=' + createHmac('sha256', 'segredo-app').update(body).digest('hex')
     expect((await POST(req(good))).status).toBe(200)
+  })
+})
+
+describe('Telnyx', () => {
+  const ev = (event_type: string, payload: Record<string, unknown>) => ({ data: { id: 'ev-' + (++seq), event_type, occurred_at: ago(2 * MIN).toISOString(), payload } })
+
+  it('mensagem recebida, envio pelo celular e status', async () => {
+    await handleTelnyxEvent(ev('message.received', {
+      id: 'tx-in-1', from: { phone_number: '+5518944445555' }, received_at: ago(2 * MIN).toISOString(),
+      body: { type: 'text', text: { body: 'Oi, quero um site' } },
+    }))
+    let c = await contactOf('5518944445555')
+    expect(c.awaitingReply).toBe(true)
+    expect(c.messages[0]).toMatchObject({ direction: 'in', body: 'Oi, quero um site' })
+
+    await handleTelnyxEvent(ev('message.echo', {
+      id: 'tx-echo-1', direction: 'outbound', origin: 'whatsapp_business_app', to: '+5518944445555',
+      body: { type: 'text', foreign_id: 'wamid.echo.x', text: { body: 'Oi! Já te respondo' } },
+    }))
+    c = await contactOf('5518944445555')
+    expect(c.awaitingReply).toBe(false)
+    expect(c.humanUntil!.getTime()).toBeGreaterThan(NOW.getTime())
+    expect(c.messages.at(-1)).toMatchObject({ author: 'voce', body: 'Oi! Já te respondo' })
+
+    const out = await prisma.waMessage.create({ data: { contactId: c.id, waMessageId: 'tx-out-1', direction: 'out', author: 'ia', body: 'x', status: 'enviada', sentAt: NOW } })
+    await handleTelnyxEvent(ev('message.finalized', { id: 'tx-out-1', to: [{ phone_number: '+5518944445555', status: 'delivered' }] }))
+    expect((await prisma.waMessage.findUniqueOrThrow({ where: { id: out.id } })).status).toBe('entregue')
+    await handleTelnyxEvent(ev('message.finalized', { id: 'tx-out-1', to: [{ status: 'delivery_failed' }], errors: [{ code: '40008', title: 'Template not approved' }] }))
+    expect((await prisma.waMessage.findUniqueOrThrow({ where: { id: out.id } })).error).toMatch(/40008/)
+  })
+
+  it('assinatura Ed25519', async () => {
+    const { generateKeyPairSync, sign } = await import('crypto')
+    const { verifyTelnyxSignature } = await import('@/lib/whatsapp/telnyx')
+    const { publicKey, privateKey } = generateKeyPairSync('ed25519')
+    const rawPub = publicKey.export({ format: 'der', type: 'spki' }).subarray(12).toString('base64')
+    const body = '{"data":{}}'
+    const ts = String(Math.floor(Date.now() / 1000))
+    const sig = sign(null, Buffer.from(`${ts}|${body}`), privateKey).toString('base64')
+    expect(verifyTelnyxSignature(body, sig, ts, rawPub)).toBe(true)
+    expect(verifyTelnyxSignature(body + ' ', sig, ts, rawPub)).toBe(false)
+    expect(verifyTelnyxSignature(body, sig, String(Number(ts) - 3600), rawPub)).toBe(false)
   })
 })
