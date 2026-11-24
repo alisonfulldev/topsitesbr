@@ -6,7 +6,7 @@ import { z } from 'zod'
 import type { WaCategory } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { requestSync } from '@/lib/whatsapp/cloud-api'
+import { exchangeCode, listPhoneNumbers, phoneStatus, requestSync, saveConnection, subscribeApp } from '@/lib/whatsapp/cloud-api'
 import { saveWaConfig, templateVarCount, waConfigSchema, type WaConfig } from '@/lib/whatsapp/config'
 import { reanalyzeContact, runWhatsappAi, type RunResult } from '@/lib/whatsapp/engine'
 
@@ -95,13 +95,79 @@ export async function requestSyncAction(kind: 'smb_app_state_sync' | 'history'):
   if (!(await requireAdmin())) return { ok: false, error: 'Não autorizado.' }
   try {
     const requestId = await requestSync(kind)
-    const key = 'whatsapp_sync_' + kind
-    const value = JSON.stringify({ at: new Date().toISOString(), requestId })
-    await prisma.systemSetting.upsert({ where: { key }, update: { value }, create: { key, value } })
+    await recordSync(kind, requestId)
     revalidatePath('/admin/whatsapp/configuracoes')
     return { ok: true, requestId }
   } catch (err) {
     return { ok: false, error: errorText(err) }
+  }
+}
+
+// ── Conexão do número (cadastro incorporado com coexistência) ───────────────
+
+export interface ConnectStep {
+  label: string
+  ok: boolean
+  detail?: string
+}
+
+async function recordSync(kind: 'smb_app_state_sync' | 'history', requestId: string | null) {
+  const key = 'whatsapp_sync_' + kind
+  const value = JSON.stringify({ at: new Date().toISOString(), requestId })
+  await prisma.systemSetting.upsert({ where: { key }, update: { value }, create: { key, value } })
+}
+
+// Chamada pela página /admin/whatsapp/conectar quando o cadastro incorporado termina.
+// O código vale 5 minutos: a troca pelo token acontece aqui, no servidor, com a chave secreta do app.
+export async function finishConnectAction(input: { code: string; wabaId: string | null; phoneNumberId: string | null }): Promise<Result<{ steps: ConnectStep[] }>> {
+  if (!(await requireAdmin())) return { ok: false, error: 'Não autorizado.' }
+  const steps: ConnectStep[] = []
+  try {
+    const { token, expiresAt } = await exchangeCode(input.code)
+    steps.push({ label: 'Acesso da Meta recebido', ok: true, detail: expiresAt ? `vale até ${expiresAt.toLocaleDateString('pt-BR')}` : undefined })
+
+    if (!input.wabaId) return { ok: false, error: 'A Meta não informou a conta do WhatsApp (waba_id). Tente conectar de novo.' }
+    let phoneNumberId = input.phoneNumberId
+    let displayPhone: string | null = null
+    const phones = await listPhoneNumbers(input.wabaId, token)
+    const phone = phones.find((p) => p.id === phoneNumberId) ?? phones[0]
+    if (!phone) return { ok: false, error: 'Nenhum número encontrado na conta do WhatsApp conectada.' }
+    phoneNumberId = phone.id
+    displayPhone = phone.display_phone_number ?? null
+    steps.push({ label: 'Número encontrado', ok: true, detail: displayPhone ?? phoneNumberId })
+
+    await subscribeApp(input.wabaId, token)
+    steps.push({ label: 'App inscrito para receber as mensagens', ok: true })
+
+    await saveConnection({
+      token, phoneNumberId, wabaId: input.wabaId, displayPhone,
+      connectedAt: new Date().toISOString(), tokenExpiresAt: expiresAt?.toISOString() ?? null,
+    })
+
+    try {
+      const st = await phoneStatus(phoneNumberId, token)
+      steps.push({ label: 'Coexistência com o app do celular', ok: st.onBizApp, detail: st.onBizApp ? 'ativa' : `is_on_biz_app = false (${st.platform ?? '?'})` })
+    } catch (err) {
+      steps.push({ label: 'Coexistência com o app do celular', ok: false, detail: errorText(err) })
+    }
+
+    // Janela de 24h: pede a agenda e o histórico já (cada um só pode ser pedido uma vez)
+    for (const [kind, label] of [['smb_app_state_sync', 'Importação da agenda pedida'], ['history', 'Importação do histórico pedida']] as const) {
+      try {
+        const requestId = await requestSync(kind)
+        await recordSync(kind, requestId)
+        steps.push({ label, ok: true })
+      } catch (err) {
+        steps.push({ label, ok: false, detail: errorText(err) + ' — tente pelo botão em Configurações (prazo: 24h)' })
+      }
+    }
+
+    revalidatePath('/admin/whatsapp')
+    revalidatePath('/admin/whatsapp/configuracoes')
+    return { ok: true, steps }
+  } catch (err) {
+    steps.push({ label: 'Erro', ok: false, detail: errorText(err) })
+    return { ok: true, steps }
   }
 }
 

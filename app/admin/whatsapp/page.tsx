@@ -45,7 +45,7 @@ export default async function WhatsappPage({ searchParams }: { searchParams: { c
     proactiveSentToday(now),
   ])
   const countOf = (key: string) => (key === 'todos' ? counts.reduce((s, c) => s + c._count, 0) : counts.find((c) => c.category === key)?._count ?? 0)
-  const missing = [!whatsappConfigured() && 'WhatsApp (WHATSAPP_TOKEN / WHATSAPP_PHONE_NUMBER_ID)', !aiConfigured() && 'IA (ANTHROPIC_API_KEY)'].filter(Boolean)
+  const missing = [!(await whatsappConfigured()) && 'WhatsApp (conecte o número em Configurações)', !aiConfigured() && 'IA (ANTHROPIC_API_KEY)'].filter(Boolean)
 
   return (
     <div className="mx-auto max-w-6xl">

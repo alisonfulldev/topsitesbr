@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { getWaConfig } from '@/lib/whatsapp/config'
-import { whatsappConfigured } from '@/lib/whatsapp/cloud-api'
+import { getConnection, whatsappConfigured } from '@/lib/whatsapp/cloud-api'
 import { aiConfigured } from '@/lib/whatsapp/ai'
 import { ConfigForm } from './ConfigForm'
 import { SyncCard } from './SyncCard'
@@ -24,11 +24,12 @@ export default async function WhatsappConfigPage() {
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'admin') redirect('/login')
 
-  const [config, syncRows, contacts, historyMessages] = await Promise.all([
+  const [config, syncRows, contacts, historyMessages, connection] = await Promise.all([
     getWaConfig(),
     prisma.systemSetting.findMany({ where: { key: { in: ['whatsapp_sync_smb_app_state_sync', 'whatsapp_sync_history'] } } }),
     prisma.waContact.count(),
     prisma.waMessage.count({ where: { status: 'historico' } }),
+    getConnection(),
   ])
   const sync = (k: string) => readSync(syncRows.find((r) => r.key === k)?.value)
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://SEU_DOMINIO'
@@ -39,7 +40,8 @@ export default async function WhatsappConfigPage() {
       <h2 className="mb-5 mt-2 text-xl font-semibold text-gray-900">Configurações do WhatsApp com IA</h2>
       <SyncCard
         webhookUrl={appUrl.replace(/\/$/, '') + '/api/webhooks/whatsapp'}
-        whatsappReady={whatsappConfigured()}
+        whatsappReady={await whatsappConfigured()}
+        connection={connection ? { displayPhone: connection.displayPhone, connectedAt: connection.connectedAt, tokenExpiresAt: connection.tokenExpiresAt } : null}
         aiReady={aiConfigured()}
         contactsSync={sync('whatsapp_sync_smb_app_state_sync')}
         historySync={sync('whatsapp_sync_history')}

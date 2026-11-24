@@ -2,11 +2,26 @@
 // que usa o mesmo formato de mensagem. O número fica em coexistência: continua no app
 // WhatsApp Business do celular e também na API.
 //
-// Variáveis de ambiente:
+// Credenciais: as gravadas pela tela "Conectar número" (system_settings, via cadastro incorporado)
+// têm prioridade; senão, as variáveis de ambiente:
 //   WHATSAPP_PROVIDER         meta (padrão) | 360dialog
-//   WHATSAPP_TOKEN            token de acesso da Meta (System User) ou API key do 360dialog
+//   WHATSAPP_TOKEN            token de acesso da Meta ou API key do 360dialog
 //   WHATSAPP_PHONE_NUMBER_ID  ID do número na Meta (só provider meta)
-//   WHATSAPP_GRAPH_VERSION    versão da Graph API (padrão v23.0)
+//   WHATSAPP_GRAPH_VERSION    versão da Graph API (padrão v27.0)
+//   WHATSAPP_APP_ID / WHATSAPP_APP_SECRET   app da Meta (troca do código do cadastro incorporado)
+
+import { prisma } from '@/lib/prisma'
+
+export const CONNECTION_KEY = 'whatsapp_connection'
+
+export interface WaConnection {
+  token: string
+  phoneNumberId: string
+  wabaId: string | null
+  displayPhone: string | null
+  connectedAt: string
+  tokenExpiresAt: string | null
+}
 
 type Provider = 'meta' | '360dialog'
 
@@ -14,22 +29,47 @@ function provider(): Provider {
   return process.env.WHATSAPP_PROVIDER === '360dialog' ? '360dialog' : 'meta'
 }
 
-export function whatsappConfigured() {
-  if (!process.env.WHATSAPP_TOKEN) return false
-  return provider() === '360dialog' || !!process.env.WHATSAPP_PHONE_NUMBER_ID
+export function graphVersion() {
+  return process.env.WHATSAPP_GRAPH_VERSION || 'v27.0'
 }
 
-function endpoint(path: 'messages' | 'smb_app_data') {
-  if (provider() === '360dialog') return `https://waba-v2.360dialog.io/${path}`
-  const version = process.env.WHATSAPP_GRAPH_VERSION || 'v23.0'
-  return `https://graph.facebook.com/${version}/${process.env.WHATSAPP_PHONE_NUMBER_ID}/${path}`
+export const GRAPH = () => `https://graph.facebook.com/${graphVersion()}`
+
+// Cache curto para não ir ao banco a cada mensagem
+let cache: { at: number; value: WaConnection | null } | null = null
+
+export async function getConnection(): Promise<WaConnection | null> {
+  if (cache && Date.now() - cache.at < 60_000) return cache.value
+  const row = await prisma.systemSetting.findUnique({ where: { key: CONNECTION_KEY } })
+  let value: WaConnection | null = null
+  try {
+    value = row ? (JSON.parse(row.value) as WaConnection) : null
+  } catch {
+    value = null
+  }
+  cache = { at: Date.now(), value }
+  return value
 }
 
-function headers(): Record<string, string> {
+export async function saveConnection(conn: WaConnection) {
+  const value = JSON.stringify(conn)
+  await prisma.systemSetting.upsert({ where: { key: CONNECTION_KEY }, update: { value }, create: { key: CONNECTION_KEY, value } })
+  cache = null
+}
+
+async function credentials(): Promise<{ token: string; phoneNumberId: string } | null> {
+  const conn = await getConnection()
+  if (conn?.token && conn.phoneNumberId) return { token: conn.token, phoneNumberId: conn.phoneNumberId }
   const token = process.env.WHATSAPP_TOKEN ?? ''
-  return provider() === '360dialog'
-    ? { 'D360-API-KEY': token, 'Content-Type': 'application/json' }
-    : { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID ?? ''
+  // Valor curto = placeholder antigo do .env
+  if (token.length < 20) return null
+  if (provider() === 'meta' && !phoneNumberId) return null
+  return { token, phoneNumberId }
+}
+
+export async function whatsappConfigured() {
+  return !!(await credentials())
 }
 
 export class WhatsAppApiError extends Error {
@@ -38,14 +78,7 @@ export class WhatsAppApiError extends Error {
   }
 }
 
-async function post(path: 'messages' | 'smb_app_data', body: unknown): Promise<Record<string, unknown>> {
-  if (!whatsappConfigured()) throw new WhatsAppApiError('WhatsApp não configurado (WHATSAPP_TOKEN / WHATSAPP_PHONE_NUMBER_ID)')
-  const res = await fetch(endpoint(path), {
-    method: 'POST',
-    headers: headers(),
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(20_000),
-  })
+async function parse(res: Response): Promise<Record<string, unknown>> {
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>
   if (!res.ok) {
     const err = (data.error ?? {}) as { message?: string; code?: number; error_data?: { details?: string } }
@@ -53,6 +86,17 @@ async function post(path: 'messages' | 'smb_app_data', body: unknown): Promise<R
     throw new WhatsAppApiError(`${err.message ?? `HTTP ${res.status}`}${detail}`, err.code)
   }
   return data
+}
+
+async function post(path: 'messages' | 'smb_app_data', body: unknown): Promise<Record<string, unknown>> {
+  const creds = await credentials()
+  if (!creds) throw new WhatsAppApiError('WhatsApp não conectado (Admin → WhatsApp IA → Conectar número)')
+  const url = provider() === '360dialog' ? `https://waba-v2.360dialog.io/${path}` : `${GRAPH()}/${creds.phoneNumberId}/${path}`
+  const headers: Record<string, string> = provider() === '360dialog'
+    ? { 'D360-API-KEY': creds.token, 'Content-Type': 'application/json' }
+    : { Authorization: `Bearer ${creds.token}`, 'Content-Type': 'application/json' }
+  const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body), signal: AbortSignal.timeout(20_000) })
+  return parse(res)
 }
 
 function messageId(data: Record<string, unknown>) {
@@ -91,4 +135,53 @@ export async function sendTemplate(to: string, name: string, language: string, p
 export async function requestSync(syncType: 'smb_app_state_sync' | 'history') {
   const data = await post('smb_app_data', { messaging_product: 'whatsapp', sync_type: syncType })
   return (data.request_id as string | undefined) ?? null
+}
+
+// ── Cadastro incorporado (Embedded Signup) ─────────────────────────────────
+
+async function graphGet(path: string, token: string, params: Record<string, string> = {}) {
+  const url = new URL(`${GRAPH()}/${path}`)
+  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v)
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(20_000) })
+  return parse(res)
+}
+
+// Troca o código do FB.login (vale 5 minutos) por um token de negócio. Só no servidor (usa a chave secreta).
+export async function exchangeCode(code: string) {
+  const appId = process.env.WHATSAPP_APP_ID
+  const secret = process.env.WHATSAPP_APP_SECRET
+  if (!appId || !secret) throw new WhatsAppApiError('WHATSAPP_APP_ID / WHATSAPP_APP_SECRET não configurados no servidor')
+  const url = new URL(`${GRAPH()}/oauth/access_token`)
+  url.searchParams.set('client_id', appId)
+  url.searchParams.set('client_secret', secret)
+  url.searchParams.set('code', code)
+  const data = await parse(await fetch(url, { signal: AbortSignal.timeout(20_000) }))
+  const token = data.access_token as string | undefined
+  if (!token) throw new WhatsAppApiError('A Meta não devolveu o token')
+  const expiresIn = Number(data.expires_in) || 0
+  return { token, expiresAt: expiresIn ? new Date(Date.now() + expiresIn * 1000) : null }
+}
+
+export async function listPhoneNumbers(wabaId: string, token: string) {
+  const data = await graphGet(`${wabaId}/phone_numbers`, token, { fields: 'id,display_phone_number,verified_name' })
+  return (data.data as { id: string; display_phone_number?: string; verified_name?: string }[] | undefined) ?? []
+}
+
+// Sem isso a conta não manda webhooks para o app
+export async function subscribeApp(wabaId: string, token: string) {
+  const res = await fetch(`${GRAPH()}/${wabaId}/subscribed_apps`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(20_000),
+  })
+  return parse(res)
+}
+
+export async function phoneStatus(phoneNumberId: string, token: string) {
+  const data = await graphGet(phoneNumberId, token, { fields: 'is_on_biz_app,platform_type,display_phone_number' })
+  return {
+    onBizApp: data.is_on_biz_app === true,
+    platform: (data.platform_type as string | undefined) ?? null,
+    displayPhone: (data.display_phone_number as string | undefined) ?? null,
+  }
 }
