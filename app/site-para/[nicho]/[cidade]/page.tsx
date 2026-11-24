@@ -1,19 +1,20 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { niches, getNicheBySlug, getNichesBySector } from '@/lib/seo/niches'
-import { cities, getCityBySlug, getCitiesByRegion } from '@/lib/seo/cities'
+import { getNicheBySlug, getNichesBySector } from '@/lib/seo/niches'
+import { getCityBySlug, getCitiesByRegion } from '@/lib/seo/cities'
 import { SITE_URL, ctaNote, marketingMetadata, organizationSchema, offerPriceAnswer } from '@/lib/marketing'
 import { MarketingLayout, ProjectCTA, DiagnosticTag, ProcessSteps, CTABand, DiagnosticSection } from '@/components/marketing/MarketingSections'
 import { MarketingIcon } from '@/components/marketing/MarketingIcon'
 import { RelatedLinksSection } from '@/components/marketing/RelatedLinksSection'
 
-export const dynamicParams = false
+// As ~7.800 combinações nicho × cidade NÃO são geradas no build (ocupavam 1,4 GB na imagem e
+// estouravam o disco da VPS). Cada página é gerada na primeira visita e fica em cache como estática.
+// Nicho/cidade inválidos caem no notFound() abaixo.
+export const dynamicParams = true
 
 export function generateStaticParams() {
-  return niches.flatMap((niche) =>
-    cities.map((city) => ({ nicho: niche.slug, cidade: city.slug }))
-  )
+  return []
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ nicho: string; cidade: string }> }): Promise<Metadata> {
