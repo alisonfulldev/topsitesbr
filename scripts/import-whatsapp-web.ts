@@ -18,6 +18,12 @@ const BLOCK = /humb?erto/i
 async function main() {
   const items = JSON.parse(fs.readFileSync(file, 'utf-8')) as WebExportItem[]
   const chats = items.map(parseWebExport)
+  // Trava: o mesmo número em conversas com nomes diferentes = número suspeito; nenhuma delas usa esse número
+  const titlesByPhone = new Map<string, Set<string>>()
+  for (const c of chats) if (c.phone) titlesByPhone.set(c.phone, (titlesByPhone.get(c.phone) ?? new Set()).add(c.title))
+  const suspicious = new Set(Array.from(titlesByPhone.entries()).filter(([, t]) => t.size > 1).map(([p]) => p))
+  for (const c of chats) if (c.phone && suspicious.has(c.phone)) c.phone = null
+  console.log(`números repetidos entre conversas diferentes: ${suspicious.size}`)
   const owner = guessOwnerName(chats)
   if (!owner) throw new Error('Não consegui identificar o seu nome nas conversas')
   const withMsgs = chats.filter((c) => c.messages.length)
